@@ -1,16 +1,11 @@
 // Import third-party dependencies
+import { registerRootComponent } from "expo";
 import React from "react";
-import { createAppContainer } from "react-navigation";
-import { createBottomTabNavigator } from "react-navigation-tabs";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 // Import font awesome icons
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faEllipsisH,
-  faHome,
-  faCalendarDay,
-  faBlog
-} from "@fortawesome/free-solid-svg-icons";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 // Import screens for navigation
 import { HomeScreen } from "../screens/Home";
@@ -19,50 +14,88 @@ import { BlogScreen } from "../screens/Blog";
 import { MoreScreen } from "../screens/More";
 
 // Bottom tab navigator config
-const MainNavigator = createBottomTabNavigator(
-  {
-    Home: {
-      screen: HomeScreen,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => (
-          <FontAwesomeIcon icon={faHome} color={tintColor} />
-        )
-      }
-    },
-    Events: {
-      screen: EventsScreen,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => (
-          <FontAwesomeIcon icon={faCalendarDay} color={tintColor} />
-        )
-      }
-    },
-    Blog: {
-      screen: BlogScreen,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => (
-          <FontAwesomeIcon icon={faBlog} color={tintColor} />
-        )
-      }
-    },
-    More: {
-      screen: MoreScreen,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => (
-          <FontAwesomeIcon icon={faEllipsisH} color={tintColor} />
-        )
-      }
-    }
-  },
-  {
-    tabBarOptions: {
-      activeTintColor: "white",
-      activeBackgroundColor: "#3248a8"
-    }
-  }
-);
+const Tab = createBottomTabNavigator();
+// {
+//   Home: {
+//     screen: HomeScreen,
+//     navigationOptions: {
+//       tabBarIcon: ({ tintColor }) => <Icon name="Home" color={tintColor} />
+//     }
+//   },
+//   Events: {
+//     screen: EventsScreen,
+//     navigationOptions: {
+//       tabBarIcon: ({ tintColor }) => (
+//         <FontAwesomeIcon icon={faCalendarDay} color={tintColor} />
+//       )
+//     }
+//   },
+//   Blog: {
+//     screen: BlogScreen,
+//     navigationOptions: {
+//       tabBarIcon: ({ tintColor }) => (
+//         <FontAwesomeIcon icon={faBlog} color={tintColor} />
+//       )
+//     }
+//   },
+//   More: {
+//     screen: MoreScreen,
+//     navigationOptions: {
+//       tabBarIcon: ({ tintColor }) => (
+//         <FontAwesomeIcon icon={faEllipsisH} color={tintColor} />
+//       )
+//     }
+//   }
+// },
+// {
+//   tabBarOptions: {
+//     activeTintColor: "white",
+//     activeBackgroundColor: "#3248a8"
+//   }
+// }
 
 // Create container for app with navigations
-const App = createAppContainer(MainNavigator);
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ color, size }) => {
+            let iconName;
 
-export default App;
+            if (route.name === "Home") {
+              iconName = "home";
+            } else if (route.name === "Events") {
+              iconName = "calendar";
+            } else if (route.name === "Blog") {
+              iconName = "blog";
+            } else if (route.name === "More") {
+              iconName = "ellipsis-h";
+            }
+
+            // You can return any component that you like here!
+            return (
+              <Icon
+                name={iconName}
+                size={size}
+                color={color}
+                style={{ textAlignVertical: "center" }}
+              />
+            );
+          }
+        })}
+        tabBarOptions={{
+          activeTintColor: "white",
+          activeBackgroundColor: "#3248a8"
+        }}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Events" component={EventsScreen} />
+        <Tab.Screen name="Blog" component={BlogScreen} />
+        <Tab.Screen name="More" component={MoreScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default registerRootComponent(App);

@@ -1,6 +1,12 @@
 // Import third-party dependencies
 import React from "react";
 import { Text, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/core";
+import { createStackNavigator } from "@react-navigation/stack";
+
+import { ProfileScreen } from "../Profile";
+
+const MoreNavigator = createStackNavigator();
 
 // Component for "more" screen in main navigation
 export class MoreScreen extends React.Component {
@@ -10,9 +16,11 @@ export class MoreScreen extends React.Component {
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>More</Text>
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   }
 }
