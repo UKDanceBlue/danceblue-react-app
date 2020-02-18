@@ -15,44 +15,6 @@ import { MoreScreen } from "../screens/More";
 
 // Bottom tab navigator config
 const Tab = createBottomTabNavigator();
-// {
-//   Home: {
-//     screen: HomeScreen,
-//     navigationOptions: {
-//       tabBarIcon: ({ tintColor }) => <Icon name="Home" color={tintColor} />
-//     }
-//   },
-//   Events: {
-//     screen: EventsScreen,
-//     navigationOptions: {
-//       tabBarIcon: ({ tintColor }) => (
-//         <FontAwesomeIcon icon={faCalendarDay} color={tintColor} />
-//       )
-//     }
-//   },
-//   Blog: {
-//     screen: BlogScreen,
-//     navigationOptions: {
-//       tabBarIcon: ({ tintColor }) => (
-//         <FontAwesomeIcon icon={faBlog} color={tintColor} />
-//       )
-//     }
-//   },
-//   More: {
-//     screen: MoreScreen,
-//     navigationOptions: {
-//       tabBarIcon: ({ tintColor }) => (
-//         <FontAwesomeIcon icon={faEllipsisH} color={tintColor} />
-//       )
-//     }
-//   }
-// },
-// {
-//   tabBarOptions: {
-//     activeTintColor: "white",
-//     activeBackgroundColor: "#3248a8"
-//   }
-// }
 
 // Create container for app with navigations
 const App = () => {
