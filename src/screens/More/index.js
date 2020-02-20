@@ -16,22 +16,6 @@ import { styles } from "../../styles";
 
 const Stack = createStackNavigator();
 
-// <Button
-//   onPress={() => {
-//     navigate("Profile");
-//   }}
-//   title="Profile"
-// />
-// <Button
-//   onPress={() => {
-//     navigate("FAQ");
-//   }}
-//   title="FAQ"
-//   style={{}}
-// />
-
-//
-
 const profileButtonImage = require("./Profile_Button.jpg");
 
 class MoreScreenOptions extends React.Component {
