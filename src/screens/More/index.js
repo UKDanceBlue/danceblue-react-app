@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { ProfileScreen } from "./Profile";
+import ProfileScreen from "./Profile";
 import { FAQScreen } from "./FAQ";
 
 import { styles } from "../../styles";
