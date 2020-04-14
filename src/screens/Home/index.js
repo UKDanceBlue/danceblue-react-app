@@ -2,6 +2,7 @@
 import React from "react";
 import { SafeAreaView, StyleSheet, View, ScrollView, Text } from "react-native";
 
+import Carousel from '../../components/Carousel/carousel' 
 import HeaderImage from '../../components/countdown/HeaderImage';
 import CountdownView from '../../components/countdown/CountdownView';
 import Announcements from '../../components/announcement/Announcements';
@@ -11,15 +12,19 @@ export class HomeScreen extends React.Component {
   static navigationOptions = {
     title: "Home"
   };
+
   render() {
     const { navigate } = this.props.navigation;
     
     return (
-      <SafeAreaView style={styles.container}>
-        <HeaderImage />
-        <CountdownView time={60}/>
-        <Announcements />
-      </SafeAreaView>
+      <ScrollView>
+        <SafeAreaView style={styles.container}>
+          <HeaderImage />
+          <CountdownView time={60}/>
+          <Announcements />
+          <Carousel />
+        </SafeAreaView>
+      </ScrollView>
     );
   }
 };
