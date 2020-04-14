@@ -1,6 +1,10 @@
 // Import third-party dependencies
 import React from "react";
-import { Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, View, ScrollView, Text } from "react-native";
+
+import HeaderImage from '../../components/countdown/HeaderImage';
+import CountdownView from '../../components/countdown/CountdownView';
+import Announcements from '../../components/announcement/Announcements';
 
 // Component for home screen in main navigation
 export class HomeScreen extends React.Component {
@@ -9,10 +13,23 @@ export class HomeScreen extends React.Component {
   };
   render() {
     const { navigate } = this.props.navigation;
+    
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Home</Text>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <HeaderImage />
+        <CountdownView time={60}/>
+        <Announcements />
+      </SafeAreaView>
     );
   }
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    height: "100%",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "darkgray",
+  },
+});
