@@ -1,14 +1,14 @@
 // Import third-party dependencies
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
+import { WebView } from "react-native-webview";
 
 // Component for profile screen in main navigation
 export class FAQScreen extends React.Component {
   render() {
-    const { navigate } = this.props.navigation;
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>FAQ</Text>
+      <View style={{ flex: 1}}>
+        <WebView source={{ uri: "http://www.danceblue.org/frequently-asked-questions/" }} />
       </View>
     );
   }

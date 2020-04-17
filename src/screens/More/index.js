@@ -4,24 +4,32 @@ import {
   View,
   ImageBackground,
   TouchableHighlight,
-  Text
+  Text,
+  SafeAreaView
 } from "react-native";
+import * as WebBrowser from 'expo-web-browser';
 import { createStackNavigator } from "@react-navigation/stack";
 
 import ProfileScreen from "./Profile";
 import { FAQScreen } from "./FAQ";
+import { DonateScreen } from "./Donate";
+import { ContactScreen } from "./Contact";
 
 import { styles } from "../../styles";
 
 const Stack = createStackNavigator();
 
 const profileButtonImage = require("./Profile_Button.jpg");
+const donateButtonImage = require("./Donate_Button.jpg");
+const faqsButtonImage = require("./FAQs_Button.jpg");
+const contactButtonImage = require("./Contact_Button.jpg");
 
 class MoreScreenOptions extends React.Component {
   render() {
     const { navigate } = this.props.navigation;
     return (
       <>
+      <SafeAreaView style={{flex: 1}}>
         <TouchableHighlight
           onPress={() => {
             navigate("Profile");
@@ -30,37 +38,71 @@ class MoreScreenOptions extends React.Component {
         >
           <ImageBackground
             source={profileButtonImage}
-            style={{
-              height: "100%",
-              width: "100%",
-              opacity: 50
-            }}
+            style={styles.img}
             imageStyle={{ borderRadius: 10 }}
           >
-            <View
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "rgba(0,0,0,0.5)"
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontWeight: "bold",
-                  fontSize: 50
-                }}
-              >
+            <View style={styles.view}>
+              <Text style={styles.text}>
                 Profile
               </Text>
             </View>
           </ImageBackground>
         </TouchableHighlight>
+        <TouchableHighlight
+        onPress={() => {
+          navigate("Donate");
+        }}
+          style={styles.button}
+        >
+          <ImageBackground
+            source={donateButtonImage}
+            style={styles.img}
+            imageStyle={{ borderRadius: 10 }}
+          >
+            <View style={styles.view}>
+              <Text style={styles.text}>
+                Donate
+              </Text>
+            </View>
+          </ImageBackground>
+        </TouchableHighlight>
+        <TouchableHighlight
+        onPress={() => {
+          navigate("FAQ");
+        }}
+          style={styles.button}
+        >
+          <ImageBackground
+            source={faqsButtonImage}
+            style={styles.img}
+            imageStyle={{ borderRadius: 10 }}
+          >
+            <View style={styles.view}>
+              <Text style={styles.text}>
+                FAQs
+              </Text>
+            </View>
+          </ImageBackground>
+        </TouchableHighlight>
+        <TouchableHighlight
+        onPress={() => {
+          navigate("Contact");
+        }}
+          style={styles.button}
+        >
+          <ImageBackground
+            source={contactButtonImage}
+            style={styles.img}
+            imageStyle={{ borderRadius: 10 }}
+          >
+            <View style={styles.view}>
+              <Text style={styles.text}>
+                Contact
+              </Text>
+            </View>
+          </ImageBackground>
+        </TouchableHighlight>
+        </SafeAreaView>
       </>
     );
   }
@@ -78,6 +120,8 @@ export class MoreScreen extends React.Component {
         <Stack.Screen name="More Options" component={MoreScreenOptions} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="FAQ" component={FAQScreen} />
+        <Stack.Screen name="Donate" component={DonateScreen} />
+        <Stack.Screen name="Contact" component={ContactScreen} />
       </Stack.Navigator>
     );
   }

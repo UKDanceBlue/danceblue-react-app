@@ -1,17 +1,14 @@
 // Import third-party dependencies
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
+import { WebView } from "react-native-webview";
 
-// Component for blogs screen in main navigation
+// Component for profile screen in main navigation
 export class BlogScreen extends React.Component {
-  static navigationOptions = {
-    title: "Blog"
-  };
   render() {
-    const { navigate } = this.props.navigation;
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Blog</Text>
+      <View style={{ flex: 1}}>
+      <WebView source={{ uri: "https://www.danceblue.org/blog/" }} />
       </View>
     );
   }
