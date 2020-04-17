@@ -7,6 +7,7 @@ import {
 
 const Announcements = (props) => {
     return (
+      <View style={styles.shadowsStyling}>
         <View style={styles.announcementView}>
           <View style={styles.announcementTitleView}>
             <Text style={styles.announcementTitle}> ANNOUNCEMENTS </Text>
@@ -28,20 +29,20 @@ const Announcements = (props) => {
             </View>
           </View>
         </View>
+      </View>
     );
 };
 
 const styles = StyleSheet.create({
   announcementView: {
     paddingLeft: 5,
-    marginTop: 5,
     paddingTop: 5,
     paddingBottom: 5,
-    width: "98%",
+    width: "100%",
     justifyContent: "flex-start",
     alignItems: "flex-start",
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 15,
     overflow: "hidden",
   },
   announcementTitle: {
@@ -76,7 +77,18 @@ const styles = StyleSheet.create({
   },
   announcementText: {
     fontSize:16,
-  }
+  },
+  shadowsStyling: {
+    width: '95%',
+    marginBottom:10,
+    shadowColor: "gray",
+    shadowOpacity: 0.8,
+    shadowRadius: 6,
+    shadowOffset: {
+      height: 0,
+      width: 0,
+    },
+  },
 });
 
 export default Announcements;

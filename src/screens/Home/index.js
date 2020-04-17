@@ -1,6 +1,7 @@
 // Import third-party dependencies
 import React from "react";
-import { SafeAreaView, StyleSheet, View, ScrollView, Text } from "react-native";
+import { SafeAreaView, StyleSheet, View, ScrollView, Text, StatusBar } from "react-native";
+import { Header } from 'react-native-elements';
 
 import Carousel from '../../components/Carousel/carousel' 
 import HeaderImage from '../../components/countdown/HeaderImage';
@@ -17,14 +18,14 @@ export class HomeScreen extends React.Component {
     const { navigate } = this.props.navigation;
     
     return (
-      <ScrollView>
-        <SafeAreaView style={styles.container}>
-          <HeaderImage />
-          <CountdownView time={60}/>
-          <Announcements />
-          <Carousel />
-        </SafeAreaView>
-      </ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <SafeAreaView style={styles.container}>
+            <HeaderImage />
+            <CountdownView time={60}/>
+            <Announcements />
+            <Carousel />
+          </SafeAreaView>
+        </ScrollView>
     );
   }
 };
@@ -33,8 +34,8 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     width: "100%",
+    marginTop:5,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "darkgray",
   },
 });

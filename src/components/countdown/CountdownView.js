@@ -9,6 +9,7 @@ import CountDown from 'react-native-countdown-component';
 
 const CountdownView = props => {
     return (
+      <View style={styles.shadowsStyling}>
         <View style={styles.container}>
             <Text 
             adjustsFontSizeToFit
@@ -27,17 +28,17 @@ const CountdownView = props => {
                 showSeparator
             />
         </View>
+      </View>
     );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: 180,
-    width: "98%",
+    height: '100%',
+    width: "100%",
     backgroundColor: "#0033A0E0",
-    marginTop: 5,
     justifyContent: "center",
-    borderRadius: 20,
+    borderRadius: 15,
     overflow: "hidden",
     alignItems: "center",
   },
@@ -53,6 +54,18 @@ const styles = StyleSheet.create({
     borderTopColor: "#FFC72C",
     borderTopWidth: 3,
     paddingTop: 5,
+  },
+  shadowsStyling: {
+    width: '95%',
+    height: 180,
+    marginBottom:10,
+    shadowColor: "gray",
+    shadowOpacity: 0.8,
+    shadowRadius: 6,
+    shadowOffset: {
+      height: 0,
+      width: 0,
+    },
   },
 });
 

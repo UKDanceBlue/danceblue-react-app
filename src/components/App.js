@@ -1,6 +1,7 @@
 // Import third-party dependencies
 import { registerRootComponent } from "expo";
 import React from "react";
+import { StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -19,6 +20,8 @@ const Tab = createBottomTabNavigator();
 // Create container for app with navigations
 const App = () => {
   return (
+    <>
+    <StatusBar barStyle={"dark-content"} />
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -57,6 +60,7 @@ const App = () => {
         <Tab.Screen name="More" component={MoreScreen} />
       </Tab.Navigator>
     </NavigationContainer>
+    </>
   );
 };
 
