@@ -27,7 +27,7 @@ export default class Event extends Component {
                     style={styles.eventTitle}
                     adjustsFontSizeToFit
                     numberOfLines={2}
-                  >Buffalo Wild Wings Restaurant Night</Text>
+                  >Jimmy John's     Restaurant Night</Text>
                 </View>
                 <View style={styles.eventDateView}>
                   <Text style={styles.eventDate}>
@@ -40,7 +40,7 @@ export default class Event extends Component {
                     style={styles.eventDetails}
                     adjustsFontSizeToFit
                     numberOfLines={3}
-                >Support the Chaarg DanceBlue Team and earn one spirit point!
+                >Support the Chaarg DanceBlue Team and earn one spirit point! We need 3 lines!
                 </Text>
               </View>
             </View>
@@ -52,11 +52,11 @@ export default class Event extends Component {
             <Button
                 style={styles.button}
                 type='outline'
-                raised={true}
+                raised='true'
                 icon={
                     <Icon
                       name="car"
-                      size={20}
+                      size={15}
                       color="#0033A0"
                     />
                 }
@@ -64,24 +64,12 @@ export default class Event extends Component {
             <Button
                 style={styles.button}
                 type='outline'
-                raised={true}
-                icon={
-                    <Icon
-                      name="map-marker"
-                      size={20}
-                      color="red"
-                    />
-                }
-            />
-            <Button
-                style={styles.button}
-                type='outline'
-                raised={true}
+                raised='true'
                 icon={
                     <Icon
                       name="calendar"
-                      size={20}
-                      color="gold"
+                      size={15}
+                      color="#0033A0"
                     />
                 }
             />
@@ -139,7 +127,7 @@ const styles = StyleSheet.create({
   eventTitleView: {
     flex: 3,
     justifyContent: "center",
-    alignItems:'center',
+    alignItems:'flex-start',
   },
   eventTitle: {
     textAlign: "left",
@@ -175,15 +163,14 @@ const styles = StyleSheet.create({
     alignItems:'center',
   },
   button: {
-    width:100,
+    width:140,
   },
   icon: {
     top: -8,
     right: -5,
     width: 40,
     height: 40,
-    borderRadius: 40 / 2,
-    borderWidth:1,
+    borderRadius: 45 / 2,
     backgroundColor: "gold",
   },
   pointsText: {

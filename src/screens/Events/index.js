@@ -17,6 +17,7 @@ export class EventsScreen extends React.Component {
             <Text style={styles.sectionTitle}> TODAY'S EVENTS </Text>
           </View>
           <Event style={styles.eventRow}/>
+          <Event style={styles.eventRow}/>
           <View style={styles.sectionTitleView}>
             <Text style={styles.sectionTitle}> COMING UP </Text>
           </View>
