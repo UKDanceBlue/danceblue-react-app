@@ -1,7 +1,42 @@
 // Import third-party dependencies
 import React from "react";
-import { Text, View, StyleSheet, ScrollView, SafeAreaView } from "react-native";
+import { Text, View, StyleSheet, ScrollView, SafeAreaView, TouchableHighlight } from "react-native";
 import Event from '../../components/event/Event';
+import EventDetails from '../../components/event/EventDetails';
+import { createStackNavigator } from "@react-navigation/stack";
+
+const Stack = createStackNavigator();
+
+class EventsList extends React.Component {
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.sectionTitleView}>
+            <Text style={styles.sectionTitle}> HAPPENING NOW </Text>
+          </View>
+          <TouchableHighlight
+            onPress={() => navigate("Details")}
+            style={styles.eventRow}
+          >
+            <Event />
+          </TouchableHighlight>
+          <View style={styles.sectionTitleView}>
+            <Text style={styles.sectionTitle}> COMING UP </Text>
+          </View>
+          <TouchableHighlight
+            onPress={() => navigate("Details")}
+            style={styles.eventRow}
+            test={"Bitch"}
+          >
+            <Event test={"Bitch"}/>
+          </TouchableHighlight>
+        </SafeAreaView>
+      </ScrollView>
+    );
+  }
+}
 
 // Component for events screen in main navigation
 export class EventsScreen extends React.Component {
@@ -11,22 +46,10 @@ export class EventsScreen extends React.Component {
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <SafeAreaView style={styles.container}>
-          <View style={styles.sectionTitleView}>
-            <Text style={styles.sectionTitle}> HAPPENING NOW </Text>
-          </View>
-          <View style={styles.eventRow}>
-            <Event />
-          </View>
-          <View style={styles.sectionTitleView}>
-            <Text style={styles.sectionTitle}> COMING UP </Text>
-          </View>
-          <View style={styles.eventRow}>
-            <Event />
-          </View>
-        </SafeAreaView>
-      </ScrollView>
+      <Stack.Navigator>
+        <Stack.Screen name="Events" component={EventsList} />
+        <Stack.Screen name="Details" component={EventDetails} />
+      </Stack.Navigator>
     );
   }
 };
@@ -35,6 +58,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent:'center',
     alignItems:'center',
+    marginTop:5
   },
   sectionTitle: {
     color: "black",
