@@ -1,45 +1,65 @@
 // Import third-party dependencies
 import React from "react";
-import { Text, View } from "react-native";
-import { Input, Button } from "react-native-elements";
+import { View } from "react-native";
+import { Text, Button } from "react-native-elements";
 
-import Icon from "react-native-vector-icons/FontAwesome5";
+import SignUpForm from "../../components/SignUpForm";
+import LoginForm from "../../components/LoginForm";
 
-import { withFirebase } from "../../components/Firebase";
+import { withFirebaseHOC } from "../../../config/Firebase";
 
 // Component for profile screen in main navigation
 class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      loggedIn: false,
+      user: undefined
+    };
+
+    this.handleSignOut = this.handleSignOut.bind(this);
   }
 
-  handleSubmit() {
-    this.props.firebase.doSignInWithEmailAndPassword();
+  componentDidMount() {
+    this.props.firebase.checkAuthUser(user => {
+      if (user) {
+        this.setState({ loggedIn: true, user: user });
+      }
+    });
+  }
+
+  handleSignOut() {
+    this.props.firebase.signOut().then(() => {
+      this.setState({ loggedIn: false, user: undefined });
+    });
   }
 
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Input
-          label="Email"
-          autoCompleteType="email"
-          textContentType="emailAddress"
-          inputContainerStyle={{ bottom: 10 }}
-        />
-        <Input
-          label="Password"
-          autoCompleteType="password"
-          textContentType="password"
-          secureTextEntry={true}
-          inputContainerStyle={{ bottom: 10 }}
-        />
-        <Button title="Login" onPress={this.handleSubmit} />
-      </View>
+      <>
+        {this.state.loggedIn && (
+          <View>
+            <Text>{this.state.user.email}</Text>
+            <Button title="Signout" onPress={this.handleSignOut} type="clear" />
+          </View>
+        )}
+        {!this.state.loggedIn && (
+          <View>
+            <Text h2 style={{ textAlign: "center" }}>
+              Sign Up
+            </Text>
+            <SignUpForm />
+            <Text h2 style={{ textAlign: "center" }}>
+              Login
+            </Text>
+            <LoginForm />
+          </View>
+        )}
+      </>
     );
   }
 }
 
-export default withFirebase(ProfileScreen);
+export default withFirebaseHOC(ProfileScreen);
