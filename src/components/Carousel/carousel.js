@@ -1,7 +1,7 @@
 {/* Carousel implementation for Sponsor showcase */}
 import React from "react";
 import { Text, View, ScrollView, StyleSheet } from "react-native";
-import Card from '../../components/Carousel/card';
+import Card from './card';
 
 // Import all of the sponsor pictures here
 import hyundai from './assets/hyundai.png';
@@ -17,34 +17,34 @@ import ukhousing from './assets/uk-housing.jpg';
 import ukifc from './assets/uk-ifc.png';
 
 const Carousel = props => {
-        return (
-            <View style={styles.shadowsStyling}>
-            <ScrollView ScrollEventThrottle= { 16 }>
-                <View style={styles.sponsorView}>
-                    <View style={styles.sponsorTitleView}>
-                        <Text style={styles.sponsorTitle}>SPONSORS</Text>
-                    </View>
-                    <View style={styles.cardScrollView}>
-                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}
-                        style={{padding:10}}>
-                            <Card imageLink={hyundai} sponsorLink={'https://www.hyundaiusa.com/'}/>
-                            <Card imageLink={aramark} sponsorLink={'https://www.aramark.com/'}/>
-                            <Card imageLink={coke} sponsorLink={'https://us.coca-cola.com/'}/>
-                            <Card imageLink={enterprise} sponsorLink={'https://www.enterprisecarsales.com/'}/>
-                            <Card imageLink={hub} sponsorLink={'https://huboncampus.com/lexington/'}/>
-                            <Card imageLink={jerseymikes} sponsorLink={'https://www.jerseymikes.com/'}/>
-                            <Card imageLink={keeneland} sponsorLink={'https://keeneland.com/'}/>
-                            <Card imageLink={piefive} sponsorLink={'https://www.piefivepizza.com/'}/>
-                            <Card imageLink={ukfcu} sponsorLink={'https://www.ukfcu.org/'}/>
-                            <Card imageLink={ukhousing} sponsorLink={'https://www.uky.edu/housing/'}/>
-                            <Card imageLink={ukifc} sponsorLink={'http://www.kentuckyifc.com/'}/>
-                        </ScrollView>
-                    </View>
-                </View>
+  return (
+    <View style={styles.shadowsStyling}>
+      <ScrollView ScrollEventThrottle= { 16 }>
+        <View style={styles.sponsorView}>
+          <View style={styles.sponsorTitleView}>
+            <Text style={styles.sponsorTitle}>SPONSORS</Text>
+          </View>
+          <View style={styles.cardScrollView}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}
+              style={{padding:10}}>
+              <Card imageLink={hyundai} sponsorLink={'https://www.hyundaiusa.com/'}/>
+              <Card imageLink={aramark} sponsorLink={'https://www.aramark.com/'}/>
+              <Card imageLink={coke} sponsorLink={'https://us.coca-cola.com/'}/>
+              <Card imageLink={enterprise} sponsorLink={'https://www.enterprisecarsales.com/'}/>
+              <Card imageLink={hub} sponsorLink={'https://huboncampus.com/lexington/'}/>
+              <Card imageLink={jerseymikes} sponsorLink={'https://www.jerseymikes.com/'}/>
+              <Card imageLink={keeneland} sponsorLink={'https://keeneland.com/'}/>
+              <Card imageLink={piefive} sponsorLink={'https://www.piefivepizza.com/'}/>
+              <Card imageLink={ukfcu} sponsorLink={'https://www.ukfcu.org/'}/>
+              <Card imageLink={ukhousing} sponsorLink={'https://www.uky.edu/housing/'}/>
+              <Card imageLink={ukifc} sponsorLink={'http://www.kentuckyifc.com/'}/>
             </ScrollView>
-            </View>
-        );
-    };
+          </View>
+        </View>
+      </ScrollView>
+    </View>
+ );
+};
 
 const styles = StyleSheet.create({
   sponsorView: {
