@@ -1,38 +1,48 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
     View,
     StyleSheet,
     Text,
     Image,
+    TouchableHighlight
 } from 'react-native';
 import IconBadge from 'react-native-icon-badge';
 import bdubs from "../../../assets/events/BDubs.jpg";
 
-const Event = (props) => {
-    return (
-        <IconBadge
-            MainElement={
-                <View style={styles.eventBox}>
-                    <View style={styles.eventImage}>
-                        <Image source={bdubs} style={styles.image}/>
-                    </View>
-                    <View style={styles.eventInfo}>
-                        <Text 
-                            adjustsFontSizeToFit
-                            numberOfLines={2}
-                            style={styles.eventTitle}
-                        >Buffalo Wild Wings Restaurant Night</Text>
-                        <Text style={styles.eventDate}>Monday, January 1, 2020</Text>
-                        <Text style={styles.eventDate}>11am-11:30pm</Text>
-                    </View>
-                </View>
-            }
-            BadgeElement={
-                <Text style={styles.pointsText}>99</Text>
-            }
-            IconBadgeStyle={styles.icon}
-        />
-    );
+export default class Event extends Component {
+    constructor(props){
+        super(props)
+    }
+    render(){
+        return (
+            <TouchableHighlight
+                onPress={ ()=>this.props.onPress }
+            >
+                <IconBadge
+                    MainElement={
+                        <View style={styles.eventBox}>
+                            <View style={styles.eventImage}>
+                                <Image source={bdubs} style={styles.image}/>
+                            </View>
+                            <View style={styles.eventInfo}>
+                                <Text 
+                                    adjustsFontSizeToFit
+                                    numberOfLines={2}
+                                    style={styles.eventTitle}
+                                >Buffalo Wild Wings Restaurant Night</Text>
+                                <Text style={styles.eventDate}>Monday, January 1, 2020</Text>
+                                <Text style={styles.eventDate}>11am-11:30pm</Text>
+                            </View>
+                        </View>
+                    }
+                    BadgeElement={
+                        <Text style={styles.pointsText}>99</Text>
+                    }
+                    IconBadgeStyle={styles.icon}
+                />
+            </TouchableHighlight>
+        );
+    }
 };
 
 
@@ -97,5 +107,3 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
     },
 });
-
-export default Event;

@@ -5,11 +5,13 @@ import {
     Text,
     Image,
 } from 'react-native';
-import bdubs from "../../../assets/events/BDubs.jpg";
 
-const EventDetails = (props) => {
+const EventDetails = ({ navigation, route }) => {
+    const { test } = this.route.params;
     return (
-        <Text>{props.test}</Text>
+        <View>
+            <Text>{test}</Text>
+        </View>
     );
 };
 

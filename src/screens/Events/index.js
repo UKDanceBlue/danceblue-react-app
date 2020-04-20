@@ -8,6 +8,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 const Stack = createStackNavigator();
 
 class EventsList extends React.Component {
+  
   render() {
     const { navigate } = this.props.navigation;
     return (
@@ -16,22 +17,23 @@ class EventsList extends React.Component {
           <View style={styles.sectionTitleView}>
             <Text style={styles.sectionTitle}> HAPPENING NOW </Text>
           </View>
-          <TouchableHighlight
-            onPress={() => navigate("Details")}
+          <Event
             style={styles.eventRow}
-          >
-            <Event />
-          </TouchableHighlight>
+            onPress={() => this.navigate('Details', {
+              test: 'anything you want here',
+            })
+          }
+          />
           <View style={styles.sectionTitleView}>
             <Text style={styles.sectionTitle}> COMING UP </Text>
           </View>
-          <TouchableHighlight
-            onPress={() => navigate("Details")}
+          <Event
             style={styles.eventRow}
-            test={"Bitch"}
-          >
-            <Event test={"Bitch"}/>
-          </TouchableHighlight>
+            onPress={() => navigate('Details', {
+              test: 'anything you want here',
+            })
+          }
+          />
         </SafeAreaView>
       </ScrollView>
     );
