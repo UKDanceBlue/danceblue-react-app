@@ -1,44 +1,8 @@
 // Import third-party dependencies
 import React from "react";
-import { Text, View, StyleSheet, ScrollView, SafeAreaView, TouchableHighlight } from "react-native";
+import { Text, View, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import Event from '../../components/event/Event';
-import EventDetails from '../../components/event/EventDetails';
-import { createStackNavigator } from "@react-navigation/stack";
 
-const Stack = createStackNavigator();
-
-class EventsList extends React.Component {
-  
-  render() {
-    const { navigate } = this.props.navigation;
-    return (
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <SafeAreaView style={styles.container}>
-          <View style={styles.sectionTitleView}>
-            <Text style={styles.sectionTitle}> HAPPENING NOW </Text>
-          </View>
-          <Event
-            style={styles.eventRow}
-            onPress={() => this.navigate('Details', {
-              test: 'anything you want here',
-            })
-          }
-          />
-          <View style={styles.sectionTitleView}>
-            <Text style={styles.sectionTitle}> COMING UP </Text>
-          </View>
-          <Event
-            style={styles.eventRow}
-            onPress={() => navigate('Details', {
-              test: 'anything you want here',
-            })
-          }
-          />
-        </SafeAreaView>
-      </ScrollView>
-    );
-  }
-}
 
 // Component for events screen in main navigation
 export class EventsScreen extends React.Component {
@@ -46,12 +10,20 @@ export class EventsScreen extends React.Component {
     title: "Events"
   };
   render() {
-    const { navigate } = this.props.navigation;
     return (
-      <Stack.Navigator>
-        <Stack.Screen name="Events" component={EventsList} />
-        <Stack.Screen name="Details" component={EventDetails} />
-      </Stack.Navigator>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.sectionTitleView}>
+            <Text style={styles.sectionTitle}> TODAY'S EVENTS </Text>
+          </View>
+          <Event style={styles.eventRow}/>
+          <Event style={styles.eventRow}/>
+          <View style={styles.sectionTitleView}>
+            <Text style={styles.sectionTitle}> COMING UP </Text>
+          </View>
+          <Event style={styles.eventRow}/>
+        </SafeAreaView>
+      </ScrollView>
     );
   }
 };
