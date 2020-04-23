@@ -1,65 +1,45 @@
 // Import third-party dependencies
 import React from "react";
-import { View } from "react-native";
-import { Text, Button } from "react-native-elements";
+import { Text, View } from "react-native";
+import { Input, Button } from "react-native-elements";
 
-import SignUpForm from "../../components/SignUpForm";
-import LoginForm from "../../components/LoginForm";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
-import { withFirebaseHOC } from "../../../config/Firebase";
+import { withFirebase } from "../../components/Firebase";
 
 // Component for profile screen in main navigation
 class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      loggedIn: false,
-      user: undefined
-    };
-
-    this.handleSignOut = this.handleSignOut.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
-    this.props.firebase.checkAuthUser(user => {
-      if (user) {
-        this.setState({ loggedIn: true, user: user });
-      }
-    });
-  }
-
-  handleSignOut() {
-    this.props.firebase.signOut().then(() => {
-      this.setState({ loggedIn: false, user: undefined });
-    });
+  handleSubmit() {
+    this.props.firebase.doSignInWithEmailAndPassword();
   }
 
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <>
-        {this.state.loggedIn && (
-          <View>
-            <Text>{this.state.user.email}</Text>
-            <Button title="Signout" onPress={this.handleSignOut} type="clear" />
-          </View>
-        )}
-        {!this.state.loggedIn && (
-          <View>
-            <Text h2 style={{ textAlign: "center" }}>
-              Sign Up
-            </Text>
-            <SignUpForm />
-            <Text h2 style={{ textAlign: "center" }}>
-              Login
-            </Text>
-            <LoginForm />
-          </View>
-        )}
-      </>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Input
+          label="Email"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          inputContainerStyle={{ bottom: 10 }}
+        />
+        <Input
+          label="Password"
+          autoCompleteType="password"
+          textContentType="password"
+          secureTextEntry={true}
+          inputContainerStyle={{ bottom: 10 }}
+        />
+        <Button title="Login" onPress={this.handleSubmit} />
+      </View>
     );
   }
 }
 
-export default withFirebaseHOC(ProfileScreen);
+export default withFirebase(ProfileScreen);

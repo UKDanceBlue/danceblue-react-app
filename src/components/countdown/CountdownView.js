@@ -1,70 +1,72 @@
-import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React from 'react';
+import {
+    View,
+    StyleSheet,
+    Text,
+} from 'react-native';
 
-import CountDown from "react-native-countdown-component";
+import CountDown from 'react-native-countdown-component';
 
 const CountdownView = props => {
-  return (
-    <View style={styles.shadowsStyling}>
-      <View style={styles.container}>
-        <Text
-          adjustsFontSizeToFit
-          numberOfLines={1}
-          style={styles.countodwnTitle}
-        >
-          DanceBlue 5K 🏃🏼‍♂
-        </Text>
-        <CountDown
-          style={styles.countdownStyle}
-          size={30}
-          until={props.time}
-          digitStyle={{ backgroundColor: "rgba(255,255,255,0.5)" }}
-          digitTxtStyle={{ color: "white" }}
-          timeLabelStyle={{ color: "white", fontWeight: "bold" }}
-          separatorStyle={{ color: "#FFC72C" }}
-          timeToShow={["D", "H", "M", "S"]}
-          showSeparator
-        />
+    return (
+      <View style={styles.shadowsStyling}>
+        <View style={styles.container}>
+            <Text 
+            adjustsFontSizeToFit
+            numberOfLines={1}
+            style={styles.countodwnTitle}
+            >DanceBlue 5K 🏃🏼‍♂</Text>
+            <CountDown
+                style={styles.countdownStyle}
+                size={30}
+                until={props.time}
+                digitStyle={{backgroundColor: 'rgba(255,255,255,0.5)'}}
+                digitTxtStyle={{color: 'white'}}
+                timeLabelStyle={{color: 'white', fontWeight: 'bold'}}
+                separatorStyle={{color: '#FFC72C'}}
+                timeToShow={['D', 'H', 'M', 'S']}
+                showSeparator
+            />
+        </View>
       </View>
-    </View>
-  );
+    );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
+    height: '100%',
     width: "100%",
     backgroundColor: "#0033A0E0",
     justifyContent: "center",
     borderRadius: 15,
     overflow: "hidden",
-    alignItems: "center"
+    alignItems: "center",
   },
   countodwnTitle: {
     fontSize: 34,
-    fontWeight: "bold",
+    fontWeight:'bold',
     color: "white",
     alignSelf: "center",
-    paddingBottom: 5
+    paddingBottom: 5,
   },
   countdownStyle: {
     width: "90%",
     borderTopColor: "#FFC72C",
     borderTopWidth: 3,
-    paddingTop: 5
+    paddingTop: 5,
   },
   shadowsStyling: {
-    width: "95%",
+    width: '95%',
     height: 180,
-    marginBottom: 10,
+    marginBottom:10,
     shadowColor: "gray",
     shadowOpacity: 0.8,
     shadowRadius: 6,
     shadowOffset: {
       height: 0,
-      width: 0
-    }
-  }
+      width: 0,
+    },
+  },
 });
 
 export default CountdownView;
