@@ -11,6 +11,7 @@ class CountdownView extends React.Component {
 
     this.state = {
       title: this.props.title || "",
+      finishMessage: "",
       date: 0,
       id: "0",
       months: 0,
@@ -29,7 +30,8 @@ class CountdownView extends React.Component {
         let countdown = doc.data();
         this.setState({
           title: countdown.title,
-          date: moment.duration(moment(countdown.time.toDate()).diff(moment()))
+          date: moment.duration(moment(countdown.time.toDate()).diff(moment())),
+          finishMessage: countdown.finishMessage
         });
         this.updateTimer();
       });
@@ -74,9 +76,19 @@ class CountdownView extends React.Component {
           >
             {this.state.title}
           </Text>
-          <Text
-            style={{ fontWeight: "bold", fontSize: 45, color: "white" }}
-          >{`${months} : ${days} : ${hours} : ${mins} : ${secs}`}</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 45, color: "white" }}>
+            {months != 0 && `${months} : `}
+            {days != 0 && `${days} : `}
+            {hours != 0 && `${hours} : `}
+            {mins != 0 && `${mins} : `}
+            {secs != 0 && `${secs}`}
+            {months == 0 &&
+              days == 0 &&
+              hours == 0 &&
+              mins == 0 &&
+              secs == 0 &&
+              `${this.state.finishMessage}`}
+          </Text>
         </View>
       </View>
     );
