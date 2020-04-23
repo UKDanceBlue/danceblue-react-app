@@ -1,38 +1,60 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 
-const Announcements = props => {
+import { withFirebaseHOC } from "../../../config/Firebase";
+
+const BulletPoint = props => {
   return (
-    <View style={styles.shadowsStyling}>
-      <View style={styles.announcementView}>
-        <View style={styles.announcementTitleView}>
-          <Text style={styles.announcementTitle}> ANNOUNCEMENTS </Text>
-        </View>
-        <View style={styles.announcementRow}>
-          <View style={styles.bulletView}>
-            <Text style={styles.bulletStyle}>{"\u2022" + " "}</Text>
-          </View>
-          <View style={styles.bulletTextView}>
-            <Text style={styles.announcementText}>
-              This is the announcement. It is very long and pointless to do
-              something this long.
-            </Text>
-          </View>
-        </View>
-        <View style={styles.announcementRow}>
-          <View style={styles.bulletView}>
-            <Text style={styles.bulletStyle}>{"\u2022" + " "}</Text>
-          </View>
-          <View style={styles.bulletTextView}>
-            <Text style={styles.announcementText}>
-              DanceBlue has raised over $15 Million FTK!
-            </Text>
-          </View>
-        </View>
+    <View style={styles.announcementRow}>
+      <View style={styles.bulletView}>
+        <Text style={styles.bulletStyle}>{"\u2022" + " "}</Text>
+      </View>
+      <View style={styles.bulletTextView}>
+        <Text style={styles.announcementText}>{props.body}</Text>
       </View>
     </View>
   );
 };
+
+class Announcements extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      announcements: [],
+      isLoading: true
+    };
+  }
+
+  componentDidMount() {
+    let announcements = [];
+    this.props.firebase.getAnnouncements().then(snapshot => {
+      snapshot.forEach(doc =>
+        announcements.push({ id: doc.id, ...doc.data() })
+      );
+      this.setState({ announcements: announcements, isLoading: false });
+    });
+  }
+
+  render() {
+    let bullets = this.state.announcements.map(announcement => (
+      <BulletPoint body={announcement.body} />
+    ));
+    return (
+      <View style={styles.shadowsStyling}>
+        <View style={styles.announcementView}>
+          <View style={styles.announcementTitleView}>
+            <Text style={styles.announcementTitle}> ANNOUNCEMENTS </Text>
+          </View>
+          {this.state.isLoading && (
+            <ActivityIndicator size="large" color="blue" />
+          )}
+          {!this.state.isLoading && bullets}
+        </View>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   announcementView: {
@@ -91,4 +113,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Announcements;
+export default withFirebaseHOC(Announcements);

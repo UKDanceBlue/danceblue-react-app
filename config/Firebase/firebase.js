@@ -46,6 +46,12 @@ const Firebase = {
       .where("active", "==", true)
       .get();
   },
+  getAnnouncements: () => {
+    return firebase
+      .firestore()
+      .collection("announcements")
+      .get();
+  },
   // cloud storage
   getDocumentRef: path => {
     return firebase.storage().ref(path);
