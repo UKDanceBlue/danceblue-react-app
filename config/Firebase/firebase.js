@@ -32,6 +32,13 @@ const Firebase = {
       .collection("users")
       .doc(`${userData.uid}`)
       .set(userData);
+  },
+
+  getTeams: () => {
+    return firebase
+      .firestore()
+      .collection("teams")
+      .get();
   }
 };
 

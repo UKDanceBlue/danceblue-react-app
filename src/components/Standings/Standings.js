@@ -3,6 +3,8 @@ import React from "react";
 import { Text, View, StyleSheet, TouchableHighlight } from "react-native";
 import Place from "./place";
 
+import { withFirebaseHOC } from "../../../config/Firebase";
+
 const styles = StyleSheet.create({
   ListView: {
     paddingLeft: 5,
@@ -76,22 +78,29 @@ class Standings extends React.Component {
     };
   }
 
-  componentDidMount() { 
-    // SortedTeams is an array that sorts the teams' points in descending order
-    const sortedTeams = [].concat(Teams).sort((a, b) => a.points < b.points);
-    this.setState({ allTeams: sortedTeams });
+  componentDidMount() {
+    let teams = [];
+    this.props.firebase.getTeams().then(snapshot => {
+      snapshot.forEach(doc => {
+        teams.push(doc.data());
+      });
+      // SortedTeams is an array that sorts the teams' points in descending order
+      const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points);
+      this.setState({ allTeams: sortedTeams });
+    });
   }
 
   render() {
     //   places renders the Place object for each team in the correct order
     let places = this.state.allTeams
       .slice(0, this.state.shownNumber)
-      .map((item, index) => (
+      .map((team, index) => (
         <Place
           rank={index + 1}
-          teamName={item.teamName}
-          teamNumber={item.teamNumber}
-          points={item.points}
+          teamName={team.name}
+          teamNumber={team.number}
+          points={team.points}
+          key={team.id}
         />
       ));
 
@@ -115,9 +124,10 @@ class Standings extends React.Component {
             style={styles.more}
           >
             <Text>
-                {/* Shows the appropriate message when the leaderboard is collapsed/extended */}
-                {this.state.shownNumber == this.state.topNumber
-                    ? 'Show more...' : 'Show less...'}
+              {/* Shows the appropriate message when the leaderboard is collapsed/extended */}
+              {this.state.shownNumber == this.state.topNumber
+                ? "Show more..."
+                : "Show less..."}
             </Text>
           </TouchableHighlight>
         </View>
@@ -126,4 +136,4 @@ class Standings extends React.Component {
   }
 }
 
-export default Standings;
+export default withFirebaseHOC(Standings);
