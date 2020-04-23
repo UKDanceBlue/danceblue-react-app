@@ -5,6 +5,17 @@ import moment from "moment";
 
 import { withFirebaseHOC } from "../../../config/Firebase";
 
+const TimeUnit = props => {
+  return (
+    <View style={{ alignItems: "center", paddingLeft: 7, paddingRight: 7 }}>
+      <Text style={{ fontWeight: "bold", fontSize: 45, color: "white" }}>
+        {props.value}
+      </Text>
+      <Text style={{ fontSize: 20, color: "white" }}>{props.label}</Text>
+    </View>
+  );
+};
+
 class CountdownView extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +42,7 @@ class CountdownView extends React.Component {
         this.setState({
           title: countdown.title,
           date: moment.duration(moment(countdown.time.toDate()).diff(moment())),
-          finishMessage: countdown.finishMessage
+          finishMessage: countdown.finishMessage || ""
         });
         this.updateTimer();
       });
@@ -76,12 +87,92 @@ class CountdownView extends React.Component {
           >
             {this.state.title}
           </Text>
-          <Text style={{ fontWeight: "bold", fontSize: 45, color: "white" }}>
-            {months != 0 && `${months} : `}
-            {days != 0 && `${days} : `}
-            {hours != 0 && `${hours} : `}
-            {mins != 0 && `${mins} : `}
-            {secs != 0 && `${secs}`}
+          <View style={{ flexDirection: "row" }}>
+            {months != 0 && (
+              <>
+                <TimeUnit
+                  label={months == 1 ? "month" : "months"}
+                  value={months}
+                />
+
+                <Text
+                  style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
+                >
+                  :
+                </Text>
+              </>
+            )}
+            {(days != 0 && (
+              <>
+                <TimeUnit label={days == 1 ? "day" : "days"} value={days} />
+                <Text
+                  style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
+                >
+                  :
+                </Text>
+              </>
+            )) ||
+              (months != 0 && (
+                <>
+                  <TimeUnit label={days == 1 ? "day" : "days"} value={days} />
+                  <Text
+                    style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
+                  >
+                    :
+                  </Text>
+                </>
+              ))}
+            {(hours != 0 && (
+              <>
+                <TimeUnit label={hours == 1 ? "hour" : "hours"} value={hours} />
+                <Text
+                  style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
+                >
+                  :
+                </Text>
+              </>
+            )) ||
+              (days != 0 && months != 0 && (
+                <>
+                  <TimeUnit
+                    label={hours == 1 ? "hour" : "hours"}
+                    value={hours}
+                  />
+                  <Text
+                    style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
+                  >
+                    :
+                  </Text>
+                </>
+              ))}
+            {(mins != 0 && (
+              <>
+                <TimeUnit label={mins == 1 ? "min" : "mins"} value={mins} />
+                <Text
+                  style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
+                >
+                  :
+                </Text>
+              </>
+            )) ||
+              (hours != 0 && days != 0 && months != 0 && (
+                <>
+                  <TimeUnit label={mins == 1 ? "min" : "mins"} value={mins} />
+                  <Text
+                    style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
+                  >
+                    :
+                  </Text>
+                </>
+              ))}
+            {(secs != 0 && (
+              <TimeUnit label={secs == 1 ? "sec" : "secs"} value={secs} />
+            )) ||
+              (mins != 0 && hours != 0 && days != 0 && months != 0 && (
+                <TimeUnit label={secs == 1 ? "sec" : "secs"} value={secs} />
+              ))}
+          </View>
+          <Text style={{ fontWeight: "bold", fontSize: 40, color: "white" }}>
             {months == 0 &&
               days == 0 &&
               hours == 0 &&
@@ -109,7 +200,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     alignSelf: "center",
-    paddingBottom: 5
+    paddingBottom: 5,
+    paddingTop: 50
   },
   countdownStyle: {
     width: "90%",
