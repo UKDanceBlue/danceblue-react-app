@@ -3,28 +3,25 @@ import React from "react";
 import { Text, View, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import Event from '../../components/event/Event';
 
+
 // Component for events screen in main navigation
 export class EventsScreen extends React.Component {
   static navigationOptions = {
     title: "Events"
   };
   render() {
-    const { navigate } = this.props.navigation;
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <SafeAreaView style={styles.container}>
           <View style={styles.sectionTitleView}>
-            <Text style={styles.sectionTitle}> HAPPENING NOW </Text>
+            <Text style={styles.sectionTitle}> TODAY'S EVENTS </Text>
           </View>
-          <View style={styles.eventRow}>
-            <Event />
-          </View>
+          <Event style={styles.eventRow}/>
+          <Event style={styles.eventRow}/>
           <View style={styles.sectionTitleView}>
             <Text style={styles.sectionTitle}> COMING UP </Text>
           </View>
-          <View style={styles.eventRow}>
-            <Event />
-          </View>
+          <Event style={styles.eventRow}/>
         </SafeAreaView>
       </ScrollView>
     );
@@ -35,6 +32,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent:'center',
     alignItems:'center',
+    marginTop:5
   },
   sectionTitle: {
     color: "black",
