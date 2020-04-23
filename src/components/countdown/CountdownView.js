@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 
 import moment from "moment";
 
@@ -29,7 +29,8 @@ class CountdownView extends React.Component {
       days: 0,
       hours: 0,
       mins: 0,
-      secs: 0
+      secs: 0,
+      isLoading: true
     };
 
     this.updateTimer = this.updateTimer.bind(this);
@@ -42,7 +43,8 @@ class CountdownView extends React.Component {
         this.setState({
           title: countdown.title,
           date: moment.duration(moment(countdown.time.toDate()).diff(moment())),
-          finishMessage: countdown.finishMessage || ""
+          finishMessage: countdown.finishMessage || "",
+          isLoading: false
         });
         this.updateTimer();
       });
@@ -80,106 +82,152 @@ class CountdownView extends React.Component {
     return (
       <View style={styles.shadowsStyling}>
         <View style={styles.container}>
-          <Text
-            adjustsFontSizeToFit
-            numberOfLines={1}
-            style={styles.countodwnTitle}
-          >
-            {this.state.title}
-          </Text>
-          <View style={{ flexDirection: "row" }}>
-            {months != 0 && (
-              <>
-                <TimeUnit
-                  label={months == 1 ? "month" : "months"}
-                  value={months}
-                />
+          {this.state.isLoading && (
+            <ActivityIndicator color="white" size="large" />
+          )}
+          {!this.state.isLoading && (
+            <>
+              <Text
+                adjustsFontSizeToFit
+                numberOfLines={1}
+                style={styles.countodwnTitle}
+              >
+                {this.state.title}
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                {months != 0 && (
+                  <>
+                    <TimeUnit
+                      label={months == 1 ? "month" : "months"}
+                      value={months}
+                    />
 
-                <Text
-                  style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
-                >
-                  :
-                </Text>
-              </>
-            )}
-            {(days != 0 && (
-              <>
-                <TimeUnit label={days == 1 ? "day" : "days"} value={days} />
-                <Text
-                  style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
-                >
-                  :
-                </Text>
-              </>
-            )) ||
-              (months != 0 && (
-                <>
-                  <TimeUnit label={days == 1 ? "day" : "days"} value={days} />
-                  <Text
-                    style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
-                  >
-                    :
-                  </Text>
-                </>
-              ))}
-            {(hours != 0 && (
-              <>
-                <TimeUnit label={hours == 1 ? "hour" : "hours"} value={hours} />
-                <Text
-                  style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
-                >
-                  :
-                </Text>
-              </>
-            )) ||
-              (days != 0 && months != 0 && (
-                <>
-                  <TimeUnit
-                    label={hours == 1 ? "hour" : "hours"}
-                    value={hours}
-                  />
-                  <Text
-                    style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
-                  >
-                    :
-                  </Text>
-                </>
-              ))}
-            {(mins != 0 && (
-              <>
-                <TimeUnit label={mins == 1 ? "min" : "mins"} value={mins} />
-                <Text
-                  style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
-                >
-                  :
-                </Text>
-              </>
-            )) ||
-              (hours != 0 && days != 0 && months != 0 && (
-                <>
-                  <TimeUnit label={mins == 1 ? "min" : "mins"} value={mins} />
-                  <Text
-                    style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
-                  >
-                    :
-                  </Text>
-                </>
-              ))}
-            {(secs != 0 && (
-              <TimeUnit label={secs == 1 ? "sec" : "secs"} value={secs} />
-            )) ||
-              (mins != 0 && hours != 0 && days != 0 && months != 0 && (
-                <TimeUnit label={secs == 1 ? "sec" : "secs"} value={secs} />
-              ))}
-          </View>
-          <Text style={{ fontWeight: "bold", fontSize: 40, color: "white" }}>
-            {months == 0 &&
-              days == 0 &&
-              hours == 0 &&
-              mins == 0 &&
-              secs == 0 &&
-              `${this.state.finishMessage}`}
-          </Text>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 40,
+                        color: "white"
+                      }}
+                    >
+                      :
+                    </Text>
+                  </>
+                )}
+                {(days != 0 && (
+                  <>
+                    <TimeUnit label={days == 1 ? "day" : "days"} value={days} />
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 40,
+                        color: "white"
+                      }}
+                    >
+                      :
+                    </Text>
+                  </>
+                )) ||
+                  (months != 0 && (
+                    <>
+                      <TimeUnit
+                        label={days == 1 ? "day" : "days"}
+                        value={days}
+                      />
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: 40,
+                          color: "white"
+                        }}
+                      >
+                        :
+                      </Text>
+                    </>
+                  ))}
+                {(hours != 0 && (
+                  <>
+                    <TimeUnit
+                      label={hours == 1 ? "hour" : "hours"}
+                      value={hours}
+                    />
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 40,
+                        color: "white"
+                      }}
+                    >
+                      :
+                    </Text>
+                  </>
+                )) ||
+                  (days != 0 && months != 0 && (
+                    <>
+                      <TimeUnit
+                        label={hours == 1 ? "hour" : "hours"}
+                        value={hours}
+                      />
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: 40,
+                          color: "white"
+                        }}
+                      >
+                        :
+                      </Text>
+                    </>
+                  ))}
+                {(mins != 0 && (
+                  <>
+                    <TimeUnit label={mins == 1 ? "min" : "mins"} value={mins} />
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 40,
+                        color: "white"
+                      }}
+                    >
+                      :
+                    </Text>
+                  </>
+                )) ||
+                  (hours != 0 && days != 0 && months != 0 && (
+                    <>
+                      <TimeUnit
+                        label={mins == 1 ? "min" : "mins"}
+                        value={mins}
+                      />
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: 40,
+                          color: "white"
+                        }}
+                      >
+                        :
+                      </Text>
+                    </>
+                  ))}
+                {(secs != 0 && (
+                  <TimeUnit label={secs == 1 ? "sec" : "secs"} value={secs} />
+                )) ||
+                  (mins != 0 && hours != 0 && days != 0 && months != 0 && (
+                    <TimeUnit label={secs == 1 ? "sec" : "secs"} value={secs} />
+                  ))}
+              </View>
+              <Text
+                style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
+              >
+                {months == 0 &&
+                  days == 0 &&
+                  hours == 0 &&
+                  mins == 0 &&
+                  secs == 0 &&
+                  `${this.state.finishMessage}`}
+              </Text>
+            </>
+          )}
         </View>
       </View>
     );
