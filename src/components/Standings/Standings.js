@@ -40,33 +40,6 @@ const styles = StyleSheet.create({
   }
 });
 
-const Teams = [
-  { teamNumber: "Team 1", teamName: "A", points: 2 },
-  { teamNumber: "Team 2", teamName: "B", points: 4 },
-  { teamNumber: "Team 3", teamName: "C", points: 1 },
-  { teamNumber: "Team 4", teamName: "D", points: 8 },
-  { teamNumber: "Team 5", teamName: "E", points: 1 },
-  { teamNumber: "Team 6", teamName: "F", points: 1 },
-  { teamNumber: "Team 7", teamName: "G", points: 1 },
-  { teamNumber: "Team 8", teamName: "H", points: 15 },
-  { teamNumber: "Team 9", teamName: "I", points: 10 },
-  { teamNumber: "Team 10", teamName: "J", points: 1 },
-  { teamNumber: "Team 11", teamName: "K", points: 1 },
-  { teamNumber: "Team 12", teamName: "L", points: 22 },
-  { teamNumber: "Team 13", teamName: "M", points: 1 },
-  { teamNumber: "Team 14", teamName: "N", points: 7 },
-  { teamNumber: "Team 15", teamName: "O", points: 1 },
-  { teamNumber: "Team 16", teamName: "P", points: 43 },
-  { teamNumber: "Team 17", teamName: "Q", points: 1 },
-  { teamNumber: "Team 18", teamName: "R", points: 1 },
-  { teamNumber: "Team 19", teamName: "S", points: 99 },
-  { teamNumber: "Team 20", teamName: "T", points: 50 },
-  { teamNumber: "Team 21", teamName: "U", points: 1 },
-  { teamNumber: "Team 22", teamName: "V", points: 1 },
-  { teamNumber: "Team 23", teamName: "W", points: 3 },
-  { teamNumber: "Team 24", teamName: "X", points: 20 }
-];
-
 class Standings extends React.Component {
   constructor(props) {
     super(props);
@@ -82,7 +55,7 @@ class Standings extends React.Component {
     let teams = [];
     this.props.firebase.getTeams().then(snapshot => {
       snapshot.forEach(doc => {
-        teams.push(doc.data());
+        teams.push({ id: doc.id, ...doc.data() });
       });
       // SortedTeams is an array that sorts the teams' points in descending order
       const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points);
