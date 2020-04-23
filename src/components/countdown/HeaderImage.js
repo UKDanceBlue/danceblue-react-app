@@ -17,11 +17,10 @@ const HeaderImage = props => {
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
+    height: "100%",
     width: "100%",
     justifyContent: "center",
     alignSelf: "center",
-    borderRadius: 15,
     overflow: "hidden"
   },
   background: {
@@ -31,24 +30,23 @@ const styles = StyleSheet.create({
     resizeMode: "contain"
   },
   logo: {
-    flex:1,
-    height:null,
-    width:null,
-    resizeMode:'contain',
-    backgroundColor:'#FFFFFF99'
+    flex: 1,
+    height: null,
+    width: null,
+    resizeMode: "contain",
+    backgroundColor: "#FFFFFF99"
   },
   shadowsStyling: {
-    width: '95%',
+    width: "100%",
     height: 280,
-    marginBottom:10,
     shadowColor: "gray",
     shadowOpacity: 0.5,
     shadowRadius: 6,
     shadowOffset: {
       height: 0,
-      width: 0,
-    },
-  },
+      width: 0
+    }
+  }
 });
 
 export default HeaderImage;

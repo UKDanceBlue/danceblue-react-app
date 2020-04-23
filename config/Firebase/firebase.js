@@ -39,6 +39,13 @@ const Firebase = {
       .collection("sponsors")
       .get();
   },
+  getActiveCountdown: () => {
+    return firebase
+      .firestore()
+      .collection("countdowns")
+      .where("active", "==", true)
+      .get();
+  },
   // cloud storage
   getDocumentRef: path => {
     return firebase.storage().ref(path);

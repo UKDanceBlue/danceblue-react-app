@@ -1,7 +1,7 @@
 // Import third-party dependencies
 import { registerRootComponent } from "expo";
 import React from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, YellowBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -26,6 +26,11 @@ if (!global.atob) {
   global.atob = decode;
 }
 
+YellowBox.ignoreWarnings([
+  "Setting a timer",
+  "source.uri should not be an empty string"
+]);
+
 // Bottom tab navigator config
 const Tab = createBottomTabNavigator();
 
@@ -33,7 +38,7 @@ const Tab = createBottomTabNavigator();
 const App = () => {
   return (
     <FirebaseProvider value={Firebase}>
-      <StatusBar barStyle={"dark-content"} />
+      <StatusBar barStyle={"default"} />
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={({ route }) => ({
