@@ -1,6 +1,12 @@
 // Standings implementation for the Morale Cup leaderboard
 import React from "react";
-import { Text, View, StyleSheet, TouchableHighlight } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableHighlight,
+  ActivityIndicator
+} from "react-native";
 import Place from "./place";
 
 import { withFirebaseHOC } from "../../../config/Firebase";
@@ -47,7 +53,8 @@ class Standings extends React.Component {
     this.state = {
       allTeams: [],
       shownNumber: this.props.shownNumber | 3,
-      topNumber: this.props.topNumber | 3
+      topNumber: this.props.topNumber | 3,
+      isLoading: true
     };
   }
 
@@ -59,7 +66,7 @@ class Standings extends React.Component {
       });
       // SortedTeams is an array that sorts the teams' points in descending order
       const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points);
-      this.setState({ allTeams: sortedTeams });
+      this.setState({ allTeams: sortedTeams, isLoading: false });
     });
   }
 
@@ -81,29 +88,44 @@ class Standings extends React.Component {
       <View style={styles.shadowsStyling}>
         <View style={styles.ListView}>
           <Text style={styles.ListTitle}>MORALE CUP STANDINGS</Text>
-          {/* Renders the top 3 teams from the 'places' variable */}
-          {places}
-          {/* Renders the 'show more/less' button and toggles the extended/collapsed leaderboard */}
-          <TouchableHighlight
-            onPress={() => {
-              this.setState({
-                shownNumber:
-                  this.state.shownNumber == this.state.topNumber
-                    ? this.state.allTeams.length
-                    : this.state.topNumber
-              });
-            }}
-            underlayColor="#dddddd"
-            style={styles.more}
-          >
-            <Text>
-              {/* Shows the appropriate message when the leaderboard is collapsed/extended */}
-              {this.state.shownNumber == this.state.topNumber
-                ? "Show more..."
-                : "Show less..."}
-            </Text>
-          </TouchableHighlight>
+          {!this.state.isLoading && (
+            <>
+              {/* Renders the top 3 teams from the 'places' variable */}
+              {places}
+              {/* Renders the 'show more/less' button and toggles the extended/collapsed leaderboard */}
+              <TouchableHighlight
+                onPress={() => {
+                  this.setState({
+                    shownNumber:
+                      this.state.shownNumber == this.state.topNumber
+                        ? this.state.allTeams.length
+                        : this.state.topNumber
+                  });
+                }}
+                underlayColor="#dddddd"
+                style={styles.more}
+              >
+                <Text>
+                  {/* Shows the appropriate message when the leaderboard is collapsed/extended */}
+                  {this.state.shownNumber == this.state.topNumber
+                    ? "Show more..."
+                    : "Show less..."}
+                </Text>
+              </TouchableHighlight>
+            </>
+          )}
         </View>
+        {this.state.isLoading && (
+          <ActivityIndicator
+            size="large"
+            color="blue"
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 20
+            }}
+          />
+        )}
       </View>
     );
   }

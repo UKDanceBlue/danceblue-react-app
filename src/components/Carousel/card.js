@@ -1,6 +1,13 @@
 import React from "react";
-import { View, Image, TouchableHighlight, StyleSheet } from "react-native";
+import {
+  View,
+  TouchableHighlight,
+  StyleSheet,
+  ActivityIndicator,
+  Image
+} from "react-native";
 import * as WebBrowser from "expo-web-browser";
+import { Text } from "react-native-elements";
 
 import { withFirebaseHOC } from "../../../config/Firebase";
 
@@ -9,17 +16,18 @@ class Card extends React.Component {
     super(props);
 
     this.state = {
-      imageRef: ""
+      imageRef: "",
+      isLoading: true
     };
   }
 
   componentDidMount() {
     this.props.firebase
-      .getDocumentRef(this.props.imageLink)
-      .getDownloadURL()
+      .getDocumentURL(this.props.imageLink)
       .then(url => {
-        this.setState({ imageRef: url });
-      });
+        this.setState({ imageRef: url, isLoading: false });
+      })
+      .catch(error => console.log(error.message));
   }
 
   render() {
@@ -29,7 +37,12 @@ class Card extends React.Component {
         underlayColor="#dddddd"
       >
         <View style={styles.border}>
-          <Image source={{ uri: this.state.imageRef }} style={styles.image} />
+          {this.state.isLoading && (
+            <ActivityIndicator style={styles.image} size="large" color="blue" />
+          )}
+          {!this.state.isLoading && (
+            <Image source={{ uri: this.state.imageRef }} style={styles.image} />
+          )}
         </View>
       </TouchableHighlight>
     );

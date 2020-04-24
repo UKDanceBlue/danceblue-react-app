@@ -30,7 +30,8 @@ class CountdownView extends React.Component {
       hours: 0,
       mins: 0,
       secs: 0,
-      isLoading: true
+      isLoading: true,
+      timerSetup: true
     };
 
     this.updateTimer = this.updateTimer.bind(this);
@@ -71,7 +72,8 @@ class CountdownView extends React.Component {
           hours,
           mins,
           secs,
-          date
+          date,
+          timerSetup: false
         });
       }
     }, 1000);
@@ -94,40 +96,30 @@ class CountdownView extends React.Component {
               >
                 {this.state.title}
               </Text>
-              <View style={{ flexDirection: "row" }}>
-                {months != 0 && (
-                  <>
-                    <TimeUnit
-                      label={months == 1 ? "month" : "months"}
-                      value={months}
-                    />
+              {this.state.timerSetup && (
+                <ActivityIndicator color="white" size="large" />
+              )}
+              {!this.state.timerSetup && (
+                <View style={{ flexDirection: "row" }}>
+                  {months != 0 && (
+                    <>
+                      <TimeUnit
+                        label={months == 1 ? "month" : "months"}
+                        value={months}
+                      />
 
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        fontSize: 40,
-                        color: "white"
-                      }}
-                    >
-                      :
-                    </Text>
-                  </>
-                )}
-                {(days != 0 && (
-                  <>
-                    <TimeUnit label={days == 1 ? "day" : "days"} value={days} />
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        fontSize: 40,
-                        color: "white"
-                      }}
-                    >
-                      :
-                    </Text>
-                  </>
-                )) ||
-                  (months != 0 && (
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: 40,
+                          color: "white"
+                        }}
+                      >
+                        :
+                      </Text>
+                    </>
+                  )}
+                  {(days != 0 && (
                     <>
                       <TimeUnit
                         label={days == 1 ? "day" : "days"}
@@ -143,25 +135,25 @@ class CountdownView extends React.Component {
                         :
                       </Text>
                     </>
-                  ))}
-                {(hours != 0 && (
-                  <>
-                    <TimeUnit
-                      label={hours == 1 ? "hour" : "hours"}
-                      value={hours}
-                    />
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        fontSize: 40,
-                        color: "white"
-                      }}
-                    >
-                      :
-                    </Text>
-                  </>
-                )) ||
-                  (days != 0 && months != 0 && (
+                  )) ||
+                    (months != 0 && (
+                      <>
+                        <TimeUnit
+                          label={days == 1 ? "day" : "days"}
+                          value={days}
+                        />
+                        <Text
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: 40,
+                            color: "white"
+                          }}
+                        >
+                          :
+                        </Text>
+                      </>
+                    ))}
+                  {(hours != 0 && (
                     <>
                       <TimeUnit
                         label={hours == 1 ? "hour" : "hours"}
@@ -177,22 +169,25 @@ class CountdownView extends React.Component {
                         :
                       </Text>
                     </>
-                  ))}
-                {(mins != 0 && (
-                  <>
-                    <TimeUnit label={mins == 1 ? "min" : "mins"} value={mins} />
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        fontSize: 40,
-                        color: "white"
-                      }}
-                    >
-                      :
-                    </Text>
-                  </>
-                )) ||
-                  (hours != 0 && days != 0 && months != 0 && (
+                  )) ||
+                    ((days != 0 || months != 0) && (
+                      <>
+                        <TimeUnit
+                          label={hours == 1 ? "hour" : "hours"}
+                          value={hours}
+                        />
+                        <Text
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: 40,
+                            color: "white"
+                          }}
+                        >
+                          :
+                        </Text>
+                      </>
+                    ))}
+                  {(mins != 0 && (
                     <>
                       <TimeUnit
                         label={mins == 1 ? "min" : "mins"}
@@ -208,14 +203,38 @@ class CountdownView extends React.Component {
                         :
                       </Text>
                     </>
-                  ))}
-                {(secs != 0 && (
-                  <TimeUnit label={secs == 1 ? "sec" : "secs"} value={secs} />
-                )) ||
-                  (mins != 0 && hours != 0 && days != 0 && months != 0 && (
+                  )) ||
+                    ((hours != 0 || days != 0 || months != 0) && (
+                      <>
+                        <TimeUnit
+                          label={mins == 1 ? "min" : "mins"}
+                          value={mins}
+                        />
+                        <Text
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: 40,
+                            color: "white"
+                          }}
+                        >
+                          :
+                        </Text>
+                      </>
+                    ))}
+                  {(secs != 0 && (
                     <TimeUnit label={secs == 1 ? "sec" : "secs"} value={secs} />
-                  ))}
-              </View>
+                  )) ||
+                    (mins != 0 ||
+                      hours != 0 ||
+                      days != 0 ||
+                      (months != 0 && (
+                        <TimeUnit
+                          label={secs == 1 ? "sec" : "secs"}
+                          value={secs}
+                        />
+                      )))}
+                </View>
+              )}
               <Text
                 style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
               >

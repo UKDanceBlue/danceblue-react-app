@@ -53,8 +53,11 @@ const Firebase = {
       .get();
   },
   // cloud storage
-  getDocumentRef: path => {
-    return firebase.storage().ref(path);
+  getDocumentURL: path => {
+    return firebase
+      .storage()
+      .ref(path)
+      .getDownloadURL();
   }
 };
 

@@ -46,11 +46,19 @@ class Announcements extends React.Component {
           <View style={styles.announcementTitleView}>
             <Text style={styles.announcementTitle}> ANNOUNCEMENTS </Text>
           </View>
-          {this.state.isLoading && (
-            <ActivityIndicator size="large" color="blue" />
-          )}
           {!this.state.isLoading && bullets}
         </View>
+        {this.state.isLoading && (
+          <ActivityIndicator
+            size="large"
+            color="blue"
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 20
+            }}
+          />
+        )}
       </View>
     );
   }
