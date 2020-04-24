@@ -7,8 +7,8 @@ import { withFirebaseHOC } from "../../../config/Firebase";
 
 const TimeUnit = props => {
   return (
-    <View style={{ alignItems: "center", paddingLeft: 7, paddingRight: 7 }}>
-      <Text style={{ fontWeight: "bold", fontSize: 45, color: "white" }}>
+    <View style={{ alignItems: "center", paddingLeft: 7, paddingRight: 7, }}>
+      <Text style={{ fontWeight: "bold", fontSize: 40, color: "white", backgroundColor:'#FFFFFF77' }}>
         {props.value}
       </Text>
       <Text style={{ fontSize: 20, color: "white" }}>{props.label}</Text>
@@ -82,13 +82,13 @@ class CountdownView extends React.Component {
   render() {
     const { months, days, hours, mins, secs } = this.state;
     return (
-      <View style={styles.shadowsStyling}>
-        <View style={styles.container}>
-          {this.state.isLoading && (
-            <ActivityIndicator color="white" size="large" />
-          )}
-          {!this.state.isLoading && (
-            <>
+      <View style={styles.container}>
+        {this.state.isLoading && (
+          <ActivityIndicator color="white" size="large" />
+        )}
+        {!this.state.isLoading && (
+          <>
+          <View style={styles.countodwnTitleView}>
               <Text
                 adjustsFontSizeToFit
                 numberOfLines={1}
@@ -96,30 +96,48 @@ class CountdownView extends React.Component {
               >
                 {this.state.title}
               </Text>
-              {this.state.timerSetup && (
-                <ActivityIndicator color="white" size="large" />
-              )}
-              {!this.state.timerSetup && (
-                <View style={{ flexDirection: "row" }}>
-                  {months != 0 && (
-                    <>
-                      <TimeUnit
-                        label={months == 1 ? "month" : "months"}
-                        value={months}
-                      />
+            </View>
+            {this.state.timerSetup && (
+              <ActivityIndicator color="white" size="large" />
+            )}
+            {!this.state.timerSetup && (
+              <View style={{ flexDirection: "row" }}>
+                {months != 0 && (
+                  <>
+                    <TimeUnit
+                      label={months == 1 ? "month" : "months"}
+                      value={months}
+                    />
 
-                      <Text
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: 40,
-                          color: "white"
-                        }}
-                      >
-                        :
-                      </Text>
-                    </>
-                  )}
-                  {(days != 0 && (
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 40,
+                        color: "white",
+                      }}
+                    >
+                      :
+                    </Text>
+                  </>
+                )}
+                {(days != 0 && (
+                  <>
+                    <TimeUnit
+                      label={days == 1 ? "day" : "days"}
+                      value={days}
+                    />
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 40,
+                        color: "white"
+                      }}
+                    >
+                      :
+                    </Text>
+                  </>
+                )) ||
+                  (months != 0 && (
                     <>
                       <TimeUnit
                         label={days == 1 ? "day" : "days"}
@@ -135,25 +153,25 @@ class CountdownView extends React.Component {
                         :
                       </Text>
                     </>
-                  )) ||
-                    (months != 0 && (
-                      <>
-                        <TimeUnit
-                          label={days == 1 ? "day" : "days"}
-                          value={days}
-                        />
-                        <Text
-                          style={{
-                            fontWeight: "bold",
-                            fontSize: 40,
-                            color: "white"
-                          }}
-                        >
-                          :
-                        </Text>
-                      </>
-                    ))}
-                  {(hours != 0 && (
+                  ))}
+                {(hours != 0 && (
+                  <>
+                    <TimeUnit
+                      label={hours == 1 ? "hour" : "hours"}
+                      value={hours}
+                    />
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 40,
+                        color: "white"
+                      }}
+                    >
+                      :
+                    </Text>
+                  </>
+                )) ||
+                  ((days != 0 || months != 0) && (
                     <>
                       <TimeUnit
                         label={hours == 1 ? "hour" : "hours"}
@@ -169,25 +187,25 @@ class CountdownView extends React.Component {
                         :
                       </Text>
                     </>
-                  )) ||
-                    ((days != 0 || months != 0) && (
-                      <>
-                        <TimeUnit
-                          label={hours == 1 ? "hour" : "hours"}
-                          value={hours}
-                        />
-                        <Text
-                          style={{
-                            fontWeight: "bold",
-                            fontSize: 40,
-                            color: "white"
-                          }}
-                        >
-                          :
-                        </Text>
-                      </>
-                    ))}
-                  {(mins != 0 && (
+                  ))}
+                {(mins != 0 && (
+                  <>
+                    <TimeUnit
+                      label={mins == 1 ? "min" : "mins"}
+                      value={mins}
+                    />
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 40,
+                        color: "white"
+                      }}
+                    >
+                      :
+                    </Text>
+                  </>
+                )) ||
+                  ((hours != 0 || days != 0 || months != 0) && (
                     <>
                       <TimeUnit
                         label={mins == 1 ? "min" : "mins"}
@@ -203,51 +221,33 @@ class CountdownView extends React.Component {
                         :
                       </Text>
                     </>
-                  )) ||
-                    ((hours != 0 || days != 0 || months != 0) && (
-                      <>
-                        <TimeUnit
-                          label={mins == 1 ? "min" : "mins"}
-                          value={mins}
-                        />
-                        <Text
-                          style={{
-                            fontWeight: "bold",
-                            fontSize: 40,
-                            color: "white"
-                          }}
-                        >
-                          :
-                        </Text>
-                      </>
-                    ))}
-                  {(secs != 0 && (
-                    <TimeUnit label={secs == 1 ? "sec" : "secs"} value={secs} />
-                  )) ||
-                    (mins != 0 ||
-                      hours != 0 ||
-                      days != 0 ||
-                      (months != 0 && (
-                        <TimeUnit
-                          label={secs == 1 ? "sec" : "secs"}
-                          value={secs}
-                        />
-                      )))}
-                </View>
-              )}
-              <Text
-                style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
-              >
-                {months == 0 &&
-                  days == 0 &&
-                  hours == 0 &&
-                  mins == 0 &&
-                  secs == 0 &&
-                  `${this.state.finishMessage}`}
-              </Text>
-            </>
-          )}
-        </View>
+                  ))}
+                {(secs != 0 && (
+                  <TimeUnit label={secs == 1 ? "sec" : "secs"} value={secs} />
+                )) ||
+                  (mins != 0 ||
+                    hours != 0 ||
+                    days != 0 ||
+                    (months != 0 && (
+                      <TimeUnit
+                        label={secs == 1 ? "sec" : "secs"}
+                        value={secs}
+                      />
+                    )))}
+              </View>
+            )}
+            <Text
+              style={{ fontWeight: "bold", fontSize: 40, color: "white" }}
+            >
+              {months == 0 &&
+                days == 0 &&
+                hours == 0 &&
+                mins == 0 &&
+                secs == 0 &&
+                `${this.state.finishMessage}`}
+            </Text>
+          </>
+        )}
       </View>
     );
   }
@@ -255,12 +255,23 @@ class CountdownView extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
-    width: "100%",
+    height: 150,
+    width: "98%",
     backgroundColor: "#0033A0E0",
     justifyContent: "center",
     overflow: "hidden",
-    alignItems: "center"
+    alignSelf:'center',
+    alignItems: "center",
+    borderRadius:15,
+    marginBottom:5,
+    borderWidth:1,
+    borderColor:'gold'
+  },
+  countodwnTitleView: {
+    width:'95%',
+    borderBottomColor:'white',
+    borderBottomWidth:2,
+    marginBottom:5,
   },
   countodwnTitle: {
     fontSize: 34,
@@ -268,26 +279,14 @@ const styles = StyleSheet.create({
     color: "white",
     alignSelf: "center",
     paddingBottom: 5,
-    paddingTop: 50
+    paddingTop: 10,
   },
   countdownStyle: {
-    width: "90%",
+    width: "75%",
     borderTopColor: "#FFC72C",
     borderTopWidth: 3,
     paddingTop: 5
   },
-  shadowsStyling: {
-    width: "100%",
-    height: 180,
-    marginBottom: 10,
-    shadowColor: "gray",
-    shadowOpacity: 0.8,
-    shadowRadius: 6,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
-  }
 });
 
 export default withFirebaseHOC(CountdownView);

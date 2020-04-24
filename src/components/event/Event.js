@@ -52,11 +52,11 @@ export default class Event extends Component {
             <Button
                 style={styles.button}
                 type='outline'
-                raised='true'
+                raised={true}
                 icon={
                     <Icon
                       name="car"
-                      size={15}
+                      size={20}
                       color="#0033A0"
                     />
                 }
@@ -64,19 +64,31 @@ export default class Event extends Component {
             <Button
                 style={styles.button}
                 type='outline'
-                raised='true'
+                raised={true}
+                icon={
+                    <Icon
+                      name="map-marker"
+                      size={20}
+                      color="red"
+                    />
+                }
+            />
+            <Button
+                style={styles.button}
+                type='outline'
+                raised={true}
                 icon={
                     <Icon
                       name="calendar"
-                      size={15}
-                      color="#0033A0"
+                      size={19}
+                      color="green"
                     />
                 }
             />
           </View>
           </View>
         }
-        BadgeElement={<Text style={styles.pointsText}>1</Text>}
+        BadgeElement={<Text style={styles.pointsText}>10</Text>}
         IconBadgeStyle={styles.icon}
       />
     );
@@ -99,7 +111,7 @@ const styles = StyleSheet.create({
   },
   eventImage: {
     flex: 6,
-    height: "92%",
+    height: "90%",
     width: "100%",
     alignSelf: "center",
     marginRight: 5,
@@ -163,14 +175,15 @@ const styles = StyleSheet.create({
     alignItems:'center',
   },
   button: {
-    width:140,
+    width:90,
+    height:"80%",
   },
   icon: {
     top: -8,
     right: -5,
-    width: 40,
-    height: 40,
-    borderRadius: 45 / 2,
+    width: 35,
+    height: 35,
+    borderRadius: 35 / 2,
     backgroundColor: "gold",
   },
   pointsText: {

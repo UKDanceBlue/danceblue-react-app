@@ -41,7 +41,7 @@ class Announcements extends React.Component {
       <BulletPoint body={announcement.body} />
     ));
     return (
-      <View style={styles.shadowsStyling}>
+      <View style={styles.container}>
         <View style={styles.announcementView}>
           <View style={styles.announcementTitleView}>
             <Text style={styles.announcementTitle}> ANNOUNCEMENTS </Text>
@@ -65,15 +65,19 @@ class Announcements extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: "98%",
+    marginBottom: 5,
+    borderRadius: 15,
+    borderColor:'gold',
+    borderWidth:1,
+    overflow: "hidden",
+  },
   announcementView: {
     paddingLeft: 5,
     paddingBottom: 5,
-    width: "100%",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    backgroundColor: "white",
-    borderRadius: 15,
-    overflow: "hidden"
   },
   announcementTitle: {
     color: "black",
@@ -82,7 +86,7 @@ const styles = StyleSheet.create({
   },
   announcementTitleView: {
     borderBottomColor: "#0033A0",
-    borderBottomWidth: 2
+    borderBottomWidth: 2,
   },
   announcementRow: {
     flexDirection: "row",
@@ -108,17 +112,6 @@ const styles = StyleSheet.create({
   announcementText: {
     fontSize: 16
   },
-  shadowsStyling: {
-    width: "95%",
-    marginBottom: 10,
-    shadowColor: "gray",
-    shadowOpacity: 0.8,
-    shadowRadius: 6,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
-  }
 });
 
 export default withFirebaseHOC(Announcements);

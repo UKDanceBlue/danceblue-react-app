@@ -5,23 +5,25 @@ import db_logo from "../../../assets/home/DB_Primary_Logo-01.png";
 
 const HeaderImage = props => {
   return (
-    <View style={styles.shadowsStyling}>
-      <View style={styles.container}>
-        <ImageBackground source={background_img} style={styles.background}>
-          <Image source={db_logo} style={styles.logo} />
-        </ImageBackground>
-      </View>
+    <View style={styles.container}>
+      <ImageBackground source={background_img} style={styles.background}>
+        <Image source={db_logo} style={styles.logo} />
+      </ImageBackground>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
-    width: "100%",
+    height: 280,
+    width: "98%",
     justifyContent: "center",
     alignSelf: "center",
-    overflow: "hidden"
+    borderRadius: 15,
+    overflow: "hidden",
+    marginBottom:5,
+    borderWidth:1,
+    borderColor:'gold'
   },
   background: {
     flex: 3,
@@ -36,17 +38,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     backgroundColor: "#FFFFFF99"
   },
-  shadowsStyling: {
-    width: "100%",
-    height: 280,
-    shadowColor: "gray",
-    shadowOpacity: 0.5,
-    shadowRadius: 6,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
-  }
 });
 
 export default HeaderImage;

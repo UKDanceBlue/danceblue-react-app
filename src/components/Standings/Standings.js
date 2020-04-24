@@ -12,6 +12,14 @@ import Place from "./place";
 import { withFirebaseHOC } from "../../../config/Firebase";
 
 const styles = StyleSheet.create({
+  container: {
+    width: "98%",
+    marginBottom: 5,
+    borderColor:'gold',
+    borderWidth:1,
+    borderRadius:15,
+    overflow:"hidden",
+  },
   ListView: {
     paddingLeft: 5,
     marginTop: 5,
@@ -30,16 +38,9 @@ const styles = StyleSheet.create({
     borderBottomColor: "#0033A0",
     borderBottomWidth: 2
   },
-  shadowsStyling: {
-    width: "95%",
-    marginBottom: 10,
-    shadowColor: "gray",
-    shadowOpacity: 0.5,
-    shadowRadius: 6,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
+  ListTitleView: {
+    borderBottomColor: "#0033A0",
+    borderBottomWidth: 2
   },
   more: {
     justifyContent: "flex-end"
@@ -85,9 +86,11 @@ class Standings extends React.Component {
       ));
 
     return (
-      <View style={styles.shadowsStyling}>
+      <View style={styles.container}>
         <View style={styles.ListView}>
-          <Text style={styles.ListTitle}>MORALE CUP STANDINGS</Text>
+          <View style={styles.ListTitleView}>
+            <Text style={styles.ListTitle}> MORALE CUP STANDINGS </Text>
+          </View>
           {!this.state.isLoading && (
             <>
               {/* Renders the top 3 teams from the 'places' variable */}

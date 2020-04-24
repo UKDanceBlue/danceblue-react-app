@@ -33,11 +33,11 @@ class Carousel extends React.Component {
     ));
 
     return (
-      <View style={styles.shadowsStyling}>
+      <View style={styles.container}>
         <ScrollView ScrollEventThrottle={16}>
           <View style={styles.sponsorView}>
             <View style={styles.sponsorTitleView}>
-              <Text style={styles.sponsorTitle}>SPONSORS</Text>
+              <Text style={styles.sponsorTitle}> SPONSORS </Text>
             </View>
             <View style={styles.cardScrollView}>
               <ScrollView
@@ -56,43 +56,36 @@ class Carousel extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: "98%",
+    marginBottom: 10,
+    borderWidth:1,
+    borderColor:'gold',
+    borderRadius:15,
+    overflow:"hidden",
+    padding:5,
+  },
   sponsorView: {
-    paddingLeft: 5,
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingVertical:5,
     width: "100%",
     justifyContent: "flex-start",
     alignItems: "flex-start",
     backgroundColor: "white",
-    borderRadius: 15,
-    overflow: "hidden",
     flex: 1
   },
   sponsorTitle: {
     color: "black",
     fontSize: 20,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   sponsorTitleView: {
     borderBottomColor: "#0033A0",
-    borderBottomWidth: 2
+    borderBottomWidth: 2,
   },
   cardScrollView: {
     height: 170,
     marginTop: 5,
-    padding: 5
   },
-  shadowsStyling: {
-    width: "95%",
-    marginBottom: 10,
-    shadowColor: "gray",
-    shadowOpacity: 0.5,
-    shadowRadius: 6,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
-  }
 });
 
 export default withFirebaseHOC(Carousel);
