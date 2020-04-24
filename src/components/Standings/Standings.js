@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   container: {
     width: "98%",
     marginBottom: 5,
-    borderColor:'gold',
+    borderColor:'#FFC72C',
     borderWidth:1,
     borderRadius:15,
     overflow:"hidden",

@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     width: "98%",
     marginBottom: 5,
     borderRadius: 15,
-    borderColor:'gold',
+    borderColor:'#FFC72C',
     borderWidth:1,
     overflow: "hidden",
   },

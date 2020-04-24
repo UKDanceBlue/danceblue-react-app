@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     borderRadius:15,
     marginBottom:5,
     borderWidth:1,
-    borderColor:'gold'
+    borderColor:'#FFC72C'
   },
   countodwnTitleView: {
     width:'95%',
