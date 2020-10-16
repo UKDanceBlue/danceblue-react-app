@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import IconBadge from "react-native-icon-badge";
 import bdubs from "../../../assets/events/BDubs.jpg";
 
 export default class Event extends Component {
@@ -16,8 +15,6 @@ export default class Event extends Component {
   }
   render() {
     return (
-      <IconBadge
-        MainElement={
           <View style={styles.container}>
           <View style={styles.eventBox}>
             <View style={styles.eventInfo}>
@@ -27,7 +24,7 @@ export default class Event extends Component {
                     style={styles.eventTitle}
                     adjustsFontSizeToFit
                     numberOfLines={2}
-                  >Jimmy John's     Restaurant Night</Text>
+                  >Jimmy John&apos;s Restaurant Night</Text>
                 </View>
                 <View style={styles.eventDateView}>
                   <Text style={styles.eventDate}>
@@ -52,7 +49,7 @@ export default class Event extends Component {
             <Button
                 style={styles.button}
                 type='outline'
-                raised='true'
+                raised={true}
                 icon={
                     <Icon
                       name="car"
@@ -64,7 +61,7 @@ export default class Event extends Component {
             <Button
                 style={styles.button}
                 type='outline'
-                raised='true'
+                raised={true}
                 icon={
                     <Icon
                       name="calendar"
@@ -75,10 +72,6 @@ export default class Event extends Component {
             />
           </View>
           </View>
-        }
-        BadgeElement={<Text style={styles.pointsText}>1</Text>}
-        IconBadgeStyle={styles.icon}
-      />
     );
   }
 }
