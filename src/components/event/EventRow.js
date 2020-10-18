@@ -27,7 +27,7 @@ const EventRow = (props) => {
                         </View>
                         <View style={styles.eventDateView}>
                             <Text style={styles.eventDate}>
-                                Time - {props.startTime} - {props.endTime}
+                                {props.startDate} - {props.endDate}
                             </Text>
                         </View>
                     </View>
