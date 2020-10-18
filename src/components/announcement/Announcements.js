@@ -1,35 +1,26 @@
 import React from 'react';
-import {
-    View,
-    StyleSheet,
-    Text,
-} from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
+import AnnouncementRow from '../../components/announcement/AnnouncementRow';
 
-const Announcements = (props) => {
+const Announcements = () => {
+    let announcements = [
+        { id: 1, text: 'This is the announcement. It is very long and pointless to do something this long.' },
+        { id: 2, text: 'DanceBlue has raised over $15 Million FTK!' }
+    ];
+
     return (
-      <View style={styles.shadowsStyling}>
-        <View style={styles.announcementView}>
-          <View style={styles.announcementTitleView}>
-            <Text style={styles.announcementTitle}> ANNOUNCEMENTS </Text>
-          </View>
-          <View style={styles.announcementRow}>
-            <View style={styles.bulletView}>
-              <Text style={styles.bulletStyle}>{'\u2022' + " "}</Text>
+        <View style={styles.shadowsStyling}>
+            <View style={styles.announcementView}>
+                <View style={styles.announcementTitleView}>
+                    <Text style={styles.announcementTitle}>ANNOUNCEMENTS</Text>
+                </View>
+                {
+                    announcements.map((row) =>
+                        <AnnouncementRow styles={styles} key={row.id} id={row.id} text={row.text} />
+                    )
+                }
             </View>
-            <View style={styles.bulletTextView}>
-              <Text style={styles.announcementText}>This is the announcement. It is very long and pointless to do something this long.</Text>
-            </View>
-          </View>
-          <View style={styles.announcementRow}>
-            <View style={styles.bulletView}>
-              <Text style={styles.bulletStyle}>{'\u2022' + " "}</Text>
-            </View>
-            <View style={styles.bulletTextView}>
-              <Text style={styles.announcementText}>DanceBlue has raised over $15 Million FTK!</Text>
-            </View>
-          </View>
         </View>
-      </View>
     );
 };
 
