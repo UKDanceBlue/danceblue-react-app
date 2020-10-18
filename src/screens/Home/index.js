@@ -3,7 +3,7 @@ import React from "react";
 import { SafeAreaView, StyleSheet, View, ScrollView, Text, StatusBar } from "react-native";
 import { Header } from 'react-native-elements';
 
-import Carousel from '../../components/Carousel/carousel' 
+import Carousel from '../../components/Carousel/carousel';
 import HeaderImage from '../../components/countdown/HeaderImage';
 import CountdownView from '../../components/countdown/CountdownView';
 import Announcements from '../../components/announcement/Announcements';

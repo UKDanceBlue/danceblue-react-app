@@ -10,70 +10,73 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import bdubs from "../../../assets/events/BDubs.jpg";
 
 export default class Event extends Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return (
-          <View style={styles.container}>
-          <View style={styles.eventBox}>
-            <View style={styles.eventInfo}>
-              <View style={styles.eventTitleDateView}>
-                <View style={styles.eventTitleView}>
-                  <Text
-                    style={styles.eventTitle}
-                    adjustsFontSizeToFit
-                    numberOfLines={2}
-                  >Jimmy John&apos;s Restaurant Night</Text>
-                </View>
-                <View style={styles.eventDateView}>
-                  <Text style={styles.eventDate}>
-                    January 1 {"\u2022"} 11am-11:30pm
+    constructor(props) {
+
+
+
+        super(props);
+    }
+    render() {
+        return (
+            <View style={styles.container}>
+                <View style={styles.eventBox}>
+                    <View style={styles.eventInfo}>
+                        <View style={styles.eventTitleDateView}>
+                            <View style={styles.eventTitleView}>
+                                <Text
+                                    style={styles.eventTitle}
+                                    adjustsFontSizeToFit
+                                    numberOfLines={2}
+                                >Jimmy John&apos;s Restaurant Night</Text>
+                            </View>
+                            <View style={styles.eventDateView}>
+                                <Text style={styles.eventDate}>
+                                    January 1 {"\u2022"} 11am-11:30pm
                   </Text>
-                </View>
-              </View>
-              <View style={styles.eventDetailsView}>
-                <Text 
-                    style={styles.eventDetails}
-                    adjustsFontSizeToFit
-                    numberOfLines={3}
-                >Support the Chaarg DanceBlue Team and earn one spirit point! We need 3 lines!
+                            </View>
+                        </View>
+                        <View style={styles.eventDetailsView}>
+                            <Text
+                                style={styles.eventDetails}
+                                adjustsFontSizeToFit
+                                numberOfLines={3}
+                            >Support the Chaarg DanceBlue Team and earn one spirit point! We need 3 lines!
                 </Text>
-              </View>
-            </View>
-            <View style={styles.eventImage}>
-              <Image source={bdubs} style={styles.image} />
-            </View>
-          </View>
-          <View style={styles.buttonView}>
-            <Button
-                style={styles.button}
-                type='outline'
-                raised={true}
-                icon={
-                    <Icon
-                      name="car"
-                      size={15}
-                      color="#0033A0"
+                        </View>
+                    </View>
+                    <View style={styles.eventImage}>
+                        <Image source={bdubs} style={styles.image} />
+                    </View>
+                </View>
+                <View style={styles.buttonView}>
+                    <Button
+                        style={styles.button}
+                        type='outline'
+                        raised={true}
+                        icon={
+                            <Icon
+                                name="car"
+                                size={15}
+                                color="#0033A0"
+                            />
+                        }
                     />
-                }
-            />
-            <Button
-                style={styles.button}
-                type='outline'
-                raised={true}
-                icon={
-                    <Icon
-                      name="calendar"
-                      size={15}
-                      color="#0033A0"
+                    <Button
+                        style={styles.button}
+                        type='outline'
+                        raised={true}
+                        icon={
+                            <Icon
+                                name="calendar"
+                                size={15}
+                                color="#0033A0"
+                            />
+                        }
                     />
-                }
-            />
-          </View>
-          </View>
-    );
-  }
+                </View>
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({

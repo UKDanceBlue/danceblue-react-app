@@ -1,7 +1,7 @@
 // Import third-party dependencies
 import React from "react";
 import { Text, View, StyleSheet, ScrollView, SafeAreaView } from "react-native";
-import Event from '../../components/event/Event';
+import Events from '../../components/event/Events';
 
 
 // Component for events screen in main navigation
@@ -13,15 +13,7 @@ export class EventsScreen extends React.Component {
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <SafeAreaView style={styles.container}>
-          <View style={styles.sectionTitleView}>
-            <Text style={styles.sectionTitle}> TODAY'S EVENTS </Text>
-          </View>
-          <Event style={styles.eventRow}/>
-          <Event style={styles.eventRow}/>
-          <View style={styles.sectionTitleView}>
-            <Text style={styles.sectionTitle}> COMING UP </Text>
-          </View>
-          <Event style={styles.eventRow}/>
+          <Events />
         </SafeAreaView>
       </ScrollView>
     );
@@ -33,21 +25,5 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
     marginTop:5
-  },
-  sectionTitle: {
-    color: "black",
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  sectionTitleView: {
-    marginLeft:5,
-    marginBottom:13,
-    borderBottomColor: "#0033A0",
-    borderBottomWidth: 2,
-    alignSelf:'flex-start',
-  },
-  eventRow: {
-    justifyContent:'center',
-    alignItems: 'center',
-  },
+  }
 });
