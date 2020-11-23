@@ -3,7 +3,7 @@ import React from "react";
 import { SafeAreaView, StyleSheet, View, ScrollView, Text, StatusBar } from "react-native";
 import { Header } from 'react-native-elements';
 
-import Carousel from '../../components/Carousel/carousel';
+import Sponsors from '../../components/sponsor/Sponsors';
 import HeaderImage from '../../components/countdown/HeaderImage';
 import CountdownView from '../../components/countdown/CountdownView';
 import Announcements from '../../components/announcement/Announcements';
@@ -28,7 +28,7 @@ export class HomeScreen extends React.Component {
                     <CountdownView name={eventName} time={secondsToEnd} />
                     <Announcements />
                     <Standings />
-                    <Carousel />
+                    <Sponsors />
                 </SafeAreaView>
             </ScrollView>
         );

@@ -4,7 +4,6 @@
     "name": "DanceBlue Mobile",
     "slug": "danceblue-mobile",
     "privacy": "public",
-    "sdkVersion": "37.0.0",
     "platforms": [
       "ios",
       "android",

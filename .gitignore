@@ -11,6 +11,7 @@ web-build/
 web-report/
 w
 web
+package-lock.json
 
 # macOS
 .DS_Store
