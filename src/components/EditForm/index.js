@@ -1,10 +1,8 @@
 // Import third-party dependencies
 import React from 'react'
 import { View } from 'react-native'
-import { Input, Text, Button } from 'react-native-elements'
+import { Input } from 'react-native-elements'
 import { Formik, ErrorMessage } from 'formik'
-
-import Icon from 'react-native-vector-icons/FontAwesome5'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 

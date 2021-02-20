@@ -1,6 +1,6 @@
 // Import third-party dependencies
 import React from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { View } from 'react-native'
 import { WebView } from 'react-native-webview'
 
 // Component for profile screen in main navigation

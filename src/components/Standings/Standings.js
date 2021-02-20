@@ -53,7 +53,6 @@ class Standings extends React.Component {
       .slice(0, this.state.shownNumber)
       .map((item, index) => (
         <Place
-
           key={item.teamNumber}
           rank={index + 1}
           teamName={item.teamName}
@@ -84,7 +83,8 @@ class Standings extends React.Component {
             <Text>
               {/* Shows the appropriate message when the leaderboard is collapsed/extended */}
               {this.state.shownNumber === this.state.topNumber
-                ? 'Show more...' : 'Show less...'}
+                ? 'Show more...'
+                : 'Show less...'}
             </Text>
           </TouchableHighlight>
         </View>

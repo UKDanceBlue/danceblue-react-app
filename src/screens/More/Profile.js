@@ -63,7 +63,7 @@ class ProfileScreen extends React.Component {
   }
 
   handleSignIn () {
-    if (this.state.signUp == true) {
+    if (this.state.signUp === true) {
       this.setState({ loggedIn: false, signUp: false, user: undefined })
     } else {
       this.setState({ loggedIn: false, signUp: true, user: undefined })
@@ -72,7 +72,6 @@ class ProfileScreen extends React.Component {
 
   // Render the application view
   render () {
-    const { navigate } = this.props.navigation
     return (
       <>
         {this.state.loggedIn && !this.state.isLoading && (

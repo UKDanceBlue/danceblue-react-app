@@ -1,10 +1,9 @@
 // Import third-party dependencies
 import React from 'react'
-import { Text, View, StyleSheet, Dimensions } from 'react-native'
+import { View, StyleSheet, Dimensions } from 'react-native'
 import { WebView } from 'react-native-webview'
 
 const width = Dimensions.get('window').width // full width
-const height = Dimensions.get('window').height // full height
 
 // Component for profile screen in main navigation
 export class BlogScreen extends React.Component {

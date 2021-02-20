@@ -6,7 +6,7 @@ import Events from '../../components/event/Events';
 
 // Component for events screen in main navigation
 export class EventsScreen extends React.Component {
-    static navigationOptions = {
+    const navigationOptions = {
         title: "Events"
     };
     render() {

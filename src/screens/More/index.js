@@ -110,7 +110,7 @@ class MoreScreenOptions extends React.Component {
 
 // Component for "more" screen in main navigation
 export class MoreScreen extends React.Component {
-  static navigationOptions = {
+  const navigationOptions = {
     title: "More"
   };
   render() {

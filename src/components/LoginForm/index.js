@@ -4,8 +4,6 @@ import { View } from 'react-native'
 import { Input, Button } from 'react-native-elements'
 import { Formik } from 'formik'
 
-import Icon from 'react-native-vector-icons/FontAwesome5'
-
 import { withFirebaseHOC } from '../../../config/Firebase'
 
 // Component for profile screen in main navigation

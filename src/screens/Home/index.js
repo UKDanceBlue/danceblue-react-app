@@ -18,7 +18,7 @@ import Standings from "../../components/Standings/Standings";
 
 // Component for home screen in main navigation
 export class HomeScreen extends React.Component {
-  static navigationOptions = {
+  const navigationOptions = {
     title: "Home",
   };
 

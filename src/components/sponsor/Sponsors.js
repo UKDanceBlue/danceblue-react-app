@@ -14,7 +14,7 @@ import piefive from './assets/pie-five.jpg'
 import ukfcu from './assets/uk-credit-union.png'
 import ukhousing from './assets/uk-housing.jpg'
 import ukifc from './assets/uk-ifc.png'
-{ /* Carousel implementation for Sponsor showcase */ }
+/* Carousel implementation for Sponsor showcase */
 
 const Sponsors = props => {
   const sponsors = [

@@ -12,7 +12,7 @@ class Place extends React.Component {
         return <Icon name='award' size={30} color='silver' />
       } else if (rank === 3) {
         return <Icon name='award' size={30} color='blue' />
-      } else return
+      }
     }
     return (
     // Renders the individual row of the leaderboard for each team

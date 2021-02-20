@@ -1,14 +1,14 @@
 import React from 'react'
 import { View, ImageBackground, Image, StyleSheet } from 'react-native'
-import background_img from '../../../assets/home/db20_ribbon.jpg'
-import db_logo from '../../../assets/home/DB_Primary_Logo-01.png'
+import backgroundImg from '../../../assets/home/db20_ribbon.jpg'
+import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png'
 
 const HeaderImage = props => {
   return (
     <View style={styles.shadowsStyling}>
       <View style={styles.container}>
-        <ImageBackground source={background_img} style={styles.background}>
-          <Image source={db_logo} style={styles.logo} />
+        <ImageBackground source={backgroundImg} style={styles.background}>
+          <Image source={dbLogo} style={styles.logo} />
         </ImageBackground>
       </View>
     </View>
