@@ -32,7 +32,7 @@
     "react-native-screens": "~2.10.1",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "^0.11.7",
-    "react-native-webview": "10.7.0",
+    "react-native-webview": "11.0.0",
     "react-native-windows": "^0.61.15",
     "recompose": "^0.30.0"
   },
