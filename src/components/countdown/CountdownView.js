@@ -101,6 +101,7 @@ class CountdownView extends React.Component {
               <ActivityIndicator color='white' size='large' />
             )}
             {!this.state.timerSetup && (
+              /* jscpd:ignore-start */
               <View style={{ flexDirection: 'row' }}>
                 {months !== 0 && (
                   <>
@@ -235,6 +236,7 @@ class CountdownView extends React.Component {
                       />
                     )))}
               </View>
+              /* jscpd:ignore-end */
             )}
             <Text
               style={{ fontWeight: 'bold', fontSize: 40, color: 'white' }}
