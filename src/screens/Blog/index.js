@@ -1,15 +1,31 @@
 // Import third-party dependencies
-import React from "react";
-import { Text, View, StyleSheet } from "react-native";
-import { WebView } from "react-native-webview";
+import React from 'react'
+import { View, StyleSheet, Dimensions } from 'react-native'
+import { WebView } from 'react-native-webview'
+
+const width = Dimensions.get('window').width // full width
 
 // Component for profile screen in main navigation
 export class BlogScreen extends React.Component {
-  render() {
+  render () {
     return (
-      <View style={{ flex: 1}}>
-      <WebView source={{ uri: "https://www.danceblue.org/blog/" }} />
+      <View style={styles.viewPortContainer}>
+        <WebView
+          source={{ uri: 'https://www.danceblue.org/blog/' }}
+          style={styles.webviewContainer}
+        />
       </View>
-    );
+    )
   }
 }
+
+const styles = StyleSheet.create({
+  viewPortContainer: {
+    flex: 1
+  },
+  webviewContainer: {
+    flex: 1,
+    width: width,
+    borderWidth: 0
+  }
+})

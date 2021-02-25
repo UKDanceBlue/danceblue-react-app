@@ -1,5 +1,6 @@
 node_modules/**/*
-.expo/*
+.expo
+node/.expo/*
 npm-debug.*
 *.jks
 *.p8
@@ -11,6 +12,10 @@ web-build/
 web-report/
 w
 web
+package-lock.json
 
 # macOS
 .DS_Store
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/

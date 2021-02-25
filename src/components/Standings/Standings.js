@@ -1,79 +1,79 @@
 // Standings implementation for the Morale Cup leaderboard
-import React from "react";
+import React from 'react'
 import {
   Text,
   View,
   StyleSheet,
   TouchableHighlight,
   ActivityIndicator
-} from "react-native";
-import Place from "./place";
+} from 'react-native'
+import Place from './place'
 
-import { withFirebaseHOC } from "../../../config/Firebase";
+import { withFirebaseHOC } from '../../../config/Firebase'
 
 const styles = StyleSheet.create({
   container: {
-    width: "98%",
+    width: '98%',
     marginBottom: 5,
-    borderColor:'#FFC72C',
-    borderWidth:1,
-    borderRadius:15,
-    overflow:"hidden",
+    borderColor: '#FFC72C',
+    borderWidth: 1,
+    borderRadius: 15,
+    overflow: 'hidden'
   },
   ListView: {
     paddingLeft: 5,
     marginTop: 5,
     paddingTop: 5,
     paddingBottom: 5,
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    backgroundColor: "white",
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    backgroundColor: 'white',
     borderRadius: 10,
-    overflow: "hidden",
+    overflow: 'hidden',
     flex: 1
   },
   ListTitle: {
     fontSize: 20,
-    fontWeight: "bold",
-    borderBottomColor: "#0033A0",
+    fontWeight: 'bold',
+    borderBottomColor: '#0033A0',
     borderBottomWidth: 2
   },
   ListTitleView: {
-    borderBottomColor: "#0033A0",
+    borderBottomColor: '#0033A0',
     borderBottomWidth: 2
   },
   more: {
-    justifyContent: "flex-end"
+    justifyContent: 'flex-end'
   }
-});
+})
 
 class Standings extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
 
     this.state = {
       allTeams: [],
       shownNumber: this.props.shownNumber | 3,
       topNumber: this.props.topNumber | 3,
       isLoading: true
-    };
+    }
   }
 
-  componentDidMount() {
-    let teams = [];
+  componentDidMount () {
+    const teams = []
     this.props.firebase.getTeams().then(snapshot => {
       snapshot.forEach(doc => {
-        teams.push({ id: doc.id, ...doc.data() });
-      });
+        teams.push({ id: doc.id, ...doc.data() })
+      })
       // SortedTeams is an array that sorts the teams' points in descending order
-      const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points);
-      this.setState({ allTeams: sortedTeams, isLoading: false });
-    });
+      const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points)
+      this.setState({ allTeams: sortedTeams, isLoading: false })
+    })
   }
 
-  render() {
+  render () {
     //   places renders the Place object for each team in the correct order
-    let places = this.state.allTeams
+    const places = this.state.allTeams
       .slice(0, this.state.shownNumber)
       .map((team, index) => (
         <Place
@@ -83,7 +83,7 @@ class Standings extends React.Component {
           points={team.points}
           key={team.id}
         />
-      ));
+      ))
 
     return (
       <View style={styles.container}>
@@ -100,19 +100,19 @@ class Standings extends React.Component {
                 onPress={() => {
                   this.setState({
                     shownNumber:
-                      this.state.shownNumber == this.state.topNumber
+                      this.state.shownNumber === this.state.topNumber
                         ? this.state.allTeams.length
                         : this.state.topNumber
-                  });
+                  })
                 }}
-                underlayColor="#dddddd"
+                underlayColor='#dddddd'
                 style={styles.more}
               >
                 <Text>
                   {/* Shows the appropriate message when the leaderboard is collapsed/extended */}
-                  {this.state.shownNumber == this.state.topNumber
-                    ? "Show more..."
-                    : "Show less..."}
+                  {this.state.shownNumber === this.state.topNumber
+                    ? 'Show more...'
+                    : 'Show less...'}
                 </Text>
               </TouchableHighlight>
             </>
@@ -120,18 +120,18 @@ class Standings extends React.Component {
         </View>
         {this.state.isLoading && (
           <ActivityIndicator
-            size="large"
-            color="blue"
+            size='large'
+            color='blue'
             style={{
-              alignItems: "center",
-              justifyContent: "center",
+              alignItems: 'center',
+              justifyContent: 'center',
               padding: 20
             }}
           />
         )}
       </View>
-    );
+    )
   }
 }
 
-export default withFirebaseHOC(Standings);
+export default withFirebaseHOC(Standings)
