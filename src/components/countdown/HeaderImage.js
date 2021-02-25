@@ -5,23 +5,20 @@ import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png'
 
 const HeaderImage = props => {
   return (
-    <View style={styles.shadowsStyling}>
-      <View style={styles.container}>
-        <ImageBackground source={backgroundImg} style={styles.background}>
-          <Image source={dbLogo} style={styles.logo} />
-        </ImageBackground>
-      </View>
+    <View style={styles.container}>
+      <ImageBackground source={backgroundImg} style={styles.background}>
+        <Image source={dbLogo} style={styles.logo} />
+      </ImageBackground>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
+    height: 280,
     width: '100%',
     justifyContent: 'center',
     alignSelf: 'center',
-    borderRadius: 15,
     overflow: 'hidden'
   },
   background: {
@@ -36,18 +33,6 @@ const styles = StyleSheet.create({
     width: null,
     resizeMode: 'contain',
     backgroundColor: '#FFFFFF99'
-  },
-  shadowsStyling: {
-    width: '95%',
-    height: 280,
-    marginBottom: 10,
-    shadowColor: 'gray',
-    shadowOpacity: 0.5,
-    shadowRadius: 6,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
   }
 })
 

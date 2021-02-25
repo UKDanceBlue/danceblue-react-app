@@ -1,7 +1,7 @@
 // Import third-party dependencies
 import { registerRootComponent } from 'expo'
 import React from 'react'
-import { StatusBar } from 'react-native'
+import { StatusBar, LogBox } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
@@ -25,6 +25,8 @@ if (!global.btoa) {
 if (!global.atob) {
   global.atob = decode
 }
+
+LogBox.ignoreLogs(['Setting a timer'])
 
 // Bottom tab navigator config
 const Tab = createBottomTabNavigator()

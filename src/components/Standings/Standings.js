@@ -1,99 +1,25 @@
 // Standings implementation for the Morale Cup leaderboard
 import React from 'react'
-import { Text, View, StyleSheet, TouchableHighlight } from 'react-native'
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableHighlight,
+  ActivityIndicator
+} from 'react-native'
 import Place from './place'
 
-const Teams = [
-  { teamNumber: 'Team 1', teamName: 'A', points: 2 },
-  { teamNumber: 'Team 2', teamName: 'B', points: 4 },
-  { teamNumber: 'Team 3', teamName: 'C', points: 1 },
-  { teamNumber: 'Team 4', teamName: 'D', points: 8 },
-  { teamNumber: 'Team 5', teamName: 'E', points: 1 },
-  { teamNumber: 'Team 6', teamName: 'F', points: 1 },
-  { teamNumber: 'Team 7', teamName: 'G', points: 1 },
-  { teamNumber: 'Team 8', teamName: 'H', points: 15 },
-  { teamNumber: 'Team 9', teamName: 'I', points: 10 },
-  { teamNumber: 'Team 10', teamName: 'J', points: 1 },
-  { teamNumber: 'Team 11', teamName: 'K', points: 1 },
-  { teamNumber: 'Team 12', teamName: 'L', points: 22 },
-  { teamNumber: 'Team 13', teamName: 'M', points: 1 },
-  { teamNumber: 'Team 14', teamName: 'N', points: 7 },
-  { teamNumber: 'Team 15', teamName: 'O', points: 1 },
-  { teamNumber: 'Team 16', teamName: 'P', points: 43 },
-  { teamNumber: 'Team 17', teamName: 'Q', points: 1 },
-  { teamNumber: 'Team 18', teamName: 'R', points: 1 },
-  { teamNumber: 'Team 19', teamName: 'S', points: 99 },
-  { teamNumber: 'Team 20', teamName: 'T', points: 50 },
-  { teamNumber: 'Team 21', teamName: 'U', points: 1 },
-  { teamNumber: 'Team 22', teamName: 'V', points: 1 },
-  { teamNumber: 'Team 23', teamName: 'W', points: 3 },
-  { teamNumber: 'Team 24', teamName: 'X', points: 20 }
-]
-
-class Standings extends React.Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      allTeams: [],
-      shownNumber: this.props.shownNumber | 3,
-      topNumber: this.props.topNumber | 3
-    }
-  }
-
-  componentDidMount () {
-    // SortedTeams is an array that sorts the teams' points in descending order
-    const sortedTeams = [].concat(Teams).sort((a, b) => a.points < b.points)
-    this.setState({ allTeams: sortedTeams })
-  }
-
-  render () {
-    //   places renders the Place object for each team in the correct order
-    const places = this.state.allTeams
-      .slice(0, this.state.shownNumber)
-      .map((item, index) => (
-        <Place
-          key={item.teamNumber}
-          rank={index + 1}
-          teamName={item.teamName}
-          teamNumber={item.teamNumber}
-          points={item.points}
-        />
-      ))
-
-    return (
-      <View style={styles.shadowsStyling}>
-        <View style={styles.ListView}>
-          <Text style={styles.ListTitle}>MORALE CUP STANDINGS</Text>
-          {/* Renders the top 3 teams from the 'places' variable */}
-          {places}
-          {/* Renders the 'show more/less' button and toggles the extended/collapsed leaderboard */}
-          <TouchableHighlight
-            onPress={() => {
-              this.setState({
-                shownNumber:
-                                    this.state.shownNumber === this.state.topNumber
-                                      ? this.state.allTeams.length
-                                      : this.state.topNumber
-              })
-            }}
-            underlayColor='#dddddd'
-            style={styles.more}
-          >
-            <Text>
-              {/* Shows the appropriate message when the leaderboard is collapsed/extended */}
-              {this.state.shownNumber === this.state.topNumber
-                ? 'Show more...'
-                : 'Show less...'}
-            </Text>
-          </TouchableHighlight>
-        </View>
-      </View>
-    )
-  }
-}
+import { withFirebaseHOC } from '../../../config/Firebase'
 
 const styles = StyleSheet.create({
+  container: {
+    width: '98%',
+    marginBottom: 5,
+    borderColor: '#FFC72C',
+    borderWidth: 1,
+    borderRadius: 15,
+    overflow: 'hidden'
+  },
   ListView: {
     paddingLeft: 5,
     marginTop: 5,
@@ -112,20 +38,100 @@ const styles = StyleSheet.create({
     borderBottomColor: '#0033A0',
     borderBottomWidth: 2
   },
-  shadowsStyling: {
-    width: '95%',
-    marginBottom: 10,
-    shadowColor: 'gray',
-    shadowOpacity: 0.5,
-    shadowRadius: 6,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
+  ListTitleView: {
+    borderBottomColor: '#0033A0',
+    borderBottomWidth: 2
   },
   more: {
     justifyContent: 'flex-end'
   }
 })
 
-export default Standings
+class Standings extends React.Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      allTeams: [],
+      shownNumber: this.props.shownNumber | 3,
+      topNumber: this.props.topNumber | 3,
+      isLoading: true
+    }
+  }
+
+  componentDidMount () {
+    const teams = []
+    this.props.firebase.getTeams().then(snapshot => {
+      snapshot.forEach(doc => {
+        teams.push({ id: doc.id, ...doc.data() })
+      })
+      // SortedTeams is an array that sorts the teams' points in descending order
+      const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points)
+      this.setState({ allTeams: sortedTeams, isLoading: false })
+    })
+  }
+
+  render () {
+    //   places renders the Place object for each team in the correct order
+    const places = this.state.allTeams
+      .slice(0, this.state.shownNumber)
+      .map((team, index) => (
+        <Place
+          rank={index + 1}
+          teamName={team.name}
+          teamNumber={team.number}
+          points={team.points}
+          key={team.id}
+        />
+      ))
+
+    return (
+      <View style={styles.container}>
+        <View style={styles.ListView}>
+          <View style={styles.ListTitleView}>
+            <Text style={styles.ListTitle}> MORALE CUP STANDINGS </Text>
+          </View>
+          {!this.state.isLoading && (
+            <>
+              {/* Renders the top 3 teams from the 'places' variable */}
+              {places}
+              {/* Renders the 'show more/less' button and toggles the extended/collapsed leaderboard */}
+              <TouchableHighlight
+                onPress={() => {
+                  this.setState({
+                    shownNumber:
+                      this.state.shownNumber === this.state.topNumber
+                        ? this.state.allTeams.length
+                        : this.state.topNumber
+                  })
+                }}
+                underlayColor='#dddddd'
+                style={styles.more}
+              >
+                <Text>
+                  {/* Shows the appropriate message when the leaderboard is collapsed/extended */}
+                  {this.state.shownNumber === this.state.topNumber
+                    ? 'Show more...'
+                    : 'Show less...'}
+                </Text>
+              </TouchableHighlight>
+            </>
+          )}
+        </View>
+        {this.state.isLoading && (
+          <ActivityIndicator
+            size='large'
+            color='blue'
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 20
+            }}
+          />
+        )}
+      </View>
+    )
+  }
+}
+
+export default withFirebaseHOC(Standings)
