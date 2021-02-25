@@ -3,7 +3,18 @@ import { View, StyleSheet, Text, ActivityIndicator } from 'react-native'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
-import AnnouncementRow from '../../components/announcement/AnnouncementRow'
+const BulletPoint = props => {
+  return (
+    <View style={styles.announcementRow}>
+      <View style={styles.bulletView}>
+        <Text style={styles.bulletStyle}>{'\u2022' + ' '}</Text>
+      </View>
+      <View style={styles.bulletTextView}>
+        <Text style={styles.announcementText}>{props.body}</Text>
+      </View>
+    </View>
+  )
+}
 
 class Announcements extends React.Component {
   constructor (props) {
@@ -27,7 +38,7 @@ class Announcements extends React.Component {
 
   render () {
     const bullets = this.state.announcements.map(announcement => (
-      <AnnouncementRow styles={styles} key={announcement.id} id={announcement.id} text={announcement.body} />
+      <BulletPoint body={announcement.body} key={announcement.id} />
     ))
     return (
       <View style={styles.container}>
@@ -37,36 +48,36 @@ class Announcements extends React.Component {
           </View>
           {!this.state.isLoading && bullets}
         </View>
-        {
-                    this.state.isLoading && (
-                      <ActivityIndicator
-                        size='large'
-                        color='blue'
-                        style={styles.activityIndicatorStyle}
-                      />
-                    )
-                }
+        {this.state.isLoading && (
+          <ActivityIndicator
+            size='large'
+            color='blue'
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 20
+            }}
+          />
+        )}
       </View>
     )
   }
-};
+}
 
 const styles = StyleSheet.create({
-  activityIndicatorStyle: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20
+  container: {
+    width: '98%',
+    marginBottom: 5,
+    borderRadius: 15,
+    borderColor: '#FFC72C',
+    borderWidth: 1,
+    overflow: 'hidden'
   },
   announcementView: {
     paddingLeft: 5,
-    paddingTop: 5,
     paddingBottom: 5,
-    width: '100%',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    backgroundColor: 'white',
-    borderRadius: 15,
-    overflow: 'hidden'
+    alignItems: 'flex-start'
   },
   announcementTitle: {
     color: 'black',
@@ -100,17 +111,6 @@ const styles = StyleSheet.create({
   },
   announcementText: {
     fontSize: 16
-  },
-  shadowsStyling: {
-    width: '95%',
-    marginBottom: 10,
-    shadowColor: 'gray',
-    shadowOpacity: 0.8,
-    shadowRadius: 6,
-    shadowOffset: {
-      height: 0,
-      width: 0
-    }
   }
 })
 

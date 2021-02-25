@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 class Place extends React.Component {
   render () {
     // The 'top3Icon function adds an award icon to the top 3 teams
-    const top3Icon = (rank) => {
+    const top3Icon = rank => {
       if (rank === 1) {
         return <Icon name='award' size={30} color='gold' />
       } else if (rank === 2) {
@@ -15,7 +15,7 @@ class Place extends React.Component {
       }
     }
     return (
-    // Renders the individual row of the leaderboard for each team
+      // Renders the individual row of the leaderboard for each team
       <View style={styles.row}>
         <View style={styles.left}>
           <Text style={styles.place}>
@@ -26,13 +26,13 @@ class Place extends React.Component {
           {top3Icon(this.props.rank)}
         </View>
         <View style={styles.middle}>
-          <Text style={styles.team}>
-            {/* Renders the team number */}
-            {this.props.teamNumber}
-          </Text>
           <Text style={styles.name}>
             {/* Renders the team name */}
             {this.props.teamName}
+          </Text>
+          <Text style={styles.team}>
+            {/* Renders the team number */}
+            {this.props.teamNumber}
           </Text>
         </View>
         <View style={styles.right}>
@@ -80,11 +80,11 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     fontSize: 17
   },
-  team: {
+  name: {
     fontWeight: 'bold',
     fontSize: 15
   },
-  name: {
+  team: {
     fontWeight: 'normal',
     fontStyle: 'italic'
   }

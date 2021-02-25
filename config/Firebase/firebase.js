@@ -6,29 +6,38 @@ import firebaseConfig from './firebaseConfig'
 firebase.initializeApp(firebaseConfig)
 
 const Firebase = {
-  // authentication things
+  // auth
   loginWithEmail: (email, password) => {
     return firebase.auth().signInWithEmailAndPassword(email, password)
   },
-
   signupWithEmail: (email, password) => {
     return firebase.auth().createUserWithEmailAndPassword(email, password)
   },
-
   signOut: () => {
     return firebase.auth().signOut()
   },
-
   checkAuthUser: (user) => {
     return firebase.auth().onAuthStateChanged(user)
   },
-
-  // firestore queries
+  // firestore
+  createNewUser: userData => {
+    return firebase
+      .firestore()
+      .collection('users')
+      .doc(`${userData.uid}`)
+      .set(userData)
+  },
   getTeams: () => {
-    return firebase.firestore().collection('teams').get()
+    return firebase
+      .firestore()
+      .collection('teams')
+      .get()
   },
   getSponsors: () => {
-    return firebase.firestore().collection('sponsors').get()
+    return firebase
+      .firestore()
+      .collection('sponsors')
+      .get()
   },
   getActiveCountdown: () => {
     return firebase
@@ -41,48 +50,29 @@ const Firebase = {
     return firebase
       .firestore()
       .collection('announcements')
-      .where('endDate', '>=', new Date())
-      .orderBy('endDate')
       .get()
   },
-
-  // cloud storage
-  getDocumentURL: (path) => {
-    return firebase.storage().ref(path).getDownloadURL()
-  },
-
-  // user stuff
-  readUser: (userid) => {
+  getUser: (userId) => {
     return firebase
       .firestore()
       .collection('users')
-      .where('uid', '==', userid)
+      .where('uid', '==', userId)
       .get()
   },
   // This can be used to pull team information based on user's team.
-  getTeam: (team) => {
+  getTeam: (teamId) => {
     return firebase
       .firestore()
       .collection('teams')
-      .where('number', '==', team)
+      .where('number', '==', teamId)
       .get()
   },
-
-  createNewUser: (userData) => {
+  // cloud storage
+  getDocumentURL: path => {
     return firebase
-      .firestore()
-      .collection('users')
-      .doc(`${userData.uid}`)
-      .set(userData)
-  },
-
-  // This function can be updated if we choose to let users update their profiles themselves from app.
-  updateUser: (userData) => {
-    return firebase
-      .firestore()
-      .collection('users')
-      .doc(`${userData.uid}`)
-      .set(userData)
+      .storage()
+      .ref(path)
+      .getDownloadURL()
   }
 }
 
