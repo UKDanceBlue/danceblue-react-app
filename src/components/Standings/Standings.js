@@ -5,7 +5,8 @@ import {
   View,
   StyleSheet,
   TouchableHighlight,
-  ActivityIndicator
+  ActivityIndicator,
+  Switch
 } from 'react-native'
 import Place from './place'
 
@@ -55,7 +56,8 @@ class Standings extends React.Component {
       allTeams: [],
       shownNumber: this.props.shownNumber | 3,
       topNumber: this.props.topNumber | 3,
-      isLoading: true
+      isLoading: true,
+      showPerMember: false
     }
   }
 
@@ -67,6 +69,7 @@ class Standings extends React.Component {
       })
       // SortedTeams is an array that sorts the teams' points in descending order
       const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points)
+      const sortedTeamsPPM = [].concat(teams).sort((a, b) => (a.points / a.size) < (b.points / b.size))
       this.setState({ allTeams: sortedTeams, isLoading: false })
     })
   }
@@ -82,6 +85,9 @@ class Standings extends React.Component {
           teamNumber={team.number}
           points={team.points}
           key={team.id}
+          size={team.size}
+          showPerMember={this.state.showPerMember}
+          pointsPerMember={Math.floor(team.points / team.size * 10) / 10}
         />
       ))
 
@@ -93,6 +99,35 @@ class Standings extends React.Component {
           </View>
           {!this.state.isLoading && (
             <>
+            <View style={styles2.row}>
+              <View style={styles2.left}>
+                <Text>
+                  Team
+                </Text>
+              </View>
+              <View style={styles2.middle}/>
+              <View style={styles2.right}>
+                <TouchableHighlight
+                    onPress={() => {
+                      this.setState({
+                        showPerMember:
+                          this.state.showPerMember === false
+                            ? true
+                            : false
+                      })
+                    }}
+                    underlayColor='#dddddd'
+                    style={styles.more}
+                  >
+                    <Text>
+                      {/* Shows the appropriate message when the leaderboard is collapsed/extended */}
+                      {this.state.showPerMember === true
+                        ? 'Pts per Member'
+                        : 'Team Points'}
+                    </Text>
+                  </TouchableHighlight>
+                </View>
+              </View>
               {/* Renders the top 3 teams from the 'places' variable */}
               {places}
               {/* Renders the 'show more/less' button and toggles the extended/collapsed leaderboard */}
@@ -133,5 +168,33 @@ class Standings extends React.Component {
     )
   }
 }
+
+
+const styles2 = StyleSheet.create({
+  row: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 0.2,
+    borderBottomColor: '#999999'
+  },
+  left: {
+    width: '20%',
+    flexDirection: 'row'
+  },
+  right: {
+    width: '30%',
+    justifyContent: 'flex-end',
+    textAlign: 'right'
+  },
+  middle: {
+    width: '50%',
+    flexDirection: 'column'
+  }
+})
+
+
 
 export default withFirebaseHOC(Standings)

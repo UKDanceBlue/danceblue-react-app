@@ -38,7 +38,15 @@ class Place extends React.Component {
         <View style={styles.right}>
           <Text style={styles.bold}>
             {/* Renders the number of points earned */}
-            {this.props.points} {this.props.points === 1 ? 'point' : 'points'}
+            {this.props.showPerMember
+              ? this.props.pointsPerMember < 1
+                ? "< 1 "
+                : this.props.pointsPerMember
+              : this.props.points}
+            {this.props.showPerMember
+              ? ' points'
+              : this.props.points === 1 ? ' point' : ' points'
+            }
           </Text>
         </View>
       </View>
