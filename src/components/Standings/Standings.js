@@ -54,10 +54,12 @@ class Standings extends React.Component {
 
     this.state = {
       allTeams: [],
+      allTeamsPPM: [],
       shownNumber: this.props.shownNumber | 3,
       topNumber: this.props.topNumber | 3,
       isLoading: true,
-      showPerMember: false
+      showPerMember: false,
+      userTeamNumber: undefined
     }
   }
 
@@ -71,12 +73,22 @@ class Standings extends React.Component {
       const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points)
       const sortedTeamsPPM = [].concat(teams).sort((a, b) => (a.points / a.size) < (b.points / b.size))
       this.setState({ allTeams: sortedTeams, isLoading: false })
+      this.setState({ allTeamsPPM: sortedTeamsPPM, isLoading: false })
     })
+    
+    this.props.firebase.checkAuthUser(user => {
+      if(user){
+        this.props.firebase.getUserData(user.uid).then(data => {
+          this.setState({userTeamNumber: data.data().team})
+        })
+      }
+    })
+
   }
 
   render () {
     //   places renders the Place object for each team in the correct order
-    const places = this.state.allTeams
+    const places = (this.state.showPerMember ?  this.state.allTeamsPPM : this.state.allTeams)
       .slice(0, this.state.shownNumber)
       .map((team, index) => (
         <Place
@@ -86,6 +98,7 @@ class Standings extends React.Component {
           points={team.points}
           key={team.id}
           size={team.size}
+          userTeamNumber={this.state.userTeamNumber}
           showPerMember={this.state.showPerMember}
           pointsPerMember={Math.floor(team.points / team.size * 10) / 10}
         />

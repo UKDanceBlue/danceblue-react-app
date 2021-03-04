@@ -59,6 +59,13 @@ const Firebase = {
       .where('uid', '==', userId)
       .get()
   },
+  getUserData: (userId) => {
+    return firebase
+      .firestore()
+      .collection('users')
+      .doc(userId)
+      .get()
+  },
   // This can be used to pull team information based on user's team.
   getTeam: (teamId) => {
     return firebase

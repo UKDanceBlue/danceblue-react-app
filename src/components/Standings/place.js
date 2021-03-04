@@ -16,7 +16,7 @@ class Place extends React.Component {
     }
     return (
       // Renders the individual row of the leaderboard for each team
-      <View style={styles.row}>
+      <View style={this.props.teamNumber == this.props.userTeamNumber ? styles.highlightedRow : styles.row}>
         <View style={styles.left}>
           <Text style={styles.place}>
             {/* Renders the rank/place of the team */}
@@ -63,6 +63,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderBottomWidth: 0.2,
     borderBottomColor: '#999999'
+  },
+  highlightedRow: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 0.2,
+    borderBottomColor: '#999999',
+    backgroundColor: '#ffffc8'
   },
   left: {
     width: '20%',
