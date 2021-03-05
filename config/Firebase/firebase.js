@@ -59,6 +59,12 @@ const Firebase = {
       .where('uid', '==', userId)
       .get()
   },
+  getUsers: (userId) => {
+    return firebase
+      .firestore()
+      .collection('users')
+      .get()
+  },
   getUserData: (userId) => {
     return firebase
       .firestore()

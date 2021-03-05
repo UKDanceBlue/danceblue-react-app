@@ -16,7 +16,15 @@ class Place extends React.Component {
     }
     return (
       // Renders the individual row of the leaderboard for each team
-      <View style={this.props.teamNumber == this.props.userTeamNumber ? styles.highlightedRow : styles.row}>
+      <View style={
+        this.props.showScoresByTeam
+          ? this.props.teamNumber == this.props.userTeamNumber 
+            ? styles.highlightedRow 
+            : styles.row
+          : this.props.uid == this.props.userID
+            ? styles.highlightedRow
+            : styles.row
+          }>
         <View style={styles.left}>
           <Text style={styles.place}>
             {/* Renders the rank/place of the team */}
@@ -38,12 +46,12 @@ class Place extends React.Component {
         <View style={styles.right}>
           <Text style={styles.bold}>
             {/* Renders the number of points earned */}
-            {this.props.showPerMember
+            {this.props.showPointsPerMember
               ? this.props.pointsPerMember < 1
                 ? "< 1 "
                 : this.props.pointsPerMember
               : this.props.points}
-            {this.props.showPerMember
+            {this.props.showPointsPerMember
               ? ' points'
               : this.props.points === 1 ? ' point' : ' points'
             }

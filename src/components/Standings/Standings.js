@@ -12,58 +12,26 @@ import Place from './place'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
-const styles = StyleSheet.create({
-  container: {
-    width: '98%',
-    marginBottom: 5,
-    borderColor: '#FFC72C',
-    borderWidth: 1,
-    borderRadius: 15,
-    overflow: 'hidden'
-  },
-  ListView: {
-    paddingLeft: 5,
-    marginTop: 5,
-    paddingTop: 5,
-    paddingBottom: 5,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    overflow: 'hidden',
-    flex: 1
-  },
-  ListTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    borderBottomColor: '#0033A0',
-    borderBottomWidth: 2
-  },
-  ListTitleView: {
-    borderBottomColor: '#0033A0',
-    borderBottomWidth: 2
-  },
-  more: {
-    justifyContent: 'flex-end'
-  }
-})
-
 class Standings extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
       allTeams: [],
-      allTeamsPPM: [],
+      allUsers: [],
+      allTeamsPPM: [], // PPM = points per member
       shownNumber: this.props.shownNumber | 3,
       topNumber: this.props.topNumber | 3,
       isLoading: true,
-      showPerMember: false,
-      userTeamNumber: undefined
+      showScoresByTeam: true,
+      showPointsPerMember: false,
+      userTeamNum: undefined,
+      userID: undefined
     }
   }
 
   componentDidMount () {
+    // Create arrays for team list, one for team total scores and one for team scores per member.
     const teams = []
     this.props.firebase.getTeams().then(snapshot => {
       snapshot.forEach(doc => {
@@ -75,34 +43,87 @@ class Standings extends React.Component {
       this.setState({ allTeams: sortedTeams, isLoading: false })
       this.setState({ allTeamsPPM: sortedTeamsPPM, isLoading: false })
     })
+
+    // Get list of users, for switching scoreboard to display people instead of teams.
+    const users = []
+    this.props.firebase.getUsers().then(snapshot => {
+      snapshot.forEach(doc => {
+        users.push({ id: doc.id, ...doc.data() })
+      })
+      const sortedUsers = [].concat(users).sort((a, b) => a.points < b.points)
+      this.setState({ allUsers: sortedUsers, isLoading: false })
+    })
     
+    // Get the team number and user ID of the current user.
+    // These are for highlighting the user's position in the teams and users scoreboards
     this.props.firebase.checkAuthUser(user => {
       if(user){
         this.props.firebase.getUserData(user.uid).then(data => {
           this.setState({userTeamNumber: data.data().team})
+          this.setState({userID: data.data().uid})
         })
       }
     })
-
   }
 
   render () {
-    //   places renders the Place object for each team in the correct order
-    const places = (this.state.showPerMember ?  this.state.allTeamsPPM : this.state.allTeams)
-      .slice(0, this.state.shownNumber)
-      .map((team, index) => (
-        <Place
-          rank={index + 1}
-          teamName={team.name}
-          teamNumber={team.number}
-          points={team.points}
-          key={team.id}
-          size={team.size}
-          userTeamNumber={this.state.userTeamNumber}
-          showPerMember={this.state.showPerMember}
-          pointsPerMember={Math.floor(team.points / team.size * 10) / 10}
-        />
-      ))
+    // Creates places list for teams, which renders Place object for each team in order
+    if (this.state.showScoresByTeam) {
+      var places = (this.state.showPointsPerMember ?  this.state.allTeamsPPM : this.state.allTeams)
+        .slice(0, this.state.shownNumber)
+        .map((team, index) => (
+          <Place
+            rank={index + 1}
+            teamName={team.name}
+            teamNumber={team.number}
+            points={team.points}
+            key={team.id}
+            size={team.size}
+            userTeamNumber={this.state.userTeamNum}
+            showPointsPerMember={this.state.showPointsPerMember}
+            showScoresByTeam={this.state.showScoresByTeam}
+            pointsPerMember={Math.floor(team.points / team.size * 10) / 10}
+          />
+        ))
+    } 
+    // Creates places list for people, which renders Place object for each user in order
+    else {
+      var places = this.state.allUsers
+        .slice(0, this.state.shownNumber)
+        .map((user, index) => (
+          <Place
+            rank={index + 1}
+            teamName={user.name}
+            teamNumber={user.team}
+            points={user.points}
+            key={user.uid}
+            size={1}
+            userTeamNumber={this.state.userTeamNum}
+            uid={user.uid}
+            userID={this.state.userID}
+            showPerMember={this.state.showPointsPerMember}
+            pointsPerMember={user.points}
+          />
+        ))
+    }
+
+    // If scoreboard is showing people rather than teams,
+    // Show top 10 users on scoreboard, with current user at bottom (if they're below 10th).
+    if (!this.state.showScoresByTeam && places.length > 10) {
+      let userPlace = new Place
+      let userPlaceRank = undefined
+      for (var i = 0; i < places.length; i++) {
+        if (places[i].key == this.state.userID) {
+          userPlace = places[i]
+          userPlaceRank = i
+          break
+        }
+      }
+      places = places.slice(0, 10)
+      if (userPlaceRank > 10) {
+        places = places.concat([userPlace])
+      }
+    }
 
     return (
       <View style={styles.container}>
@@ -112,19 +133,37 @@ class Standings extends React.Component {
           </View>
           {!this.state.isLoading && (
             <>
-            <View style={styles2.row}>
-              <View style={styles2.left}>
-                <Text>
-                  Team
-                </Text>
-              </View>
-              <View style={styles2.middle}/>
-              <View style={styles2.right}>
+            <View style={styles.row}>
+              <View style={styles.left}>
+                {/* Button for toggling between Teams and People scoreboard */}
                 <TouchableHighlight
+                  onPress={() => {
+                    this.setState({
+                      showScoresByTeam:
+                        this.state.showScoresByTeam === true
+                          ? false
+                          : true
+                    })
+                  }}
+                  underlayColor='#dddddd'
+                  style={styles.more}
+                >
+                    <Text>
+                      {/* Shows the appropriate message when the leaderboard is in teams/people */}
+                      {this.state.showScoresByTeam === true
+                        ? 'Teams'
+                        : 'People'}
+                    </Text>
+                  </TouchableHighlight>
+                </View>
+              <View style={styles.middle}/>
+                <View style={styles.right}>
+                  {/* Button for toggling between total scores and points per member */}
+                  <TouchableHighlight
                     onPress={() => {
                       this.setState({
-                        showPerMember:
-                          this.state.showPerMember === false
+                        showPointsPerMember:
+                          this.state.showPointsPerMember === false
                             ? true
                             : false
                       })
@@ -133,15 +172,14 @@ class Standings extends React.Component {
                     style={styles.more}
                   >
                     <Text>
-                      {/* Shows the appropriate message when the leaderboard is collapsed/extended */}
-                      {this.state.showPerMember === true
+                      {this.state.showPointsPerMember === true
                         ? 'Pts per Member'
-                        : 'Team Points'}
+                        : 'Total Points'}
                     </Text>
                   </TouchableHighlight>
                 </View>
               </View>
-              {/* Renders the top 3 teams from the 'places' variable */}
+              {/* Renders the top shownNumber Places from the 'places' variable */}
               {places}
               {/* Renders the 'show more/less' button and toggles the extended/collapsed leaderboard */}
               <TouchableHighlight
@@ -182,8 +220,40 @@ class Standings extends React.Component {
   }
 }
 
-
-const styles2 = StyleSheet.create({
+const styles = StyleSheet.create({
+  container: {
+    width: '98%',
+    marginBottom: 5,
+    borderColor: '#FFC72C',
+    borderWidth: 1,
+    borderRadius: 15,
+    overflow: 'hidden'
+  },
+  ListView: {
+    paddingLeft: 5,
+    marginTop: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    overflow: 'hidden',
+    flex: 1
+  },
+  ListTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    borderBottomColor: '#0033A0',
+    borderBottomWidth: 2
+  },
+  ListTitleView: {
+    borderBottomColor: '#0033A0',
+    borderBottomWidth: 2
+  },
+  more: {
+    justifyContent: 'flex-end'
+  },
   row: {
     paddingTop: 10,
     paddingBottom: 10,
