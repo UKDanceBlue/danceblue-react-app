@@ -151,8 +151,8 @@ class Standings extends React.Component {
                     <Text>
                       {/* Shows the appropriate message when the leaderboard is in teams/people */}
                       {this.state.showScoresByTeam === true
-                        ? 'Teams'
-                        : 'People'}
+                        ? ' Teams'
+                        : ' People'}
                     </Text>
                   </TouchableHighlight>
                 </View>
@@ -161,20 +161,24 @@ class Standings extends React.Component {
                   {/* Button for toggling between total scores and points per member */}
                   <TouchableHighlight
                     onPress={() => {
-                      this.setState({
-                        showPointsPerMember:
-                          this.state.showPointsPerMember === false
-                            ? true
-                            : false
-                      })
+                      if (this.state.showScoresByTeam) { // only toggleable when showing teams
+                        this.setState({
+                          showPointsPerMember:
+                            this.state.showPointsPerMember === false
+                              ? true
+                              : false
+                        })
+                      }
                     }}
                     underlayColor='#dddddd'
                     style={styles.more}
                   >
                     <Text>
-                      {this.state.showPointsPerMember === true
-                        ? 'Pts per Member'
-                        : 'Total Points'}
+                      {this.state.showScoresByTeam
+                        ? this.state.showPointsPerMember === true
+                          ? 'Pts per Member'
+                          : 'Total Points'
+                        : ''} {/* no button when showing people */} 
                     </Text>
                   </TouchableHighlight>
                 </View>
