@@ -225,16 +225,16 @@ class CountdownView extends React.Component {
                   ))}
                 {(secs !== 0 && (
                   <TimeUnit label={secs === 1 ? 'sec' : 'secs'} value={secs} />
-                )) ||
-                  ((mins !== 0 ||
+                )) || ((mins !== 0 ||
                     hours !== 0 ||
                     days !== 0 ||
                     months !== 0) && (
-                      <TimeUnit
-                        label={secs === 1 ? 'sec' : 'secs'}
-                        value={secs}
-                      />
-                    ))}
+                  /* eslint-disable */
+                  <TimeUnit
+                    label={secs === 1 ? 'sec' : 'secs'}
+                    value={secs}
+                  />
+                ))}
               </View>
               /* jscpd:ignore-end */
             )}
