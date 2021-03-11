@@ -52,6 +52,12 @@ const Firebase = {
       .collection('announcements')
       .get()
   },
+  getEvents: () => {
+    return firebase
+      .firestore()
+      .collection('events')
+      .get()
+  },
   getUser: (userId) => {
     return firebase
       .firestore()
