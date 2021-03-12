@@ -8,7 +8,7 @@ import { withFirebaseHOC } from '../../../config/Firebase'
 const TimeUnit = props => {
   return (
     <View style={{ alignItems: 'center', paddingLeft: 7, paddingRight: 7 }}>
-      <Text style={{ fontWeight: 'bold', fontSize: 40, color: 'white' }}>
+      <Text style={styles.countdownText}>
         {props.value}
       </Text>
       <Text style={{ fontSize: 20, color: 'white' }}>{props.label}</Text>
@@ -88,11 +88,11 @@ class CountdownView extends React.Component {
         )}
         {!this.state.isLoading && (
           <>
-            <View style={styles.countodwnTitleView}>
+            <View style={styles.countdownTitleView}>
               <Text
                 adjustsFontSizeToFit
                 numberOfLines={1}
-                style={styles.countodwnTitle}
+                style={styles.countdownText}
               >
                 {this.state.title}
               </Text>
@@ -102,7 +102,7 @@ class CountdownView extends React.Component {
             )}
             {!this.state.timerSetup && (
               /* jscpd:ignore-start */
-              <View style={{ flexDirection: 'row' }}>
+              <View style={styles.countdownTimer}>
                 {months !== 0 && (
                   <>
                     <TimeUnit
@@ -225,21 +225,21 @@ class CountdownView extends React.Component {
                   ))}
                 {(secs !== 0 && (
                   <TimeUnit label={secs === 1 ? 'sec' : 'secs'} value={secs} />
-                )) ||
-                  (mins !== 0 ||
+                )) || ((mins !== 0 ||
                     hours !== 0 ||
                     days !== 0 ||
-                    (months !== 0 && (
-                      <TimeUnit
-                        label={secs === 1 ? 'sec' : 'secs'}
-                        value={secs}
-                      />
-                    )))}
+                    months !== 0) && (
+                  /* eslint-disable */
+                  <TimeUnit
+                    label={secs === 1 ? 'sec' : 'secs'}
+                    value={secs}
+                  />
+                ))}
               </View>
               /* jscpd:ignore-end */
             )}
             <Text
-              style={{ fontWeight: 'bold', fontSize: 40, color: 'white' }}
+              style={styles.coundownText}
             >
               {months === 0 &&
                 days === 0 &&
@@ -257,37 +257,25 @@ class CountdownView extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: '98%',
     backgroundColor: '#0033A0E0',
+    flex: 1,
     justifyContent: 'center',
-    overflow: 'hidden',
-    alignSelf: 'center',
-    alignItems: 'center',
-    borderRadius: 15,
-    marginBottom: 5,
-    marginTop: 5,
-    borderWidth: 1,
-    borderColor: '#FFC72C'
+    alignItems: 'center'
   },
-  countodwnTitleView: {
+  countdownTitleView: {
     width: '95%',
     borderBottomColor: 'white',
     borderBottomWidth: 2,
-    marginBottom: 5
+    alignItems: 'center'
   },
-  countodwnTitle: {
-    fontSize: 34,
+  countdownText: {
+    fontSize: 40,
     fontWeight: 'bold',
-    color: 'white',
-    alignSelf: 'center',
-    paddingBottom: 5,
-    paddingTop: 10
+    color: 'white'
   },
-  countdownStyle: {
-    width: '75%',
-    borderTopColor: '#FFC72C',
-    borderTopWidth: 3,
-    paddingTop: 5
+  countdownTimer: {
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 })
 

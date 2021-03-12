@@ -2,7 +2,6 @@
 import React from 'react'
 import {
   SafeAreaView,
-  StyleSheet,
   ScrollView
 } from 'react-native'
 
@@ -20,7 +19,7 @@ export class HomeScreen extends React.Component {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={{ flex: 1 }}>
           <HeaderImage />
           <CountdownView />
           <Announcements />
@@ -35,12 +34,3 @@ export class HomeScreen extends React.Component {
 HomeScreen.navigationOptions = {
   title: 'Home'
 }
-
-const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
