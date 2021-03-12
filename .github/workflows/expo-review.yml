@@ -1,8 +1,5 @@
-name: Expo Publish
-on:
-  push:
-    branches:
-      - main
+name: Expo Review
+on: [pull_request]
 jobs:
   publish:
     name: Install and publish
@@ -17,6 +14,12 @@ jobs:
           expo-version: 4.x
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+          expo-packager: npm
           expo-cache: true
       - run: npm install
-      - run: expo publish
+      - run: expo publish --release-channel pr-${{ github.event.number }}
+      - uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: App is ready for review, you can [see it here](https://expo.io/@university-of-kentucky-danceblue/danceblue-mobile?release-channel=pr-${{ github.event.number }}).

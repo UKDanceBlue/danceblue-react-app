@@ -3,11 +3,11 @@
     "entryPoint": "./src/components/App.js",
     "name": "DanceBlue Mobile",
     "slug": "danceblue-mobile",
-    "privacy": "public",
+    "privacy": "unlisted",
+    "owner": "university-of-kentucky-danceblue",
     "platforms": [
       "ios",
-      "android",
-      "web"
+      "android"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -30,6 +30,6 @@
       "package": "com.danceblue.dancebluemobile",
       "versionCode": 1
     },
-    "description": ""
+    "description": "University of Kentucky DanceBlue Mobile Application"
   }
 }
