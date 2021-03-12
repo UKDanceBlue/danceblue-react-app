@@ -15,8 +15,9 @@ jobs:
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
           expo-packager: npm
+          expo-cache: true
       - run: npm install
-      - run: expo publish --release-channel=pr-${{ github.event.number }}
+      - run: expo publish --release-channel pr-${{ github.event.number }}
       - uses: unsplash/comment-on-pr@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
