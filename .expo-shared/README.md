@@ -1,3 +1,5 @@
+# FAQ
+
 > Why do I have a folder named ".expo-shared" in my project?
 
 The ".expo-shared" folder is created when running commands that produce state that is intended to be shared with all developers on the project. For example, "npx expo-optimize".
