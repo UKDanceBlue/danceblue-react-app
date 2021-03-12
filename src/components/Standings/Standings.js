@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableHighlight,
   ActivityIndicator
+  , Dimensions
 } from 'react-native'
 import Place from './place'
 
@@ -129,36 +130,50 @@ class Standings extends React.Component {
           </View>
           {!this.state.isLoading && (
             <>
-              <View style={styles.row}>
-                <View style={styles.left}>
+              <View style={styles.optionRow}>
+
+                <View style={!this.state.showPointsPerMember && this.state.showScoresByTeam ? styles.highlightedOption : styles.option}>
                   {/* Button for toggling between Teams and People scoreboard */}
                   <TouchableHighlight
                     onPress={() => {
                       this.setState({
-                        showScoresByTeam:
-                        this.state.showScoresByTeam !== true
+                        showPointsPerMember: false,
+                        showScoresByTeam: true
                       })
                     }}
                     underlayColor='#dddddd'
                     style={styles.more}
                   >
                     <Text>
-                      {/* Shows the appropriate message when the leaderboard is in teams/people */}
-                      {this.state.showScoresByTeam === true
-                        ? ' Teams'
-                        : ' People'}
+                      Team Totals
                     </Text>
                   </TouchableHighlight>
                 </View>
-                <View style={styles.middle} />
-                <View style={styles.right}>
+
+                <View style={this.state.showPointsPerMember && this.state.showScoresByTeam ? styles.highlightedOption : styles.option}>
+                  <TouchableHighlight
+                    onPress={() => {
+                      this.setState({
+                        showPointsPerMember: true,
+                        showScoresByTeam: true
+                      })
+                    }}
+                    underlayColor='#dddddd'
+                    style={styles.more}
+                  >
+                    <Text>
+                      Total per Members
+                    </Text>
+                  </TouchableHighlight>
+                </View>
+
+                <View style={!this.state.showScoresByTeam ? styles.highlightedOption : styles.option}>
                   {/* Button for toggling between total scores and points per member */}
                   <TouchableHighlight
                     onPress={() => {
                       if (this.state.showScoresByTeam) { // only toggleable when showing teams
                         this.setState({
-                          showPointsPerMember:
-                            this.state.showPointsPerMember === false
+                          showScoresByTeam: false
                         })
                       }
                     }}
@@ -166,14 +181,11 @@ class Standings extends React.Component {
                     style={styles.more}
                   >
                     <Text>
-                      {this.state.showScoresByTeam
-                        ? this.state.showPointsPerMember === true
-                            ? 'Pts per Member'
-                            : 'Total Points'
-                        : ''} {/* no button when showing people */}
+                      Student Scores
                     </Text>
                   </TouchableHighlight>
                 </View>
+
               </View>
               {/* Renders the top shownNumber Places from the 'places' variable */}
               {places}
@@ -216,6 +228,8 @@ class Standings extends React.Component {
   }
 }
 
+const { width } = Dimensions.get('window')
+const colWidth = width / 3
 const styles = StyleSheet.create({
   container: {
     width: '98%',
@@ -250,27 +264,28 @@ const styles = StyleSheet.create({
   more: {
     justifyContent: 'flex-end'
   },
-  row: {
+  optionRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    width: width,
+    borderColor: '#63656a',
+    borderWidth: 1,
+    borderRadius: 30,
+    overflow: 'hidden'
+  },
+  option: {
+    width: colWidth,
     paddingTop: 10,
     paddingBottom: 10,
-    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  highlightedOption: {
+    width: colWidth,
+    paddingTop: 10,
+    paddingBottom: 10,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 0.2,
-    borderBottomColor: '#999999'
-  },
-  left: {
-    width: '20%',
-    flexDirection: 'row'
-  },
-  right: {
-    width: '30%',
-    justifyContent: 'flex-end',
-    textAlign: 'right'
-  },
-  middle: {
-    width: '50%',
-    flexDirection: 'column'
+    backgroundColor: '#1897d4'
   }
 })
 
