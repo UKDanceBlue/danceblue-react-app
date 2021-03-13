@@ -12,7 +12,11 @@ const EventRow = (props) => {
   const styles = props.styles
   const sDate = props.startDate.toDate()
   const eDate = props.endDate.toDate()
+  const now = new Date();
   return (
+           props.showIfToday && sDate.getMonth()==now.getMonth() && sDate.getDate()==now.getDate() || // if the today property is true and the event is today, or
+           !props.showIfToday && sDate.getMonth()>=now.getMonth() && sDate.getDate()>now.getDate() // if the today property is false and the event is in the future
+         ) && ( 
     <View key={props.id} style={styles.eventContainer}>
       <View style={styles.eventBox}>
         <View style={styles.eventInfo}>
