@@ -7,12 +7,14 @@ import {
 import { Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import bdubs from '../../../assets/events/BDubs.jpg'
+import { withFirebaseHOC } from '../../../config/Firebase'
 
 const EventRow = (props) => {
   const styles = props.styles
   const sDate = props.startDate.toDate()
   const eDate = props.endDate.toDate()
   const now = new Date();
+  var imageUrl;
   return (
            props.showIfToday && sDate.getMonth()==now.getMonth() && sDate.getDate()==now.getDate() || // if the today property is true and the event is today, or
            !props.showIfToday && sDate.getMonth()>=now.getMonth() && sDate.getDate()>now.getDate() // if the today property is false and the event is in the future
@@ -47,7 +49,7 @@ const EventRow = (props) => {
           </View>
         </View>
         <View style={styles.eventImage}>
-          <Image source={bdubs} style={styles.image} />
+          <Image source={firebase.firestore().collection('teams').where('number', '==', teamId).get()} style={styles.image} />
         </View>
       </View>
       <View style={styles.buttonView}>
