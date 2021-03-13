@@ -10,6 +10,8 @@ import bdubs from '../../../assets/events/BDubs.jpg'
 
 const EventRow = (props) => {
   const styles = props.styles
+  const sDate = props.startDate.toDate()
+  const eDate = props.endDate.toDate()
   return (
     <View key={props.id} style={styles.eventContainer}>
       <View style={styles.eventBox}>
@@ -26,7 +28,7 @@ const EventRow = (props) => {
             </View>
             <View style={styles.eventDateView}>
               <Text style={styles.eventDate}>
-                {props.startDate} - {props.endDate}
+                {sDate.toLocaleString('en-US', {weekday: 'short', month: 'numeric', day: 'numeric'}) + "    " + sDate.toLocaleString('en-US', {timeStyle:'short'}) + " - " + eDate.toLocaleString('en-US', {timeStyle:'short'})}
               </Text>
             </View>
           </View>

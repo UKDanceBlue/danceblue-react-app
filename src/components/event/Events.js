@@ -32,7 +32,7 @@ class Events extends React.Component {
                 </View>
                 {
                     this.state.events.map((row) =>
-                        <EventRow styles={styles} key={row.id} id={row.id} title={row.title} startDate={row.startDate} endDate={row.endDate} text={row.text} />
+                        <EventRow styles={styles} key={row.id} id={row.id} title={row.title} startDate={row.start_date} endDate={row.end_date} text={row.text} />
                     )
                 }
             </View>
