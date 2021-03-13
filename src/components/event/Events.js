@@ -29,7 +29,7 @@ class Events extends React.Component {
                 </View>
                 {
                     this.state.events.map((row) =>
-                        <EventRow styles={styles} key={row.id} id={row.id} title={row.title} startDate={row.start_date} endDate={row.end_date} text={row.text} showIfToday={true}/>
+                        <EventRow styles={styles} key={row.id} id={row.id} title={row.title} startDate={row.start_date} endDate={row.end_date} text={row.text} showIfToday={true} imageLink={row.image}/>
                     )
                 }
                 <View style={styles.sectionTitleView}>
@@ -37,7 +37,7 @@ class Events extends React.Component {
                 </View>
                 {
                     this.state.events.map((row) =>
-                        <EventRow styles={styles} key={row.id} id={row.id} title={row.title} startDate={row.start_date} endDate={row.end_date} text={row.text} showIfToday={false} url={row.image}/>
+                        <EventRow styles={styles} key={row.id} id={row.id} title={row.title} startDate={row.start_date} endDate={row.end_date} text={row.text} showIfToday={false} imageLink={row.image}/>
                     )
                 }
             </View>

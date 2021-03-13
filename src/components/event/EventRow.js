@@ -2,22 +2,41 @@ import React from 'react'
 import {
   View,
   Text,
-  Image
+  Image,
+  ActivityIndicator
 } from 'react-native'
 import { Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import bdubs from '../../../assets/events/BDubs.jpg'
 import { withFirebaseHOC } from '../../../config/Firebase'
 
-const EventRow = (props) => {
+class EventRow extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            imageRef: "",
+            isLoading: true
+        }
+    }
+    componentDidMount () {
+    this.props.firebase
+      .getDocumentURL(this.props.imageLink)
+      .then(url => {
+        this.setState({ imageRef: url, isLoading: false })
+      })
+      .catch(error => console.log(error.message))
+  }
+  render() {
+  const props = this.props
   const styles = props.styles
   const sDate = props.startDate.toDate()
   const eDate = props.endDate.toDate()
   const now = new Date();
-  var imageUrl;
   return (
-           props.showIfToday && sDate.getMonth()==now.getMonth() && sDate.getDate()==now.getDate() || // if the today property is true and the event is today, or
-           !props.showIfToday && sDate.getMonth()>=now.getMonth() && sDate.getDate()>now.getDate() // if the today property is false and the event is in the future
+           props.showIfToday && sDate.getMonth()==now.getMonth() && sDate.getDate()==now.getDate() || // if the today property is true and the event starts today, or
+           props.showIfToday && sDate < now && eDate > now || // if the today property is true and the event is current, or
+           !props.showIfToday && sDate.getMonth()>=now.getMonth() && sDate.getDate()>now.getDate() // if the today property is false and the event starts sometime after today
          ) && ( 
     <View key={props.id} style={styles.eventContainer}>
       <View style={styles.eventBox}>
@@ -34,7 +53,12 @@ const EventRow = (props) => {
             </View>
             <View style={styles.eventDateView}>
               <Text style={styles.eventDate}>
-                {sDate.toLocaleString('en-US', {weekday: 'short', month: 'numeric', day: 'numeric'}) + "    " + sDate.toLocaleString('en-US', {timeStyle:'short'}) + " - " + eDate.toLocaleString('en-US', {timeStyle:'short'})}
+                { sDate.getMonth()==eDate.getMonth() && sDate.getDate()==eDate.getDate() && // if the event starts and ends on the same day
+                  sDate.toLocaleString('en-US', {weekday: 'short', month: 'numeric', day: 'numeric'}) + "    " + sDate.toLocaleString('en-US', {timeStyle:'short'}) + " - " + eDate.toLocaleString('en-US', {timeStyle:'short'})
+                }
+                { (sDate.getDate()!=eDate.getDate() || sDate.getMonth()!=eDate.getMonth()) &&
+                  sDate.toLocaleString('en-US', {weekday: 'short', month: 'numeric', day: 'numeric'}) + "  -  " + eDate.toLocaleString('en-US', {weekday: 'short', month: 'numeric', day: 'numeric'})
+                }
               </Text>
             </View>
           </View>
@@ -49,7 +73,12 @@ const EventRow = (props) => {
           </View>
         </View>
         <View style={styles.eventImage}>
-          <Image source={firebase.firestore().collection('teams').where('number', '==', teamId).get()} style={styles.image} />
+          {this.state.isLoading && (
+            <ActivityIndicator style={styles.image} size='large' color='blue' />
+          )}
+          {!this.state.isLoading && (
+            <Image source={{ uri:this.state.imageRef}} style={styles.image} />
+          )}
         </View>
       </View>
       <View style={styles.buttonView}>
@@ -65,6 +94,12 @@ const EventRow = (props) => {
             />
                     }
         />
+
+      </View>
+    </View>
+  )
+  }
+}/*
         <Button
           style={styles.button}
           type='outline'
@@ -76,10 +111,5 @@ const EventRow = (props) => {
               color='#0033A0'
             />
                     }
-        />
-      </View>
-    </View>
-  )
-}
-
-export default EventRow
+        />*/
+export default withFirebaseHOC(EventRow)
