@@ -1,5 +1,6 @@
 import React from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet,
+TouchableHighlight } from 'react-native'
 import EventRow from '../../components/event/EventRow'
 import { withFirebaseHOC } from '../../../config/Firebase'
 
@@ -22,15 +23,19 @@ class Events extends React.Component {
         })
     }
     render() {
+      const { navigate } = this.props.navigation
+      
         return ( // to do: use isloading
             <View style={styles.stephTest}>
                 <View style={styles.sectionTitleView}>
                     <Text style={styles.sectionTitle}> TODAYS EVENTS </Text>
                 </View>
                 {
-                    this.state.events.map((row) =>
+                    this.state.events.map((row) => (
+                      <TouchableHighlight style={styles.button} onClick={navigate('Event')}>
                         <EventRow styles={styles} key={row.id} id={row.id} title={row.title} startDate={row.start_date} endDate={row.end_date} text={row.text} showIfToday={true} imageLink={row.image}/>
-                    )
+                      </TouchableHighlight>
+                  ))
                 }
                 <View style={styles.sectionTitleView}>
                     <Text style={styles.sectionTitle}> COMING UP </Text>
@@ -137,7 +142,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     button: {
-        width: 140
+      alignItems: 'center',
+      margin: 10,
+      height: '30%',
+      borderRadius: 10,
+      flex: 1,
+      backgroundColor: '#ffffff'
     },
     icon: {
         top: -8,
