@@ -32,37 +32,44 @@ class Standings extends React.Component {
 
   componentDidMount () {
     // Create arrays for team list, one for team total scores and one for team scores per member.
+
+    const promises = []
+
     const teams = []
-    this.props.firebase.getTeams().then(snapshot => {
+    promises.push(this.props.firebase.getTeams().then(snapshot => {
       snapshot.forEach(doc => {
         teams.push({ id: doc.id, ...doc.data() })
       })
       // SortedTeams is an array that sorts the teams' points in descending order
       const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points)
       const sortedTeamsPPM = [].concat(teams).sort((a, b) => (a.points / a.size) < (b.points / b.size))
-      this.setState({ allTeams: sortedTeams, isLoading: false })
-      this.setState({ allTeamsPPM: sortedTeamsPPM, isLoading: false })
-    })
+      this.setState({ allTeams: sortedTeams })
+      this.setState({ allTeamsPPM: sortedTeamsPPM })
+    }))
 
     // Get list of users, for switching scoreboard to display people instead of teams.
     const users = []
-    this.props.firebase.getUsers().then(snapshot => {
+    promises.push(this.props.firebase.getUsers().then(snapshot => {
       snapshot.forEach(doc => {
         users.push({ id: doc.id, ...doc.data() })
       })
       const sortedUsers = [].concat(users).sort((a, b) => a.points < b.points)
-      this.setState({ allUsers: sortedUsers, isLoading: false })
-    })
+      this.setState({ allUsers: sortedUsers })
+    }))
+
     // Get the team number and user ID of the current user.
     // These are for highlighting the user's position in the teams and users scoreboards
     this.props.firebase.checkAuthUser(user => {
       if (user) {
-        this.props.firebase.getUserData(user.uid).then(data => {
+        promises.push(this.props.firebase.getUserData(user.uid).then(data => {
           this.setState({ userTeamNum: data.data().teamNumber })
           this.setState({ userID: data.id })
-        })
+        }))
       }
     })
+
+    // Display loading indicator until all promises resolve
+    Promise.all(promises).then(this.setState({ isLoading: false }))
   }
 
   render () {
