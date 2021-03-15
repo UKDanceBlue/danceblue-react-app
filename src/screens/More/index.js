@@ -7,32 +7,22 @@ import {
   Text,
   SafeAreaView
 } from 'react-native'
-import { createStackNavigator } from '@react-navigation/stack'
-
-import ProfileScreen from './Profile'
-import { FAQScreen } from './FAQ'
-import { DonateScreen } from './Donate'
-import { ContactScreen } from './Contact'
 
 import { styles } from '../../styles'
-
-const Stack = createStackNavigator()
 
 const profileButtonImage = require('./Profile_Button.jpg')
 const donateButtonImage = require('./Donate_Button.jpg')
 const faqsButtonImage = require('./FAQs_Button.jpg')
 const contactButtonImage = require('./Contact_Button.jpg')
 
-class MoreScreenOptions extends React.Component {
+// Component for "more" screen in main navigation
+export class MoreScreen extends React.Component {
   render () {
     const { navigate } = this.props.navigation
     return (
       <>
         <SafeAreaView style={{ flex: 1 }}>
           <TouchableHighlight
-            onPress={() => {
-              navigate('Profile')
-            }}
             style={styles.button}
           >
             <ImageBackground
@@ -42,7 +32,7 @@ class MoreScreenOptions extends React.Component {
             >
               <View style={styles.view}>
                 <Text style={styles.text}>
-                  Profile
+                  {'Profile\nComing Soon!'}
                 </Text>
               </View>
             </ImageBackground>
@@ -103,23 +93,6 @@ class MoreScreenOptions extends React.Component {
           </TouchableHighlight>
         </SafeAreaView>
       </>
-    )
-  }
-}
-
-// Component for "more" screen in main navigation
-export class MoreScreen extends React.Component {
-  render () {
-    /* eslint-disable */
-    const { navigate } = this.props.navigation
-    return (
-      <Stack.Navigator>
-        <Stack.Screen name='More Options' component={MoreScreenOptions} />
-        <Stack.Screen name='Profile' component={ProfileScreen} />
-        <Stack.Screen name='FAQ' component={FAQScreen} />
-        <Stack.Screen name='Donate' component={DonateScreen} />
-        <Stack.Screen name='Contact' component={ContactScreen} />
-      </Stack.Navigator>
     )
   }
 }
