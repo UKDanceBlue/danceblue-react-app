@@ -28,7 +28,7 @@ class EventRow extends React.Component {
   }
   render() {
     return (
-        <Text>{this.props.id}</Text>
+        <Text>{this.props.title}</Text>
     )
   }
 }

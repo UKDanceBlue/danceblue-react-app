@@ -58,6 +58,21 @@ const Firebase = {
       .collection('events')
       .get()
   },
+  getEvent: (id) => {
+    return firebase
+      .firestore()
+      .collection('events')
+      .doc(id)
+      .get()
+  },
+  getUpcomingEvents: () => {
+    let now = new Date()
+    return firebase
+      .firestore()
+      .collection('events')
+      .where('endTime', '>', now)
+      .get()
+  },
   getUser: (userId) => {
     return firebase
       .firestore()

@@ -7,7 +7,7 @@ import { HomeScreen } from './Home'
 import EventsScreen from './Events'
 import { BlogScreen } from './Blog'
 import { MoreScreen } from './More'
-import { Event } from '../components/event/Event'
+import Event from '../components/event/Event'
 
 // import ProfileScreen from './More/Profile'
 import { FAQScreen } from './More/FAQ'
@@ -66,7 +66,7 @@ function MainStackScreen () {
       <MainStack.Screen name='FAQ' component={FAQScreen} />
       <MainStack.Screen name='Donate' component={DonateScreen} />
       <MainStack.Screen name='Contact' component={ContactScreen} />
-      <MainStack.Screen name="Event" component={Event} />
+      <MainStack.Screen name="Event" component={Event} options ={({route}) => ({title: route.params.name})} />
     </MainStack.Navigator>
   )
 }
