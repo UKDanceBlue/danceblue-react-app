@@ -8,7 +8,7 @@ import { EventsScreen } from './Events'
 import { BlogScreen } from './Blog'
 import { MoreScreen } from './More'
 
-import ProfileScreen from './More/Profile'
+// import ProfileScreen from './More/Profile'
 import { FAQScreen } from './More/FAQ'
 import { DonateScreen } from './More/Donate'
 import { ContactScreen } from './More/Contact'
@@ -58,21 +58,21 @@ function TabsScreen () {
   )
 }
 
-function MainStackScreen() {
+function MainStackScreen () {
   return (
     <MainStack.Navigator>
-      <MainStack.Screen name="Tab" component={TabsScreen} options={{ headerShown: false }} />
+      <MainStack.Screen name='Tab' component={TabsScreen} options={{ headerShown: false }} />
       <MainStack.Screen name='FAQ' component={FAQScreen} />
       <MainStack.Screen name='Donate' component={DonateScreen} />
       <MainStack.Screen name='Contact' component={ContactScreen} />
     </MainStack.Navigator>
-  );
+  )
 }
 
 export function RootStackScreen () {
   return (
-    <RootStack.Navigator mode="modal">
-      <RootStack.Screen name="Main" component={MainStackScreen} options={{ headerShown: false }} />
+    <RootStack.Navigator mode='modal'>
+      <RootStack.Screen name='Main' component={MainStackScreen} options={{ headerShown: false }} />
     </RootStack.Navigator>
   )
 }

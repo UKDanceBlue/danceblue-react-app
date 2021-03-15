@@ -7,16 +7,8 @@ import {
   Text,
   SafeAreaView
 } from 'react-native'
-import { createStackNavigator } from '@react-navigation/stack'
-
-import ProfileScreen from './Profile'
-import { FAQScreen } from './FAQ'
-import { DonateScreen } from './Donate'
-import { ContactScreen } from './Contact'
 
 import { styles } from '../../styles'
-
-const Stack = createStackNavigator()
 
 const profileButtonImage = require('./Profile_Button.jpg')
 const donateButtonImage = require('./Donate_Button.jpg')
@@ -40,7 +32,7 @@ export class MoreScreen extends React.Component {
             >
               <View style={styles.view}>
                 <Text style={styles.text}>
-                  {`Profile\nComing Soon!`}
+                  {'Profile\nComing Soon!'}
                 </Text>
               </View>
             </ImageBackground>
