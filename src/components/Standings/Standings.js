@@ -49,7 +49,7 @@ class Standings extends React.Component {
 
     // Get list of users, for switching scoreboard to display people instead of teams.
     const users = []
-    promises.push(this.props.firebase.getUsers().then(snapshot => {
+    promises.push(this.props.firebase.getUsersWithPoints().then(snapshot => {
       snapshot.forEach(doc => {
         users.push({ id: doc.id, ...doc.data() })
       })
@@ -61,7 +61,7 @@ class Standings extends React.Component {
     // These are for highlighting the user's position in the teams and users scoreboards
     this.props.firebase.checkAuthUser(user => {
       if (user) {
-        promises.push(this.props.firebase.getUserData(user.uid).then(data => {
+        promises.push(this.props.firebase.getUser(user.uid).then(data => {
           this.setState({ userTeamNum: data.data().teamNumber })
           this.setState({ userID: data.id })
         }))

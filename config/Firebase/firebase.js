@@ -52,20 +52,20 @@ const Firebase = {
       .collection('announcements')
       .get()
   },
+  getUsers: () => {
+    return firebase
+      .firestore()
+      .collection('users')
+      .get()
+  },
+  getUsersWithPoints: () => {
+    return firebase
+      .firestore()
+      .collection('users')
+      .where('points', '!=', null)
+      .get()
+  },
   getUser: (userId) => {
-    return firebase
-      .firestore()
-      .collection('users')
-      .where('uid', '==', userId)
-      .get()
-  },
-  getUsers: (userId) => {
-    return firebase
-      .firestore()
-      .collection('users')
-      .get()
-  },
-  getUserData: (userId) => {
     return firebase
       .firestore()
       .collection('users')
