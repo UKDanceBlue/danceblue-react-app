@@ -28,6 +28,7 @@
     "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "~1.7.0",
     "react-native-leaderboard": "^1.0.6",
+    "react-native-open-maps": "^0.3.5",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",

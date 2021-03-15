@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import {
   Text,
   ActivityIndicator,
-  StyleSheet
+  StyleSheet,
+  Button
 } from 'react-native'
+import openMap from 'react-native-open-maps'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
@@ -24,13 +26,15 @@ class Event extends Component {
   }
 
   render () {
-    return <>
-    {this.state.isLoading && (
-      <ActivityIndicator style={styles.image} size='large' color='blue' />
-    )}
-    {!this.state.isLoading && (
-      <Text>{this.state.title}</Text>
-    )}</>
+    return (
+      <>
+        {this.state.isLoading && (
+          <ActivityIndicator style={styles.image} size='large' color='blue' />
+        )}
+        {!this.state.isLoading && (
+          <Button color={'#bdc3c7'} onPress={() => openMap({ query: this.state.address })} title='Get Directions' />
+        )}
+      </>)
   }
 }
 
