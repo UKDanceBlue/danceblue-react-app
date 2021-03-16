@@ -10,6 +10,19 @@ import * as Calendar from 'expo-calendar'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
+const danceBlueCalendarConfig = {
+  title: 'DanceBlue',
+  color: 'blue',
+  enitityType: Calendar.EntityTypes.EVENT,
+  source: {
+    isLocalAccount: true,
+    name: 'DanceBlue Mobile'
+  },
+  name: 'dancebluemobile',
+  ownerAccount: 'DanceBlue Mobile',
+  accessLevel: Calendar.CalendarAccessLevel.OWNER
+}
+
 class Event extends Component {
   constructor (props) {
     super(props)
@@ -20,7 +33,8 @@ class Event extends Component {
     }
 
     this.checkCalendarPermissions = this.checkCalendarPermissions.bind(this)
-    this.getPrimaryCalendar = this.getPrimaryCalendar.bind(this)
+    this.checkDBCalendar = this.checkDBCalendar.bind(this)
+    this.addToCalendar = this.addToCalendar.bind(this)
   }
 
   componentDidMount () {
@@ -29,28 +43,36 @@ class Event extends Component {
     }).then(this.checkCalendarPermissions)
   }
 
-  async checkCalendarPermissions () {
-    let { status } = await Calendar.requestCalendarPermissionsAsync()
-    if (status === 'granted') {
-      this.getPrimaryCalendar()
-    }
+  checkCalendarPermissions () {
+    return Calendar.requestCalendarPermissionsAsync()
   }
 
-  async getPrimaryCalendar () {
-    if (Platform.OS === 'ios') {
-      Calendar.getDefaultCalendarAsync().then(calendar => {
-        this.setState({ calendarID: calendar.id})
+  checkDBCalendar () {
+    let foundCalendar = false
+    let promises = []
+    return Calendar.getCalendarsAsync().then(calendars => {
+      calendars.forEach(calendar => {
+        if (calendar.name === 'dancebluemobile') {
+          this.setState({ calendarID: calendar.id})
+          foundCalendar = true
+        }
       })
-    } else {
-      Calendar.getCalendarsAsync().then(calendars => {
-        calendars.forEach(calendar => {
-          console.log(calendar.isPrimary)
-          if (calendar.isPrimary) {
-            this.setState({ calendarID: calendar.id })
-          }
-        })
+    }).then(() => {
+      if (!foundCalendar) {
+        Calendar.createCalendarAsync(danceBlueCalendarConfig).then(id => this.setState({ calendarID: id }))
+      }
+    })
+  }
+
+  addToCalendar () {
+    this.checkCalendarPermissions().then(this.checkDBCalendar).then(() => {
+      return Calendar.createEventAsync(this.state.calendarID, {
+        title: this.state.title,
+        startDate: this.state.startTime.toDate(),
+        endDate: this.state.endTime.toDate(),
+        location: this.state.address
       })
-    }
+    })
   }
 
   render () {
@@ -58,7 +80,6 @@ class Event extends Component {
       title: `DanceBlue: ${this.state.title}`,
       startDate: (this.state.startTime ? this.state.startTime.toDate().toUTCString() : null)
     }
-    console.log(this.state.calendarID)
     return (
       <>
         {this.state.isLoading && (
@@ -66,7 +87,7 @@ class Event extends Component {
         )}
         {!this.state.isLoading && (<>
           <Button color={'#bdc3c7'} onPress={() => openMap({ query: this.state.address })} title='Get Directions' />
-          <Button color={'#bdc3c7'} onPress={() => console.log(this.state.calendarID)} title='Add to Calendar' /></>
+          <Button color={'#bdc3c7'} onPress={() => this.addToCalendar()} title='Add to Calendar' /></>
         )}
       </>)
   }
