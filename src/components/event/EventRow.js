@@ -10,15 +10,16 @@ import bdubs from '../../../assets/events/BDubs.jpg'
 import { withFirebaseHOC } from '../../../config/Firebase'
 
 class EventRow extends React.Component {
-    constructor(props) {
-        super(props)
+  constructor (props) {
+    super(props)
 
-        this.state = {
-            imageRef: "",
-            isLoading: true
-        }
+    this.state = {
+      imageRef: '',
+      isLoading: true
     }
-    componentDidMount () {
+  }
+
+  componentDidMount () {
     this.props.firebase
       .getDocumentURL(this.props.imageLink)
       .then(url => {
@@ -26,9 +27,10 @@ class EventRow extends React.Component {
       })
       .catch(error => console.log(error.message))
   }
-  render() {
+
+  render () {
     return (
-        <Text>{this.props.title}</Text>
+      <Text>{this.props.title}</Text>
     )
   }
 }

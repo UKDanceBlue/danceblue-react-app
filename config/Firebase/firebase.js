@@ -66,7 +66,7 @@ const Firebase = {
       .get()
   },
   getUpcomingEvents: () => {
-    let now = new Date()
+    const now = new Date()
     return firebase
       .firestore()
       .collection('events')

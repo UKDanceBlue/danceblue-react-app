@@ -3,7 +3,10 @@ import {
   Text,
   ActivityIndicator,
   StyleSheet,
-  Button, Platform
+  TouchableHighlight,
+  Platform,
+  View,
+  Image
 } from 'react-native'
 import openMap from 'react-native-open-maps'
 import * as Calendar from 'expo-calendar'
@@ -39,7 +42,10 @@ class Event extends Component {
 
   componentDidMount () {
     this.props.firebase.getEvent(this.state.id).then(doc => {
-      this.setState({ isLoading: false, ...doc.data() });
+      this.setState({ isLoading: false, ...doc.data() })
+      this.props.firebase.getDocumentURL(doc.data().image).then(url => {
+        this.setState({ imageRef: url })
+      }).catch(error => console.log(error.message))
     }).then(this.checkCalendarPermissions)
   }
 
@@ -49,11 +55,11 @@ class Event extends Component {
 
   checkDBCalendar () {
     let foundCalendar = false
-    let promises = []
+    const promises = []
     return Calendar.getCalendarsAsync().then(calendars => {
       calendars.forEach(calendar => {
         if (calendar.name === 'dancebluemobile') {
-          this.setState({ calendarID: calendar.id})
+          this.setState({ calendarID: calendar.id })
           foundCalendar = true
         }
       })
@@ -76,7 +82,7 @@ class Event extends Component {
   }
 
   render () {
-    let eventConfig = {
+    const eventConfig = {
       title: `DanceBlue: ${this.state.title}`,
       startDate: (this.state.startTime ? this.state.startTime.toDate().toUTCString() : null)
     }
@@ -85,19 +91,49 @@ class Event extends Component {
         {this.state.isLoading && (
           <ActivityIndicator style={styles.image} size='large' color='blue' />
         )}
-        {!this.state.isLoading && (<>
-          <Button color={'#bdc3c7'} onPress={() => openMap({ query: this.state.address })} title='Get Directions' />
-          <Button color={'#bdc3c7'} onPress={() => this.addToCalendar()} title='Add to Calendar' /></>
+        {!this.state.isLoading && (
+          <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+            <Image source={{ uri: this.state.imageRef }} style={styles.image} />
+            <View style={styles.buttonContainer}>
+              <TouchableHighlight
+                onPress={() => openMap({ query: this.state.address })}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>Get Directions</Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                  style={styles.button}
+                  onPress={() => this.addToCalendar()}
+              >
+                <Text style={styles.buttonText}>Add to Calendar</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
         )}
-      </>)
+      </>
+    )
   }
 }
 
 const styles = StyleSheet.create({
   image: {
-    flex: 1,
-    width: 200,
-    resizeMode: 'contain'
+    height: 250,
+    width: '100%'
+  },
+  button: {
+    backgroundColor: '#0033A0E0',
+    borderRadius: 5,
+    padding: 10,
+    width: '45%',
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    flex: 1
+  },
+  buttonText: {
+    color: 'white'
   }
 })
 

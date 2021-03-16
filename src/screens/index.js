@@ -1,7 +1,9 @@
 import React from 'react'
+import { StyleSheet } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import { BlurView } from 'expo-blur';
 
 import { HomeScreen } from './Home'
 import EventsScreen from './Events'
@@ -66,7 +68,15 @@ function MainStackScreen () {
       <MainStack.Screen name='FAQ' component={FAQScreen} />
       <MainStack.Screen name='Donate' component={DonateScreen} />
       <MainStack.Screen name='Contact' component={ContactScreen} />
-      <MainStack.Screen name="Event" component={Event} options ={({route}) => ({title: route.params.name})} />
+      <MainStack.Screen name='Event' component={Event} options={({ route }) => ({
+          title: route.params.name,
+          headerTransparent: true,
+          headerMode: 'screen',
+          headerBackground: () => (
+            <BlurView tint="light" intensity={100} style={StyleSheet.absoluteFill} />
+          )
+        })}
+      />
     </MainStack.Navigator>
   )
 }
