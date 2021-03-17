@@ -32,12 +32,17 @@ class Event extends Component {
 
     this.state = {
       isLoading: true,
-      id: props.route.params.id
+      id: props.route.params.id,
+      isOnCalendar: false,
+      isAddingToCalendar: false
     }
 
     this.checkCalendarPermissions = this.checkCalendarPermissions.bind(this)
     this.checkDBCalendar = this.checkDBCalendar.bind(this)
     this.addToCalendar = this.addToCalendar.bind(this)
+    this.createDBCalendar = this.createDBCalendar.bind(this)
+    this.checkEventExists = this.checkEventExists.bind(this)
+    this.removeFromCalendar = this.removeFromCalendar.bind(this)
   }
 
   componentDidMount () {
@@ -46,7 +51,7 @@ class Event extends Component {
       this.props.firebase.getDocumentURL(doc.data().image).then(url => {
         this.setState({ imageRef: url })
       }).catch(error => console.log(error.message))
-    }).then(this.checkCalendarPermissions)
+    }).then(this.checkCalendarPermissions).then(this.checkEventExists)
   }
 
   checkCalendarPermissions () {
@@ -62,22 +67,44 @@ class Event extends Component {
           foundCalendar = true
         }
       })
-    }).then(() => {
-      if (!foundCalendar) {
-        Calendar.createCalendarAsync(danceBlueCalendarConfig).then(id => this.setState({ calendarID: id }))
+      return foundCalendar
+    })
+  }
+
+  createDBCalendar () {
+    return Calendar.createCalendarAsync(danceBlueCalendarConfig).then(id => this.setState({ calendarID: id }))
+  }
+
+  checkEventExists () {
+    this.checkCalendarPermissions().then(this.checkDBCalendar).then(async calendarExists => {
+      if (calendarExists) {
+        return Calendar.getEventsAsync([this.state.calendarID], this.state.startTime.toDate(), this.state.endTime.toDate()).then(events => {
+          events.forEach(event => {
+            if (event.title === this.state.title) this.setState({ isOnCalendar: true, eventCalendarID: event.id })
+          })
+        })
       }
     })
   }
 
   addToCalendar () {
-    this.checkCalendarPermissions().then(this.checkDBCalendar).then(() => {
+    this.setState({ isAddingToCalendar: true })
+    this.checkCalendarPermissions().then(this.checkDBCalendar).then(async calendarExists => {
+      if (!calendarExists) {
+        await this.createDBCalendar()
+      }
       return Calendar.createEventAsync(this.state.calendarID, {
         title: this.state.title,
         startDate: this.state.startTime.toDate(),
         endDate: this.state.endTime.toDate(),
         location: this.state.address
-      })
+      }).then(id => this.setState({ isAddingToCalendar: false, isOnCalendar: true, eventCalendarID: id }))
     })
+  }
+
+  removeFromCalendar () {
+    this.setState({ isAddingToCalendar: true })
+    return Calendar.deleteEventAsync(this.state.eventCalendarID).then(() => this.setState({ isAddingToCalendar: false, isOnCalendar: false, eventCalendarID: null }))
   }
 
   render () {
@@ -127,9 +154,13 @@ class Event extends Component {
                 {this.state.startTime && (
                   <TouchableHighlight
                     style={styles.button}
-                    onPress={() => this.addToCalendar()}
+                    onPress={() => {
+                      this.state.isOnCalendar ? this.removeFromCalendar() : this.addToCalendar()
+                    }}
                   >
-                    <Text style={styles.buttonText}>Add to Calendar</Text>
+                    <Text style={styles.buttonText}>
+                      {this.state.isOnCalendar ? 'Remove Event' : 'Add to Calendar'}
+                    </Text>
                   </TouchableHighlight>
                 )}
               </View>
