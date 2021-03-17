@@ -4,7 +4,6 @@ import {
   ActivityIndicator,
   StyleSheet,
   TouchableHighlight,
-  Platform,
   View,
   Image
 } from 'react-native'
@@ -56,7 +55,6 @@ class Event extends Component {
 
   checkDBCalendar () {
     let foundCalendar = false
-    const promises = []
     return Calendar.getCalendarsAsync().then(calendars => {
       calendars.forEach(calendar => {
         if (calendar.name === 'dancebluemobile') {
@@ -83,12 +81,8 @@ class Event extends Component {
   }
 
   render () {
-    const eventConfig = {
-      title: `DanceBlue: ${this.state.title}`,
-      startDate: (this.state.startTime ? this.state.startTime.toDate().toUTCString() : null)
-    }
-    let startDate = (this.state.startTime ? moment(this.state.startTime.toDate()) : moment())
-    let endDate = (this.state.endTime ? moment(this.state.endTime.toDate()) : moment())
+    const startDate = (this.state.startTime ? moment(this.state.startTime.toDate()) : moment())
+    const endDate = (this.state.endTime ? moment(this.state.endTime.toDate()) : moment())
     let whenString = ''
     if (startDate.isSame(endDate, 'day')) {
       whenString = `${startDate.format('M/D/YYYY h:mm a')} - ${endDate.format('h:mm a')}`
@@ -104,24 +98,40 @@ class Event extends Component {
           <View style={{ flex: 1, justifyContent: 'flex-start' }}>
             <Image source={{ uri: this.state.imageRef }} style={styles.image} />
             <View style={styles.body}>
-              {this.state.description && (<Text style={styles.text}>{this.state.description}</Text>)}
-              {this.state.address && (<><Text style={styles.boldText}>Where?</Text>
-              <Text style={styles.text}>{this.state.address}</Text></>)}
-              {this.state.startTime && (<><Text style={styles.boldText}>When?</Text>
-              <Text style={styles.text}>{whenString}</Text></>)}
+              {this.state.description && (
+                <Text style={styles.text}>
+                  {this.state.description}
+                </Text>
+              )}
+              {this.state.address && (
+                <>
+                  <Text style={styles.boldText}>Where?</Text>
+                  <Text style={styles.text}>{this.state.address}</Text>
+                </>
+              )}
+              {this.state.startTime && (
+                <>
+                  <Text style={styles.boldText}>When?</Text>
+                  <Text style={styles.text}>{whenString}</Text>
+                </>
+              )}
               <View style={styles.buttonContainer}>
-                {this.state.address && (<TouchableHighlight
-                  onPress={() => openMap({ query: this.state.address })}
-                  style={styles.button}
-                >
-                  <Text style={styles.buttonText}>Get Directions</Text>
-                </TouchableHighlight>)}
-                  {this.state.startTime && (<TouchableHighlight
-                  style={styles.button}
-                  onPress={() => this.addToCalendar()}
-                >
-                  <Text style={styles.buttonText}>Add to Calendar</Text>
-                </TouchableHighlight>)}
+                {this.state.address && (
+                  <TouchableHighlight
+                    onPress={() => openMap({ query: this.state.address })}
+                    style={styles.button}
+                  >
+                    <Text style={styles.buttonText}>Get Directions</Text>
+                  </TouchableHighlight>
+                )}
+                {this.state.startTime && (
+                  <TouchableHighlight
+                    style={styles.button}
+                    onPress={() => this.addToCalendar()}
+                  >
+                    <Text style={styles.buttonText}>Add to Calendar</Text>
+                  </TouchableHighlight>
+                )}
               </View>
             </View>
           </View>

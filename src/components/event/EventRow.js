@@ -21,20 +21,20 @@ class EventRow extends React.Component {
 
   componentDidMount () {
     if (this.props.imageLink) {
-    this.props.firebase
-      .getDocumentURL(this.props.imageLink)
-      .then(url => {
-        this.setState({ imageRef: url, isLoading: false })
-      })
-      .catch(error => console.log(error.message))
+      this.props.firebase
+        .getDocumentURL(this.props.imageLink)
+        .then(url => {
+          this.setState({ imageRef: url, isLoading: false })
+        })
+        .catch(error => console.log(error.message))
     } else {
-      this.setState({ imageRef: '', isLoading: false})
+      this.setState({ imageRef: '', isLoading: false })
     }
   }
 
   render () {
-    let startDate = moment(this.props.startDate)
-    let endDate = moment(this.props.endDate)
+    const startDate = moment(this.props.startDate)
+    const endDate = moment(this.props.endDate)
     let whenString = ''
     if (startDate.isSame(endDate, 'day')) {
       whenString = `${startDate.format('M/D/YYYY h:mm a')} - ${endDate.format('h:mm a')}`
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexGrow: 0,
     flexShrink: 1
-  },
+  }
 })
 
 export default withFirebaseHOC(EventRow)
