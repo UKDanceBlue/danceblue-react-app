@@ -15,7 +15,7 @@ import { withFirebaseHOC } from '../../../config/Firebase'
 
 const danceBlueCalendarConfig = {
   title: 'DanceBlue',
-  color: 'blue',
+  color: '#0033A0',
   enitityType: Calendar.EntityTypes.EVENT,
   source: {
     isLocalAccount: true,
