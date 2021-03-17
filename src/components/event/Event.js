@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import openMap from 'react-native-open-maps'
 import * as Calendar from 'expo-calendar'
+import moment from 'moment'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
@@ -86,6 +87,14 @@ class Event extends Component {
       title: `DanceBlue: ${this.state.title}`,
       startDate: (this.state.startTime ? this.state.startTime.toDate().toUTCString() : null)
     }
+    let startDate = (this.state.startTime ? moment(this.state.startTime.toDate()) : moment())
+    let endDate = (this.state.endTime ? moment(this.state.endTime.toDate()) : moment())
+    let whenString = ''
+    if (startDate.isSame(endDate, 'day')) {
+      whenString = `${startDate.format('M/D/YYYY h:mm a')} - ${endDate.format('h:mm a')}`
+    } else {
+      whenString = `${startDate.format('M/D/YYYY h:mm a')} - ${endDate.format('M/D/YYYY h:mm a')}`
+    }
     return (
       <>
         {this.state.isLoading && (
@@ -94,19 +103,26 @@ class Event extends Component {
         {!this.state.isLoading && (
           <View style={{ flex: 1, justifyContent: 'flex-start' }}>
             <Image source={{ uri: this.state.imageRef }} style={styles.image} />
-            <View style={styles.buttonContainer}>
-              <TouchableHighlight
-                onPress={() => openMap({ query: this.state.address })}
-                style={styles.button}
-              >
-                <Text style={styles.buttonText}>Get Directions</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
+            <View style={styles.body}>
+              {this.state.description && (<Text style={styles.text}>{this.state.description}</Text>)}
+              {this.state.address && (<><Text style={styles.boldText}>Where?</Text>
+              <Text style={styles.text}>{this.state.address}</Text></>)}
+              {this.state.startTime && (<><Text style={styles.boldText}>When?</Text>
+              <Text style={styles.text}>{whenString}</Text></>)}
+              <View style={styles.buttonContainer}>
+                {this.state.address && (<TouchableHighlight
+                  onPress={() => openMap({ query: this.state.address })}
+                  style={styles.button}
+                >
+                  <Text style={styles.buttonText}>Get Directions</Text>
+                </TouchableHighlight>)}
+                  {this.state.startTime && (<TouchableHighlight
                   style={styles.button}
                   onPress={() => this.addToCalendar()}
-              >
-                <Text style={styles.buttonText}>Add to Calendar</Text>
-              </TouchableHighlight>
+                >
+                  <Text style={styles.buttonText}>Add to Calendar</Text>
+                </TouchableHighlight>)}
+              </View>
             </View>
           </View>
         )}
@@ -125,15 +141,27 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     width: '45%',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    flex: 1
+    paddingTop: 10
   },
   buttonText: {
     color: 'white'
+  },
+  text: {
+    fontSize: 17
+  },
+  boldText: {
+    fontWeight: 'bold',
+    fontSize: 17
+  },
+  body: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 15
   }
 })
 

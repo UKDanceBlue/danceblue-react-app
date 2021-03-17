@@ -45,21 +45,21 @@ class EventsScreen extends React.Component {
   render () {
     const { navigate } = this.props.navigation
     return (
-      <ScrollView>
+      <ScrollView style={styles.body}>
         <SafeAreaView>
-          <Text>Today's Events</Text>
+          <Text style={styles.heading}>Today's Events</Text>
           {
             this.state.today.map((row) => (
-              <TouchableOpacity style={styles.button} onPress={() => navigate('Event', { id: row.id, name: row.title })} key={row.id}>
-                <EventRow styles={styles} key={row.id} id={row.id} title={row.title} startDate={row.start_date} endDate={row.end_date} text={row.text} showIfToday imageLink={row.image} />
+              <TouchableOpacity style={styles.eventRow} onPress={() => navigate('Event', { id: row.id, name: row.title })} key={row.id}>
+                <EventRow styles={styles} key={row.id} id={row.id} title={row.title} startDate={row.startTime.toDate()} endDate={row.endTime.toDate()} text={row.text} showIfToday imageLink={row.image} />
               </TouchableOpacity>
             ))
           }
-          <Text>Upcoming Events</Text>
+          <Text style={styles.heading}>Upcoming Events</Text>
           {
             this.state.upcoming.map((row) => (
-              <TouchableOpacity style={styles.button} onPress={() => navigate('Event', { id: row.id, name: row.title })} key={row.id}>
-                <EventRow styles={styles} key={row.id} id={row.id} title={row.title} startDate={row.start_date} endDate={row.end_date} text={row.text} showIfToday imageLink={row.image} />
+              <TouchableOpacity style={styles.eventRow} onPress={() => navigate('Event', { id: row.id, name: row.title })} key={row.id}>
+                <EventRow styles={styles} key={row.id} id={row.id} title={row.title} startDate={row.startTime.toDate()} endDate={row.endTime.toDate()} text={row.text} showIfToday imageLink={row.image} />
               </TouchableOpacity>
             ))
           }
@@ -74,13 +74,18 @@ EventsScreen.navigationOptions = {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    margin: 10,
-    height: 50,
-    borderRadius: 10,
-    flex: 1,
-    backgroundColor: '#AAA'
+  eventRow: {
+    marginTop: 5,
+    marginBottom: 5
+  },
+  body: {
+    padding: 10,
+    backgroundColor: 'white',
+    flex: 1
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold'
   }
 })
 

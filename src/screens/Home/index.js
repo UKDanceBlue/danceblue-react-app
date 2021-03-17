@@ -22,7 +22,6 @@ export class HomeScreen extends React.Component {
         <SafeAreaView style={{ flex: 1 }}>
           <HeaderImage />
           <CountdownView />
-          <Announcements />
           <Standings />
           <Carousel />
         </SafeAreaView>
