@@ -7,14 +7,14 @@ import { BlurView } from 'expo-blur'
 
 import { HomeScreen, ScoreboardScreen } from './Home'
 import EventsScreen from './Events'
-import { BlogScreen } from './Blog'
+import { StoreScreen } from './Store'
 import { MoreScreen } from './More'
 import Event from '../components/event/Event'
 
 // import ProfileScreen from './More/Profile'
 import { FAQScreen } from './More/FAQ'
 import { DonateScreen } from './More/Donate'
-import { ContactScreen } from './More/Contact'
+import { AboutScreen } from './More/About'
 
 const RootStack = createStackNavigator()
 const MainStack = createStackNavigator()
@@ -31,8 +31,8 @@ function TabsScreen () {
             iconName = 'home'
           } else if (route.name === 'Events') {
             iconName = 'calendar'
-          } else if (route.name === 'Blog') {
-            iconName = 'blog'
+          } else if (route.name === 'Store') {
+            iconName = 'store'
           } else if (route.name === 'More') {
             iconName = 'ellipsis-h'
           }
@@ -55,7 +55,7 @@ function TabsScreen () {
     >
       <Tabs.Screen name='Home' component={HomeScreen} />
       <Tabs.Screen name='Events' component={EventsScreen} />
-      <Tabs.Screen name='Blog' component={BlogScreen} />
+      <Tabs.Screen name='Store' component={StoreScreen} />
       <Tabs.Screen name='More' component={MoreScreen} />
     </Tabs.Navigator>
   )
@@ -67,7 +67,7 @@ function MainStackScreen () {
       <MainStack.Screen name='Tab' component={TabsScreen} options={{ headerShown: false }} />
       <MainStack.Screen name='FAQ' component={FAQScreen} />
       <MainStack.Screen name='Donate' component={DonateScreen} />
-      <MainStack.Screen name='Contact' component={ContactScreen} />
+      <MainStack.Screen name='About' component={AboutScreen} />
       <MainStack.Screen name='Scoreboard' component={ScoreboardScreen} />
       <MainStack.Screen
         name='Event' component={Event} options={({ route }) => ({
