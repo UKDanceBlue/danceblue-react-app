@@ -65,6 +65,27 @@ const Firebase = {
       .where('points', '!=', null)
       .get()
   },
+  getEvents: () => {
+    return firebase
+      .firestore()
+      .collection('events')
+      .get()
+  },
+  getEvent: (id) => {
+    return firebase
+      .firestore()
+      .collection('events')
+      .doc(id)
+      .get()
+  },
+  getUpcomingEvents: () => {
+    const now = new Date()
+    return firebase
+      .firestore()
+      .collection('events')
+      .where('endTime', '>', now)
+      .get()
+  },
   getUser: (userId) => {
     return firebase
       .firestore()
