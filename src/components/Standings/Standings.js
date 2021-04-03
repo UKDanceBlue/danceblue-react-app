@@ -199,21 +199,14 @@ class Standings extends React.Component {
               {/* Renders the 'show more/less' button and toggles the extended/collapsed leaderboard */}
               <TouchableHighlight
                 onPress={() => {
-                  this.setState({
-                    shownNumber:
-                      this.state.shownNumber === this.state.topNumber
-                        ? this.state.allTeams.length
-                        : this.state.topNumber
-                  })
+                  this.props.navigate('Scoreboard')
                 }}
                 underlayColor='#dddddd'
                 style={styles.more}
               >
                 <Text>
                   {/* Shows the appropriate message when the leaderboard is collapsed/extended */}
-                  {this.state.shownNumber === this.state.topNumber
-                    ? 'Show more...'
-                    : 'Show less...'}
+                  Show more...
                 </Text>
               </TouchableHighlight>
             </>

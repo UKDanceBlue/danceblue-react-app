@@ -13,6 +13,8 @@ import { FAQScreen } from './More/FAQ'
 import { DonateScreen } from './More/Donate'
 import { ContactScreen } from './More/Contact'
 
+import Standings from '../components/Standings/Standings'
+
 const RootStack = createStackNavigator()
 const MainStack = createStackNavigator()
 const Tabs = createBottomTabNavigator()
@@ -65,6 +67,7 @@ function MainStackScreen () {
       <MainStack.Screen name='FAQ' component={FAQScreen} />
       <MainStack.Screen name='Donate' component={DonateScreen} />
       <MainStack.Screen name='Contact' component={ContactScreen} />
+      <MainStack.Screen name='Scoreboard' component={Standings} />
     </MainStack.Navigator>
   )
 }
