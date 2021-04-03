@@ -139,60 +139,6 @@ class Standings extends React.Component {
             <>
               <View style={styles.optionRow}>
 
-                <View style={!this.state.showPointsPerMember && this.state.showScoresByTeam ? styles.highlightedOption : styles.option}>
-                  {/* Button for toggling between Teams and People scoreboard */}
-                  <TouchableHighlight
-                    onPress={() => {
-                      this.setState({
-                        showPointsPerMember: false,
-                        showScoresByTeam: true
-                      })
-                    }}
-                    underlayColor='#dddddd'
-                    style={styles.more}
-                  >
-                    <Text>
-                      Team Totals
-                    </Text>
-                  </TouchableHighlight>
-                </View>
-
-                <View style={this.state.showPointsPerMember && this.state.showScoresByTeam ? styles.highlightedOption : styles.option}>
-                  <TouchableHighlight
-                    onPress={() => {
-                      this.setState({
-                        showPointsPerMember: true,
-                        showScoresByTeam: true
-                      })
-                    }}
-                    underlayColor='#dddddd'
-                    style={styles.more}
-                  >
-                    <Text>
-                      Total per Members
-                    </Text>
-                  </TouchableHighlight>
-                </View>
-
-                <View style={!this.state.showScoresByTeam ? styles.highlightedOption : styles.option}>
-                  {/* Button for toggling between total scores and points per member */}
-                  <TouchableHighlight
-                    onPress={() => {
-                      if (this.state.showScoresByTeam) { // only toggleable when showing teams
-                        this.setState({
-                          showScoresByTeam: false
-                        })
-                      }
-                    }}
-                    underlayColor='#dddddd'
-                    style={styles.more}
-                  >
-                    <Text>
-                      Student Scores
-                    </Text>
-                  </TouchableHighlight>
-                </View>
-
               </View>
               {/* Renders the top shownNumber Places from the 'places' variable */}
               {places}
@@ -231,24 +177,13 @@ class Standings extends React.Component {
 const { width } = Dimensions.get('window')
 const colWidth = width / 3
 const styles = StyleSheet.create({
-  container: {
-    width: '98%',
-    marginBottom: 5,
-    borderColor: '#FFC72C',
-    borderWidth: 1,
-    borderRadius: 15,
-    overflow: 'hidden'
-  },
   ListView: {
     paddingLeft: 5,
-    marginTop: 5,
     paddingTop: 5,
     paddingBottom: 5,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     backgroundColor: 'white',
-    borderRadius: 10,
-    overflow: 'hidden',
     flex: 1
   },
   ListTitle: {
@@ -264,29 +199,6 @@ const styles = StyleSheet.create({
   more: {
     justifyContent: 'flex-end'
   },
-  optionRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    width: width,
-    borderColor: '#63656a',
-    borderWidth: 1,
-    borderRadius: 30,
-    overflow: 'hidden'
-  },
-  option: {
-    width: colWidth,
-    paddingTop: 10,
-    paddingBottom: 10,
-    alignItems: 'center'
-  },
-  highlightedOption: {
-    width: colWidth,
-    paddingTop: 10,
-    paddingBottom: 10,
-    alignItems: 'center',
-    backgroundColor: '#1897d4'
-  }
 })
 
 export default withFirebaseHOC(Standings)
