@@ -8,7 +8,6 @@ import {
 import Carousel from '../../components/Carousel/carousel'
 import HeaderImage from '../../components/countdown/HeaderImage'
 import CountdownView from '../../components/countdown/CountdownView'
-import Announcements from '../../components/announcement/Announcements'
 import Standings from '../../components/Standings/Standings'
 
 // Component for home screen in main navigation
@@ -22,7 +21,6 @@ export class HomeScreen extends React.Component {
         <SafeAreaView style={{ flex: 1 }}>
           <HeaderImage />
           <CountdownView />
-          <Announcements />
           <Standings />
           <Carousel />
         </SafeAreaView>
