@@ -24,10 +24,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.danceblue.dancebluemarathon"
     },
     "android": {
-      "package": "com.danceblue.dancebluemobile",
+      "package": "com.danceblue.dancebluemarathon",
       "versionCode": 1
     },
     "description": "University of Kentucky DanceBlue Mobile Application"
