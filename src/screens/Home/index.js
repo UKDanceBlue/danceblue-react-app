@@ -13,9 +13,9 @@ import Standings from '../../components/Standings/Standings'
 export class ScoreboardScreen extends React.Component {
   render () {
     return (
-      <ScrollView showsVerticalScrollIndicator={true}>
+      <ScrollView showsVerticalScrollIndicator>
         <SafeAreaView style={{ flex: 1 }}>
-          <Standings isExpanded={true} />
+          <Standings isExpanded />
         </SafeAreaView>
       </ScrollView>
     )

@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableHighlight,
   ActivityIndicator
-  , Dimensions
 } from 'react-native'
 import Place from './place'
 
@@ -135,15 +134,16 @@ class Standings extends React.Component {
     let expandButton = null
     if (this.state.isExpandable) {
       expandButton = (
-      <TouchableHighlight
-        onPress={() => {
-          this.props.navigate('Scoreboard')
-        }}
-        underlayColor='#dddddd'
-        style={styles.more}
+        <TouchableHighlight
+          onPress={() => {
+            this.props.navigate('Scoreboard')
+          }}
+          underlayColor='#dddddd'
+          style={styles.more}
         >
-        <Text>Show more...</Text>
-      </TouchableHighlight>)
+          <Text>Show more...</Text>
+        </TouchableHighlight>
+      )
     }
 
     return (
@@ -176,8 +176,6 @@ class Standings extends React.Component {
   }
 }
 
-const { width } = Dimensions.get('window')
-const colWidth = width / 3
 const styles = StyleSheet.create({
   ListView: {
     paddingLeft: 5,
@@ -200,7 +198,7 @@ const styles = StyleSheet.create({
   },
   more: {
     justifyContent: 'flex-end'
-  },
+  }
 })
 
 export default withFirebaseHOC(Standings)

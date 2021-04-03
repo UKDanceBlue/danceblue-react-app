@@ -57,7 +57,7 @@ class Carousel extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   sponsorView: {
     padding: 5,
