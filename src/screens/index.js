@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
-import { HomeScreen } from './Home'
+import { HomeScreen, ScoreboardScreen } from './Home'
 import { EventsScreen } from './Events'
 import { BlogScreen } from './Blog'
 import { MoreScreen } from './More'
@@ -12,8 +12,6 @@ import { MoreScreen } from './More'
 import { FAQScreen } from './More/FAQ'
 import { DonateScreen } from './More/Donate'
 import { ContactScreen } from './More/Contact'
-
-import Standings from '../components/Standings/Standings'
 
 const RootStack = createStackNavigator()
 const MainStack = createStackNavigator()
@@ -67,7 +65,7 @@ function MainStackScreen () {
       <MainStack.Screen name='FAQ' component={FAQScreen} />
       <MainStack.Screen name='Donate' component={DonateScreen} />
       <MainStack.Screen name='Contact' component={ContactScreen} />
-      <MainStack.Screen name='Scoreboard' component={Standings} />
+      <MainStack.Screen name='Scoreboard' component={ScoreboardScreen} />
     </MainStack.Navigator>
   )
 }

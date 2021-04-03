@@ -10,6 +10,18 @@ import HeaderImage from '../../components/countdown/HeaderImage'
 import CountdownView from '../../components/countdown/CountdownView'
 import Standings from '../../components/Standings/Standings'
 
+export class ScoreboardScreen extends React.Component {
+  render () {
+    return (
+      <ScrollView showsVerticalScrollIndicator={true}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <Standings isExpanded={true} />
+        </SafeAreaView>
+      </ScrollView>
+    )
+  }
+}
+
 // Component for home screen in main navigation
 export class HomeScreen extends React.Component {
   render () {
@@ -21,7 +33,7 @@ export class HomeScreen extends React.Component {
         <SafeAreaView style={{ flex: 1 }}>
           <HeaderImage />
           <CountdownView />
-          <Standings navigate={navigate} />
+          <Standings navigate={navigate} isExpandable={true} />
           <Carousel />
         </SafeAreaView>
       </ScrollView>

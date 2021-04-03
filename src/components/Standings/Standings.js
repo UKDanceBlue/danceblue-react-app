@@ -22,6 +22,8 @@ class Standings extends React.Component {
       allTeamsPPM: [], // PPM = points per member
       shownNumber: this.props.shownNumber | 3,
       topNumber: this.props.topNumber | 3,
+      isExpanded: this.props.isExpanded | false,
+      isExpandable: this.props.isExpandable | false,
       isLoading: true,
       showScoresByTeam: true,
       showPointsPerMember: false,
@@ -32,10 +34,11 @@ class Standings extends React.Component {
 
   componentDidMount () {
     // Create arrays for team list, one for team total scores and one for team scores per member.
-
     const promises = []
-
     const teams = []
+
+    let shownNumber = this.state.shownNumber
+
     promises.push(this.props.firebase.getTeams().then(snapshot => {
       snapshot.forEach(doc => {
         teams.push({ id: doc.id, ...doc.data() })
@@ -43,8 +46,8 @@ class Standings extends React.Component {
       // SortedTeams is an array that sorts the teams' points in descending order
       const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points)
       const sortedTeamsPPM = [].concat(teams).sort((a, b) => (a.points / a.size) < (b.points / b.size))
-      this.setState({ allTeams: sortedTeams })
-      this.setState({ allTeamsPPM: sortedTeamsPPM })
+      if (this.state.isExpanded) shownNumber = sortedTeams.length
+      this.setState({ allTeams: sortedTeams, allTeamsPPM: sortedTeamsPPM, shownNumber: shownNumber })
     }))
 
     // Get list of users, for switching scoreboard to display people instead of teams.
@@ -129,6 +132,20 @@ class Standings extends React.Component {
       }
     }
 
+    let expandButton = null
+    if (this.state.isExpandable) {
+      expandButton = (
+      <TouchableHighlight
+        onPress={() => {
+          this.props.navigate('Scoreboard')
+        }}
+        underlayColor='#dddddd'
+        style={styles.more}
+        >
+        <Text>Show more...</Text>
+      </TouchableHighlight>)
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.ListView}>
@@ -137,24 +154,9 @@ class Standings extends React.Component {
           </View>
           {!this.state.isLoading && (
             <>
-              <View style={styles.optionRow}>
-
-              </View>
               {/* Renders the top shownNumber Places from the 'places' variable */}
               {places}
-              {/* Renders the 'show more/less' button and toggles the extended/collapsed leaderboard */}
-              <TouchableHighlight
-                onPress={() => {
-                  this.props.navigate('Scoreboard')
-                }}
-                underlayColor='#dddddd'
-                style={styles.more}
-              >
-                <Text>
-                  {/* Shows the appropriate message when the leaderboard is collapsed/extended */}
-                  Show more...
-                </Text>
-              </TouchableHighlight>
+              {expandButton}
             </>
           )}
         </View>
