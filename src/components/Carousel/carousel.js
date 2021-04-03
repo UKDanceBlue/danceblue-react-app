@@ -57,17 +57,10 @@ class Carousel extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: '98%',
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#FFC72C',
-    borderRadius: 15,
-    overflow: 'hidden',
-    padding: 5
+    overflow: 'hidden'
   },
   sponsorView: {
-    paddingVertical: 5,
-    width: '100%',
+    padding: 5,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     backgroundColor: 'white',

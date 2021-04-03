@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { BlurView } from 'expo-blur'
 
-import { HomeScreen } from './Home'
+import { HomeScreen, ScoreboardScreen } from './Home'
 import EventsScreen from './Events'
 import { BlogScreen } from './Blog'
 import { MoreScreen } from './More'
@@ -68,6 +68,7 @@ function MainStackScreen () {
       <MainStack.Screen name='FAQ' component={FAQScreen} />
       <MainStack.Screen name='Donate' component={DonateScreen} />
       <MainStack.Screen name='Contact' component={ContactScreen} />
+      <MainStack.Screen name='Scoreboard' component={ScoreboardScreen} />
       <MainStack.Screen
         name='Event' component={Event} options={({ route }) => ({
           title: route.params.name,

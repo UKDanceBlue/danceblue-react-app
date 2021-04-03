@@ -52,6 +52,19 @@ const Firebase = {
       .collection('announcements')
       .get()
   },
+  getUsers: () => {
+    return firebase
+      .firestore()
+      .collection('users')
+      .get()
+  },
+  getUsersWithPoints: () => {
+    return firebase
+      .firestore()
+      .collection('users')
+      .where('points', '!=', null)
+      .get()
+  },
   getEvents: () => {
     return firebase
       .firestore()
@@ -77,7 +90,7 @@ const Firebase = {
     return firebase
       .firestore()
       .collection('users')
-      .where('uid', '==', userId)
+      .doc(userId)
       .get()
   },
   // This can be used to pull team information based on user's team.

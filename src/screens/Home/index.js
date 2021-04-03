@@ -8,8 +8,19 @@ import {
 import Carousel from '../../components/Carousel/carousel'
 import HeaderImage from '../../components/countdown/HeaderImage'
 import CountdownView from '../../components/countdown/CountdownView'
-// import Announcements from '../../components/announcement/Announcements'
 import Standings from '../../components/Standings/Standings'
+
+export class ScoreboardScreen extends React.Component {
+  render () {
+    return (
+      <ScrollView showsVerticalScrollIndicator>
+        <SafeAreaView style={{ flex: 1 }}>
+          <Standings isExpanded />
+        </SafeAreaView>
+      </ScrollView>
+    )
+  }
+}
 
 // Component for home screen in main navigation
 export class HomeScreen extends React.Component {
@@ -22,7 +33,7 @@ export class HomeScreen extends React.Component {
         <SafeAreaView style={{ flex: 1 }}>
           <HeaderImage />
           <CountdownView />
-          <Standings />
+          <Standings navigate={navigate} isExpandable={true} />
           <Carousel />
         </SafeAreaView>
       </ScrollView>
