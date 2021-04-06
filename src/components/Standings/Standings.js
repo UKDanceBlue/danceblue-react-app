@@ -150,7 +150,7 @@ class Standings extends React.Component {
       <View style={styles.container}>
         <View style={styles.ListView}>
           <View style={styles.ListTitleView}>
-            <Text style={styles.ListTitle}> SPIRIT POINTS STANDINGS </Text>
+            <Text style={styles.ListTitle}> MORALE POINTS STANDINGS </Text>
           </View>
           {!this.state.isLoading && (
             <>

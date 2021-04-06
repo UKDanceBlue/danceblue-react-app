@@ -29,7 +29,11 @@
     },
     "android": {
       "package": "com.danceblue.dancebluemarathon",
-      "versionCode": 1
+      "versionCode": 1,
+      "permissions": [
+        "WRITE_CALENDAR",
+        "READ_CALENDAR"
+      ]
     },
     "description": "University of Kentucky DanceBlue Mobile Application"
   }
