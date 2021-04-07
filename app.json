@@ -9,7 +9,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -24,11 +24,16 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.danceblue.mobile"
     },
     "android": {
-      "package": "com.danceblue.dancebluemobile",
-      "versionCode": 1
+      "package": "com.danceblue.dancebluemarathon",
+      "versionCode": 2,
+      "permissions": [
+        "WRITE_CALENDAR",
+        "READ_CALENDAR"
+      ]
     },
     "description": "University of Kentucky DanceBlue Mobile Application"
   }

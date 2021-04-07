@@ -7,6 +7,8 @@ import {
   TouchableHighlight,
   ActivityIndicator
 } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome5'
+
 import Place from './place'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
@@ -29,25 +31,15 @@ class Standings extends React.Component {
       userTeamNum: undefined,
       userID: undefined
     }
+
+    this.loadTeams = this.loadTeams.bind(this)
   }
 
   componentDidMount () {
     // Create arrays for team list, one for team total scores and one for team scores per member.
     const promises = []
-    const teams = []
 
-    let shownNumber = this.state.shownNumber
-
-    promises.push(this.props.firebase.getTeams().then(snapshot => {
-      snapshot.forEach(doc => {
-        teams.push({ id: doc.id, ...doc.data() })
-      })
-      // SortedTeams is an array that sorts the teams' points in descending order
-      const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points)
-      const sortedTeamsPPM = [].concat(teams).sort((a, b) => (a.points / a.size) < (b.points / b.size))
-      if (this.state.isExpanded) shownNumber = sortedTeams.length
-      this.setState({ allTeams: sortedTeams, allTeamsPPM: sortedTeamsPPM, shownNumber: shownNumber })
-    }))
+    promises.push(this.loadTeams())
 
     // Get list of users, for switching scoreboard to display people instead of teams.
     const users = []
@@ -72,6 +64,21 @@ class Standings extends React.Component {
 
     // Display loading indicator until all promises resolve
     Promise.all(promises).then(this.setState({ isLoading: false }))
+  }
+
+  loadTeams () {
+    const teams = []
+    let shownNumber = this.state.shownNumber
+    return this.props.firebase.getTeams().then(snapshot => {
+      snapshot.forEach(doc => {
+        teams.push({ id: doc.id, ...doc.data() })
+      })
+      // SortedTeams is an array that sorts the teams' points in descending order
+      const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points)
+      const sortedTeamsPPM = [].concat(teams).sort((a, b) => (a.points / a.size) < (b.points / b.size))
+      if (this.state.isExpanded) shownNumber = sortedTeams.length
+      this.setState({ allTeams: sortedTeams, allTeamsPPM: sortedTeamsPPM, shownNumber: shownNumber })
+    })
   }
 
   render () {
@@ -150,7 +157,10 @@ class Standings extends React.Component {
       <View style={styles.container}>
         <View style={styles.ListView}>
           <View style={styles.ListTitleView}>
-            <Text style={styles.ListTitle}> SPIRIT POINTS STANDINGS </Text>
+            <Text style={styles.ListTitle}> MORALE POINTS STANDINGS </Text>
+            <TouchableHighlight style={styles.syncIcon} onPress={() => this.loadTeams()}>
+              <Icon name='sync' size={20} color='#0033A0' />
+            </TouchableHighlight>
           </View>
           {!this.state.isLoading && (
             <>
@@ -189,12 +199,20 @@ const styles = StyleSheet.create({
   ListTitle: {
     fontSize: 20,
     fontWeight: 'bold',
+    flex: 3,
     borderBottomColor: '#0033A0',
     borderBottomWidth: 2
   },
   ListTitleView: {
-    borderBottomColor: '#0033A0',
-    borderBottomWidth: 2
+    flex: 1,
+    flexDirection: 'row',
+    width: '98%'
+  },
+  syncIcon: {
+    flex: 1,
+    paddingLeft: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   more: {
     justifyContent: 'flex-end'

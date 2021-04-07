@@ -13,7 +13,7 @@ import { styles } from '../../styles'
 const profileButtonImage = require('./Profile_Button.jpg')
 const donateButtonImage = require('./Donate_Button.jpg')
 const faqsButtonImage = require('./FAQs_Button.jpg')
-const contactButtonImage = require('./Contact_Button.jpg')
+const aboutButtonImage = require('./About_Button.jpg')
 
 // Component for "more" screen in main navigation
 export class MoreScreen extends React.Component {
@@ -33,6 +33,24 @@ export class MoreScreen extends React.Component {
               <View style={styles.view}>
                 <Text style={styles.text}>
                   {'Profile\nComing Soon!'}
+                </Text>
+              </View>
+            </ImageBackground>
+          </TouchableHighlight>
+          <TouchableHighlight
+            onPress={() => {
+              navigate('About')
+            }}
+            style={styles.button}
+          >
+            <ImageBackground
+              source={aboutButtonImage}
+              style={styles.img}
+              imageStyle={{ borderRadius: 10 }}
+            >
+              <View style={styles.view}>
+                <Text style={styles.text}>
+                  About Us
                 </Text>
               </View>
             </ImageBackground>
@@ -69,24 +87,6 @@ export class MoreScreen extends React.Component {
               <View style={styles.view}>
                 <Text style={styles.text}>
                   FAQs
-                </Text>
-              </View>
-            </ImageBackground>
-          </TouchableHighlight>
-          <TouchableHighlight
-            onPress={() => {
-              navigate('Contact')
-            }}
-            style={styles.button}
-          >
-            <ImageBackground
-              source={contactButtonImage}
-              style={styles.img}
-              imageStyle={{ borderRadius: 10 }}
-            >
-              <View style={styles.view}>
-                <Text style={styles.text}>
-                  Contact
                 </Text>
               </View>
             </ImageBackground>
