@@ -33,7 +33,6 @@ class Standings extends React.Component {
     }
 
     this.loadTeams = this.loadTeams.bind(this)
-
   }
 
   componentDidMount () {
@@ -67,9 +66,8 @@ class Standings extends React.Component {
     Promise.all(promises).then(this.setState({ isLoading: false }))
   }
 
-  loadTeams() {
-    console.log('test')
-    var teams = []
+  loadTeams () {
+    const teams = []
     let shownNumber = this.state.shownNumber
     return this.props.firebase.getTeams().then(snapshot => {
       snapshot.forEach(doc => {
@@ -203,7 +201,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     flex: 3,
     borderBottomColor: '#0033A0',
-    borderBottomWidth: 2,
+    borderBottomWidth: 2
   },
   ListTitleView: {
     flex: 1,
