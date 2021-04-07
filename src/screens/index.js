@@ -8,13 +8,14 @@ import { BlurView } from 'expo-blur'
 import { HomeScreen, ScoreboardScreen } from './Home'
 import EventsScreen from './Events'
 import { StoreScreen } from './Store'
-import { MoreScreen } from './More'
+import MoreScreen from './More'
 import Event from '../components/event/Event'
 
 // import ProfileScreen from './More/Profile'
 import { FAQScreen } from './More/FAQ'
 import { DonateScreen } from './More/Donate'
 import { AboutScreen } from './More/About'
+import ProfileScreen from './More/Profile'
 
 const RootStack = createStackNavigator()
 const MainStack = createStackNavigator()
@@ -65,6 +66,7 @@ function MainStackScreen () {
   return (
     <MainStack.Navigator>
       <MainStack.Screen name='Tab' component={TabsScreen} options={{ headerShown: false }} />
+      <MainStack.Screen name='Profile' component={ProfileScreen} />
       <MainStack.Screen name='FAQ' component={FAQScreen} />
       <MainStack.Screen name='Donate' component={DonateScreen} />
       <MainStack.Screen name='About' component={AboutScreen} />

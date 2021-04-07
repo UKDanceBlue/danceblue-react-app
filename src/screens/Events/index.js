@@ -3,7 +3,6 @@ import React from 'react'
 import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from 'react-native'
 import EventRow from '../../components/event/EventRow'
 import { withFirebaseHOC } from '../../../config/Firebase'
-// import Events from '../../components/event/Events'
 
 // Component for events screen in main navigation
 class EventsScreen extends React.Component {

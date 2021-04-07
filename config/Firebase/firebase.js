@@ -107,6 +107,13 @@ const Firebase = {
       .storage()
       .ref(path)
       .getDownloadURL()
+  },
+  getConfig: () => {
+    return firebase
+      .firestore()
+      .collection('configs')
+      .doc('mobile-app')
+      .get()
   }
 }
 
