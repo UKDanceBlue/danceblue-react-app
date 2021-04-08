@@ -114,6 +114,14 @@ const Firebase = {
       .collection('configs')
       .doc('mobile-app')
       .get()
+  },
+  getUserBadges: (userID) => {
+    return firebase
+      .firestore()
+      .collection('users')
+      .doc(userID)
+      .collection('badges')
+      .get()
   }
 }
 

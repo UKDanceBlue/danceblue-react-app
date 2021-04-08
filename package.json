@@ -34,6 +34,7 @@
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
+    "react-native-super-grid": "^4.1.1",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "^0.11.7",
     "react-native-webview": "10.7.0",
