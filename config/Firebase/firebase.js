@@ -122,6 +122,20 @@ const Firebase = {
       .doc(userID)
       .collection('badges')
       .get()
+  },
+  addPushToken: (token) => {
+    let dbRef = firebase.firestore().collection('expo-push-tokens')
+    return dbRef.get().then(snapshot => {
+      let found = false
+      snapshot.forEach(doc => {
+        if (doc.data().token === token) found = true
+      })
+      if (found === false) {
+        return dbRef.add({
+          token: token
+        })
+      }
+    })
   }
 }
 
