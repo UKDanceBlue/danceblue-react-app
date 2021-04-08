@@ -7,7 +7,7 @@ admin.initializeApp();
 exports.checkScavengerHunt = functions.https.onRequest(async (req, res) => {
   const guess = req.body.guess;
   const userID = req.body.userID;
-  const correct = "12345678910";
+  const correct = "14753810629";
 
   if (guess === correct) {
     res.json({
@@ -15,9 +15,10 @@ exports.checkScavengerHunt = functions.https.onRequest(async (req, res) => {
       solved: true,
       userID: userID,
     });
+    const now = admin.firestore.Timestamp.now();
     const data = {
       image: "/badges/Scavenger Hunt Completion 21.png",
-      timeEarned: admin.firestore.Timestamp.now(),
+      timeEarned: now,
       name: "Scavenger Hunt '21",
     };
     admin
@@ -27,6 +28,13 @@ exports.checkScavengerHunt = functions.https.onRequest(async (req, res) => {
         .collection("badges")
         .doc("scavenger-hunt-21")
         .set(data);
+    admin
+        .firestore()
+        .collection("scavenger-hunt-21")
+        .add({
+          timeEarned: now,
+          userID: userID,
+        });
   } else {
     res.json({
       message: "Sorry, your guess was wrong. The treasure remains hidden.",

@@ -25,7 +25,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.danceblue.mobile"
+      "bundleIdentifier": "com.danceblue.mobile",
+      "buildNumber": "1.1"
     },
     "android": {
       "package": "com.danceblue.dancebluemarathon",
