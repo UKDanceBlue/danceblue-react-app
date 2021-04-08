@@ -200,8 +200,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     flex: 3,
-    borderBottomColor: '#0033A0',
-    borderBottomWidth: 2
   },
   ListTitleView: {
     flex: 1,

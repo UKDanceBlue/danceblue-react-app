@@ -72,8 +72,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   sponsorTitleView: {
-    borderBottomColor: '#0033A0',
-    borderBottomWidth: 2
   },
   cardScrollView: {
     height: 170,

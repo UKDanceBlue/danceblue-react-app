@@ -29,14 +29,17 @@ class ProfileScreen extends React.Component {
 
   componentDidMount () {
     this.props.firebase.checkAuthUser(user => {
-      if (!user.isAnonymous) {
-        let userID = user.uid
-        this.props.firebase.getUser(userID).then(doc => {
-          let userData = doc.data()
-          this.setState({ loggedIn: true, user: {id: user.uid, ...userData}, isLoading: false })
-        })
+      if (user !== null) {
+        if (!user.isAnonymous) {
+          let userID = user.uid
+          this.props.firebase.getUser(userID).then(doc => {
+            let userData = doc.data()
+            this.setState({ loggedIn: true, user: {id: user.uid, ...userData}, isLoading: false })
+          })
+        }
       }
     })
+    this.setState({ isLoading: false })
   }
 
   handleSignOut () {
@@ -84,6 +87,7 @@ class ProfileScreen extends React.Component {
                         Sign Up
                       </Text>
                       <SignUpForm />
+                      <Button title="Already signed up? Click here to Log in!" onPress={() => this.setState({ formShown: 'login' })} type="clear" />
                     </>
                   ) : (
                     <>
@@ -91,6 +95,7 @@ class ProfileScreen extends React.Component {
                         Login
                       </Text>
                       <LoginForm />
+                      <Button type="clear" title="New? Click here to Sign Up!" onPress={() => this.setState({ formShown: 'signup' })} />
                     </>
                   )}
                 </>

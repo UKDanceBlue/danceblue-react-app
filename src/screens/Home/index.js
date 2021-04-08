@@ -40,6 +40,13 @@ class HomeScreen extends React.Component {
     this.props.firebase.getConfig().then(doc => {
       this.setState({ activeCountdown: doc.data().activeCountdown, scavengerHunt: doc.data().scavengerHunt })
     })
+    this.props.firebase.checkAuthUser(user => {
+      if (user !== null) {
+        if (!user.isAnonymous) {
+          this.setState({ userID: user.uid })
+        }
+      }
+    })
   }
 
   render () {
@@ -53,8 +60,8 @@ class HomeScreen extends React.Component {
           {this.state.activeCountdown && (
             <CountdownView />
           )}
-          {this.state.scavengerHunt && (
-            <ScavengerHunt />
+          {this.state.scavengerHunt && this.state.userID && (
+            <ScavengerHunt userID={this.state.userID} />
           )}
           <Standings navigate={navigate} isExpandable={true} />
           <Carousel />
