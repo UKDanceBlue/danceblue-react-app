@@ -3,6 +3,8 @@ import { registerRootComponent } from 'expo'
 import React from 'react'
 import { StatusBar, LogBox } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
 
 // Import Firebase Context Provider
 import Firebase, { FirebaseProvider } from '../../config/Firebase'
@@ -20,15 +22,17 @@ if (!global.atob) {
 LogBox.ignoreLogs(['Setting a timer'])
 
 // Create container for app with navigations
-const App = () => {
-  return (
-    <FirebaseProvider value={Firebase}>
-      <StatusBar />
-      <NavigationContainer>
-        <RootStackScreen />
-      </NavigationContainer>
-    </FirebaseProvider>
-  )
+class App extends React.Component {
+  render() {
+    return (
+      <FirebaseProvider value={Firebase}>
+        <StatusBar />
+        <NavigationContainer>
+          <RootStackScreen />
+        </NavigationContainer>
+      </FirebaseProvider>
+    )
+  }
 }
 
 export default registerRootComponent(App)

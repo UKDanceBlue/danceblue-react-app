@@ -18,6 +18,8 @@
     "expo": "^39.0.0",
     "expo-blur": "^9.0.0",
     "expo-calendar": "~8.5.0",
+    "expo-constants": "^10.0.1",
+    "expo-notifications": "~0.7.2",
     "expo-web-browser": "~8.5.0",
     "firebase": "^8.0.0",
     "formik": "^2.1.4",

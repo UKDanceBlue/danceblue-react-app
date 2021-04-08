@@ -34,7 +34,8 @@
       "permissions": [
         "WRITE_CALENDAR",
         "READ_CALENDAR"
-      ]
+      ],
+      "useNextNotificationsApi": true
     },
     "description": "University of Kentucky DanceBlue Mobile Application"
   }
