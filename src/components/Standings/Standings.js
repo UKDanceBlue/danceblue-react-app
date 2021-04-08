@@ -157,7 +157,7 @@ class Standings extends React.Component {
       <View style={styles.container}>
         <View style={styles.ListView}>
           <View style={styles.ListTitleView}>
-            <Text style={styles.ListTitle}> MORALE POINTS STANDINGS </Text>
+            <Text style={styles.ListTitle}>MORALE POINTS STANDINGS </Text>
             <TouchableHighlight style={styles.syncIcon} onPress={() => this.loadTeams()}>
               <Icon name='sync' size={20} color='#0033A0' />
             </TouchableHighlight>

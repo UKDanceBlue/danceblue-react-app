@@ -19,7 +19,6 @@ class Badge extends React.Component {
   }
 
   render () {
-    console.log(this.state.imageRef)
     return (
       <View style={styles.container}>
         {this.state.isLoading && (

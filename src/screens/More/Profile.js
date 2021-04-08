@@ -1,6 +1,6 @@
 // Import third-party dependencies
 import React from 'react'
-import { View, StyleSheet, Image } from 'react-native'
+import { View, StyleSheet, Image, ActivityIndicator } from 'react-native'
 import { Text, Button } from 'react-native-elements'
 
 import SignUpForm from '../../components/SignUpForm'
@@ -20,7 +20,8 @@ class ProfileScreen extends React.Component {
     this.state = {
       loggedIn: false,
       user: undefined,
-      formShown: 'login'
+      formShown: 'login',
+      isLoading: true
     }
 
     this.handleSignOut = this.handleSignOut.bind(this)
@@ -32,7 +33,7 @@ class ProfileScreen extends React.Component {
         let userID = user.uid
         this.props.firebase.getUser(userID).then(doc => {
           let userData = doc.data()
-          this.setState({ loggedIn: true, user: {id: user.uid, ...userData} })
+          this.setState({ loggedIn: true, user: {id: user.uid, ...userData}, isLoading: false })
         })
       }
     })
@@ -50,44 +51,53 @@ class ProfileScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        {this.state.loggedIn && (
-          <>
-            <View style={styles.header}>
-              <Image style={styles.avatar} source={avatar} />
-              <View style={styles.headerText}>
-                <Text h4>{this.state.user.name}</Text>
-              </View>
-            </View>
-            <View style={styles.badges}>
-              <View style={styles.sectionTitleView}>
-                <Text style={styles.sectionTitle}>Badges</Text>
-              </View>
-              <Badges userID={this.state.user.id} />
-            </View>
-            <View style={styles.footer}>
-              <Button title='Signout' onPress={this.handleSignOut} type='clear' />
-            </View>
+        <>
+          {this.state.isLoading && (
+            <ActivityIndicator style={styles.image} size='large' color='blue' />
+          )}
+          {!this.state.isLoading && (
+            <>
+              {this.state.loggedIn && (
+                <>
+                  <View style={styles.header}>
+                    <Image style={styles.avatar} source={avatar} />
+                    <View style={styles.headerText}>
+                      <Text h4>{this.state.user.name}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.badges}>
+                    <View style={styles.sectionTitleView}>
+                      <Text style={styles.sectionTitle}>Badges</Text>
+                    </View>
+                    <Badges userID={this.state.user.id} />
+                  </View>
+                  <View style={styles.footer}>
+                    <Button title='Signout' onPress={this.handleSignOut} type='clear' />
+                  </View>
+                </>
+              )}
+              {!this.state.loggedIn && (
+                <>
+                  {this.state.formShown === 'signup' ? (
+                    <>
+                      <Text h2 style={{ textAlign: 'center' }}>
+                        Sign Up
+                      </Text>
+                      <SignUpForm />
+                    </>
+                  ) : (
+                    <>
+                      <Text h2 style={{ textAlign: 'center' }}>
+                        Login
+                      </Text>
+                      <LoginForm />
+                    </>
+                  )}
+                </>
+              )}
+            </>
+          )}
         </>
-        )}
-        {!this.state.loggedIn && (
-          <>
-            {this.state.formShown === 'signup' ? (
-              <>
-                <Text h2 style={{ textAlign: 'center' }}>
-                  Sign Up
-                </Text>
-                <SignUpForm />
-              </>
-            ) : (
-              <>
-                <Text h2 style={{ textAlign: 'center' }}>
-                  Login
-                </Text>
-                <LoginForm />
-              </>
-            )}
-          </>
-        )}
       </View>
     )
   }

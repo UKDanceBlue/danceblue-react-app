@@ -238,16 +238,18 @@ class CountdownView extends React.Component {
               </View>
               /* jscpd:ignore-end */
             )}
-            <Text
-              style={styles.coundownText}
-            >
-              {months === 0 &&
-                days === 0 &&
-                hours === 0 &&
-                mins === 0 &&
-                secs === 0 &&
-                `${this.state.finishMessage}`}
-            </Text>
+            {months === 0 &&
+              days === 0 &&
+              hours === 0 &&
+              mins === 0 &&
+              secs === 0 && (
+                <Text
+                  style={styles.coundownText}
+                >
+                  {this.state.finishMessage}
+                </Text>
+              )
+            }
           </>
         )}
       </View>
