@@ -16,6 +16,7 @@
     "@react-navigation/stack": "^5.0.5",
     "base-64": "^0.1.0",
     "expo": "^39.0.0",
+    "expo-app-loading": "^1.0.1",
     "expo-blur": "^9.0.0",
     "expo-calendar": "~8.5.0",
     "expo-constants": "^10.0.1",

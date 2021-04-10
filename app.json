@@ -29,11 +29,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.danceblue.mobile",
-      "buildNumber": "1.1"
+      "buildNumber": "1.1.2"
     },
     "android": {
       "package": "com.danceblue.dancebluemarathon",
-      "versionCode": 2,
+      "versionCode": 4,
       "permissions": [
         "WRITE_CALENDAR",
         "READ_CALENDAR"

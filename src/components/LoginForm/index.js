@@ -17,12 +17,23 @@ class LoginForm extends React.Component {
   handleLogin (values, actions) {
     const { email, password } = values
 
-    this.props.firebase
-      .loginWithEmail(email, password)
-      .then(res => {
-        if (this.props.navigate) this.props.navigate()
-      })
-      .catch(error => actions.setFieldError('general', error.message))
+    this.props.firebase.checkAuthUser(user => {
+      if (user !== null) {
+        this.props.firebase
+          .loginWithEmail(email, password)
+          .then(res => {
+            if (this.props.navigate) this.props.navigate()
+          })
+          .catch(error => actions.setFieldError('general', error.message))
+      } else {
+        this.props.firebase
+          .loginWithEmail(email, password)
+          .then(res => {
+            if (this.props.navigate) this.props.navigate()
+          })
+          .catch(error => actions.setFieldError('general', error.message))
+      }
+    })
   }
 
   render () {

@@ -19,12 +19,26 @@ const Firebase = {
   checkAuthUser: (user) => {
     return firebase.auth().onAuthStateChanged(user)
   },
+  getAuthUserInstance: () => {
+    return firebase.auth().currentUser
+  },
+  signInAnon: () => {
+    return firebase.auth().signInAnonymously()
+  },
+  linkAnon: (email, password) => {
+    var credentials = firebase.auth.EmailAuthProvider.credential(email, password)
+    return firebase.auth().currentUser.linkWithCredential(credentials)
+  },
+  reauthenticate: (email, password) => {
+    var credentials = firebase.auth.EmailAuthProvider.credential(email, password)
+    return firebase.auth().currentUser.reauthenticateWithCredential(credentials)
+  },
   // firestore
-  createNewUser: userData => {
+  createNewUser: (userData, id) => {
     return firebase
       .firestore()
       .collection('users')
-      .doc(`${userData.uid}`)
+      .doc(id)
       .set(userData)
   },
   getTeams: () => {

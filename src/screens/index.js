@@ -1,9 +1,11 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions, Image } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { BlurView } from 'expo-blur'
+
+import { withFirebaseHOC } from '../../config/Firebase'
 
 import HomeScreen from './Home'
 import {ScoreboardScreen } from './Home'
@@ -17,6 +19,8 @@ import { FAQScreen } from './More/FAQ'
 import { DonateScreen } from './More/Donate'
 import { AboutScreen } from './More/About'
 import ProfileScreen from './More/Profile'
+
+import { SplashLoginScreen } from './Modals'
 
 const RootStack = createStackNavigator()
 const MainStack = createStackNavigator()
@@ -86,10 +90,36 @@ function MainStackScreen () {
   )
 }
 
-export function RootStackScreen () {
-  return (
-    <RootStack.Navigator mode='modal'>
-      <RootStack.Screen name='Main' component={MainStackScreen} options={{ headerShown: false }} />
-    </RootStack.Navigator>
-  )
+class RootStackScreen extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      userID: null,
+      isLoading: true
+    }
+  }
+
+  componentDidMount() {
+    this.props.firebase.checkAuthUser(user => {
+      if (user !== null) this.setState({ userID: user.uid, isLoading: false })
+      else this.setState({ isLoading: false })
+    })
+  }
+
+  render() {
+    if (this.state.isLoading) return <Image style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }} source={require('../../assets/splash2.png')} />
+    return (
+      <RootStack.Navigator mode='modal'>
+        {this.state.userID && (
+          <RootStack.Screen name='Main' component={MainStackScreen} options={{ headerShown: false }} />
+        )}
+        {!this.state.userID && (
+          <RootStack.Screen name='SplashLogin' component={SplashLoginScreen} options={{ headerShown: false }} />
+        )}
+      </RootStack.Navigator>
+    )
+  }
 }
+
+export default withFirebaseHOC(RootStackScreen)

@@ -20,7 +20,7 @@ class ProfileScreen extends React.Component {
     this.state = {
       loggedIn: false,
       user: undefined,
-      formShown: 'login',
+      formShown: 'signup',
       isLoading: true
     }
 
@@ -44,8 +44,8 @@ class ProfileScreen extends React.Component {
 
   handleSignOut () {
     this.props.firebase.signOut().then(() => {
-      this.setState({ loggedIn: false, user: undefined })
-    })
+      return this.props.firebase.signInAnon()
+    }).then(() => this.setState({ loggedIn: false, user: undefined }))
   }
 
   render () {
@@ -86,7 +86,7 @@ class ProfileScreen extends React.Component {
                       <Text h2 style={{ textAlign: 'center' }}>
                         Sign Up
                       </Text>
-                      <SignUpForm />
+                      <SignUpForm navigate={() => navigate('Home')}/>
                       <Button title="Already signed up? Click here to Log in!" onPress={() => this.setState({ formShown: 'login' })} type="clear" />
                     </>
                   ) : (

@@ -17,16 +17,27 @@ class SignUpForm extends React.Component {
   handleSignUp (values, actions) {
     const { name, email, password } = values
 
-    this.props.firebase
-      .signupWithEmail(email, password)
-      .then(res => {
-        const { uid } = res.user
+    const user = this.props.firebase.getAuthUserInstance()
+    if (user !== null) {
+      this.props.firebase.linkAnon(email, password).then(res => {
+        const { uid } = user
         const userData = { email, name }
-        this.props.firebase.createNewUser(userData).then(() => {
-          if (this.props.navigate) this.props.navigate()
+        this.props.firebase.createNewUser(userData, uid).then(() => {
+          if(this.props.navigate) this.props.navigate()
         })
       })
-      .catch(error => actions.setFieldError('general', error.message))
+    } else {
+      this.props.firebase
+        .signupWithEmail(email, password)
+        .then(res => {
+          const { uid } = res.user
+          const userData = { email, name }
+          this.props.firebase.createNewUser(userData, uid).then(() => {
+            if (this.props.navigate) this.props.navigate()
+          })
+        })
+        .catch(error => actions.setFieldError('general', error.message))
+    }
   }
 
   render () {

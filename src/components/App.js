@@ -3,12 +3,14 @@ import { registerRootComponent } from 'expo'
 import React from 'react'
 import { StatusBar, LogBox } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
-import Constants from 'expo-constants';
-import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants'
+import * as Notifications from 'expo-notifications'
+import { compose } from 'recompose'
+import AppLoading from 'expo-app-loading'
 
 // Import Firebase Context Provider
 import Firebase, { FirebaseProvider } from '../../config/Firebase'
-import { RootStackScreen } from '../screens'
+import RootStackScreen from '../screens'
 
 // Fix firestore error - can be removed if issue is resolved in package
 import { decode, encode } from 'base-64'
@@ -35,7 +37,9 @@ class App extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {}
+    this.state = {
+      isReady: false
+    }
   }
 
   componentDidMount() {
@@ -62,14 +66,12 @@ class App extends React.Component {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
-      console.log(finalStatus)
       if (Platform.OS === 'ios' && finalStatus === 1) finalStatus = 'granted'
       if (finalStatus !== 'granted') {
         alert('Failed to get push token for push notification!');
         return;
       }
       const token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token)
       Firebase.addPushToken(token)
       this.setState({ expoPushToken: token });
     } else {
@@ -98,4 +100,6 @@ class App extends React.Component {
   }
 }
 
-export default registerRootComponent(App)
+export default compose(
+  registerRootComponent
+)(App)
