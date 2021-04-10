@@ -62,11 +62,14 @@ class App extends React.Component {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
+      console.log(finalStatus)
+      if (Platform.OS === 'ios' && finalStatus === 1) finalStatus = 'granted'
       if (finalStatus !== 'granted') {
         alert('Failed to get push token for push notification!');
         return;
       }
       const token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token)
       Firebase.addPushToken(token)
       this.setState({ expoPushToken: token });
     } else {

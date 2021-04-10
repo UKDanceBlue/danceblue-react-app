@@ -5,6 +5,9 @@
     "slug": "danceblue-mobile",
     "privacy": "unlisted",
     "owner": "university-of-kentucky-danceblue",
+    "notification": {
+      "icon": "./assets/icon.png",
+    },
     "platforms": [
       "ios",
       "android"
