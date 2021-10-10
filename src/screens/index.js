@@ -29,24 +29,21 @@ const Tabs = createBottomTabNavigator()
 function TabsScreen () {
   return (
     <Tabs.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={
+        ({ route }) => ({
         tabBarIcon: ({ color, size }) => {
-          let iconName
-
-          if (route.name === 'Home') {
-            iconName = 'home'
-          } else if (route.name === 'Events') {
-            iconName = 'calendar'
-          } else if (route.name === 'Store') {
-            iconName = 'store'
-          } else if (route.name === 'More') {
-            iconName = 'ellipsis-h'
-          }
+          const iconMap = new Map([ //Key: Screen   Value: Icon ID
+            ['Home'], ['home'],
+            ['Events'], ['calendar'],
+            ['Store'], ['store'],
+            ['More'], ['ellipsis-h'],
+            ['Test'], ['ellipsis-h']
+          ]);
 
           // You can return any component that you like here!
           return (
             <Icon
-              name={iconName}
+              name={iconMap.get(route.name)}
               size={size}
               color={color}
               style={{ textAlignVertical: 'center' }}
