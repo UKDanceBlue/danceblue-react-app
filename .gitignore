@@ -13,6 +13,8 @@ web-report/
 w
 web
 package-lock.json
+*.log
+doc/**
 
 # macOS
 .DS_Store
