@@ -1,7 +1,9 @@
 name: Super-Linter
 
 # Run this workflow every time a new commit pushed to your repository
-on: push
+on:
+  pull_request:
+    branches: [main, staging]
 
 jobs:
   # Set the job key. The key is displayed as the job name
@@ -21,5 +23,6 @@ jobs:
       - name: Run Super-Linter
         uses: github/super-linter@v3
         env:
+          VALIDATE_ALL_CODEBASE: FALSE
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

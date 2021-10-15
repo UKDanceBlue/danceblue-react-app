@@ -1,192 +1,242 @@
 import React, { Component } from 'react'
 import {
-  View,
-  StyleSheet,
   Text,
+  ActivityIndicator,
+  StyleSheet,
+  TouchableHighlight,
+  View,
   Image
 } from 'react-native'
-import { Button } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import IconBadge from 'react-native-icon-badge'
-import bdubs from '../../../assets/events/BDubs.jpg'
+import openMap from 'react-native-open-maps'
+import * as Calendar from 'expo-calendar'
+import moment from 'moment'
 
-export default class Event extends Component {
+import { withFirebaseHOC } from '../../../config/Firebase'
+
+const danceBlueCalendarConfig = {
+  title: 'DanceBlue',
+  color: '#0033A0',
+  enitityType: Calendar.EntityTypes.EVENT,
+  source: {
+    isLocalAccount: true,
+    name: 'DanceBlue Mobile'
+  },
+  name: 'dancebluemobile',
+  ownerAccount: 'DanceBlue Mobile',
+  accessLevel: Calendar.CalendarAccessLevel.OWNER
+}
+
+/**
+ * TODO
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
+class Event extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      isLoading: true,
+      id: props.route.params.id,
+      isOnCalendar: false,
+      isAddingToCalendar: false
+    }
+
+    this.checkCalendarPermissions = this.checkCalendarPermissions.bind(this)
+    this.checkDBCalendar = this.checkDBCalendar.bind(this)
+    this.addToCalendar = this.addToCalendar.bind(this)
+    this.createDBCalendar = this.createDBCalendar.bind(this)
+    this.checkEventExists = this.checkEventExists.bind(this)
+    this.removeFromCalendar = this.removeFromCalendar.bind(this)
+  }
+
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
+  componentDidMount () {
+    this.props.firebase.getEvent(this.state.id).then(doc => {
+      this.setState({ isLoading: false, ...doc.data() })
+      this.props.firebase.getDocumentURL(doc.data().image).then(url => {
+        this.setState({ imageRef: url })
+      }).catch(error => console.log(error.message))
+    }).then(this.checkCalendarPermissions).then(this.checkEventExists)
+  }
+
+  /**
+   * TODO
+   * @returns TODO
+   */
+  checkCalendarPermissions () {
+    return Calendar.requestCalendarPermissionsAsync()
+  }
+
+  /**
+   * TODO
+   * @returns TODO
+   */
+  checkDBCalendar () {
+    let foundCalendar = false
+    return Calendar.getCalendarsAsync().then(calendars => {
+      calendars.forEach(calendar => {
+        if (calendar.name === 'dancebluemobile') {
+          this.setState({ calendarID: calendar.id })
+          foundCalendar = true
+        }
+      })
+      return foundCalendar
+    })
+  }
+
+  /**
+   * TODO
+   * @returns TOOD
+   */
+  createDBCalendar () {
+    return Calendar.createCalendarAsync(danceBlueCalendarConfig).then(id => this.setState({ calendarID: id }))
+  }
+
+  /**
+   * TODO
+   */
+  checkEventExists () {
+    this.checkCalendarPermissions().then(this.checkDBCalendar).then(async calendarExists => {
+      if (calendarExists) {
+        return Calendar.getEventsAsync([this.state.calendarID], this.state.startTime.toDate(), this.state.endTime.toDate()).then(events => {
+          events.forEach(event => {
+            if (event.title === this.state.title) this.setState({ isOnCalendar: true, eventCalendarID: event.id })
+          })
+        })
+      }
+    })
+  }
+
+  /**
+   * TODO
+   */
+  addToCalendar () {
+    this.setState({ isAddingToCalendar: true })
+    this.checkCalendarPermissions().then(this.checkDBCalendar).then(async calendarExists => {
+      if (!calendarExists) {
+        await this.createDBCalendar()
+      }
+      return Calendar.createEventAsync(this.state.calendarID, {
+        title: this.state.title,
+        startDate: this.state.startTime.toDate(),
+        endDate: this.state.endTime.toDate(),
+        location: this.state.address
+      }).then(id => this.setState({ isAddingToCalendar: false, isOnCalendar: true, eventCalendarID: id }))
+    })
+  }
+
+  /**
+   * TODO
+   * @returns TODO
+   */
+  removeFromCalendar () {
+    this.setState({ isAddingToCalendar: true })
+    return Calendar.deleteEventAsync(this.state.eventCalendarID).then(() => this.setState({ isAddingToCalendar: false, isOnCalendar: false, eventCalendarID: null }))
+  }
+
   render () {
+    const startDate = (this.state.startTime ? moment(this.state.startTime.toDate()) : moment())
+    const endDate = (this.state.endTime ? moment(this.state.endTime.toDate()) : moment())
+    let whenString = ''
+    if (startDate.isSame(endDate, 'day')) {
+      whenString = `${startDate.format('M/D/YYYY h:mm a')} - ${endDate.format('h:mm a')}`
+    } else {
+      whenString = `${startDate.format('M/D/YYYY h:mm a')} - ${endDate.format('M/D/YYYY h:mm a')}`
+    }
     return (
-      <IconBadge
-        MainElement={
-          <View style={styles.container}>
-            <View style={styles.eventBox}>
-              <View style={styles.eventInfo}>
-                <View style={styles.eventTitleDateView}>
-                  <View style={styles.eventTitleView}>
-                    <Text
-                      style={styles.eventTitle}
-                      adjustsFontSizeToFit
-                      numberOfLines={2}
-                    >Jimmy John's     Restaurant Night
+      <>
+        {this.state.isLoading && (
+          <ActivityIndicator style={styles.image} size='large' color='blue' />
+        )}
+        {!this.state.isLoading && (
+          <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+            <Image source={{ uri: this.state.imageRef }} style={styles.image} />
+            <View style={styles.body}>
+              {this.state.description && (
+                <Text style={styles.text}>
+                  {this.state.description}
+                </Text>
+              )}
+              {this.state.address && (
+                <>
+                  <Text style={styles.boldText}>Where?</Text>
+                  <Text style={styles.text}>{this.state.address}</Text>
+                </>
+              )}
+              {this.state.startTime && (
+                <>
+                  <Text style={styles.boldText}>When?</Text>
+                  <Text style={styles.text}>{whenString}</Text>
+                </>
+              )}
+              <View style={styles.buttonContainer}>
+                {this.state.address && (
+                  <TouchableHighlight
+                    onPress={() => openMap({ query: this.state.address })}
+                    style={styles.button}
+                  >
+                    <Text style={styles.buttonText}>Get Directions</Text>
+                  </TouchableHighlight>
+                )}
+                {this.state.startTime && (
+                  <TouchableHighlight
+                    style={styles.button}
+                    onPress={() => {
+                      this.state.isOnCalendar ? this.removeFromCalendar() : this.addToCalendar()
+                    }}
+                  >
+                    <Text style={styles.buttonText}>
+                      {this.state.isOnCalendar ? 'Remove Event' : 'Add to Calendar'}
                     </Text>
-                  </View>
-                  <View style={styles.eventDateView}>
-                    <Text style={styles.eventDate}>
-                      January 1 {'\u2022'} 11am-11:30pm
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.eventDetailsView}>
-                  <Text
-                    style={styles.eventDetails}
-                    adjustsFontSizeToFit
-                    numberOfLines={3}
-                  >Support the Chaarg DanceBlue Team and earn one spirit point! We need 3 lines!
-                  </Text>
-                </View>
+                  </TouchableHighlight>
+                )}
               </View>
-              <View style={styles.eventImage}>
-                <Image source={bdubs} style={styles.image} />
-              </View>
-            </View>
-            <View style={styles.buttonView}>
-              <Button
-                style={styles.button}
-                type='outline'
-                raised
-                icon={
-                  <Icon
-                    name='car'
-                    size={20}
-                    color='#0033A0'
-                  />
-                }
-              />
-              <Button
-                style={styles.button}
-                type='outline'
-                raised
-                icon={
-                  <Icon
-                    name='map-marker'
-                    size={20}
-                    color='red'
-                  />
-                }
-              />
-              <Button
-                style={styles.button}
-                type='outline'
-                raised
-                icon={
-                  <Icon
-                    name='calendar'
-                    size={19}
-                    color='green'
-                  />
-                }
-              />
             </View>
           </View>
-        }
-        BadgeElement={<Text style={styles.pointsText}>10</Text>}
-        IconBadgeStyle={styles.icon}
-      />
+        )}
+      </>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: 175,
-    width: '95%',
-    marginBottom: 10,
-    backgroundColor: 'white',
-    borderRadius: 15,
-    overflow: 'hidden'
-  },
-  eventBox: {
-    flex: 60,
-    width: '100%',
-    flexDirection: 'row'
-  },
-  eventImage: {
-    flex: 6,
-    height: '90%',
-    width: '100%',
-    alignSelf: 'center',
-    marginRight: 5,
-    borderRadius: 15,
-    overflow: 'hidden'
-  },
   image: {
-    flex: 1,
-    height: null,
-    width: null,
-    resizeMode: 'cover'
-  },
-  eventInfo: {
-    flex: 13,
-    width: '100%',
-    paddingVertical: 4,
-    paddingLeft: 8,
-    paddingRight: 2,
-    alignItems: 'flex-start'
-  },
-  eventTitleDateView: {
-    flex: 1,
-    justifyContent: 'flex-start'
-  },
-  eventTitleView: {
-    flex: 3,
-    justifyContent: 'center',
-    alignItems: 'flex-start'
-  },
-  eventTitle: {
-    textAlign: 'left',
-    fontWeight: 'bold',
-    fontSize: 30
-  },
-  eventDateView: {
-    flex: 1,
-    justifyContent: 'center'
-  },
-  eventDate: {
-    textAlign: 'left',
-    fontSize: 12,
-    color: 'gray'
-  },
-  eventDetailsView: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    paddingTop: 2,
-    borderTopWidth: 2,
-    borderTopColor: '#0033A0'
-  },
-  eventDetails: {
-    textAlign: 'left',
-    fontSize: 14
-  },
-  buttonView: {
-    flex: 20,
-    marginTop: -10,
-    padding: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center'
+    height: 250,
+    width: '100%'
   },
   button: {
-    width: 90,
-    height: '80%'
+    backgroundColor: '#0033A0E0',
+    borderRadius: 5,
+    padding: 10,
+    width: '45%',
+    alignItems: 'center'
   },
-  icon: {
-    top: -8,
-    right: -5,
-    width: 35,
-    height: 35,
-    borderRadius: 35 / 2,
-    backgroundColor: '#FFC72C'
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingTop: 10
   },
-  pointsText: {
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold'
+  buttonText: {
+    color: 'white'
+  },
+  text: {
+    fontSize: 17
+  },
+  boldText: {
+    fontWeight: 'bold',
+    fontSize: 17
+  },
+  body: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 15
   }
 })
+
+export default withFirebaseHOC(Event)

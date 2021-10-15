@@ -5,6 +5,14 @@ import moment from 'moment'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
+/**
+ * TODO
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 const TimeUnit = props => {
   return (
     <View style={{ alignItems: 'center', paddingLeft: 7, paddingRight: 7 }}>
@@ -16,6 +24,14 @@ const TimeUnit = props => {
   )
 }
 
+/**
+ * TODO
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class CountdownView extends React.Component {
   constructor (props) {
     super(props)
@@ -37,6 +53,9 @@ class CountdownView extends React.Component {
     this.updateTimer = this.updateTimer.bind(this)
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
   componentDidMount () {
     this.props.firebase.getActiveCountdown().then(snapshot => {
       snapshot.forEach(doc => {
@@ -52,6 +71,9 @@ class CountdownView extends React.Component {
     })
   }
 
+  /**
+   * Every 1 second subtract 1 second from the timer (stored in CountdownView.state) until it is less than or equal to 0,  then stop
+   */
   updateTimer () {
     const x = setInterval(() => {
       let { date } = this.state
@@ -79,6 +101,10 @@ class CountdownView extends React.Component {
     }, 1000)
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render () {
     const { months, days, hours, mins, secs } = this.state
     return (
@@ -238,16 +264,18 @@ class CountdownView extends React.Component {
               </View>
               /* jscpd:ignore-end */
             )}
-            <Text
-              style={styles.coundownText}
-            >
-              {months === 0 &&
-                days === 0 &&
-                hours === 0 &&
-                mins === 0 &&
-                secs === 0 &&
-                `${this.state.finishMessage}`}
-            </Text>
+            {months === 0 &&
+              days === 0 &&
+              hours === 0 &&
+              mins === 0 &&
+              secs === 0 && (
+                <Text
+                  style={styles.coundownText}
+                >
+                  {this.state.finishMessage}
+                </Text>
+              )
+            }
           </>
         )}
       </View>

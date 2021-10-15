@@ -3,6 +3,14 @@ import { View, StyleSheet, Text, ActivityIndicator } from 'react-native'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
+/**
+ * A bullet point with text
+ * @param {Object} props Properties of the component: (body)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 const BulletPoint = props => {
   return (
     <View style={styles.announcementRow}>
@@ -16,6 +24,15 @@ const BulletPoint = props => {
   )
 }
 
+/**
+ * A set of announcements loaded from FireBase
+ * @param {Object} props Properties of the component: (body)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
+
 class Announcements extends React.Component {
   constructor (props) {
     super(props)
@@ -26,6 +43,9 @@ class Announcements extends React.Component {
     }
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
   componentDidMount () {
     const announcements = []
     this.props.firebase.getAnnouncements().then(snapshot => {
@@ -36,6 +56,10 @@ class Announcements extends React.Component {
     })
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render () {
     const bullets = this.state.announcements.map(announcement => (
       <BulletPoint body={announcement.body} key={announcement.id} />

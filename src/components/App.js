@@ -3,19 +3,14 @@ import { registerRootComponent } from 'expo'
 import React from 'react'
 import { StatusBar, LogBox } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-
-// Import font awesome icons
-import Icon from 'react-native-vector-icons/FontAwesome5'
-
-// Import screens for navigation
-import { HomeScreen } from '../screens/Home'
-import { EventsScreen } from '../screens/Events'
-import { BlogScreen } from '../screens/Blog'
-import { MoreScreen } from '../screens/More'
+import Constants from 'expo-constants'
+import * as Notifications from 'expo-notifications'
+import { compose } from 'recompose'
+import AppLoading from 'expo-app-loading'
 
 // Import Firebase Context Provider
 import Firebase, { FirebaseProvider } from '../../config/Firebase'
+import RootStackScreen from '../screens'
 
 // Fix firestore error - can be removed if issue is resolved in package
 import { decode, encode } from 'base-64'
@@ -28,54 +23,99 @@ if (!global.atob) {
 
 LogBox.ignoreLogs(['Setting a timer'])
 
-// Bottom tab navigator config
-const Tab = createBottomTabNavigator()
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 // Create container for app with navigations
-const App = () => {
-  return (
-    <FirebaseProvider value={Firebase}>
-      <StatusBar barStyle='dark-content' />
-      <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ color, size }) => {
-              let iconName
+/**
+ * Main App components
+ * @author Kenton Carrier
+ * @since 1.0.1
+ */
+class App extends React.Component {
 
-              if (route.name === 'Home') {
-                iconName = 'home'
-              } else if (route.name === 'Events') {
-                iconName = 'calendar'
-              } else if (route.name === 'Blog') {
-                iconName = 'blog'
-              } else if (route.name === 'More') {
-                iconName = 'ellipsis-h'
-              }
+  constructor(props) {
+    super(props)
 
-              // You can return any component that you like here!
-              return (
-                <Icon
-                  name={iconName}
-                  size={size}
-                  color={color}
-                  style={{ textAlignVertical: 'center' }}
-                />
-              )
-            }
-          })}
-          tabBarOptions={{
-            activeTintColor: 'white',
-            activeBackgroundColor: '#3248a8'
-          }}
-        >
-          <Tab.Screen name='Home' component={HomeScreen} />
-          <Tab.Screen name='Events' component={EventsScreen} />
-          <Tab.Screen name='Blog' component={BlogScreen} />
-          <Tab.Screen name='More' component={MoreScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </FirebaseProvider>
-  )
+    this.state = {
+      isReady: false
+    }
+  }
+
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
+  componentDidMount() {
+
+    this.registerForPushNotificationsAsync()
+
+    Notifications.addNotificationReceivedListener(this._handleNotification)
+
+    Notifications.addNotificationResponseReceivedListener(this._handleNotificationResponse)
+  }
+
+  _handleNotification = notification => {
+    this.setState({ notification: notification });
+  };
+
+  _handleNotificationResponse = response => {
+  };
+
+  /**
+   * TODO
+   * @returns TODO
+   */
+  async registerForPushNotificationsAsync() {
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (Platform.OS === 'ios' && finalStatus === 1) finalStatus = 'granted'
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      Firebase.addPushToken(token)
+      this.setState({ expoPushToken: token });
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  };
+
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
+  render() {
+    return (
+      <FirebaseProvider value={Firebase}>
+        <StatusBar />
+        <NavigationContainer>
+          <RootStackScreen />
+        </NavigationContainer>
+      </FirebaseProvider>
+    )
+  }
 }
 
-export default registerRootComponent(App)
+export default compose(
+  registerRootComponent
+)(App)

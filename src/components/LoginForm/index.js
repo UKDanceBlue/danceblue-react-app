@@ -6,7 +6,14 @@ import { Formik } from 'formik'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
-// Component for profile screen in main navigation
+/**
+ * Component for profile screen in main navigation
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class LoginForm extends React.Component {
   constructor (props) {
     super(props)
@@ -14,17 +21,37 @@ class LoginForm extends React.Component {
     this.handleLogin = this.handleLogin.bind(this)
   }
 
+  /** **TODO validate that this is accurate, I don't think it is**
+   * Called when the user submits the login form, sends the details they entered to Firebase and tries to log them in
+   * @param {Object} values A user's *email* and *password*
+   * @param {Object} actions Used here to set an error if Firebase fails
+   */
   handleLogin (values, actions) {
     const { email, password } = values
 
-    this.props.firebase
-      .loginWithEmail(email, password)
-      .then(res => {
-        if (this.props.navigate) this.props.navigate()
-      })
-      .catch(error => actions.setFieldError('general', error.message))
+    this.props.firebase.checkAuthUser(user => {
+      if (user !== null) {
+        this.props.firebase
+          .loginWithEmail(email, password)
+          .then(res => {
+            if (this.props.navigate) this.props.navigate()
+          })
+          .catch(error => actions.setFieldError('general', error.message))
+      } else {
+        this.props.firebase
+          .loginWithEmail(email, password)
+          .then(res => {
+            if (this.props.navigate) this.props.navigate()
+          })
+          .catch(error => actions.setFieldError('general', error.message))
+      }
+    })
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render () {
     return (
       <Formik

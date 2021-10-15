@@ -6,7 +6,14 @@ import { Formik, ErrorMessage } from 'formik'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
-// Component for profile screen in main navigation
+/**
+ * Component for profile screen in main navigation
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class EditForm extends React.Component {
   constructor (props) {
     super(props)
@@ -23,6 +30,11 @@ class EditForm extends React.Component {
     this.handleSignup = this.handleSignUp.bind(this)
   }
 
+  /**
+   * TODO
+   * @param {*} values 
+   * @param {*} actions 
+   */
   handleSignUp (values, actions) {
     const { name, email, team } = values
     const userData = {
@@ -36,6 +48,10 @@ class EditForm extends React.Component {
       .catch(error => actions.setFieldError('general', error.message))
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render () {
     return (
       <Formik

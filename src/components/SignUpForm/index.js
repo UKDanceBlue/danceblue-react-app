@@ -6,7 +6,14 @@ import { Formik, ErrorMessage } from 'formik'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
-// Component for profile screen in main navigation
+/**
+ * Component for profile screen in main navigation
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class SignUpForm extends React.Component {
   constructor (props) {
     super(props)
@@ -14,22 +21,43 @@ class SignUpForm extends React.Component {
     this.handleSignup = this.handleSignUp.bind(this)
   }
 
+  /** **TODO validate that this is accurate**
+   * Called when the user submits the login form, sends the details they entered to Firebase
+   * 1. If the user exists then log them in
+   * 2. If they do not exist then ask Firebase to sign them up
+   * @param {Object} values A user's *name*, *email*, and *password*
+   * @param {Object} actions Used here to set an error if Firebase fails
+   */
   handleSignUp (values, actions) {
     const { name, email, password } = values
 
-    this.props.firebase
-      .signupWithEmail(email, password)
-      .then(res => {
-        const { uid } = res.user
-        const team = '0'
-        const userData = { email, name, uid, team }
-        this.props.firebase.createNewUser(userData).then(() => {
-          if (this.props.navigate) this.props.navigate()
+    const user = this.props.firebase.getAuthUserInstance()
+    if (user !== null) {
+      this.props.firebase.linkAnon(email, password).then(res => {
+        const { uid } = user
+        const userData = { email, name }
+        this.props.firebase.createNewUser(userData, uid).then(() => {
+          if(this.props.navigate) this.props.navigate()
         })
       })
-      .catch(error => actions.setFieldError('general', error.message))
+    } else {
+      this.props.firebase
+        .signupWithEmail(email, password)
+        .then(res => {
+          const { uid } = res.user
+          const userData = { email, name }
+          this.props.firebase.createNewUser(userData, uid).then(() => {
+            if (this.props.navigate) this.props.navigate()
+          })
+        })
+        .catch(error => actions.setFieldError('general', error.message))
+    }
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render () {
     return (
       <Formik

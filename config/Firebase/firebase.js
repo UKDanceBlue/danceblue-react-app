@@ -19,12 +19,26 @@ const Firebase = {
   checkAuthUser: (user) => {
     return firebase.auth().onAuthStateChanged(user)
   },
+  getAuthUserInstance: () => {
+    return firebase.auth().currentUser
+  },
+  signInAnon: () => {
+    return firebase.auth().signInAnonymously()
+  },
+  linkAnon: (email, password) => {
+    var credentials = firebase.auth.EmailAuthProvider.credential(email, password)
+    return firebase.auth().currentUser.linkWithCredential(credentials)
+  },
+  reauthenticate: (email, password) => {
+    var credentials = firebase.auth.EmailAuthProvider.credential(email, password)
+    return firebase.auth().currentUser.reauthenticateWithCredential(credentials)
+  },
   // firestore
-  createNewUser: userData => {
+  createNewUser: (userData, id) => {
     return firebase
       .firestore()
       .collection('users')
-      .doc(`${userData.uid}`)
+      .doc(id)
       .set(userData)
   },
   getTeams: () => {
@@ -52,11 +66,45 @@ const Firebase = {
       .collection('announcements')
       .get()
   },
+  getUsers: () => {
+    return firebase
+      .firestore()
+      .collection('users')
+      .get()
+  },
+  getUsersWithPoints: () => {
+    return firebase
+      .firestore()
+      .collection('users')
+      .where('points', '!=', null)
+      .get()
+  },
+  getEvents: () => {
+    return firebase
+      .firestore()
+      .collection('events')
+      .get()
+  },
+  getEvent: (id) => {
+    return firebase
+      .firestore()
+      .collection('events')
+      .doc(id)
+      .get()
+  },
+  getUpcomingEvents: () => {
+    const now = new Date()
+    return firebase
+      .firestore()
+      .collection('events')
+      .where('endTime', '>', now)
+      .get()
+  },
   getUser: (userId) => {
     return firebase
       .firestore()
       .collection('users')
-      .where('uid', '==', userId)
+      .doc(userId)
       .get()
   },
   // This can be used to pull team information based on user's team.
@@ -73,6 +121,35 @@ const Firebase = {
       .storage()
       .ref(path)
       .getDownloadURL()
+  },
+  getConfig: () => {
+    return firebase
+      .firestore()
+      .collection('configs')
+      .doc('mobile-app')
+      .get()
+  },
+  getUserBadges: (userID) => {
+    return firebase
+      .firestore()
+      .collection('users')
+      .doc(userID)
+      .collection('badges')
+      .get()
+  },
+  addPushToken: (token) => {
+    let dbRef = firebase.firestore().collection('expo-push-tokens')
+    return dbRef.get().then(snapshot => {
+      let found = false
+      snapshot.forEach(doc => {
+        if (doc.data().token === token) found = true
+      })
+      if (found === false) {
+        return dbRef.add({
+          token: token
+        })
+      }
+    })
   }
 }
 

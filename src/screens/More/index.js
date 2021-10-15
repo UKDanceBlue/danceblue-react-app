@@ -7,33 +7,45 @@ import {
   Text,
   SafeAreaView
 } from 'react-native'
-import { createStackNavigator } from '@react-navigation/stack'
-
-import ProfileScreen from './Profile'
-import { FAQScreen } from './FAQ'
-import { DonateScreen } from './Donate'
-import { ContactScreen } from './Contact'
 
 import { styles } from '../../styles'
-
-const Stack = createStackNavigator()
 
 const profileButtonImage = require('./Profile_Button.jpg')
 const donateButtonImage = require('./Donate_Button.jpg')
 const faqsButtonImage = require('./FAQs_Button.jpg')
-const contactButtonImage = require('./Contact_Button.jpg')
+const faqsButtonImageSH = require('./FAQs_Button_SH.jpg')
+const aboutButtonImage = require('./About_Button.jpg')
 
-class MoreScreenOptions extends React.Component {
+import { withFirebaseHOC } from '../../../config/Firebase'
+
+// Component for "more" screen in main navigation
+class MoreScreen extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      config: {
+        scavengerHunt: this.props.scavengerHunt | false
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.props.firebase.getConfig().then(doc => {
+      this.setState({ scavengerHunt: doc.data().scavengerHunt })
+    })
+  }
+
   render () {
     const { navigate } = this.props.navigation
     return (
       <>
         <SafeAreaView style={{ flex: 1 }}>
           <TouchableHighlight
+            style={styles.button}
             onPress={() => {
               navigate('Profile')
             }}
-            style={styles.button}
           >
             <ImageBackground
               source={profileButtonImage}
@@ -42,7 +54,25 @@ class MoreScreenOptions extends React.Component {
             >
               <View style={styles.view}>
                 <Text style={styles.text}>
-                  Profile
+                  {'Profile'}
+                </Text>
+              </View>
+            </ImageBackground>
+          </TouchableHighlight>
+          <TouchableHighlight
+            onPress={() => {
+              navigate('About')
+            }}
+            style={styles.button}
+          >
+            <ImageBackground
+              source={aboutButtonImage}
+              style={styles.img}
+              imageStyle={{ borderRadius: 10 }}
+            >
+              <View style={styles.view}>
+                <Text style={styles.text}>
+                  About Us
                 </Text>
               </View>
             </ImageBackground>
@@ -72,7 +102,7 @@ class MoreScreenOptions extends React.Component {
             style={styles.button}
           >
             <ImageBackground
-              source={faqsButtonImage}
+              source={this.state.scavengerHunt ? faqsButtonImageSH : faqsButtonImage}
               style={styles.img}
               imageStyle={{ borderRadius: 10 }}
             >
@@ -83,43 +113,8 @@ class MoreScreenOptions extends React.Component {
               </View>
             </ImageBackground>
           </TouchableHighlight>
-          <TouchableHighlight
-            onPress={() => {
-              navigate('Contact')
-            }}
-            style={styles.button}
-          >
-            <ImageBackground
-              source={contactButtonImage}
-              style={styles.img}
-              imageStyle={{ borderRadius: 10 }}
-            >
-              <View style={styles.view}>
-                <Text style={styles.text}>
-                  Contact
-                </Text>
-              </View>
-            </ImageBackground>
-          </TouchableHighlight>
         </SafeAreaView>
       </>
-    )
-  }
-}
-
-// Component for "more" screen in main navigation
-export class MoreScreen extends React.Component {
-  render () {
-    /* eslint-disable */
-    const { navigate } = this.props.navigation
-    return (
-      <Stack.Navigator>
-        <Stack.Screen name='More Options' component={MoreScreenOptions} />
-        <Stack.Screen name='Profile' component={ProfileScreen} />
-        <Stack.Screen name='FAQ' component={FAQScreen} />
-        <Stack.Screen name='Donate' component={DonateScreen} />
-        <Stack.Screen name='Contact' component={ContactScreen} />
-      </Stack.Navigator>
     )
   }
 }
@@ -127,3 +122,5 @@ export class MoreScreen extends React.Component {
 MoreScreen.navigationOptions = {
   title: 'More'
 }
+
+export default withFirebaseHOC(MoreScreen)

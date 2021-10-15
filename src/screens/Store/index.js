@@ -6,12 +6,12 @@ import { WebView } from 'react-native-webview'
 const width = Dimensions.get('window').width // full width
 
 // Component for profile screen in main navigation
-export class BlogScreen extends React.Component {
+export class StoreScreen extends React.Component {
   render () {
     return (
       <View style={styles.viewPortContainer}>
         <WebView
-          source={{ uri: 'https://www.danceblue.org/blog/' }}
+          source={{ uri: 'http://www.danceblue.org/dancebluetique/' }}
           style={styles.webviewContainer}
         />
       </View>
