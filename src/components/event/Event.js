@@ -26,6 +26,14 @@ const danceBlueCalendarConfig = {
   accessLevel: Calendar.CalendarAccessLevel.OWNER
 }
 
+/**
+ * TODO
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class Event extends Component {
   constructor (props) {
     super(props)
@@ -45,6 +53,9 @@ class Event extends Component {
     this.removeFromCalendar = this.removeFromCalendar.bind(this)
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
   componentDidMount () {
     this.props.firebase.getEvent(this.state.id).then(doc => {
       this.setState({ isLoading: false, ...doc.data() })
@@ -54,10 +65,18 @@ class Event extends Component {
     }).then(this.checkCalendarPermissions).then(this.checkEventExists)
   }
 
+  /**
+   * TODO
+   * @returns TODO
+   */
   checkCalendarPermissions () {
     return Calendar.requestCalendarPermissionsAsync()
   }
 
+  /**
+   * TODO
+   * @returns TODO
+   */
   checkDBCalendar () {
     let foundCalendar = false
     return Calendar.getCalendarsAsync().then(calendars => {
@@ -71,10 +90,17 @@ class Event extends Component {
     })
   }
 
+  /**
+   * TODO
+   * @returns TOOD
+   */
   createDBCalendar () {
     return Calendar.createCalendarAsync(danceBlueCalendarConfig).then(id => this.setState({ calendarID: id }))
   }
 
+  /**
+   * TODO
+   */
   checkEventExists () {
     this.checkCalendarPermissions().then(this.checkDBCalendar).then(async calendarExists => {
       if (calendarExists) {
@@ -87,6 +113,9 @@ class Event extends Component {
     })
   }
 
+  /**
+   * TODO
+   */
   addToCalendar () {
     this.setState({ isAddingToCalendar: true })
     this.checkCalendarPermissions().then(this.checkDBCalendar).then(async calendarExists => {
@@ -102,6 +131,10 @@ class Event extends Component {
     })
   }
 
+  /**
+   * TODO
+   * @returns TODO
+   */
   removeFromCalendar () {
     this.setState({ isAddingToCalendar: true })
     return Calendar.deleteEventAsync(this.state.eventCalendarID).then(() => this.setState({ isAddingToCalendar: false, isOnCalendar: false, eventCalendarID: null }))

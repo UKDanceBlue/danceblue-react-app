@@ -10,6 +10,14 @@ import * as WebBrowser from 'expo-web-browser'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
+/**
+ * TODO
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class Card extends React.Component {
   constructor (props) {
     super(props)
@@ -20,6 +28,9 @@ class Card extends React.Component {
     }
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
   componentDidMount () {
     this.props.firebase
       .getDocumentURL(this.props.imageLink)
@@ -29,6 +40,10 @@ class Card extends React.Component {
       .catch(error => console.log(error.message))
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render () {
     return (
       <TouchableHighlight

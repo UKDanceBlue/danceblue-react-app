@@ -5,6 +5,14 @@ import { Formik, ErrorMessage } from 'formik'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
+/**
+ * TODO
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class ScavengerHunt extends React.Component {
   constructor (props) {
     super(props)
@@ -18,6 +26,9 @@ class ScavengerHunt extends React.Component {
     this.handleGuess = this.handleGuess.bind(this)
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
   componentDidMount() {
     this.props.firebase.getUserBadges(this.state.userID).then(snapshot => {
       snapshot.forEach(doc => {
@@ -27,6 +38,11 @@ class ScavengerHunt extends React.Component {
     })
   }
 
+  /**
+   * Checks if the user's guess was correct usign the checkScavengerHunt function in Firebase
+   * @param {Object} values Holds the user's guess
+   * @param {Object} actions Unused
+   */
   handleGuess(values, actions) {
     const { guess } = values
     this.setState({ isLoading: true, guessed: true })
@@ -51,6 +67,10 @@ class ScavengerHunt extends React.Component {
       })
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render () {
     return (
       <View style={styles.container}>

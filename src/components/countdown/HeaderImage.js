@@ -7,6 +7,14 @@ import backgroundImg from '../../../assets/home/db20_ribbon.jpg'
 import backgroundImgSH from '../../../assets/home/db20_ribbonSH.jpg'
 import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png'
 
+/**
+ * TODO
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class HeaderImage extends React.Component {
   constructor(props) {
     super(props)
@@ -16,12 +24,19 @@ class HeaderImage extends React.Component {
     }
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
   componentDidMount() {
     this.props.firebase.getConfig().then(doc => {
       this.setState({ scavengerHunt: doc.data().scavengerHunt })
     })
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render() {
     return (
       <View style={styles.container}>

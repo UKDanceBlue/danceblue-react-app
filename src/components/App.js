@@ -32,6 +32,11 @@ Notifications.setNotificationHandler({
 });
 
 // Create container for app with navigations
+/**
+ * Main App components
+ * @author Kenton Carrier
+ * @since 1.0.1
+ */
 class App extends React.Component {
 
   constructor(props) {
@@ -42,6 +47,9 @@ class App extends React.Component {
     }
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
   componentDidMount() {
 
     this.registerForPushNotificationsAsync()
@@ -58,6 +66,10 @@ class App extends React.Component {
   _handleNotificationResponse = response => {
   };
 
+  /**
+   * TODO
+   * @returns TODO
+   */
   async registerForPushNotificationsAsync() {
     if (Constants.isDevice) {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -88,6 +100,10 @@ class App extends React.Component {
     }
   };
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render() {
     return (
       <FirebaseProvider value={Firebase}>

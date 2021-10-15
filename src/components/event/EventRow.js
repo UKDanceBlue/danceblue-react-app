@@ -9,6 +9,14 @@ import {
 import { withFirebaseHOC } from '../../../config/Firebase'
 import moment from 'moment'
 
+/**
+ * TODO
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class EventRow extends React.Component {
   constructor (props) {
     super(props)
@@ -19,6 +27,9 @@ class EventRow extends React.Component {
     }
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
   componentDidMount () {
     if (this.props.imageLink) {
       this.props.firebase
@@ -32,6 +43,10 @@ class EventRow extends React.Component {
     }
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render () {
     const startDate = moment(this.props.startDate)
     const endDate = moment(this.props.endDate)
