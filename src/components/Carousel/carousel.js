@@ -4,6 +4,14 @@ import Card from './card'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
+/**
+ * TODO
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class Carousel extends React.Component {
   constructor (props) {
     super(props)
@@ -13,6 +21,9 @@ class Carousel extends React.Component {
     }
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
   componentDidMount () {
     const dbSponsors = []
     this.props.firebase.getSponsors().then(snapshot => {
@@ -23,6 +34,10 @@ class Carousel extends React.Component {
     })
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render () {
     const cards = this.state.sponsors.map((sponsor, index) => (
       <Card

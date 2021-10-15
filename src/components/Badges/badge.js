@@ -3,6 +3,14 @@ import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
+/**
+ * A badge icon for use with profiles
+ * @param {Object} props Properties of the component: (imageURL, name)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class Badge extends React.Component {
   constructor(props) {
     super(props)
@@ -12,12 +20,19 @@ class Badge extends React.Component {
     }
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
   componentDidMount() {
     this.props.firebase.getDocumentURL(this.props.imageURL).then(url => {
       this.setState({ imageRef: url, isLoading: false })
     }).catch(error => console.log(error.message))
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render () {
     return (
       <View style={styles.container}>

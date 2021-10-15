@@ -6,7 +6,14 @@ import { Formik, ErrorMessage } from 'formik'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
-// Component for profile screen in main navigation
+/**
+ * Component for profile screen in main navigation
+ * @param {Object} props Properties of the component: (TODO)
+ * @returns A React Native component
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class SignUpForm extends React.Component {
   constructor (props) {
     super(props)
@@ -14,6 +21,13 @@ class SignUpForm extends React.Component {
     this.handleSignup = this.handleSignUp.bind(this)
   }
 
+  /** **TODO validate that this is accurate**
+   * Called when the user submits the login form, sends the details they entered to Firebase
+   * 1. If the user exists then log them in
+   * 2. If they do not exist then ask Firebase to sign them up
+   * @param {Object} values A user's *name*, *email*, and *password*
+   * @param {Object} actions Used here to set an error if Firebase fails
+   */
   handleSignUp (values, actions) {
     const { name, email, password } = values
 
@@ -40,6 +54,10 @@ class SignUpForm extends React.Component {
     }
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render () {
     return (
       <Formik

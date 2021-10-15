@@ -13,6 +13,13 @@ import Place from './place'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
+/**
+ * TODO
+ * @param {Object} props Properties of the component: (TODO)
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class Standings extends React.Component {
   constructor (props) {
     super(props)
@@ -35,6 +42,9 @@ class Standings extends React.Component {
     this.loadTeams = this.loadTeams.bind(this)
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   */
   componentDidMount () {
     // Create arrays for team list, one for team total scores and one for team scores per member.
     const promises = []
@@ -68,6 +78,10 @@ class Standings extends React.Component {
     Promise.all(promises).then(this.setState({ isLoading: false }))
   }
 
+  /**
+   * Loads teams from Firebase and then load them into Standings.state
+   * @returns Teams loaded from Firebase
+   */
   loadTeams () {
     const teams = []
     let shownNumber = this.state.shownNumber
@@ -83,6 +97,10 @@ class Standings extends React.Component {
     })
   }
 
+  /**
+   * Called to generate a React Native component
+   * @returns A JSX formatted component
+   */
   render () {
     // Creates places list for teams, which renders Place object for each team in order
     let places = []
