@@ -21,7 +21,7 @@ class LoginForm extends React.Component {
     this.handleLogin = this.handleLogin.bind(this)
   }
 
-  /** **TODO validate that this is accurate, I don't think it is**
+  /**
    * Called when the user submits the login form, sends the details they entered to Firebase and tries to log them in
    * @param {Object} values A user's *email* and *password*
    * @param {Object} actions Used here to set an error if Firebase fails
