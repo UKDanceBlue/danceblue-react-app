@@ -25,7 +25,7 @@ const BulletPoint = props => {
 }
 
 /**
- * A set of announcements loaded from FireBase
+ * A set of announcements loaded from FireBase, displayed in bulletpoints
  * @param {Object} props Properties of the component: (body)
  * @returns A React Native component
  * @author Kenton Carrier
