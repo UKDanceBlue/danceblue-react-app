@@ -10,8 +10,8 @@ import { withFirebaseHOC } from '../../../config/Firebase'
 import moment from 'moment'
 
 /**
- * TODO
- * @param {Object} props Properties of the component: (TODO)
+ * A simple row of *Event*s from *startDate* to *endDate*
+ * @param {Object} props Properties of the component: imageLink, startDate, endDate, title, firebase
  * @returns A React Native component
  * @author Kenton Carrier
  * @since 1.0.1
