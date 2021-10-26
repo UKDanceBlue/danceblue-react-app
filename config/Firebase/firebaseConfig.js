@@ -1,4 +1,4 @@
-export default {
+export default {// TODO replace most of these with secrets
   apiKey: 'AIzaSyDIOW4mnUoM568wgxQP9MOtP6-vLZZruy8',
   authDomain: 'react-danceblue.firebaseapp.com',
   databaseURL: 'https://react-danceblue.firebaseio.com',

@@ -3,7 +3,7 @@
       "dictionaries": ["jsdoc", "closure"]
     },
     "source": {
-      "include": ["src"],
+      "include": ["src","config"],
       "includePattern": ".+\\.js(doc|x)?$",
       "excludePattern": "(^|\\/|\\\\)_"
     },

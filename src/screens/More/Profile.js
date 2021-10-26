@@ -12,7 +12,13 @@ import avatar from '../../../assets/avatar.png'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
-// Component for profile screen in main navigation
+/**
+ * Component for "Profile" screen in main navigation
+ * @param {Object} props Properties of the component: navigation, firebase
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class ProfileScreen extends React.Component {
   constructor (props) {
     super(props)
@@ -27,6 +33,11 @@ class ProfileScreen extends React.Component {
     this.handleSignOut = this.handleSignOut.bind(this)
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
   componentDidMount () {
     this.props.firebase.checkAuthUser(user => {
       if (user !== null) {
@@ -42,12 +53,21 @@ class ProfileScreen extends React.Component {
     this.setState({ isLoading: false })
   }
 
+  /**
+   * Have firebase sign out the current user and then sign in an anonomous user
+   */
   handleSignOut () {
     this.props.firebase.signOut().then(() => {
       return this.props.firebase.signInAnon()
     }).then(() => this.setState({ loggedIn: false, user: undefined }))
   }
 
+  /**
+   * Called by React Native when rendering the screen
+   * @returns A JSX formatted Component
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
   render () {
     /* eslint-disable */
     const { navigate } = this.props.navigation
@@ -55,12 +75,12 @@ class ProfileScreen extends React.Component {
     return (
       <View style={styles.container}>
         <>
-          {this.state.isLoading && (
+          {/* Start of still loading view */this.state.isLoading && (
             <ActivityIndicator style={styles.image} size='large' color='blue' />
-          )}
-          {!this.state.isLoading && (
+          )/* End of still loading view */}
+          {/* Start of finished loading view */!this.state.isLoading && (
             <>
-              {this.state.loggedIn && (
+              {/* Start of logged in view */this.state.loggedIn && (
                 <>
                   <View style={styles.header}>
                     <Image style={styles.avatar} source={avatar} />
@@ -78,8 +98,8 @@ class ProfileScreen extends React.Component {
                     <Button title='Signout' onPress={this.handleSignOut} type='clear' />
                   </View>
                 </>
-              )}
-              {!this.state.loggedIn && (
+              )/* End of logged in view */}
+              {/* Start of logged out view */!this.state.loggedIn && (
                 <>
                   {this.state.formShown === 'signup' ? (
                     <>
@@ -99,9 +119,9 @@ class ProfileScreen extends React.Component {
                     </>
                   )}
                 </>
-              )}
+              )/* End of logged in view */}
             </>
-          )}
+          )/* End of finished loading view */}
         </>
       </View>
     )

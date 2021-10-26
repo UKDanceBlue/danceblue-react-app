@@ -25,9 +25,8 @@ const BulletPoint = props => {
 }
 
 /**
- * A set of announcements loaded from FireBase
+ * A set of announcements loaded from FireBase, displayed in bulletpoints
  * @param {Object} props Properties of the component: (body)
- * @returns A React Native component
  * @author Kenton Carrier
  * @since 1.0.1
  * @class
@@ -45,6 +44,9 @@ class Announcements extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   * @author Kenton Carrier
+   * @since 1.0.1
+   * @class
    */
   componentDidMount () {
     const announcements = []
@@ -59,6 +61,8 @@ class Announcements extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   render () {
     const bullets = this.state.announcements.map(announcement => (

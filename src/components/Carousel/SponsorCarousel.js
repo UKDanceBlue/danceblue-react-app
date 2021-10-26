@@ -1,18 +1,17 @@
 import React from 'react'
 import { Text, View, ScrollView, StyleSheet } from 'react-native'
-import Card from './card'
+import SponsorCard from './SponsorCard'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
 /**
- * TODO
- * @param {Object} props Properties of the component: (TODO)
- * @returns A React Native component
+ * A horizontally scrolling carousel of SponsorCards
+ * @param {Object} props Properties of the component: firebase
  * @author Kenton Carrier
  * @since 1.0.1
  * @class
  */
-class Carousel extends React.Component {
+class SponsorCarousel extends React.Component {
   constructor (props) {
     super(props)
 
@@ -23,6 +22,8 @@ class Carousel extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   componentDidMount () {
     const dbSponsors = []
@@ -37,10 +38,12 @@ class Carousel extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   render () {
     const cards = this.state.sponsors.map((sponsor, index) => (
-      <Card
+      <SponsorCard
         imageLink={sponsor.logo}
         sponsorLink={sponsor.link}
         key={sponsor.id}
@@ -94,4 +97,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default withFirebaseHOC(Carousel)
+export default withFirebaseHOC(SponsorCarousel)

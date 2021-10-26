@@ -11,14 +11,13 @@ import * as WebBrowser from 'expo-web-browser'
 import { withFirebaseHOC } from '../../../config/Firebase'
 
 /**
- * TODO
- * @param {Object} props Properties of the component: (TODO)
- * @returns A React Native component
+ * A card showing a Sponsor's logo that link's to their website
+ * @param {Object} props Properties of the component: imageLink, sponsorLink, firebase
  * @author Kenton Carrier
  * @since 1.0.1
  * @class
  */
-class Card extends React.Component {
+class SponsorCard extends React.Component {
   constructor (props) {
     super(props)
 
@@ -30,6 +29,8 @@ class Card extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   componentDidMount () {
     this.props.firebase
@@ -43,6 +44,8 @@ class Card extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   render () {
     return (
@@ -75,4 +78,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default withFirebaseHOC(Card)
+export default withFirebaseHOC(SponsorCard)

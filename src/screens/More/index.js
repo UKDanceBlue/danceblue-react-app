@@ -18,7 +18,13 @@ const aboutButtonImage = require('./About_Button.jpg')
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
-// Component for "more" screen in main navigation
+/**
+ * Component for "More" screen in main navigation
+ * @param {Object} props Properties of the component: navigation, firebase
+ * @author Kenton Carrier
+ * @since 1.0.1
+ * @class
+ */
 class MoreScreen extends React.Component {
   constructor(props) {
     super(props)
@@ -30,12 +36,23 @@ class MoreScreen extends React.Component {
     }
   }
 
+  /**
+   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
   componentDidMount() {
     this.props.firebase.getConfig().then(doc => {
       this.setState({ scavengerHunt: doc.data().scavengerHunt })
     })
   }
 
+  /**
+   * Called by React Native when rendering the screen
+   * @returns A JSX formatted Component
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
   render () {
     const { navigate } = this.props.navigation
     return (
