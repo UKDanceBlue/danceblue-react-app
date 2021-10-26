@@ -40,6 +40,7 @@
       ],
       "useNextNotificationsApi": true
     },
-    "description": "University of Kentucky DanceBlue Mobile Application"
+    "description": "University of Kentucky DanceBlue Mobile Application",
+    "sdkVersion": "43.0.0"
   }
 }
