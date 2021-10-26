@@ -7,7 +7,7 @@ import { withFirebaseHOC } from '../../../config/Firebase'
 
 /**
  * TODO
- * @param {Object} props Properties of the component: (TODO)
+ * @param {Object} props Properties of the component: value, label
  * @returns A React Native component
  * @author Kenton Carrier
  * @since 1.0.1
@@ -25,8 +25,9 @@ const TimeUnit = props => {
 }
 
 /**
- * TODO
- * @param {Object} props Properties of the component: (TODO)
+ * A component to show a countdown loaded form firebase
+ * Loads the active countdown from firebase (if applicably) and then counts down by the second until the end of that countodwn
+ * @param {Object} props Properties of the component: title, firebase
  * @returns A React Native component
  * @author Kenton Carrier
  * @since 1.0.1

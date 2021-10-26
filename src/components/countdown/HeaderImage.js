@@ -8,8 +8,8 @@ import backgroundImgSH from '../../../assets/home/db20_ribbonSH.jpg'
 import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png'
 
 /**
- * TODO
- * @param {Object} props Properties of the component: (TODO)
+ * A header image container used on the home screen
+ * @param {Object} props Properties of the component: scavengerHunt, firebase
  * @returns A React Native component
  * @author Kenton Carrier
  * @since 1.0.1
