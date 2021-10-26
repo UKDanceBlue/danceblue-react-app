@@ -1,4 +1,3 @@
-// Standings implementation for the Morale Cup leaderboard
 import React from 'react'
 import {
   Text,
@@ -14,8 +13,8 @@ import Place from './place'
 import { withFirebaseHOC } from '../../../config/Firebase'
 
 /**
- * TODO
- * @param {Object} props Properties of the component: (TODO)
+ * Standings implementation for the Morale Cup leaderboard 
+ * @param {Object} props Properties of the component: shownNumber, topNumber, isExpanded, isExpandable, navigate(), firebase
  * @author Kenton Carrier
  * @since 1.0.1
  * @class
@@ -79,7 +78,7 @@ class Standings extends React.Component {
   }
 
   /**
-   * Loads teams from Firebase and then load them into Standings.state
+   * Loads teams from Firebase and then stores them into this.state
    * @returns Teams loaded from Firebase
    */
   loadTeams () {

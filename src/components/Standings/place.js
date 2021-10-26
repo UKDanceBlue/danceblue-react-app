@@ -3,8 +3,8 @@ import { View, Text, StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 /**
- * TODO
- * @param {Object} props Properties of the component: (TODO)
+ * A component showing a team name, their morale cup rank (if applicable), and their points
+ * @param {Object} props Properties of the component: isHighlighted, rank, teamName, teamNumber, showPointsPerMember, points
  * @returns A React Native component
  * @author Kenton Carrier
  * @since 1.0.1
