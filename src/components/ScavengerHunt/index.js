@@ -6,8 +6,8 @@ import { Formik, ErrorMessage } from 'formik'
 import { withFirebaseHOC } from '../../../config/Firebase'
 
 /**
- * TODO
- * @param {Object} props Properties of the component: (TODO)
+ * Scavenger hunt tracker
+ * @param {Object} props Properties of the component
  * @returns A React Native component
  * @author Kenton Carrier
  * @since 1.0.1
