@@ -33,11 +33,10 @@ function TabsScreen () {
         ({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           const iconMap = new Map([ //Key: Screen   Value: Icon ID
-            ['Home'], ['home'],
-            ['Events'], ['calendar'],
-            ['Store'], ['store'],
-            ['More'], ['ellipsis-h'],
-            ['Test'], ['ellipsis-h']
+            ['Home', 'home'],
+            ['Events', 'calendar'],
+            ['Store', 'store'],
+            ['More', 'ellipsis-h']
           ]);
 
           // You can return any component that you like here!

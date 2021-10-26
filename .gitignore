@@ -15,6 +15,7 @@ web
 package-lock.json
 *.log
 doc/**
+.vscode/**
 
 # macOS
 .DS_Store
