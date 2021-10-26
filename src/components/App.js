@@ -6,7 +6,6 @@ import { NavigationContainer } from '@react-navigation/native'
 import Constants from 'expo-constants'
 import * as Notifications from 'expo-notifications'
 import { compose } from 'recompose'
-import AppLoading from 'expo-app-loading'
 
 // Import Firebase Context Provider
 import Firebase, { FirebaseProvider } from '../../config/Firebase'
@@ -31,9 +30,8 @@ Notifications.setNotificationHandler({
   }),
 });
 
-// Create container for app with navigations
 /**
- * Main App components
+ * Main app container
  * @author Kenton Carrier
  * @since 1.0.1
  */
@@ -49,6 +47,8 @@ class App extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   componentDidMount() {
 
@@ -59,16 +59,33 @@ class App extends React.Component {
     Notifications.addNotificationResponseReceivedListener(this._handleNotificationResponse)
   }
 
+  /**
+   * Called by Expo
+   * Adds *notification* to *this.state*
+   * @param {Notifications.Notification} notification 
+   * @private
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
   _handleNotification = notification => {
     this.setState({ notification: notification });
   };
 
+  /**
+   * Called by Expo
+   * @param {Notifications.NotificationResponse} response 
+   * @private
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
   _handleNotificationResponse = response => {
   };
 
   /**
-   * TODO
-   * @returns TODO
+   * Register notification support with the OS
+   * Adds *expoPushToken* to *this.state* if successfull
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   async registerForPushNotificationsAsync() {
     if (Constants.isDevice) {
@@ -102,7 +119,10 @@ class App extends React.Component {
 
   /**
    * Called to generate a React Native component
+   * @see {@link https://heartbeat.comet.ml/upload-images-in-react-native-apps-using-firebase-and-firestore-297934c9bae8#:~:text=the%20below%20snippet%3A-,Using%20the%20Context%20API,-Using%20the%20Context The article Kenton got the FirebaseProvider from}
    * @returns A JSX formatted component
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   render() {
     return (
