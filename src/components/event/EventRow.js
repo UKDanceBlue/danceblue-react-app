@@ -12,7 +12,6 @@ import moment from 'moment'
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
  * @param {Object} props Properties of the component: imageLink, startDate, endDate, title, firebase
- * @returns A React Native component
  * @author Kenton Carrier
  * @since 1.0.1
  * @class
@@ -29,6 +28,8 @@ class EventRow extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   componentDidMount () {
     if (this.props.imageLink) {
@@ -46,6 +47,8 @@ class EventRow extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   render () {
     const startDate = moment(this.props.startDate)

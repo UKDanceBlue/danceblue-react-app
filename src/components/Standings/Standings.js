@@ -43,6 +43,8 @@ class Standings extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   componentDidMount () {
     // Create arrays for team list, one for team total scores and one for team scores per member.
@@ -80,6 +82,8 @@ class Standings extends React.Component {
   /**
    * Loads teams from Firebase and then stores them into this.state
    * @returns Teams loaded from Firebase
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   loadTeams () {
     const teams = []
@@ -99,6 +103,8 @@ class Standings extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   render () {
     // Creates places list for teams, which renders Place object for each team in order

@@ -10,7 +10,6 @@ import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png'
 /**
  * A header image container used on the home screen
  * @param {Object} props Properties of the component: scavengerHunt, firebase
- * @returns A React Native component
  * @author Kenton Carrier
  * @since 1.0.1
  * @class
@@ -26,6 +25,8 @@ class HeaderImage extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   componentDidMount() {
     this.props.firebase.getConfig().then(doc => {
@@ -36,6 +37,8 @@ class HeaderImage extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   render() {
     return (

@@ -29,7 +29,6 @@ const danceBlueCalendarConfig = {
 /**
  * A component for showing a particular calendar event
  * @param {Object} props Properties of the component: route, firebase
- * @returns A React Native component
  * @see {@link https://docs.expo.dev/versions/latest/sdk/calendar/ Expo's Calendar API}
  * @author Kenton Carrier
  * @since 1.0.1
@@ -56,6 +55,8 @@ class Event extends Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   componentDidMount () {
     this.props.firebase.getEvent(this.state.id).then(doc => {
@@ -70,6 +71,8 @@ class Event extends Component {
    * Check if the user has given permission for calender access
    * If they have not then Expo will request them
    * @returns A promise containing a permission response 
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   checkCalendarPermissions () {
     return Calendar.requestCalendarPermissionsAsync()
@@ -78,6 +81,8 @@ class Event extends Component {
   /**
    * Check if the DanceBlue calendar exist's on the user's device
    * @returns true if the calendar exists, false if not
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   checkDBCalendar () {
     let foundCalendar = false
@@ -95,6 +100,8 @@ class Event extends Component {
   /**
    * Creates a new calendar on the user's device and adds *calendarID* to *this.state*
    * @returns A Promise for the completion of which ever callback is executed.
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   createDBCalendar () {
     return Calendar.createCalendarAsync(danceBlueCalendarConfig).then(id => this.setState({ calendarID: id }))
@@ -103,6 +110,8 @@ class Event extends Component {
   /**
    * Check if the event exists on the DanceBlue calendar
    * If it exisits then it adds *{isOnCalendar: true}* and *eventCalendarID* to *this.state*
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   checkEventExists () {
     this.checkCalendarPermissions().then(this.checkDBCalendar).then(async calendarExists => {
@@ -120,6 +129,8 @@ class Event extends Component {
    * Add the event to the calendar
    * While the function is running *this.state.isAddingToCalendar* will return true
    * If the event is successfully created *{isAddingToCalendar: false, isOnCalendar: true}* and eventCalendarID will be added to this.state
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   addToCalendar () {
     this.setState({ isAddingToCalendar: true })
@@ -140,6 +151,8 @@ class Event extends Component {
    * Removes an event from the calendar
    * While the function is running *this.state.isAddingToCalendar* will return true
    * @returns A Promise for the completion of which ever callback is executed.
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   removeFromCalendar () {
     this.setState({ isAddingToCalendar: true })

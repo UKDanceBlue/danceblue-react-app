@@ -9,7 +9,6 @@ import { withFirebaseHOC } from '../../../config/Firebase'
 /**
  * A component allowing a user to edit their account details
  * @param {Object} props Properties of the component: name, email, team, teamName, teamPoints, navigate(), firebase
- * @returns A React Native component
  * @author Kenton Carrier
  * @since 1.0.1
  * @class
@@ -34,6 +33,8 @@ class EditForm extends React.Component {
    * Update a user's details based on form contents
    * @param {Object} values A user's *name*, *email*, and *team*
    * @param {Object} actions  Used here to set an error if Firebase fails
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   handleDataUpdate (values, actions) {
     const { name, email, team } = values
@@ -51,6 +52,8 @@ class EditForm extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   render () {
     return (

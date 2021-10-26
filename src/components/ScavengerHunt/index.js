@@ -8,7 +8,6 @@ import { withFirebaseHOC } from '../../../config/Firebase'
 /**
  * Scavenger hunt tracker
  * @param {Object} props Properties of the component
- * @returns A React Native component
  * @author Kenton Carrier
  * @since 1.0.1
  * @class
@@ -28,6 +27,8 @@ class ScavengerHunt extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   componentDidMount() {
     this.props.firebase.getUserBadges(this.state.userID).then(snapshot => {
@@ -42,6 +43,8 @@ class ScavengerHunt extends React.Component {
    * Checks if the user's guess was correct usign the checkScavengerHunt function in Firebase
    * @param {Object} values Holds the user's guess
    * @param {Object} actions Unused
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   handleGuess(values, actions) {
     const { guess } = values
@@ -70,6 +73,8 @@ class ScavengerHunt extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
+   * @author Kenton Carrier
+   * @since 1.0.1
    */
   render () {
     return (
