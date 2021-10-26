@@ -5,7 +5,7 @@ import {
   ScrollView
 } from 'react-native'
 
-import Carousel from '../../components/Carousel/carousel'
+import SponsorCarousel from '../../components/Carousel/SponsorCarousel'
 import HeaderImage from '../../components/countdown/HeaderImage'
 import CountdownView from '../../components/countdown/CountdownView'
 import Standings from '../../components/Standings/Standings'
@@ -64,7 +64,7 @@ class HomeScreen extends React.Component {
             <ScavengerHunt userID={this.state.userID} />
           )}
           <Standings navigate={navigate} isExpandable={true} />
-          <Carousel />
+          <SponsorCarousel />
         </SafeAreaView>
       </ScrollView>
     )

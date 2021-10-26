@@ -11,14 +11,14 @@ import * as WebBrowser from 'expo-web-browser'
 import { withFirebaseHOC } from '../../../config/Firebase'
 
 /**
- * TODO
- * @param {Object} props Properties of the component: (TODO)
+ * A card showing a Sponsor's logo that link's to their website
+ * @param {Object} props Properties of the component: imageLink, sponsorLink, firebase
  * @returns A React Native component
  * @author Kenton Carrier
  * @since 1.0.1
  * @class
  */
-class Card extends React.Component {
+class SponsorCard extends React.Component {
   constructor (props) {
     super(props)
 
@@ -75,4 +75,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default withFirebaseHOC(Card)
+export default withFirebaseHOC(SponsorCard)
