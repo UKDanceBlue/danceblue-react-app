@@ -48,12 +48,16 @@ function TabsScreen () {
               style={{ textAlignVertical: 'center' }}
             />
           )
-        }
+        },
+        "tabBarActiveTintColor": "white",
+        "tabBarActiveBackgroundColor": "#3248a8",
+        "tabBarStyle": [
+          {
+            "display": "flex"
+          },
+          null
+        ]
       })}
-      tabBarOptions={{
-        activeTintColor: 'white',
-        activeBackgroundColor: '#3248a8'
-      }}
     >
       <Tabs.Screen name='Home' component={HomeScreen} />
       <Tabs.Screen name='Events' component={EventsScreen} />
@@ -106,7 +110,7 @@ class RootStackScreen extends React.Component {
   render() {
     if (this.state.isLoading) return <Image style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }} source={require('../../assets/splash2.png')} />
     return (
-      <RootStack.Navigator mode='modal'>
+      <RootStack.Navigator screenOptions={{presentation:"modal"}}>
         {this.state.userID && (
           <RootStack.Screen name='Main' component={MainStackScreen} options={{ headerShown: false }} />
         )}
