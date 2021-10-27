@@ -46,7 +46,6 @@ class Announcements extends React.Component {
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
    * @author Kenton Carrier
    * @since 1.0.1
-   * @class
    */
   componentDidMount () {
     const announcements = []
