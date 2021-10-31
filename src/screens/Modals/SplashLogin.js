@@ -52,7 +52,7 @@ class SplashLoginScreen extends React.Component {
               </Text>
               <Text></Text>
               <Text style={styles.headerText}>
-                With an account you get access to profile badges, the marathon scavenger hunt, and many more new features coming soon!
+                With an account you get access to profile badges, and many more new features coming soon!
               </Text>
             </View>
             <View style={styles.form}>

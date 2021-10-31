@@ -1,5 +1,5 @@
-import Firebase from './firebase'
+import Firestore from './firebase'
 import { FirebaseProvider, withFirebaseHOC } from './context'
 
-export default Firebase
+export default Firestore
 export { FirebaseProvider, withFirebaseHOC }

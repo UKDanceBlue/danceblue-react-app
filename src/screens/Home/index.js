@@ -9,7 +9,6 @@ import SponsorCarousel from '../../components/Carousel/SponsorCarousel'
 import HeaderImage from '../../components/countdown/HeaderImage'
 import CountdownView from '../../components/countdown/CountdownView'
 import Standings from '../../components/Standings/Standings'
-import ScavengerHunt from '../../components/ScavengerHunt'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 
@@ -44,8 +43,7 @@ class HomeScreen extends React.Component {
     super(props)
 
     this.state = {
-      activeCountdown: true,
-      scavengerHunt: false
+      activeCountdown: true
     }
   }
 
@@ -56,7 +54,7 @@ class HomeScreen extends React.Component {
    */
   componentDidMount() {
     this.props.firebase.getConfig().then(doc => {
-      this.setState({ activeCountdown: doc.data().activeCountdown, scavengerHunt: doc.data().scavengerHunt })
+      this.setState({ activeCountdown: doc.data().activeCountdown })
     })
     this.props.firebase.checkAuthUser(user => {
       if (user !== null) {
@@ -83,9 +81,6 @@ class HomeScreen extends React.Component {
           <HeaderImage />
           {this.state.activeCountdown && (
             <CountdownView />
-          )}
-          {this.state.scavengerHunt && this.state.userID && (
-            <ScavengerHunt userID={this.state.userID} />
           )}
           <Standings navigate={navigate} isExpandable={true} />
           <SponsorCarousel />

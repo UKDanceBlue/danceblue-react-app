@@ -8,7 +8,7 @@ import * as Notifications from 'expo-notifications'
 import { compose } from 'recompose'
 
 // Import Firebase Context Provider
-import Firebase, { FirebaseProvider } from '../../config/Firebase'
+import Firestore, { FirebaseProvider } from '../../config/Firebase'
 import RootStackScreen from '../screens'
 
 // Fix firestore error - can be removed if issue is resolved in package
@@ -101,7 +101,7 @@ class App extends React.Component {
         return;
       }
       const token = (await Notifications.getExpoPushTokenAsync()).data;
-      Firebase.addPushToken(token)
+      Firestore.addPushToken(token)
       this.setState({ expoPushToken: token });
     } else {
       alert('Must use physical device for Push Notifications');
@@ -126,7 +126,7 @@ class App extends React.Component {
    */
   render() {
     return (
-      <FirebaseProvider value={Firebase}>
+      <FirebaseProvider value={Firestore}>
         <StatusBar />
         <NavigationContainer>
           <RootStackScreen />

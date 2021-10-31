@@ -29,11 +29,6 @@ class MoreScreen extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      config: {
-        scavengerHunt: this.props.scavengerHunt | false
-      }
-    }
   }
 
   /**
@@ -42,9 +37,7 @@ class MoreScreen extends React.Component {
    * @since 1.0.1
    */
   componentDidMount() {
-    this.props.firebase.getConfig().then(doc => {
-      this.setState({ scavengerHunt: doc.data().scavengerHunt })
-    })
+    
   }
 
   /**
@@ -119,7 +112,7 @@ class MoreScreen extends React.Component {
             style={styles.button}
           >
             <ImageBackground
-              source={this.state.scavengerHunt ? faqsButtonImageSH : faqsButtonImage}
+              source={faqsButtonImage}
               style={styles.img}
               imageStyle={{ borderRadius: 10 }}
             >

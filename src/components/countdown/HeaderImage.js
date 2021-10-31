@@ -9,7 +9,7 @@ import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png'
 
 /**
  * A header image container used on the home screen
- * @param {Object} props Properties of the component: scavengerHunt, firebase
+ * @param {Object} props Properties of the component: firebase
  * @author Kenton Carrier
  * @since 1.0.1
  * @class
@@ -17,10 +17,6 @@ import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png'
 class HeaderImage extends React.Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      scavengerHunt: this.props.scavengerHunt | false
-    }
   }
 
   /**
@@ -29,9 +25,7 @@ class HeaderImage extends React.Component {
    * @since 1.0.1
    */
   componentDidMount() {
-    this.props.firebase.getConfig().then(doc => {
-      this.setState({ scavengerHunt: doc.data().scavengerHunt })
-    })
+    
   }
 
   /**
@@ -43,7 +37,7 @@ class HeaderImage extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <ImageBackground source={this.state.scavengerHunt ? backgroundImgSH : backgroundImg} style={styles.background}>
+        <ImageBackground source={backgroundImg} style={styles.background}>
           <Image source={dbLogo} style={styles.logo} />
         </ImageBackground>
       </View>
