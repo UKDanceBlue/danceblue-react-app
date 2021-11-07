@@ -12,7 +12,139 @@ firebase.initializeApp(firebaseConfig)
  * @author Kenton Carrier
  * @since 1.0.1
  */
-const Firestore = {
+const Firebase = {
+  /**
+   * Login a user using email/passowrd authentication
+   * 
+   * Likley to produce an error code due to bad input, **shoud be followed by a .catch()**
+   * @param {string} email User's email
+   * @param {string} password User's password
+   * @returns A promise for a user credential that resolves when the authentication completes or fails
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinwithemailandpassword signinwithemailandpassword}
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
+   * @function
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
+  loginWithEmail: (email, password) => {
+    return firebase.auth().signInWithEmailAndPassword(email, password)
+  },
+  /**
+   * Signup a user using email/password authentication
+   * 
+   * Likley to produce an error code due to bad input, **shoud be followed by a .catch()**
+   * @param {string} email User's email
+   * @param {string} password User's password
+   * @returns A promise for a user credential that resolves when the authentication completes or fails
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#createuserwithemailandpassword createuserwithemailandpassword}
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
+   * @function
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
+  signupWithEmail: (email, password) => {
+    return firebase.auth().createUserWithEmailAndPassword(email, password)
+  },
+  /**
+   * Signs out the user
+   * @returns A promise that resolves once the signout is complete
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signout signOut}
+   * @function
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
+  signOut: () => {
+    return firebase.auth().signOut()
+  },
+  /**
+   * Adds an observer for changes to the user's sign-in state.
+   * @param {function} user An observer function
+   * @returns A callback which can be invoked to remove the observer
+   * @see {@link hhttps://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#onauthstatechanged onauthstatechanged}
+   * @function
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
+  checkAuthUser: (user) => {
+    return firebase.auth().onAuthStateChanged(user)
+  },
+  /**
+   * Gets the currently signed in user from Firebase
+   * @returns The currently signed in user
+   * @function
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
+  getAuthUserInstance: () => {
+    return firebase.auth().currentUser
+  },
+  /**
+   * Asynchronously signs in as an anonymous user.
+   * @returns A promise for a user credential
+   * If there is already an anonymous user signed in, that user will be returned;
+   * otherwise, a new anonymous user identity will be created and returned.
+   * @function
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinanonymously signinanonymously}
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
+  signInAnon: () => {
+    return firebase.auth().signInAnonymously()
+  },
+  /**
+   * Links the signed in user (likley anonymous) with the given email and password
+   * 
+   * Likley to produce an error code due to bad input, **shoud be followed by a .catch()**
+   * @param {string} email User's email
+   * @param {string} password User's password
+   * @returns A promise for the User's credentials that resolves when Firebase finishes the changes
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.User#linkwithcredential linkWithCredential}
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
+   * @function
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
+  linkAnon: (email, password) => {
+    var credentials = firebase.auth.EmailAuthProvider.credential(email, password)
+    return firebase.auth().currentUser.linkWithCredential(credentials)
+  },
+  /**
+   * Send a reauthentication request to firebse
+   * 
+   * Could produce an error code if the given detals are outdated, **shoud be followed by a .catch()**
+   * @param {string} email User's email
+   * @param {string} password User's password
+   * @returns A promise for the User's credentials that resolves when Firebase 
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.User#reauthenticatewithcredential reauthenticateWithCredential}
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
+   * @function
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
+  reauthenticate: (email, password) => {
+    var credentials = firebase.auth.EmailAuthProvider.credential(email, password)
+    return firebase.auth().currentUser.reauthenticateWithCredential(credentials)
+  },
+  /**
+   * Add a new document describing a user the *users* collection in Firebase
+   * 
+   * Likley to produce an error code due to bad input, **shoud be followed by a .catch()**
+   * @param {map} userData Dealis of the user (e.g. name, email)
+   * @param {string} id User ID
+   * @returns A promise that resolves once the data is written
+   * @see {@link https://firebase.google.com Firebase}
+   * @function
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
+  createNewUser: (userData, id) => {
+    return firebase
+      .firestore()
+      .collection('users')
+      .doc(id)
+      .set(userData)
+  },
   /**
    * Get all teams in Firebase
    * @returns A promise containing a collection of teams
@@ -247,4 +379,4 @@ const Firestore = {
   }
 }
 
-export default Firestore
+export default Firebase

@@ -8,8 +8,8 @@ import * as Notifications from 'expo-notifications'
 import { compose } from 'recompose'
 
 // Import Firebase Context Provider
-import Firestore, { FirebaseProvider } from '../../config/Firebase'
-import RootStackScreen from '../screens'
+import Firestore, { FirebaseProvider } from './firebase'
+import RootStackScreen from './screens/index.js'
 
 // Fix firestore error - can be removed if issue is resolved in package
 import { decode, encode } from 'base-64'
@@ -39,7 +39,7 @@ class App extends React.Component {
 
   constructor(props) {
     super(props)
-
+    console.log("test")
     this.state = {
       isReady: false
     }

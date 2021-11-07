@@ -1,7 +1,7 @@
 // Import third-party dependencies
 import React from 'react'
 import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from 'react-native'
-import EventRow from '../../components/event/EventRow'
+import EventRow from '../../common/components/event/EventRow'
 import { withFirebaseHOC } from '../../../config/Firebase'
 
 /**

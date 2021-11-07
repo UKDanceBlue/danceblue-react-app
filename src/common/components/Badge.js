@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native'
 
-import { withFirebaseHOC } from '../../../config/Firebase'
+import { withFirebaseHOC } from '../../firebase'
 
 /**
  * A badge icon for use with profiles

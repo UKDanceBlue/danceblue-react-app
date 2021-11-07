@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 
-import { withFirebaseHOC } from '../../../config/Firebase'
+import { withFirebaseHOC } from '../../config/Firebase'
 
 /**
  * A card showing a Sponsor's logo that link's to their website

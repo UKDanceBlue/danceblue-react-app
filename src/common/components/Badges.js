@@ -2,9 +2,9 @@ import React from 'react'
 import { Text, View, StyleSheet, ActivityIndicator } from 'react-native'
 import { FlatGrid } from 'react-native-super-grid'
 
-import Badge from './badge.js'
+import Badge from './Badge.js'
 
-import { withFirebaseHOC } from '../../../config/Firebase'
+import { withFirebaseHOC } from '../../config/Firebase'
 
 /**
  * A row of a user's {@link Badge}s loaded from Firebase

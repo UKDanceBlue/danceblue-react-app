@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text, View, ScrollView, StyleSheet } from 'react-native'
-import SponsorCard from './SponsorCard'
+import SponsorCard from '../../common/components/ImageCard'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
 

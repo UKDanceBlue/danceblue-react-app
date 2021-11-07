@@ -7,12 +7,12 @@ import { BlurView } from 'expo-blur'
 
 import { withFirebaseHOC } from '../../config/Firebase'
 
-import HomeScreen from './Home'
-import {ScoreboardScreen } from './Home'
-import EventsScreen from './Events'
+import HomeScreen from './Home/Home'
+import {ScoreboardScreen } from './Home/Home'
+import EventsScreen from './Events/Events'
 import { StoreScreen } from './Store'
 import MoreScreen from './More'
-import Event from '../components/event/Event'
+import Event from '../common/components/event/Event'
 
 // import ProfileScreen from './More/Profile'
 import { FAQScreen } from './More/FAQ'
@@ -20,7 +20,7 @@ import { DonateScreen } from './More/Donate'
 import { AboutScreen } from './More/About'
 import ProfileScreen from './More/Profile'
 
-import { SplashLoginScreen } from './Modals'
+import SplashLoginScreen from './Modals/SplashLogin'
 
 const RootStack = createStackNavigator()
 const MainStack = createStackNavigator()

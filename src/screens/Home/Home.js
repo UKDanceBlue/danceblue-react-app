@@ -1,16 +1,13 @@
 // Import third-party dependencies
-import React from 'react'
-import {
-  SafeAreaView,
-  ScrollView
-} from 'react-native'
+import React from "react";
+import { SafeAreaView, ScrollView } from "react-native";
 
-import SponsorCarousel from '../../components/Carousel/SponsorCarousel'
-import HeaderImage from '../../components/countdown/HeaderImage'
-import CountdownView from '../../components/countdown/CountdownView'
-import Standings from '../../components/Standings/Standings'
+import SponsorCarousel from "./SponsorCarousel";
+import CountdownView from "../../common/components/CountdownView";
+import Standings from "../../common/components/Standings/Standings";
+import HeaderImage from "./HeaderImage";
 
-import { withFirebaseHOC } from '../../../config/Firebase'
+import { withFirebaseHOC } from "../../../config/Firebase";
 
 /**
  * Wrapper for a Standings component
@@ -20,14 +17,14 @@ import { withFirebaseHOC } from '../../../config/Firebase'
  * @class
  */
 export class ScoreboardScreen extends React.Component {
-  render () {
+  render() {
     return (
       <ScrollView showsVerticalScrollIndicator>
         <SafeAreaView style={{ flex: 1 }}>
           <Standings isExpanded />
         </SafeAreaView>
       </ScrollView>
-    )
+    );
   }
 }
 
@@ -40,11 +37,11 @@ export class ScoreboardScreen extends React.Component {
  */
 class HomeScreen extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
-      activeCountdown: true
-    }
+      activeCountdown: true,
+    };
   }
 
   /**
@@ -53,16 +50,16 @@ class HomeScreen extends React.Component {
    * @since 1.0.1
    */
   componentDidMount() {
-    this.props.firebase.getConfig().then(doc => {
-      this.setState({ activeCountdown: doc.data().activeCountdown })
-    })
-    this.props.firebase.checkAuthUser(user => {
+    this.props.firebase.getConfig().then((doc) => {
+      this.setState({ activeCountdown: doc.data().activeCountdown });
+    });
+    this.props.firebase.checkAuthUser((user) => {
       if (user !== null) {
         if (!user.isAnonymous) {
-          this.setState({ userID: user.uid })
+          this.setState({ userID: user.uid });
         }
       }
-    })
+    });
   }
 
   /**
@@ -71,27 +68,25 @@ class HomeScreen extends React.Component {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  render () {
+  render() {
     /* eslint-disable */
-    const { navigate } = this.props.navigation
+    const { navigate } = this.props.navigation;
 
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <SafeAreaView style={{ flex: 1 }}>
           <HeaderImage />
-          {this.state.activeCountdown && (
-            <CountdownView />
-          )}
+          {this.state.activeCountdown && <CountdownView />}
           <Standings navigate={navigate} isExpandable={true} />
           <SponsorCarousel />
         </SafeAreaView>
       </ScrollView>
-    )
+    );
   }
 }
 
 HomeScreen.navigationOptions = {
-  title: 'Home'
-}
+  title: "Home",
+};
 
-export default withFirebaseHOC(HomeScreen)
+export default withFirebaseHOC(HomeScreen);

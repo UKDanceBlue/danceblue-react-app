@@ -4,7 +4,6 @@ import { View, ImageBackground, Image, StyleSheet } from 'react-native'
 import { withFirebaseHOC } from '../../../config/Firebase'
 
 import backgroundImg from '../../../assets/home/db20_ribbon.jpg'
-import backgroundImgSH from '../../../assets/home/db20_ribbonSH.jpg'
 import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png'
 
 /**
@@ -17,15 +16,6 @@ import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png'
 class HeaderImage extends React.Component {
   constructor(props) {
     super(props)
-  }
-
-  /**
-   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   * @author Kenton Carrier
-   * @since 1.0.1
-   */
-  componentDidMount() {
-    
   }
 
   /**

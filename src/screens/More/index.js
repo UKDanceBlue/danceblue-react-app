@@ -13,7 +13,6 @@ import { styles } from '../../styles'
 const profileButtonImage = require('./Profile_Button.jpg')
 const donateButtonImage = require('./Donate_Button.jpg')
 const faqsButtonImage = require('./FAQs_Button.jpg')
-const faqsButtonImageSH = require('./FAQs_Button_SH.jpg')
 const aboutButtonImage = require('./About_Button.jpg')
 
 import { withFirebaseHOC } from '../../../config/Firebase'

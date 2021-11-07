@@ -2,9 +2,6 @@ import React from 'react'
 import { StyleSheet, View, ImageBackground, Dimensions } from 'react-native'
 import { Text, Button } from 'react-native-elements'
 
-import SignUpForm from '../../components/SignUpForm'
-import LoginForm from '../../components/LoginForm'
-
 import { withFirebaseHOC } from '../../../config/Firebase'
 
 /**
@@ -61,7 +58,7 @@ class SplashLoginScreen extends React.Component {
                   <Text h3 style={{ textAlign: 'center' }}>
                     Sign Up
                   </Text>
-                  <SignUpForm />
+                  <Text>WIP</Text>
                   <Button title="Already signed up? Click here to Log in!" onPress={() => this.setState({ formShown: 'login' })} type="clear" />
                 </>
               ) : (
@@ -69,7 +66,7 @@ class SplashLoginScreen extends React.Component {
                   <Text h3 style={{ textAlign: 'center' }}>
                     Login
                   </Text>
-                  <LoginForm />
+                  <Text>WIP</Text>
                   <Button type="clear" title="New? Click here to Sign Up!" onPress={() => this.setState({ formShown: 'signup' })} />
                 </>
               )}
