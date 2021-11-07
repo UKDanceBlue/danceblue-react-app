@@ -1,3 +1,4 @@
+// Import third-party dependencies
 import React from 'react'
 import {
   Text,
@@ -8,9 +9,9 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
-import Place from './place'
-
-import { withFirebaseHOC } from '../../../config/Firebase'
+// Import first-party dependencies
+import Place from './Place'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext'
 
 /**
  * Standings implementation for the Morale Cup leaderboard 

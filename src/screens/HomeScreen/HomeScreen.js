@@ -2,36 +2,16 @@
 import React from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 
+// Import first-party dependencies
 import SponsorCarousel from "./SponsorCarousel";
 import CountdownView from "../../common/components/CountdownView";
-import Standings from "../../common/components/Standings/Standings";
 import HeaderImage from "./HeaderImage";
-
-import { withFirebaseHOC } from "../../../config/Firebase";
-
-/**
- * Wrapper for a Standings component
- * @param {Object} props Properties of the component: navigation, firebase
- * @author Kenton Carrier
- * @since 1.0.1
- * @class
- */
-export class ScoreboardScreen extends React.Component {
-  render() {
-    return (
-      <ScrollView showsVerticalScrollIndicator>
-        <SafeAreaView style={{ flex: 1 }}>
-          <Standings isExpanded />
-        </SafeAreaView>
-      </ScrollView>
-    );
-  }
-}
+import { withFirebaseHOC } from "../../firebase/FirebaseContext";
 
 /**
  * Component for home screen in main navigation
  * @param {Object} props Properties of the component: navigation, firebase
- * @author Kenton Carrier
+ * @author Tag Howard, Kenton Carrier
  * @since 1.0.1
  * @class
  */
@@ -77,7 +57,6 @@ class HomeScreen extends React.Component {
         <SafeAreaView style={{ flex: 1 }}>
           <HeaderImage />
           {this.state.activeCountdown && <CountdownView />}
-          <Standings navigate={navigate} isExpandable={true} />
           <SponsorCarousel />
         </SafeAreaView>
       </ScrollView>
