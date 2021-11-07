@@ -1,13 +1,9 @@
 // Import third-party dependencies
 import React from 'react'
-import { View, StyleSheet, Image, ActivityIndicator } from 'react-native'
-import { Text, Button } from 'react-native-elements'
+import { View, StyleSheet, ActivityIndicator } from 'react-native'
+import { Text } from 'react-native-elements'
 
-import Badges from '../../common/components/Badges'
-
-import avatar from '../../../assets/avatar.png'
-
-import { withFirebaseHOC } from '../../../config/Firebase'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext'
 
 /**
  * Component for "Profile" screen in main navigation

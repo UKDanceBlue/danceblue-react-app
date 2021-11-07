@@ -5,8 +5,11 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { BlurView } from "expo-blur";
 
 // Import first-party dependencies
-import { ScoreboardScreen } from "./Home/Home";
-import Event from "../common/components/event/Event";
+import ScoreboardScreen from "../screens/ScoreBoardScreen"
+import EventScreen from "../screens/EventScreen";
+import GenericWebviewScreen from "../screens/GenericWebviewScreen"
+import ProfileScreen from "../screens/More/ProfileScreen";
+import TabBar from "./TabBar";
 
 const MainStack = createStackNavigator();
 
@@ -15,31 +18,31 @@ const MainStackRoot = () => {
     <MainStack.Navigator>
       <MainStack.Screen
         name="Tab"
-        component={TabsScreen}
+        component={TabBar}
         options={{ headerShown: false }}
       />
       <MainStack.Screen name="Profile" component={ProfileScreen} />
       <MainStack.Screen
         name="FAQ"
-        component={FAQScreen}
+        component={GenericWebviewScreen}
         initialParams={{
           uri: "https://www.danceblue.org/frequently-asked-questions/",
         }}
       />
       <MainStack.Screen
         name="Donate"
-        component={DonateScreen}
+        component={GenericWebviewScreen}
         initialParams={{ uri: "https://danceblue.networkforgood.com" }}
       />
       <MainStack.Screen
         name="About"
-        component={AboutScreen}
+        component={GenericWebviewScreen}
         initialParams={{ uri: "http://www.danceblue.org/about/" }}
       />
       <MainStack.Screen name="Scoreboard" component={ScoreboardScreen} />
       <MainStack.Screen
         name="Event"
-        component={Event}
+        component={EventScreen}
         options={({ route }) => ({
           title: route.params.name,
           headerTransparent: true,

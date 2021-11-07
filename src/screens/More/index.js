@@ -10,12 +10,12 @@ import {
 
 import { styles } from '../../styles'
 
-const profileButtonImage = require('./Profile_Button.jpg')
-const donateButtonImage = require('./Donate_Button.jpg')
-const faqsButtonImage = require('./FAQs_Button.jpg')
-const aboutButtonImage = require('./About_Button.jpg')
+const profileButtonImage = require('../../../assets/Profile_Button.jpg')
+const donateButtonImage = require('../../../assets/Donate_Button.jpg')
+const faqsButtonImage = require('../../../assets/FAQs_Button.jpg')
+const aboutButtonImage = require('../../../assets/About_Button.jpg')
 
-import { withFirebaseHOC } from '../../../config/Firebase'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext'
 
 /**
  * Component for "More" screen in main navigation
