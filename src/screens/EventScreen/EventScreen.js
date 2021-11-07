@@ -1,8 +1,11 @@
 // Import third-party dependencies
 import React from 'react'
 import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from 'react-native'
-import EventRow from '../../common/components/event/EventRow'
-import { withFirebaseHOC } from '../../../config/Firebase'
+
+// Import first-party dependencies
+import { withFirebaseHOC } from "../../firebase/FirebaseContext"
+import EventRow from './EventRow'
+import EventView from './EventView'
 
 /**
  * Component for "Events" screen in main navigation
@@ -11,7 +14,7 @@ import { withFirebaseHOC } from '../../../config/Firebase'
  * @since 1.0.1
  * @class
  */
-class EventsScreen extends React.Component {
+class EventScreen extends React.Component {
   constructor (props) {
     super(props)
 

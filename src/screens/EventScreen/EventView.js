@@ -1,3 +1,4 @@
+// Import third-party dependencies
 import React, { Component } from 'react'
 import {
   Text,
@@ -11,7 +12,8 @@ import openMap from 'react-native-open-maps'
 import * as Calendar from 'expo-calendar'
 import moment from 'moment'
 
-import { withFirebaseHOC } from '../../../config/Firebase'
+// Import first-party dependencies
+import { withFirebaseHOC } from "../../firebase/FirebaseContext"
 
 const danceBlueCalendarConfig = {
   title: 'DanceBlue',
@@ -34,7 +36,7 @@ const danceBlueCalendarConfig = {
  * @since 1.0.1
  * @class
  */
-class Event extends Component {
+class EventView extends Component {
   constructor (props) {
     super(props)
 

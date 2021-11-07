@@ -1,3 +1,4 @@
+// Import third-party dependencies
 import React from 'react'
 import {
   Text,
@@ -6,8 +7,10 @@ import {
   StyleSheet,
   View
 } from 'react-native'
-import { withFirebaseHOC } from '../../../config/Firebase'
 import moment from 'moment'
+
+// Import first-party dependencies
+import { withFirebaseHOC } from "../../firebase/FirebaseContext"
 
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
