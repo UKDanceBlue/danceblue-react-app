@@ -33,7 +33,7 @@ class HomeScreen extends React.Component {
     this.props.firebase.getConfig().then((doc) => {
       this.setState({ activeCountdown: doc.data().activeCountdown });
     });
-    this.props.firebase.checkAuthUser((user) => {
+    this.props.auth.checkAuthUser((user) => {
       if (user !== null) {
         if (!user.isAnonymous) {
           this.setState({ userID: user.uid });

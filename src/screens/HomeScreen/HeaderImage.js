@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ImageBackground, Image, StyleSheet } from 'react-native'
 
-import { withFirebaseHOC } from '../../../config/Firebase'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext'
 
 import backgroundImg from '../../../assets/home/db20_ribbon.jpg'
 import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png'

@@ -63,7 +63,7 @@ class EventView extends Component {
   componentDidMount () {
     this.props.firebase.getEvent(this.state.id).then(doc => {
       this.setState({ isLoading: false, ...doc.data() })
-      this.props.firebase.getDocumentURL(doc.data().image).then(url => {
+      this.props.core.getDocumentURL(doc.data().image).then(url => {
         this.setState({ imageRef: url })
       }).catch(error => console.log(error.message))
     }).then(this.checkCalendarPermissions).then(this.checkEventExists)
@@ -260,4 +260,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default withFirebaseHOC(Event)
+export default withFirebaseHOC(EventView)

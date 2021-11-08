@@ -16,6 +16,6 @@ export const FirebaseConsumer = FirebaseContext.Consumer
  */
 export const withFirebaseHOC = Component => props => (
   <FirebaseConsumer>
-    {state => <Component {...props} firebase={state} />}
+    {value => <Component {...props} firebase={value['firestore']} auth={value['auth']} core={value['core']}/>}
   </FirebaseConsumer>
 )

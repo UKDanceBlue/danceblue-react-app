@@ -1,7 +1,7 @@
 import firebase from 'firebase'
 import 'firebase/firestore'
 
-const Firebase = {
+const FirebaseFirestoreWrappers = {
     /**
      * Links the signed in user (likley anonymous) with the given email and password
      * 
@@ -274,3 +274,5 @@ const Firebase = {
       })
     }
   }
+
+export default FirebaseFirestoreWrappers

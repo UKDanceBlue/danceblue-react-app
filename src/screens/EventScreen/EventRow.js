@@ -36,7 +36,7 @@ class EventRow extends React.Component {
    */
   componentDidMount () {
     if (this.props.imageLink) {
-      this.props.firebase
+      this.props.core
         .getDocumentURL(this.props.imageLink)
         .then(url => {
           this.setState({ imageRef: url, isLoading: false })

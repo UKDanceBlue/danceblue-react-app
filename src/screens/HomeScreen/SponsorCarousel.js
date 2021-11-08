@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, View, ScrollView, StyleSheet } from 'react-native'
 import SponsorCard from '../../common/components/ImageCard'
 
-import { withFirebaseHOC } from '../../../config/Firebase'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext'
 
 /**
  * A horizontally scrolling carousel of SponsorCards

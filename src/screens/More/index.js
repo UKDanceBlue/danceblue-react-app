@@ -10,10 +10,10 @@ import {
 
 import { styles } from '../../styles'
 
-const profileButtonImage = require('../../../assets/Profile_Button.jpg')
-const donateButtonImage = require('../../../assets/Donate_Button.jpg')
-const faqsButtonImage = require('../../../assets/FAQs_Button.jpg')
-const aboutButtonImage = require('../../../assets/About_Button.jpg')
+const profileButtonImage = require('../../../assets/more/Profile_Button.jpg')
+const donateButtonImage = require('../../../assets/more/Donate_Button.jpg')
+const faqsButtonImage = require('../../../assets/more/FAQs_Button.jpg')
+const aboutButtonImage = require('../../../assets/more/About_Button.jpg')
 
 import { withFirebaseHOC } from '../../firebase/FirebaseContext'
 

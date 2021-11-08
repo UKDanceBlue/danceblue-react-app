@@ -65,7 +65,7 @@ class Standings extends React.Component {
 
     // Get the team number and user ID of the current user.
     // These are for highlighting the user's position in the teams and users scoreboards
-    this.props.firebase.checkAuthUser(user => {
+    this.props.auth.checkAuthUser(user => {
       if(user !== null) {
         if (!user.isAnonymous) {
           promises.push(this.props.firebase.getUser(user.uid).then(data => {

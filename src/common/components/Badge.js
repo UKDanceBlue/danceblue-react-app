@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native'
 
-import { withFirebaseHOC } from '../../firebase'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext'
 
 /**
  * A badge icon for use with profiles
@@ -25,7 +25,7 @@ class Badge extends React.Component {
    * @since 1.0.1
    */
   componentDidMount() {
-    this.props.firebase.getDocumentURL(this.props.imageURL).then(url => {
+    this.props.core.getDocumentURL(this.props.imageURL).then(url => {
       this.setState({ imageRef: url, isLoading: false })
     }).catch(error => console.log(error.message))
   }

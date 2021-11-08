@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 
-import { withFirebaseHOC } from '../../config/Firebase'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext'
 
 /**
  * A card showing a Sponsor's logo that link's to their website
@@ -33,7 +33,7 @@ class SponsorCard extends React.Component {
    * @since 1.0.1
    */
   componentDidMount () {
-    this.props.firebase
+    this.props.core
       .getDocumentURL(this.props.imageLink)
       .then(url => {
         this.setState({ imageRef: url, isLoading: false })

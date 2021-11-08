@@ -94,7 +94,7 @@ class EventScreen extends React.Component {
   }
 }
 
-EventsScreen.navigationOptions = {
+EventScreen.navigationOptions = {
   title: 'Events'
 }
 
@@ -114,4 +114,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default withFirebaseHOC(EventsScreen)
+export default withFirebaseHOC(EventScreen)

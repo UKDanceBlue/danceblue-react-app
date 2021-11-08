@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, View, ImageBackground, Dimensions } from 'react-native'
 import { Text, Button } from 'react-native-elements'
 
-import { withFirebaseHOC } from '../../../config/Firebase'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext'
 
 /**
  * A simplified sign in page shown when the user first opens the app
@@ -26,7 +26,7 @@ class SplashLoginScreen extends React.Component {
    * Wraps config/Firebase's firebase.signInAnon()
    */
   signInAnon() {
-    this.props.firebase.signInAnon()
+    this.props.auth.signInAnon()
   }
 
   /**

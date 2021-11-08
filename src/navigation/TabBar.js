@@ -4,13 +4,14 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
 // Import first-party dependencies
-import HomeScreen from "./Home/Home";
-import EventsScreen from "./Events/Events";
-import { StoreScreen } from "./Store";
-import MoreScreen from "./More";
+import HomeScreen from "../screens/HomeScreen";
+import EventScreen from "../screens/EventScreen";
+import GenericWebviewScreen from "../screens/GenericWebviewScreen";
+import MoreScreen from "../screens/More";
 
-const TabBar = createBottomTabNavigator();
-function TabsScreen() {
+const Tabs = createBottomTabNavigator();
+
+const TabBar = () => {
   return (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
@@ -44,11 +45,11 @@ function TabsScreen() {
       })}
     >
       <Tabs.Screen name="Home" component={HomeScreen} />
-      <Tabs.Screen name="Events" component={EventsScreen} />
+      <Tabs.Screen name="Events" component={EventScreen} />
       <Tabs.Screen
         name="Store"
-        component={StoreScreen}
-        initialParams={{ uri: "http://www.danceblue.org/dancebluetique/" }}
+        component={GenericWebviewScreen}
+        initialParams={{ uri: "https://www.danceblue.org/dancebluetique/" }}
       />
       <Tabs.Screen name="More" component={MoreScreen} />
     </Tabs.Navigator>

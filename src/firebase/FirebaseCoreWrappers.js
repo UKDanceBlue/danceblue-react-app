@@ -19,3 +19,5 @@ const FirebaseCoreWrappers = {
           .getDownloadURL()
       },
 }
+
+export default FirebaseCoreWrappers

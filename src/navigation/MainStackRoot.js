@@ -37,7 +37,7 @@ const MainStackRoot = () => {
       <MainStack.Screen
         name="About"
         component={GenericWebviewScreen}
-        initialParams={{ uri: "http://www.danceblue.org/about/" }}
+        initialParams={{ uri: "https://www.danceblue.org/about/" }}
       />
       <MainStack.Screen name="Scoreboard" component={ScoreboardScreen} />
       <MainStack.Screen

@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, ActivityIndicator } from 'react-native'
 
 import moment from 'moment'
 
-import { withFirebaseHOC } from '../../config/Firebase'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext'
 
 /**
  * A label for a unit of time

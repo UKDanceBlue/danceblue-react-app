@@ -82,3 +82,5 @@ const FirebaseAuthWrappers = {
       return firebase.auth().signInAnonymously()
     }
 }
+
+export default FirebaseAuthWrappers

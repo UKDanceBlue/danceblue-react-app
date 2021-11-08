@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 // Import first-party dependencies
 import SplashLogin from "../screens/Modals/SplashLogin";
 import { withFirebaseHOC } from "../firebase/FirebaseContext";
+import MainStackRoot from "./MainStackRoot"
 
 const RootStack = createStackNavigator();
 
@@ -20,7 +21,7 @@ class RootScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.props.firebase.checkAuthUser((user) => {
+    this.props.auth.checkAuthUser((user) => {
       if (user !== null) this.setState({ userID: user.uid, isLoading: false });
       else this.setState({ isLoading: false });
     });
@@ -42,7 +43,7 @@ class RootScreen extends React.Component {
         {this.state.userID && (
           <RootStack.Screen
             name="Main"
-            component={MainStackScreen}
+            component={MainStackRoot}
             options={{ headerShown: false }}
           />
         )}
