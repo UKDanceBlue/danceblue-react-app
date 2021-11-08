@@ -69,6 +69,23 @@ const FirebaseAuthWrappers = {
    * @since 1.0.1
    */
   signInAnon: () => firebase.auth().signInAnonymously(),
+  /**
+   * Signs a user in using a pre-existing auth credential
+   * @param {String} credential The AuthCredential, obtained from another sign in method in a JSON string
+   * @returns {UserCredential} The authenticated user's user credential
+   * @author Tag Howard
+   * @since 1.1.0
+   */
+  loginWithCredentialJSON: (credential) => firebase.auth().signInWithCredential(firebase.auth.AuthCredential.fromJSON(JSON.parse(credential))),
+  /**
+   * Links the currently signed in user's account with the given credential
+   * This function is mostly for upgrading an anonomous account
+   * @param {String} credential The AuthCredential, obtained from another sign in method in a JSON string
+   * @returns 
+   * @author Tag Howard
+   * @since 1.1.0
+   */
+  linkCurrentUserWithCredentialJSON: (credential) => firebase.auth().currentUser.linkWithCredential(firebase.auth.AuthCredential.fromJSON(JSON.parse(credential)))
 };
 
 export default FirebaseAuthWrappers;
