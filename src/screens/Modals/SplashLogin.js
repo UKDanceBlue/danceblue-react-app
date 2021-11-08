@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, ImageBackground, Dimensions } from 'react-native';
 import { Text, Button } from 'react-native-elements';
+import SingleSignOn from '../../common/SingleSignOn';
 
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
@@ -52,40 +53,26 @@ class SplashLoginScreen extends React.Component {
               </Text>
               <Text />
               <Text style={styles.headerText}>
-                With an account you get access to profile badges, and many more new features coming
-                soon!
+                With an account you get access to profile badges, team info, and other features
+                coming soon!
               </Text>
             </View>
             <View style={styles.form}>
-              {this.state.formShown === 'signup' ? (
-                <>
-                  <Text h3 style={{ textAlign: 'center' }}>
-                    Sign Up
-                  </Text>
-                  <Text>WIP</Text>
-                  <Button
-                    title="Already signed up? Click here to Log in!"
-                    onPress={() => this.setState({ formShown: 'login' })}
-                    type="clear"
-                  />
-                </>
-              ) : (
-                <>
-                  <Text h3 style={{ textAlign: 'center' }}>
-                    Login
-                  </Text>
-                  <Text>WIP</Text>
-                  <Button
-                    type="clear"
-                    title="New? Click here to Sign Up!"
-                    onPress={() => this.setState({ formShown: 'signup' })}
-                  />
-                </>
-              )}
+              <Text h3 style={{ textAlign: 'center' }}>
+                Sign in with your UK LinkBlue account
+              </Text>
+              <Button
+                title="SSO Login!"
+                onPress={() => {
+                  const sso = new SingleSignOn(this.props.auth, this.props.firestore);
+                  sso.authenticate('saml-sign-in');
+                }}
+                type="clear"
+              />
             </View>
             <View style={styles.footer}>
               <Text style={{ textAlign: 'center' }}>
-                Want to look around first? You can always sign up later on the profile page
+                Want to look around first? You can always sign in later on the profile page
               </Text>
               <Button type="clear" title="Continue as a Guest" onPress={() => this.signInAnon()} />
             </View>
