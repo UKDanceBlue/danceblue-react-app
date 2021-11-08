@@ -1,29 +1,29 @@
 // Import third-party dependencies
-import { registerRootComponent } from 'expo'
-import React from 'react'
-import { StatusBar, LogBox } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native'
-import Constants from 'expo-constants'
-import * as Notifications from 'expo-notifications'
-import { compose } from 'recompose'
+import { registerRootComponent } from 'expo';
+import React from 'react';
+import { StatusBar, LogBox } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+import { compose } from 'recompose';
 
 // Import Firebase Context Provider
-import FirebaseFirestoreWrappers from './firebase/FirebaseFirestoreWrappers'
-import FirebaseAuthWrappers from './firebase/FirebaseAuthWrappers'
-import FirebaseCoreWrappers from './firebase/FirebaseCoreWrappers'
-import { FirebaseProvider } from './firebase/FirebaseContext'
-import RootScreen from './navigation/RootScreen'
+import FirebaseFirestoreWrappers from './firebase/FirebaseFirestoreWrappers';
+import FirebaseAuthWrappers from './firebase/FirebaseAuthWrappers';
+import FirebaseCoreWrappers from './firebase/FirebaseCoreWrappers';
+import { FirebaseProvider } from './firebase/FirebaseContext';
+import RootScreen from './navigation/RootScreen';
 
 // Fix firestore error - can be removed if issue is resolved in package
-import { decode, encode } from 'base-64'
+import { decode, encode } from 'base-64';
 if (!global.btoa) {
-  global.btoa = encode
+  global.btoa = encode;
 }
 if (!global.atob) {
-  global.atob = decode
+  global.atob = decode;
 }
 
-LogBox.ignoreLogs(['Setting a timer'])
+LogBox.ignoreLogs(['Setting a timer']);
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -39,13 +39,12 @@ Notifications.setNotificationHandler({
  * @since 1.0.1
  */
 class App extends React.Component {
-
   constructor(props) {
-    super(props)
-    console.log("test")
+    super(props);
+    console.log('test');
     this.state = {
-      isReady: false
-    }
+      isReady: false,
+    };
   }
 
   /**
@@ -54,35 +53,33 @@ class App extends React.Component {
    * @since 1.0.1
    */
   componentDidMount() {
+    this.registerForPushNotificationsAsync();
 
-    this.registerForPushNotificationsAsync()
+    Notifications.addNotificationReceivedListener(this._handleNotification);
 
-    Notifications.addNotificationReceivedListener(this._handleNotification)
-
-    Notifications.addNotificationResponseReceivedListener(this._handleNotificationResponse)
+    Notifications.addNotificationResponseReceivedListener(this._handleNotificationResponse);
   }
 
   /**
    * Called by Expo
    * Adds *notification* to *this.state*
-   * @param {Notifications.Notification} notification 
+   * @param {Notifications.Notification} notification
    * @private
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  _handleNotification = notification => {
+  _handleNotification = (notification) => {
     this.setState({ notification: notification });
   };
 
   /**
    * Called by Expo
-   * @param {Notifications.NotificationResponse} response 
+   * @param {Notifications.NotificationResponse} response
    * @private
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  _handleNotificationResponse = response => {
-  };
+  _handleNotificationResponse = (response) => {};
 
   /**
    * Register notification support with the OS
@@ -98,13 +95,13 @@ class App extends React.Component {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
-      if (Platform.OS === 'ios' && finalStatus === 1) finalStatus = 'granted'
+      if (Platform.OS === 'ios' && finalStatus === 1) finalStatus = 'granted';
       if (finalStatus !== 'granted') {
         alert('Failed to get push token for push notification!');
         return;
       }
       const token = (await Notifications.getExpoPushTokenAsync()).data;
-      FirebaseFirestoreWrappers.addPushToken(token)
+      FirebaseFirestoreWrappers.addPushToken(token);
       this.setState({ expoPushToken: token });
     } else {
       alert('Must use physical device for Push Notifications');
@@ -118,7 +115,7 @@ class App extends React.Component {
         lightColor: '#FF231F7C',
       });
     }
-  };
+  }
 
   /**
    * Called to generate a React Native component
@@ -129,16 +126,20 @@ class App extends React.Component {
    */
   render() {
     return (
-      <FirebaseProvider value = {{firestore: FirebaseFirestoreWrappers, auth: FirebaseAuthWrappers, core: FirebaseCoreWrappers}}>
+      <FirebaseProvider
+        value={{
+          firestore: FirebaseFirestoreWrappers,
+          auth: FirebaseAuthWrappers,
+          core: FirebaseCoreWrappers,
+        }}
+      >
         <StatusBar />
         <NavigationContainer>
           <RootScreen />
         </NavigationContainer>
       </FirebaseProvider>
-    )
+    );
   }
 }
 
-export default compose(
-  registerRootComponent
-)(App)
+export default compose(registerRootComponent)(App);

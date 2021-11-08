@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   button: {
@@ -7,12 +7,12 @@ export const styles = StyleSheet.create({
     margin: 10,
     height: '30%',
     borderRadius: 10,
-    flex: 1
+    flex: 1,
   },
   img: {
     height: '100%',
     width: '100%',
-    opacity: 50
+    opacity: 50,
   },
   view: {
     position: 'absolute',
@@ -24,11 +24,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
     flex: 1,
-    borderRadius: 10
+    borderRadius: 10,
   },
   text: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 50
-  }
-})
+    fontSize: 50,
+  },
+});

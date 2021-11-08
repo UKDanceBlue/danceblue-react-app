@@ -1,9 +1,9 @@
 // Import third-party dependencies
-import React from 'react'
-import { View, StyleSheet, ActivityIndicator } from 'react-native'
-import { Text } from 'react-native-elements'
+import React from 'react';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text } from 'react-native-elements';
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * Component for "Profile" screen in main navigation
@@ -13,17 +13,17 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext'
  * @class
  */
 class ProfileScreen extends React.Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
       loggedIn: false,
       user: undefined,
       formShown: 'signup',
-      isLoading: true
-    }
+      isLoading: true,
+    };
 
-    this.handleSignOut = this.handleSignOut.bind(this)
+    this.handleSignOut = this.handleSignOut.bind(this);
   }
 
   /**
@@ -31,28 +31,35 @@ class ProfileScreen extends React.Component {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  componentDidMount () {
-    this.props.auth.checkAuthUser(user => {
+  componentDidMount() {
+    this.props.auth.checkAuthUser((user) => {
       if (user !== null) {
         if (!user.isAnonymous) {
-          let userID = user.uid
-          this.props.firebase.getUser(userID).then(doc => {
-            let userData = doc.data()
-            this.setState({ loggedIn: true, user: {id: user.uid, ...userData}, isLoading: false })
-          })
+          let userID = user.uid;
+          this.props.firebase.getUser(userID).then((doc) => {
+            let userData = doc.data();
+            this.setState({
+              loggedIn: true,
+              user: { id: user.uid, ...userData },
+              isLoading: false,
+            });
+          });
         }
       }
-    })
-    this.setState({ isLoading: false })
+    });
+    this.setState({ isLoading: false });
   }
 
   /**
    * Have firebase sign out the current user and then sign in an anonomous user
    */
-  handleSignOut () {
-    this.props.auth.signOut().then(() => {
-      return this.props.auth.signInAnon()
-    }).then(() => this.setState({ loggedIn: false, user: undefined }))
+  handleSignOut() {
+    this.props.auth
+      .signOut()
+      .then(() => {
+        return this.props.auth.signInAnon();
+      })
+      .then(() => this.setState({ loggedIn: false, user: undefined }));
   }
 
   /**
@@ -61,32 +68,40 @@ class ProfileScreen extends React.Component {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  render () {
-    const { navigate } = this.props.navigation
+  render() {
+    const { navigate } = this.props.navigation;
 
     return (
       <View style={styles.container}>
         <>
-          {/* Start of still loading view */this.state.isLoading && (
-            <ActivityIndicator style={styles.image} size='large' color='blue' />
-          )/* End of still loading view */}
-          {/* Start of finished loading view */!this.state.isLoading && (
-            <>
-              {/* Start of logged in view */this.state.loggedIn && (
-                <>
-                  <Text>WIP</Text>
-                </>
-              )/* End of logged in view */}
-              {/* Start of logged out view */!this.state.loggedIn && (
-                <>
-                  <Text>WIP</Text>
-                </>
-              )/* End of logged in view */}
-            </>
-          )/* End of finished loading view */}
+          {
+            /* Start of still loading view */ this.state.isLoading && (
+              <ActivityIndicator style={styles.image} size="large" color="blue" />
+            ) /* End of still loading view */
+          }
+          {
+            /* Start of finished loading view */ !this.state.isLoading && (
+              <>
+                {
+                  /* Start of logged in view */ this.state.loggedIn && (
+                    <>
+                      <Text>WIP</Text>
+                    </>
+                  ) /* End of logged in view */
+                }
+                {
+                  /* Start of logged out view */ !this.state.loggedIn && (
+                    <>
+                      <Text>WIP</Text>
+                    </>
+                  ) /* End of logged in view */
+                }
+              </>
+            ) /* End of finished loading view */
+          }
         </>
       </View>
-    )
+    );
   }
 }
 
@@ -110,12 +125,12 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     resizeMode: 'contain',
-    paddingLeft: 50
+    paddingLeft: 50,
   },
   footer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   sectionTitle: {
     fontSize: 20,
@@ -124,13 +139,13 @@ const styles = StyleSheet.create({
   sectionTitleView: {
     borderBottomColor: '#0033A0',
     borderBottomWidth: 1,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   container: {
     overflow: 'hidden',
     padding: 10,
-    flex: 1
+    flex: 1,
   },
-})
+});
 
-export default withFirebaseHOC(ProfileScreen)
+export default withFirebaseHOC(ProfileScreen);

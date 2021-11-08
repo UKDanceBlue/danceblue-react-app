@@ -1,9 +1,9 @@
-import React from 'react'
-import { View, StyleSheet, Text, ActivityIndicator } from 'react-native'
+import React from 'react';
+import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 
-import moment from 'moment'
+import moment from 'moment';
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * A label for a unit of time
@@ -13,16 +13,14 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext'
  * @since 1.0.1
  * @class
  */
-const TimeUnit = props => {
+const TimeUnit = (props) => {
   return (
     <View style={{ alignItems: 'center', paddingLeft: 7, paddingRight: 7 }}>
-      <Text style={styles.countdownText}>
-        {props.value}
-      </Text>
+      <Text style={styles.countdownText}>{props.value}</Text>
       <Text style={{ fontSize: 20, color: 'white' }}>{props.label}</Text>
     </View>
-  )
-}
+  );
+};
 
 /**
  * A component to show a countdown loaded form firebase
@@ -33,8 +31,8 @@ const TimeUnit = props => {
  * @class
  */
 class CountdownView extends React.Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
       title: this.props.title || '',
@@ -47,10 +45,10 @@ class CountdownView extends React.Component {
       mins: 0,
       secs: 0,
       isLoading: true,
-      timerSetup: true
-    }
+      timerSetup: true,
+    };
 
-    this.updateTimer = this.updateTimer.bind(this)
+    this.updateTimer = this.updateTimer.bind(this);
   }
 
   /**
@@ -58,19 +56,19 @@ class CountdownView extends React.Component {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  componentDidMount () {
-    this.props.firebase.getActiveCountdown().then(snapshot => {
-      snapshot.forEach(doc => {
-        const countdown = doc.data()
+  componentDidMount() {
+    this.props.firebase.getActiveCountdown().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        const countdown = doc.data();
         this.setState({
           title: countdown.title,
           date: moment.duration(moment(countdown.time.toDate()).diff(moment())),
           finishMessage: countdown.finishMessage || '',
-          isLoading: false
-        })
-        this.updateTimer()
-      })
-    })
+          isLoading: false,
+        });
+        this.updateTimer();
+      });
+    });
   }
 
   /**
@@ -78,19 +76,19 @@ class CountdownView extends React.Component {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  updateTimer () {
+  updateTimer() {
     const x = setInterval(() => {
-      let { date } = this.state
+      let { date } = this.state;
 
       if (date <= 0) {
-        clearInterval(x)
+        clearInterval(x);
       } else {
-        date = date.subtract(1, 's')
-        const months = date.months()
-        const days = date.days()
-        const hours = date.hours()
-        const mins = date.minutes()
-        const secs = date.seconds()
+        date = date.subtract(1, 's');
+        const months = date.months();
+        const days = date.days();
+        const hours = date.hours();
+        const mins = date.minutes();
+        const secs = date.seconds();
 
         this.setState({
           months,
@@ -99,10 +97,10 @@ class CountdownView extends React.Component {
           mins,
           secs,
           date,
-          timerSetup: false
-        })
+          timerSetup: false,
+        });
       }
-    }, 1000)
+    }, 1000);
   }
 
   /**
@@ -111,42 +109,31 @@ class CountdownView extends React.Component {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  render () {
-    const { months, days, hours, mins, secs } = this.state
+  render() {
+    const { months, days, hours, mins, secs } = this.state;
     return (
       <View style={styles.container}>
-        {this.state.isLoading && (
-          <ActivityIndicator color='white' size='large' />
-        )}
+        {this.state.isLoading && <ActivityIndicator color="white" size="large" />}
         {!this.state.isLoading && (
           <>
             <View style={styles.countdownTitleView}>
-              <Text
-                adjustsFontSizeToFit
-                numberOfLines={1}
-                style={styles.countdownText}
-              >
+              <Text adjustsFontSizeToFit numberOfLines={1} style={styles.countdownText}>
                 {this.state.title}
               </Text>
             </View>
-            {this.state.timerSetup && (
-              <ActivityIndicator color='white' size='large' />
-            )}
+            {this.state.timerSetup && <ActivityIndicator color="white" size="large" />}
             {!this.state.timerSetup && (
               /* jscpd:ignore-start */
               <View style={styles.countdownTimer}>
                 {months !== 0 && (
                   <>
-                    <TimeUnit
-                      label={months === 1 ? 'month' : 'months'}
-                      value={months}
-                    />
+                    <TimeUnit label={months === 1 ? 'month' : 'months'} value={months} />
 
                     <Text
                       style={{
                         fontWeight: 'bold',
                         fontSize: 40,
-                        color: 'white'
+                        color: 'white',
                       }}
                     >
                       :
@@ -155,15 +142,12 @@ class CountdownView extends React.Component {
                 )}
                 {(days !== 0 && (
                   <>
-                    <TimeUnit
-                      label={days === 1 ? 'day' : 'days'}
-                      value={days}
-                    />
+                    <TimeUnit label={days === 1 ? 'day' : 'days'} value={days} />
                     <Text
                       style={{
                         fontWeight: 'bold',
                         fontSize: 40,
-                        color: 'white'
+                        color: 'white',
                       }}
                     >
                       :
@@ -172,15 +156,12 @@ class CountdownView extends React.Component {
                 )) ||
                   (months !== 0 && (
                     <>
-                      <TimeUnit
-                        label={days === 1 ? 'day' : 'days'}
-                        value={days}
-                      />
+                      <TimeUnit label={days === 1 ? 'day' : 'days'} value={days} />
                       <Text
                         style={{
                           fontWeight: 'bold',
                           fontSize: 40,
-                          color: 'white'
+                          color: 'white',
                         }}
                       >
                         :
@@ -189,15 +170,12 @@ class CountdownView extends React.Component {
                   ))}
                 {(hours !== 0 && (
                   <>
-                    <TimeUnit
-                      label={hours === 1 ? 'hour' : 'hours'}
-                      value={hours}
-                    />
+                    <TimeUnit label={hours === 1 ? 'hour' : 'hours'} value={hours} />
                     <Text
                       style={{
                         fontWeight: 'bold',
                         fontSize: 40,
-                        color: 'white'
+                        color: 'white',
                       }}
                     >
                       :
@@ -206,15 +184,12 @@ class CountdownView extends React.Component {
                 )) ||
                   ((days !== 0 || months !== 0) && (
                     <>
-                      <TimeUnit
-                        label={hours === 1 ? 'hour' : 'hours'}
-                        value={hours}
-                      />
+                      <TimeUnit label={hours === 1 ? 'hour' : 'hours'} value={hours} />
                       <Text
                         style={{
                           fontWeight: 'bold',
                           fontSize: 40,
-                          color: 'white'
+                          color: 'white',
                         }}
                       >
                         :
@@ -223,15 +198,12 @@ class CountdownView extends React.Component {
                   ))}
                 {(mins !== 0 && (
                   <>
-                    <TimeUnit
-                      label={mins === 1 ? 'min' : 'mins'}
-                      value={mins}
-                    />
+                    <TimeUnit label={mins === 1 ? 'min' : 'mins'} value={mins} />
                     <Text
                       style={{
                         fontWeight: 'bold',
                         fontSize: 40,
-                        color: 'white'
+                        color: 'white',
                       }}
                     >
                       :
@@ -240,52 +212,33 @@ class CountdownView extends React.Component {
                 )) ||
                   ((hours !== 0 || days !== 0 || months !== 0) && (
                     <>
-                      <TimeUnit
-                        label={mins === 1 ? 'min' : 'mins'}
-                        value={mins}
-                      />
+                      <TimeUnit label={mins === 1 ? 'min' : 'mins'} value={mins} />
                       <Text
                         style={{
                           fontWeight: 'bold',
                           fontSize: 40,
-                          color: 'white'
+                          color: 'white',
                         }}
                       >
                         :
                       </Text>
                     </>
                   ))}
-                {(secs !== 0 && (
-                  <TimeUnit label={secs === 1 ? 'sec' : 'secs'} value={secs} />
-                )) || ((mins !== 0 ||
-                    hours !== 0 ||
-                    days !== 0 ||
-                    months !== 0) && (
-                  /* eslint-disable */
-                  <TimeUnit
-                    label={secs === 1 ? 'sec' : 'secs'}
-                    value={secs}
-                  />
-                ))}
+                {(secs !== 0 && <TimeUnit label={secs === 1 ? 'sec' : 'secs'} value={secs} />) ||
+                  ((mins !== 0 || hours !== 0 || days !== 0 || months !== 0) && (
+                    /* eslint-disable */
+                    <TimeUnit label={secs === 1 ? 'sec' : 'secs'} value={secs} />
+                  ))}
               </View>
               /* jscpd:ignore-end */
             )}
-            {months === 0 &&
-              days === 0 &&
-              hours === 0 &&
-              mins === 0 &&
-              secs === 0 && (
-                <Text
-                  style={styles.coundownText}
-                >
-                  {this.state.finishMessage}
-                </Text>
-              )
-            }
+            {months === 0 && days === 0 && hours === 0 && mins === 0 && secs === 0 && (
+              <Text style={styles.coundownText}>{this.state.finishMessage}</Text>
+            )}
           </>
         )}
       </View>
-    )
+    );
   }
 }
 
@@ -294,23 +247,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#0033A0E0',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   countdownTitleView: {
     width: '95%',
     borderBottomColor: 'white',
     borderBottomWidth: 2,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   countdownText: {
     fontSize: 40,
     fontWeight: 'bold',
-    color: 'white'
+    color: 'white',
   },
   countdownTimer: {
     flexDirection: 'row',
-    justifyContent: 'center'
-  }
-})
+    justifyContent: 'center',
+  },
+});
 
-export default withFirebaseHOC(CountdownView)
+export default withFirebaseHOC(CountdownView);

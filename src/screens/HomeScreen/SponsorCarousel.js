@@ -1,8 +1,8 @@
-import React from 'react'
-import { Text, View, ScrollView, StyleSheet } from 'react-native'
-import SponsorCard from '../../common/components/ImageCard'
+import React from 'react';
+import { Text, View, ScrollView, StyleSheet } from 'react-native';
+import SponsorCard from '../../common/components/ImageCard';
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * A horizontally scrolling carousel of SponsorCards
@@ -12,12 +12,12 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext'
  * @class
  */
 class SponsorCarousel extends React.Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
-      sponsors: []
-    }
+      sponsors: [],
+    };
   }
 
   /**
@@ -25,14 +25,14 @@ class SponsorCarousel extends React.Component {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  componentDidMount () {
-    const dbSponsors = []
-    this.props.firebase.getSponsors().then(snapshot => {
-      snapshot.forEach(doc => {
-        dbSponsors.push({ ...doc.data(), id: doc.id })
-      })
-      this.setState({ sponsors: dbSponsors })
-    })
+  componentDidMount() {
+    const dbSponsors = [];
+    this.props.firebase.getSponsors().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        dbSponsors.push({ ...doc.data(), id: doc.id });
+      });
+      this.setState({ sponsors: dbSponsors });
+    });
   }
 
   /**
@@ -41,14 +41,10 @@ class SponsorCarousel extends React.Component {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  render () {
+  render() {
     const cards = this.state.sponsors.map((sponsor, index) => (
-      <SponsorCard
-        imageLink={sponsor.logo}
-        sponsorLink={sponsor.link}
-        key={sponsor.id}
-      />
-    ))
+      <SponsorCard imageLink={sponsor.logo} sponsorLink={sponsor.link} key={sponsor.id} />
+    ));
 
     return (
       <View style={styles.container}>
@@ -58,43 +54,38 @@ class SponsorCarousel extends React.Component {
               <Text style={styles.sponsorTitle}> SPONSORS </Text>
             </View>
             <View style={styles.cardScrollView}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={{ padding: 10 }}
-              >
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ padding: 10 }}>
                 {cards}
               </ScrollView>
             </View>
           </View>
         </ScrollView>
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   sponsorView: {
     padding: 5,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     backgroundColor: 'white',
-    flex: 1
+    flex: 1,
   },
   sponsorTitle: {
     color: 'black',
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
-  sponsorTitleView: {
-  },
+  sponsorTitleView: {},
   cardScrollView: {
     height: 170,
-    marginTop: 5
-  }
-})
+    marginTop: 5,
+  },
+});
 
-export default withFirebaseHOC(SponsorCarousel)
+export default withFirebaseHOC(SponsorCarousel);

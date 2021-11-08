@@ -1,12 +1,12 @@
 // Import third-party dependencies
-import React from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import React from 'react';
+import { SafeAreaView, ScrollView } from 'react-native';
 
 // Import first-party dependencies
-import SponsorCarousel from "./SponsorCarousel";
-import CountdownView from "../../common/components/CountdownView";
-import HeaderImage from "./HeaderImage";
-import { withFirebaseHOC } from "../../firebase/FirebaseContext";
+import SponsorCarousel from './SponsorCarousel';
+import CountdownView from '../../common/components/CountdownView';
+import HeaderImage from './HeaderImage';
+import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * Component for home screen in main navigation
@@ -65,7 +65,7 @@ class HomeScreen extends React.Component {
 }
 
 HomeScreen.navigationOptions = {
-  title: "Home",
+  title: 'Home',
 };
 
 export default withFirebaseHOC(HomeScreen);

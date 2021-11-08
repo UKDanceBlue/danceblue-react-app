@@ -1,10 +1,10 @@
-import React from 'react'
-import { View, ImageBackground, Image, StyleSheet } from 'react-native'
+import React from 'react';
+import { View, ImageBackground, Image, StyleSheet } from 'react-native';
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
-import backgroundImg from '../../../assets/home/db20_ribbon.jpg'
-import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png'
+import backgroundImg from '../../../assets/home/db20_ribbon.jpg';
+import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png';
 
 /**
  * A header image container used on the home screen
@@ -15,7 +15,7 @@ import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png'
  */
 class HeaderImage extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   /**
@@ -31,7 +31,7 @@ class HeaderImage extends React.Component {
           <Image source={dbLogo} style={styles.logo} />
         </ImageBackground>
       </View>
-    )
+    );
   }
 }
 
@@ -41,21 +41,21 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignSelf: 'center',
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   background: {
     flex: 3,
     width: '100%',
     height: '100%',
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
   logo: {
     flex: 1,
     height: null,
     width: null,
     resizeMode: 'contain',
-    backgroundColor: '#FFFFFF99'
-  }
-})
+    backgroundColor: '#FFFFFF99',
+  },
+});
 
-export default withFirebaseHOC(HeaderImage)
+export default withFirebaseHOC(HeaderImage);

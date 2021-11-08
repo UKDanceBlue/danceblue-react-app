@@ -1,9 +1,9 @@
 // Import third-party dependencies
-import React from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import React from 'react';
+import { SafeAreaView, ScrollView } from 'react-native';
 
 // Import first-party dependencies
-import Standings from "./Standings";
+import Standings from './Standings';
 
 /**
  * Wrapper for a Standings component
@@ -13,15 +13,15 @@ import Standings from "./Standings";
  * @class
  */
 export class ScoreboardScreen extends React.Component {
-    render() {
-        return (
-        <ScrollView showsVerticalScrollIndicator>
-            <SafeAreaView style={{ flex: 1 }}>
-            <Standings isExpanded />
-            </SafeAreaView>
-        </ScrollView>
-        );
-    }
+  render() {
+    return (
+      <ScrollView showsVerticalScrollIndicator>
+        <SafeAreaView style={{ flex: 1 }}>
+          <Standings isExpanded />
+        </SafeAreaView>
+      </ScrollView>
+    );
+  }
 }
 
-export default ScoreboardScreen
+export default ScoreboardScreen;

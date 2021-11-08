@@ -1,3 +1,3 @@
-import GenericWebviewScreen from './GenericWebviewScreen'
+import GenericWebviewScreen from './GenericWebviewScreen';
 
-export default GenericWebviewScreen
+export default GenericWebviewScreen;

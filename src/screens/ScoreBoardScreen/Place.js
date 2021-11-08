@@ -1,7 +1,7 @@
 // Import third-party dependencies
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome5'
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 /**
  * A component showing a team name, their morale cup rank (if applicable), and their points
@@ -17,25 +17,20 @@ class Place extends React.Component {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  render () {
+  render() {
     // The 'top3Icon function adds an award icon to the top 3 teams
-    const top3Icon = rank => {
+    const top3Icon = (rank) => {
       if (rank === 1) {
-        return <Icon name='award' size={30} color='gold' />
+        return <Icon name="award" size={30} color="gold" />;
       } else if (rank === 2) {
-        return <Icon name='award' size={30} color='silver' />
+        return <Icon name="award" size={30} color="silver" />;
       } else if (rank === 3) {
-        return <Icon name='award' size={30} color='blue' />
+        return <Icon name="award" size={30} color="blue" />;
       }
-    }
+    };
     return (
       // Renders the individual row of the leaderboard for each team
-      <View style={
-        this.props.isHighlighted
-          ? styles.highlightedRow
-          : styles.row
-        }
-      >
+      <View style={this.props.isHighlighted ? styles.highlightedRow : styles.row}>
         <View style={styles.left}>
           <Text style={styles.place}>
             {/* Renders the rank/place of the team */}
@@ -59,18 +54,18 @@ class Place extends React.Component {
             {/* Renders the number of points earned */}
             {this.props.showPointsPerMember
               ? this.props.pointsPerMember < 1
-                  ? '< 1 '
-                  : this.props.pointsPerMember
+                ? '< 1 '
+                : this.props.pointsPerMember
               : this.props.points}
             {this.props.showPointsPerMember
               ? ' points'
               : this.props.points === 1
-                ? ' point'
-                : ' points'}
+              ? ' point'
+              : ' points'}
           </Text>
         </View>
       </View>
-    )
+    );
   }
 }
 
@@ -82,7 +77,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottomWidth: 0.2,
-    borderBottomColor: '#999999'
+    borderBottomColor: '#999999',
   },
   highlightedRow: {
     paddingTop: 10,
@@ -92,40 +87,40 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderBottomWidth: 0.2,
     borderBottomColor: '#999999',
-    backgroundColor: '#ffffc8'
+    backgroundColor: '#ffffc8',
   },
   left: {
     width: '20%',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   right: {
     width: '30%',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   middle: {
     width: '50%',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   place: {
     fontSize: 20,
     fontWeight: 'bold',
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   bold: {
     fontWeight: 'bold',
     textAlign: 'right',
     paddingRight: 10,
-    fontSize: 17
+    fontSize: 17,
   },
   name: {
     fontWeight: 'bold',
-    fontSize: 15
+    fontSize: 15,
   },
   team: {
     fontWeight: 'normal',
-    fontStyle: 'italic'
-  }
-})
+    fontStyle: 'italic',
+  },
+});
 
-export default Place
+export default Place;

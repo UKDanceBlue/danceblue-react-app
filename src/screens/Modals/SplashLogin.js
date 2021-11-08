@@ -1,8 +1,8 @@
-import React from 'react'
-import { StyleSheet, View, ImageBackground, Dimensions } from 'react-native'
-import { Text, Button } from 'react-native-elements'
+import React from 'react';
+import { StyleSheet, View, ImageBackground, Dimensions } from 'react-native';
+import { Text, Button } from 'react-native-elements';
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * A simplified sign in page shown when the user first opens the app
@@ -12,21 +12,21 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext'
  * @class
  */
 class SplashLoginScreen extends React.Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
-      formShown: 'signup'
-    }
+      formShown: 'signup',
+    };
 
-    this.signInAnon = this.signInAnon.bind(this)
+    this.signInAnon = this.signInAnon.bind(this);
   }
 
   /**
    * Wraps config/Firebase's firebase.signInAnon()
    */
   signInAnon() {
-    this.props.auth.signInAnon()
+    this.props.auth.signInAnon();
   }
 
   /**
@@ -36,9 +36,12 @@ class SplashLoginScreen extends React.Component {
    * @since 1.0.1
    */
   render() {
-    return(
+    return (
       <View style={styles.container}>
-        <ImageBackground source={require('../../../assets/home/Dancing-min.jpg')} style={styles.image}>
+        <ImageBackground
+          source={require('../../../assets/home/Dancing-min.jpg')}
+          style={styles.image}
+        >
           <View style={styles.textBackground}>
             <View style={styles.header}>
               <Text h2 style={{ textAlign: 'center' }}>
@@ -49,7 +52,8 @@ class SplashLoginScreen extends React.Component {
               </Text>
               <Text></Text>
               <Text style={styles.headerText}>
-                With an account you get access to profile badges, and many more new features coming soon!
+                With an account you get access to profile badges, and many more new features coming
+                soon!
               </Text>
             </View>
             <View style={styles.form}>
@@ -59,7 +63,11 @@ class SplashLoginScreen extends React.Component {
                     Sign Up
                   </Text>
                   <Text>WIP</Text>
-                  <Button title="Already signed up? Click here to Log in!" onPress={() => this.setState({ formShown: 'login' })} type="clear" />
+                  <Button
+                    title="Already signed up? Click here to Log in!"
+                    onPress={() => this.setState({ formShown: 'login' })}
+                    type="clear"
+                  />
                 </>
               ) : (
                 <>
@@ -67,18 +75,24 @@ class SplashLoginScreen extends React.Component {
                     Login
                   </Text>
                   <Text>WIP</Text>
-                  <Button type="clear" title="New? Click here to Sign Up!" onPress={() => this.setState({ formShown: 'signup' })} />
+                  <Button
+                    type="clear"
+                    title="New? Click here to Sign Up!"
+                    onPress={() => this.setState({ formShown: 'signup' })}
+                  />
                 </>
               )}
             </View>
             <View style={styles.footer}>
-              <Text style={{ textAlign: 'center' }}>Want to look around first? You can always sign up later on the profile page</Text>
+              <Text style={{ textAlign: 'center' }}>
+                Want to look around first? You can always sign up later on the profile page
+              </Text>
               <Button type="clear" title="Continue as a Guest" onPress={() => this.signInAnon()} />
             </View>
           </View>
         </ImageBackground>
       </View>
-    )
+    );
   }
 }
 
@@ -88,7 +102,7 @@ const styles = StyleSheet.create({
   },
   textBackground: {
     backgroundColor: '#FFFFFF99',
-    flex: 1
+    flex: 1,
   },
   header: {
     flex: 2,
@@ -97,18 +111,18 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 16,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   form: {
-    flex: 2
+    flex: 2,
   },
   footer: {
-    flex: 1
+    flex: 1,
   },
   image: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
-  }
-})
+  },
+});
 
-export default withFirebaseHOC(SplashLoginScreen)
+export default withFirebaseHOC(SplashLoginScreen);

@@ -1,12 +1,12 @@
 // Import third-party dependencies
-import React from "react";
-import { Dimensions, Image } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
+import React from 'react';
+import { Dimensions, Image } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 // Import first-party dependencies
-import SplashLogin from "../screens/Modals/SplashLogin";
-import { withFirebaseHOC } from "../firebase/FirebaseContext";
-import MainStackRoot from "./MainStackRoot"
+import SplashLogin from '../screens/Modals/SplashLogin';
+import { withFirebaseHOC } from '../firebase/FirebaseContext';
+import MainStackRoot from './MainStackRoot';
 
 const RootStack = createStackNavigator();
 
@@ -32,14 +32,14 @@ class RootScreen extends React.Component {
       return (
         <Image
           style={{
-            width: Dimensions.get("window").width,
-            height: Dimensions.get("window").height,
+            width: Dimensions.get('window').width,
+            height: Dimensions.get('window').height,
           }}
-          source={require("../../assets/splash2.png")}
+          source={require('../../assets/splash2.png')}
         />
       );
     return (
-      <RootStack.Navigator screenOptions={{ presentation: "modal" }}>
+      <RootStack.Navigator screenOptions={{ presentation: 'modal' }}>
         {this.state.userID && (
           <RootStack.Screen
             name="Main"

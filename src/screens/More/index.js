@@ -1,21 +1,15 @@
 // Import third-party dependencies
-import React from 'react'
-import {
-  View,
-  ImageBackground,
-  TouchableHighlight,
-  Text,
-  SafeAreaView
-} from 'react-native'
+import React from 'react';
+import { View, ImageBackground, TouchableHighlight, Text, SafeAreaView } from 'react-native';
 
-import { styles } from '../../styles'
+import { styles } from '../../styles';
 
-const profileButtonImage = require('../../../assets/more/Profile_Button.jpg')
-const donateButtonImage = require('../../../assets/more/Donate_Button.jpg')
-const faqsButtonImage = require('../../../assets/more/FAQs_Button.jpg')
-const aboutButtonImage = require('../../../assets/more/About_Button.jpg')
+const profileButtonImage = require('../../../assets/more/Profile_Button.jpg');
+const donateButtonImage = require('../../../assets/more/Donate_Button.jpg');
+const faqsButtonImage = require('../../../assets/more/FAQs_Button.jpg');
+const aboutButtonImage = require('../../../assets/more/About_Button.jpg');
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * Component for "More" screen in main navigation
@@ -27,8 +21,7 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext'
  */
 class MoreScreen extends React.Component {
   constructor(props) {
-    super(props)
-
+    super(props);
   }
 
   /**
@@ -36,9 +29,7 @@ class MoreScreen extends React.Component {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  componentDidMount() {
-    
-  }
+  componentDidMount() {}
 
   /**
    * Called by React Native when rendering the screen
@@ -46,15 +37,15 @@ class MoreScreen extends React.Component {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  render () {
-    const { navigate } = this.props.navigation
+  render() {
+    const { navigate } = this.props.navigation;
     return (
       <>
         <SafeAreaView style={{ flex: 1 }}>
           <TouchableHighlight
             style={styles.button}
             onPress={() => {
-              navigate('Profile')
+              navigate('Profile');
             }}
           >
             <ImageBackground
@@ -63,15 +54,13 @@ class MoreScreen extends React.Component {
               imageStyle={{ borderRadius: 10 }}
             >
               <View style={styles.view}>
-                <Text style={styles.text}>
-                  {'Profile'}
-                </Text>
+                <Text style={styles.text}>{'Profile'}</Text>
               </View>
             </ImageBackground>
           </TouchableHighlight>
           <TouchableHighlight
             onPress={() => {
-              navigate('About')
+              navigate('About');
             }}
             style={styles.button}
           >
@@ -81,15 +70,13 @@ class MoreScreen extends React.Component {
               imageStyle={{ borderRadius: 10 }}
             >
               <View style={styles.view}>
-                <Text style={styles.text}>
-                  About Us
-                </Text>
+                <Text style={styles.text}>About Us</Text>
               </View>
             </ImageBackground>
           </TouchableHighlight>
           <TouchableHighlight
             onPress={() => {
-              navigate('Donate')
+              navigate('Donate');
             }}
             style={styles.button}
           >
@@ -99,15 +86,13 @@ class MoreScreen extends React.Component {
               imageStyle={{ borderRadius: 10 }}
             >
               <View style={styles.view}>
-                <Text style={styles.text}>
-                  Donate
-                </Text>
+                <Text style={styles.text}>Donate</Text>
               </View>
             </ImageBackground>
           </TouchableHighlight>
           <TouchableHighlight
             onPress={() => {
-              navigate('FAQ')
+              navigate('FAQ');
             }}
             style={styles.button}
           >
@@ -117,20 +102,18 @@ class MoreScreen extends React.Component {
               imageStyle={{ borderRadius: 10 }}
             >
               <View style={styles.view}>
-                <Text style={styles.text}>
-                  FAQs
-                </Text>
+                <Text style={styles.text}>FAQs</Text>
               </View>
             </ImageBackground>
           </TouchableHighlight>
         </SafeAreaView>
       </>
-    )
+    );
   }
 }
 
 MoreScreen.navigationOptions = {
-  title: 'More'
-}
+  title: 'More',
+};
 
-export default withFirebaseHOC(MoreScreen)
+export default withFirebaseHOC(MoreScreen);

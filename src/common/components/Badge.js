@@ -1,7 +1,7 @@
-import React from 'react'
-import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native'
+import React from 'react';
+import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native';
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * A badge icon for use with profiles
@@ -12,11 +12,11 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext'
  */
 class Badge extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
-      isLoading: true
-    }
+      isLoading: true,
+    };
   }
 
   /**
@@ -25,9 +25,12 @@ class Badge extends React.Component {
    * @since 1.0.1
    */
   componentDidMount() {
-    this.props.core.getDocumentURL(this.props.imageURL).then(url => {
-      this.setState({ imageRef: url, isLoading: false })
-    }).catch(error => console.log(error.message))
+    this.props.core
+      .getDocumentURL(this.props.imageURL)
+      .then((url) => {
+        this.setState({ imageRef: url, isLoading: false });
+      })
+      .catch((error) => console.log(error.message));
   }
 
   /**
@@ -36,11 +39,11 @@ class Badge extends React.Component {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         {this.state.isLoading && (
-          <ActivityIndicator style={styles.image} size='large' color='blue' />
+          <ActivityIndicator style={styles.image} size="large" color="blue" />
         )}
         {!this.state.isLoading && (
           <>
@@ -49,7 +52,7 @@ class Badge extends React.Component {
           </>
         )}
       </View>
-    )
+    );
   }
 }
 
@@ -57,13 +60,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
-
+    justifyContent: 'center',
   },
   icon: {
     width: 50,
-    height: 50
-  }
-})
+    height: 50,
+  },
+});
 
-export default withFirebaseHOC(Badge)
+export default withFirebaseHOC(Badge);
