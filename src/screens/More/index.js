@@ -23,6 +23,7 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext'
  * @author Kenton Carrier
  * @since 1.0.1
  * @class
+ * @deprecated I want to at least redesign this, but ideally this whole screen will be gone
  */
 class MoreScreen extends React.Component {
   constructor(props) {

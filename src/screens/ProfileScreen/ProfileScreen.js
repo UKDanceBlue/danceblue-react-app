@@ -62,7 +62,6 @@ class ProfileScreen extends React.Component {
    * @since 1.0.1
    */
   render () {
-    /* eslint-disable */
     const { navigate } = this.props.navigation
 
     return (

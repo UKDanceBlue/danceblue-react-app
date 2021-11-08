@@ -8,7 +8,7 @@ import { BlurView } from "expo-blur";
 import ScoreboardScreen from "../screens/ScoreBoardScreen"
 import EventScreen from "../screens/EventScreen";
 import GenericWebviewScreen from "../screens/GenericWebviewScreen"
-import ProfileScreen from "../screens/More/ProfileScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 import TabBar from "./TabBar";
 
 const MainStack = createStackNavigator();
