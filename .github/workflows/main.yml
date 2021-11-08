@@ -1,4 +1,4 @@
-name: Expo Publish
+name: Main Pushed
 on:
   push:
     branches:
@@ -9,14 +9,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install modules
+        run: npm ci
+      - name: Run ESLint
+        run: eslint .
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      - uses: expo/expo-github-action@v5
+      - uses: expo/expo-github-action@v6
         with:
           expo-version: 4.x
-          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
           expo-cache: true
-      - run: npm install
-      - run: expo publish
+          token: ${{ secrets.EXPO_CLI_TOKEN }}
+      - run: npm ci
+      - run: expo publish --release-channel dev-main
