@@ -1,7 +1,8 @@
 // Import third-party dependencies
 import React from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Button } from 'react-native';
 import { Text } from 'react-native-elements';
+import SingleSignOn from '../../common/SingleSignOn';
 
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
@@ -40,7 +41,7 @@ class ProfileScreen extends React.Component {
             const userData = doc.data();
             this.setState({
               loggedIn: true,
-              user: { id: user.uid, ...userData },
+              user: { id: user.uid, displayName: user.displayName, ...userData },
               isLoading: false,
             });
           });
@@ -83,14 +84,22 @@ class ProfileScreen extends React.Component {
                 {
                   /* Start of logged in view */ this.state.loggedIn && (
                     <>
-                      <Text>WIP</Text>
+                      <Text>You are logged in as {this.state.user.displayName}</Text>
+                      <Button onPress={this.handleSignOut} title="Log out" />
                     </>
                   ) /* End of logged in view */
                 }
                 {
                   /* Start of logged out view */ !this.state.loggedIn && (
                     <>
-                      <Text>WIP</Text>
+                      <Text>You are logged out, to log in:</Text>
+                      <Button
+                        onPress={() => {
+                          let sso = new SingleSignOn(this.props.auth, this.props.firestore);
+                          sso.authenticate('saml-sign-in');
+                        }}
+                        title="Press me"
+                      />
                     </>
                   ) /* End of logged in view */
                 }
