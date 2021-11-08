@@ -1,6 +1,6 @@
 {
   "expo": {
-    "entryPoint": "./src/components/App.js",
+    "entryPoint": "./src/App.js",
     "name": "DanceBlue Mobile",
     "slug": "danceblue-mobile",
     "privacy": "unlisted",

@@ -10,13 +10,12 @@ import {
 
 import { styles } from '../../styles'
 
-const profileButtonImage = require('./Profile_Button.jpg')
-const donateButtonImage = require('./Donate_Button.jpg')
-const faqsButtonImage = require('./FAQs_Button.jpg')
-const faqsButtonImageSH = require('./FAQs_Button_SH.jpg')
-const aboutButtonImage = require('./About_Button.jpg')
+const profileButtonImage = require('../../../assets/more/Profile_Button.jpg')
+const donateButtonImage = require('../../../assets/more/Donate_Button.jpg')
+const faqsButtonImage = require('../../../assets/more/FAQs_Button.jpg')
+const aboutButtonImage = require('../../../assets/more/About_Button.jpg')
 
-import { withFirebaseHOC } from '../../../config/Firebase'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext'
 
 /**
  * Component for "More" screen in main navigation
@@ -24,16 +23,12 @@ import { withFirebaseHOC } from '../../../config/Firebase'
  * @author Kenton Carrier
  * @since 1.0.1
  * @class
+ * @deprecated I want to at least redesign this, but ideally this whole screen will be gone
  */
 class MoreScreen extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      config: {
-        scavengerHunt: this.props.scavengerHunt | false
-      }
-    }
   }
 
   /**
@@ -42,9 +37,7 @@ class MoreScreen extends React.Component {
    * @since 1.0.1
    */
   componentDidMount() {
-    this.props.firebase.getConfig().then(doc => {
-      this.setState({ scavengerHunt: doc.data().scavengerHunt })
-    })
+    
   }
 
   /**
@@ -119,7 +112,7 @@ class MoreScreen extends React.Component {
             style={styles.button}
           >
             <ImageBackground
-              source={this.state.scavengerHunt ? faqsButtonImageSH : faqsButtonImage}
+              source={faqsButtonImage}
               style={styles.img}
               imageStyle={{ borderRadius: 10 }}
             >

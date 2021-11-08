@@ -2,10 +2,7 @@ import React from 'react'
 import { StyleSheet, View, ImageBackground, Dimensions } from 'react-native'
 import { Text, Button } from 'react-native-elements'
 
-import SignUpForm from '../../components/SignUpForm'
-import LoginForm from '../../components/LoginForm'
-
-import { withFirebaseHOC } from '../../../config/Firebase'
+import { withFirebaseHOC } from '../../firebase/FirebaseContext'
 
 /**
  * A simplified sign in page shown when the user first opens the app
@@ -29,7 +26,7 @@ class SplashLoginScreen extends React.Component {
    * Wraps config/Firebase's firebase.signInAnon()
    */
   signInAnon() {
-    this.props.firebase.signInAnon()
+    this.props.auth.signInAnon()
   }
 
   /**
@@ -52,7 +49,7 @@ class SplashLoginScreen extends React.Component {
               </Text>
               <Text></Text>
               <Text style={styles.headerText}>
-                With an account you get access to profile badges, the marathon scavenger hunt, and many more new features coming soon!
+                With an account you get access to profile badges, and many more new features coming soon!
               </Text>
             </View>
             <View style={styles.form}>
@@ -61,7 +58,7 @@ class SplashLoginScreen extends React.Component {
                   <Text h3 style={{ textAlign: 'center' }}>
                     Sign Up
                   </Text>
-                  <SignUpForm />
+                  <Text>WIP</Text>
                   <Button title="Already signed up? Click here to Log in!" onPress={() => this.setState({ formShown: 'login' })} type="clear" />
                 </>
               ) : (
@@ -69,7 +66,7 @@ class SplashLoginScreen extends React.Component {
                   <Text h3 style={{ textAlign: 'center' }}>
                     Login
                   </Text>
-                  <LoginForm />
+                  <Text>WIP</Text>
                   <Button type="clear" title="New? Click here to Sign Up!" onPress={() => this.setState({ formShown: 'signup' })} />
                 </>
               )}
