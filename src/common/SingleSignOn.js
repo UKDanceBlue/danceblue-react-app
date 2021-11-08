@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-import { View, Button, LogBox, StyleSheet, Text } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import { firebaseConfig } from '../firebase/FirebaseContext';
@@ -24,11 +22,10 @@ export default class SingleSignOn {
    */
   async authenticate(operation) {
     try {
-      let result = await WebBrowser.openAuthSessionAsync(
-        this.backendUrl +
-          `?linkingUri=${Linking.makeUrl('/' + operation)}&apiKey=${
-            this.firebaseApiKey
-          }&authDomain=${this.firebaseAuthDomain}`
+      const result = await WebBrowser.openAuthSessionAsync(
+        `${this.backendUrl}?linkingUri=${Linking.makeUrl(`/${operation}`)}&apiKey=${
+          this.firebaseApiKey
+        }&authDomain=${this.firebaseAuthDomain}`
       );
       if (result.url) {
         this.redirectData = Linking.parse(result.url);
@@ -43,8 +40,6 @@ export default class SingleSignOn {
       return null;
     }
 
-    let userCredential;
-
     // if (this.firebaseAuthWrapper.getAuthUserInstance()) {
     //   if (!this.firebaseAuthWrapper.getAuthUserInstance().isAnonomous) {
     //     //If the user is logged in but not anonomous don't try and sign them in again, just return null
@@ -58,20 +53,15 @@ export default class SingleSignOn {
     //     )
     //     .then((uCredential) => (userCredential = uCredential));
     // } else {
-    this.firebaseAuthWrapper
+    return this.firebaseAuthWrapper
       .loginWithCredentialJSON(
-        //If the user is not signed in at all, then sign them in with SSO
+        // If the user is not signed in at all, then sign them in with SSO
         this.redirectData.queryParams.credential
       )
       .then((userCredential) => {
-        console.log(userCredential.additionalUserInfo + '\n\n\n');
-        console.log(userCredential.additionalUserInfo.profile);
-        console.log(userCredential.additionalUserInfo.profile['displayName']);
-        console.log(userCredential.additionalUserInfo.profile.displayName);
         userCredential.user.updateProfile({
           displayName: userCredential.additionalUserInfo.profile.displayName,
         });
-        console.log(userCredential.user.displayName);
       });
     // }
   }
