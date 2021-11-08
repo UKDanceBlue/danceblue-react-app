@@ -35,9 +35,9 @@ class ProfileScreen extends React.Component {
     this.props.auth.checkAuthUser((user) => {
       if (user !== null) {
         if (!user.isAnonymous) {
-          let userID = user.uid;
+          const userID = user.uid;
           this.props.firebase.getUser(userID).then((doc) => {
-            let userData = doc.data();
+            const userData = doc.data();
             this.setState({
               loggedIn: true,
               user: { id: user.uid, ...userData },
@@ -56,9 +56,7 @@ class ProfileScreen extends React.Component {
   handleSignOut() {
     this.props.auth
       .signOut()
-      .then(() => {
-        return this.props.auth.signInAnon();
-      })
+      .then(() => this.props.auth.signInAnon())
       .then(() => this.setState({ loggedIn: false, user: undefined }));
   }
 

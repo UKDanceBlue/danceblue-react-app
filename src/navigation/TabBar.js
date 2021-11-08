@@ -11,13 +11,12 @@ import MoreScreen from '../screens/More';
 
 const Tabs = createBottomTabNavigator();
 
-const TabBar = () => {
-  return (
+const TabBar = () => (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           const iconMap = {
-            //Key: Screen   Value: Icon ID
+            // Key: Screen   Value: Icon ID
             Home: 'home',
             Events: 'calendar',
             Store: 'store',
@@ -54,6 +53,5 @@ const TabBar = () => {
       <Tabs.Screen name="More" component={MoreScreen} />
     </Tabs.Navigator>
   );
-};
 
 export default TabBar;

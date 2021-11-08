@@ -9,9 +9,7 @@ const FirebaseCoreWrappers = {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  getDocumentURL: (path) => {
-    return firebase.storage().ref(path).getDownloadURL();
-  },
+  getDocumentURL: (path) => firebase.storage().ref(path).getDownloadURL(),
 };
 
 export default FirebaseCoreWrappers;

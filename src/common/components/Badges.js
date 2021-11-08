@@ -30,12 +30,12 @@ class Badges extends React.Component {
    * @since 1.0.1
    */
   componentDidMount() {
-    let badges = [];
+    const badges = [];
     this.props.firebase.getUserBadges(this.state.userID).then((snapshot) => {
       snapshot.forEach((doc) => {
         badges.push(doc.data());
       });
-      this.setState({ badges: badges, isLoading: false });
+      this.setState({ badges, isLoading: false });
     });
   }
 

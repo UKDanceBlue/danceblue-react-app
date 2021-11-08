@@ -4,12 +4,12 @@ import { View, ImageBackground, TouchableHighlight, Text, SafeAreaView } from 'r
 
 import { styles } from '../../styles';
 
+import { withFirebaseHOC } from '../../firebase/FirebaseContext';
+
 const profileButtonImage = require('../../../assets/more/Profile_Button.jpg');
 const donateButtonImage = require('../../../assets/more/Donate_Button.jpg');
 const faqsButtonImage = require('../../../assets/more/FAQs_Button.jpg');
 const aboutButtonImage = require('../../../assets/more/About_Button.jpg');
-
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * Component for "More" screen in main navigation
@@ -54,7 +54,7 @@ class MoreScreen extends React.Component {
               imageStyle={{ borderRadius: 10 }}
             >
               <View style={styles.view}>
-                <Text style={styles.text}>{'Profile'}</Text>
+                <Text style={styles.text}>Profile</Text>
               </View>
             </ImageBackground>
           </TouchableHighlight>

@@ -15,9 +15,7 @@ const FirebaseAuthWrappers = {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  loginWithEmail: (email, password) => {
-    return firebase.auth().signInWithEmailAndPassword(email, password);
-  },
+  loginWithEmail: (email, password) => firebase.auth().signInWithEmailAndPassword(email, password),
   /**
    * Signup a user using email/password authentication
    *
@@ -31,9 +29,7 @@ const FirebaseAuthWrappers = {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  signupWithEmail: (email, password) => {
-    return firebase.auth().createUserWithEmailAndPassword(email, password);
-  },
+  signupWithEmail: (email, password) => firebase.auth().createUserWithEmailAndPassword(email, password),
   /**
    * Signs out the user
    * @returns A promise that resolves once the signout is complete
@@ -42,9 +38,7 @@ const FirebaseAuthWrappers = {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  signOut: () => {
-    return firebase.auth().signOut();
-  },
+  signOut: () => firebase.auth().signOut(),
   /**
    * Adds an observer for changes to the user's sign-in state.
    * @param {function} user An observer function
@@ -54,9 +48,7 @@ const FirebaseAuthWrappers = {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  checkAuthUser: (user) => {
-    return firebase.auth().onAuthStateChanged(user);
-  },
+  checkAuthUser: (user) => firebase.auth().onAuthStateChanged(user),
   /**
    * Gets the currently signed in user from Firebase
    * @returns The currently signed in user
@@ -64,9 +56,7 @@ const FirebaseAuthWrappers = {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  getAuthUserInstance: () => {
-    return firebase.auth().currentUser;
-  },
+  getAuthUserInstance: () => firebase.auth().currentUser,
   /**
    * Asynchronously signs in as an anonymous user.
    * @returns A promise for a user credential
@@ -78,9 +68,7 @@ const FirebaseAuthWrappers = {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  signInAnon: () => {
-    return firebase.auth().signInAnonymously();
-  },
+  signInAnon: () => firebase.auth().signInAnonymously(),
 };
 
 export default FirebaseAuthWrappers;

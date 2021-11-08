@@ -37,7 +37,7 @@ class EventScreen extends React.Component {
     const events = [];
     this.props.firebase.getUpcomingEvents().then((snapshot) => {
       snapshot.forEach((doc) => events.push({ id: doc.id, ...doc.data() }));
-      this.setState({ events: events, isLoading: false }, () => this.splitEventArray());
+      this.setState({ events, isLoading: false }, () => this.splitEventArray());
     });
   }
 
@@ -55,7 +55,7 @@ class EventScreen extends React.Component {
       if (startTime <= now) today.push(event);
       else upcoming.push(event);
     });
-    this.setState({ today: today, upcoming: upcoming });
+    this.setState({ today, upcoming });
   }
 
   /**

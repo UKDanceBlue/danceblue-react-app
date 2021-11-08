@@ -13,8 +13,7 @@ import TabBar from './TabBar';
 
 const MainStack = createStackNavigator();
 
-const MainStackRoot = () => {
-  return (
+const MainStackRoot = () => (
     <MainStack.Navigator>
       <MainStack.Screen name="Tab" component={TabBar} options={{ headerShown: false }} />
       <MainStack.Screen name="Profile" component={ProfileScreen} />
@@ -50,6 +49,5 @@ const MainStackRoot = () => {
       />
     </MainStack.Navigator>
   );
-};
 
 export default MainStackRoot;

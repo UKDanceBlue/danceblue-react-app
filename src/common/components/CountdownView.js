@@ -13,14 +13,12 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
  * @since 1.0.1
  * @class
  */
-const TimeUnit = (props) => {
-  return (
+const TimeUnit = (props) => (
     <View style={{ alignItems: 'center', paddingLeft: 7, paddingRight: 7 }}>
       <Text style={styles.countdownText}>{props.value}</Text>
       <Text style={{ fontSize: 20, color: 'white' }}>{props.label}</Text>
     </View>
   );
-};
 
 /**
  * A component to show a countdown loaded form firebase

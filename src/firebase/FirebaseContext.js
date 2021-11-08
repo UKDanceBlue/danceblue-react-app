@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import firebase from 'firebase';
 
-//Initialize firebase, called when Firebase imports this file
+// Initialize firebase, called when Firebase imports this file
 const firebaseConfig = {
   apiKey: 'AIzaSyDIOW4mnUoM568wgxQP9MOtP6-vLZZruy8',
   authDomain: 'react-danceblue.firebaseapp.com',
@@ -34,9 +34,9 @@ export const withFirebaseHOC = (Component) => (props) =>
       {(value) => (
         <Component
           {...props}
-          firebase={value['firestore']}
-          auth={value['auth']}
-          core={value['core']}
+          firebase={value.firestore}
+          auth={value.auth}
+          core={value.core}
         />
       )}
     </FirebaseConsumer>

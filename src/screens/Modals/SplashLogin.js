@@ -50,7 +50,7 @@ class SplashLoginScreen extends React.Component {
               <Text style={styles.headerText}>
                 The UK DanceBlue app has many features that are only available with a user account.
               </Text>
-              <Text></Text>
+              <Text />
               <Text style={styles.headerText}>
                 With an account you get access to profile badges, and many more new features coming
                 soon!

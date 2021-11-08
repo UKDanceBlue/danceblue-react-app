@@ -88,7 +88,7 @@ class Standings extends React.Component {
    */
   loadTeams () {
     const teams = []
-    let shownNumber = this.state.shownNumber
+    let {shownNumber} = this.state
     return this.props.firebase.getTeams().then(snapshot => {
       snapshot.forEach(doc => {
         teams.push({ id: doc.id, ...doc.data() })
@@ -97,7 +97,7 @@ class Standings extends React.Component {
       const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points)
       const sortedTeamsPPM = [].concat(teams).sort((a, b) => (a.points / a.size) < (b.points / b.size))
       if (this.state.isExpanded) shownNumber = sortedTeams.length
-      this.setState({ allTeams: sortedTeams, allTeamsPPM: sortedTeamsPPM, shownNumber: shownNumber })
+      this.setState({ allTeams: sortedTeams, allTeamsPPM: sortedTeamsPPM, shownNumber })
     })
   }
 

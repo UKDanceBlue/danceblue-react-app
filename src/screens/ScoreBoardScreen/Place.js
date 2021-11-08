@@ -22,9 +22,9 @@ class Place extends React.Component {
     const top3Icon = (rank) => {
       if (rank === 1) {
         return <Icon name="award" size={30} color="gold" />;
-      } else if (rank === 2) {
+      } if (rank === 2) {
         return <Icon name="award" size={30} color="silver" />;
-      } else if (rank === 3) {
+      } if (rank === 3) {
         return <Icon name="award" size={30} color="blue" />;
       }
     };

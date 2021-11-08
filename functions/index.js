@@ -2,15 +2,16 @@ const functions = require('firebase-functions');
 
 // The Firebase Admin SDK to access Firestore.
 const admin = require('firebase-admin');
+
 admin.initializeApp();
 
 const fetch = require('node-fetch');
 
 exports.sendPushNotification = functions.https.onRequest(async (req, res) => {
-  const title = req.body.title;
-  const body = req.body.body;
-  const data = req.body.data;
-  const ttl = req.body.ttl;
+  const {title} = req.body;
+  const {body} = req.body;
+  const {data} = req.body;
+  const {ttl} = req.body;
 
   let numDevices = 0;
   const tokens = [];
@@ -38,8 +39,8 @@ exports.sendPushNotification = functions.https.onRequest(async (req, res) => {
         },
         body: JSON.stringify({
           to: chunk,
-          title: title,
-          body: body,
+          title,
+          body,
         }),
       });
     }
