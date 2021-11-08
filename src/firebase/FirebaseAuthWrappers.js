@@ -3,6 +3,40 @@ import 'firebase/auth';
 
 const FirebaseAuthWrappers = {
   /**
+   * Links the signed in user (likley anonymous) with the given email and password
+   *
+   * Likley to produce an error code due to bad input, **shoud be followed by a .catch()**
+   * @param {string} email User's email
+   * @param {string} password User's password
+   * @returns A promise for the User's credentials that resolves when Firebase finishes the changes
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.User#linkwithcredential linkWithCredential}
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
+   * @function
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
+  linkAnon: (email, password) => {
+    const credentials = firebase.auth.EmailAuthProvider.credential(email, password);
+    return firebase.auth().currentUser.linkWithCredential(credentials);
+  },
+  /**
+   * Send a reauthentication request to firebse
+   *
+   * Could produce an error code if the given detals are outdated, **shoud be followed by a .catch()**
+   * @param {string} email User's email
+   * @param {string} password User's password
+   * @returns A promise for the User's credentials that resolves when Firebase
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.User#reauthenticatewithcredential reauthenticateWithCredential}
+   * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
+   * @function
+   * @author Kenton Carrier
+   * @since 1.0.1
+   */
+  reauthenticate: (email, password) => {
+    const credentials = firebase.auth.EmailAuthProvider.credential(email, password);
+    return firebase.auth().currentUser.reauthenticateWithCredential(credentials);
+  },
+  /**
    * Login a user using email/passowrd authentication
    *
    * Likley to produce an error code due to bad input, **shoud be followed by a .catch()**
