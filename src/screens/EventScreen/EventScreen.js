@@ -1,11 +1,10 @@
 // Import third-party dependencies
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from 'react-native';
 
 // Import first-party dependencies
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 import EventRow from './EventRow';
-import EventView from './EventView';
 
 /**
  * Component for "Events" screen in main navigation
@@ -16,57 +15,68 @@ import EventView from './EventView';
  *  2. Add inline comments
  *  3. Make it a function component if possible
  */
-class EventScreen extends React.Component {
-  constructor(props) {
-    super(props);
+const EventScreen = ({ navigation: { navigate }, firestore }) => {
+  const [events, setEvents] = useState([]);
+  const [today, setToday] = useState([]);
+  const [upcoming, setUpcoming] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-    this.state = {
-      events: [],
-      today: [],
-      upcoming: [],
-      isLoading: true,
-    };
-
-    this.splitEventArray = this.splitEventArray.bind(this);
-  }
-
-  /**
-   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   */
-  componentDidMount() {
-    const events = [];
-    this.props.firestore.getUpcomingEvents().then((snapshot) => {
-      snapshot.forEach((doc) => events.push({ id: doc.id, ...doc.data() }));
-      this.setState({ events, isLoading: false }, () => this.splitEventArray());
+  useEffect(() => {
+    const firestoreEvents = [];
+    firestore.getUpcomingEvents().then((snapshot) => {
+      snapshot.forEach((doc) => firestoreEvents.push({ id: doc.id, ...doc.data() }));
+      setEvents(firestoreEvents);
+      setIsLoading(false);
     });
-  }
+  }, [firestore]);
 
   /**
-   * Splits *this.state.events* into *this.state.today* and *this.state.upcoming* based on the events' start day
+   * Splits *events* into *today* and *upcoming* based on the events' start day
    */
-  splitEventArray() {
-    const today = [];
-    const upcoming = [];
+  useEffect(() => {
+    const todayFromEvents = [];
+    const upcomingFromEvents = [];
     const now = new Date();
-    this.state.events.forEach((event) => {
+    events.forEach((event) => {
       const startTime = event.startTime.toDate();
-      if (startTime <= now) today.push(event);
-      else upcoming.push(event);
+      if (startTime <= now) todayFromEvents.push(event);
+      else upcomingFromEvents.push(event);
     });
-    this.setState({ today, upcoming });
-  }
+    setToday(todayFromEvents);
+    setUpcoming(upcomingFromEvents);
+  }, [events]);
 
   /**
    * Called by React Native when rendering the screen
    * @returns A JSX formatted Component
    */
-  render() {
-    const { navigate } = this.props.navigation;
-    return (
-      <ScrollView style={styles.body}>
-        <SafeAreaView>
-          <Text style={styles.heading}>Today's Events</Text>
-          {this.state.today.map((row) => (
+  return (
+    <ScrollView style={styles.body}>
+      <SafeAreaView>
+        <Text style={styles.heading}>Today&apos;s Events</Text>
+        {today.map((row) => (
+          <TouchableOpacity
+            style={styles.eventRow}
+            onPress={() => navigate('Event', { id: row.id, name: row.title })}
+            key={row.id}
+          >
+            <EventRow
+              styles={styles}
+              key={row.id}
+              id={row.id}
+              title={row.title}
+              startDate={row.startTime.toDate()}
+              endDate={row.endTime.toDate()}
+              text={row.text}
+              showIfToday
+              imageLink={row.image}
+            />
+          </TouchableOpacity>
+        ))}
+        <Text style={styles.heading}>Upcoming Events</Text>
+        {
+          /* jscpd:ignore-start */
+          upcoming.map((row) => (
             <TouchableOpacity
               style={styles.eventRow}
               onPress={() => navigate('Event', { id: row.id, name: row.title })}
@@ -84,36 +94,13 @@ class EventScreen extends React.Component {
                 imageLink={row.image}
               />
             </TouchableOpacity>
-          ))}
-          <Text style={styles.heading}>Upcoming Events</Text>
-          {
-            /* jscpd:ignore-start */
-            this.state.upcoming.map((row) => (
-              <TouchableOpacity
-                style={styles.eventRow}
-                onPress={() => navigate('Event', { id: row.id, name: row.title })}
-                key={row.id}
-              >
-                <EventRow
-                  styles={styles}
-                  key={row.id}
-                  id={row.id}
-                  title={row.title}
-                  startDate={row.startTime.toDate()}
-                  endDate={row.endTime.toDate()}
-                  text={row.text}
-                  showIfToday
-                  imageLink={row.image}
-                />
-              </TouchableOpacity>
-            ))
-            /* jscpd:ignore-end */
-          }
-        </SafeAreaView>
-      </ScrollView>
-    );
-  }
-}
+          ))
+          /* jscpd:ignore-end */
+        }
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
 
 EventScreen.navigationOptions = {
   title: 'Events',
