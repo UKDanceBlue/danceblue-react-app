@@ -18,7 +18,7 @@ export default class SingleSignOn {
    * unavailable in React Native, and then passing the auth credential back to the app in
    * the query string of the expo-linking url
    * @param {String} operation The authentication operation to be performed **MUST BE HANDLED BY THE SERVER**
-   * @returns {UserCredential} The signed in UserCredential or null if the operation fails or is cancelled
+   * @returns {UserCredential} The signed in UserCredential or undefined if the operation fails or is cancelled
    */
   async authenticate(operation) {
     try {
@@ -33,18 +33,14 @@ export default class SingleSignOn {
     } catch (error) {
       alert(error);
       console.log(error);
-      return null;
-    }
-
-    if (!this.redirectData) {
-      return null;
+      return undefined;
     }
 
     // if (this.firebaseAuthWrapper.getAuthUserInstance()) {
     //   if (!this.firebaseAuthWrapper.getAuthUserInstance().isAnonomous) {
-    //     //If the user is logged in but not anonomous don't try and sign them in again, just return null
+    //     //If the user is logged in but not anonomous don't try and sign them in again, just return undefined
     //     alert('Error: Invalid login state for SSO\nCancelling');
-    //     return null;
+    //     return undefined;
     //   }
     //   this.firebaseAuthWrapper
     //     .linkCurrentUserWithCredentialJSON(
@@ -60,7 +56,7 @@ export default class SingleSignOn {
       )
       .then((userCredential) => {
         userCredential.user.updateProfile({
-          displayName: userCredential.additionalUserInfo.profile.displayName,
+          displayName: userCredential?.additionalUserInfo?.profile?.displayName,
         });
       });
     // }
