@@ -1,5 +1,5 @@
 // Import third-party dependencies
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, Image, ActivityIndicator, StyleSheet, View } from 'react-native';
 import moment from 'moment';
 
@@ -9,63 +9,56 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
  * @param {Object} props Properties of the component: imageLink, startDate, endDate, title, firebase
- * @class
  */
-class EventRow extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      imageRef: '',
-      isLoading: true,
-    };
-  }
+const EventRow = ({ imageLink, startDate, endDate, title, core }) => {
+  const [imageRef, setImageRef] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
    */
-  componentDidMount() {
-    if (this.props.imageLink) {
-      this.props.core
-        .getDocumentURL(this.props.imageLink)
+  useEffect(() => {
+    if (imageLink) {
+      core
+        .getDocumentURL(imageLink)
         .then((url) => {
-          this.setState({ imageRef: url, isLoading: false });
+          setImageRef(url);
+          setIsLoading(false);
         })
         .catch((error) => console.log(error.message));
     } else {
-      this.setState({ imageRef: '', isLoading: false });
+      setImageRef('');
+      setIsLoading(false);
     }
-  }
+  }, [core, imageLink]);
 
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
    */
-  render() {
-    const startDate = moment(this.props.startDate);
-    const endDate = moment(this.props.endDate);
-    let whenString = '';
-    if (startDate.isSame(endDate, 'day')) {
-      whenString = `${startDate.format('M/D/YYYY h:mm a')} - ${endDate.format('h:mm a')}`;
-    } else {
-      whenString = `${startDate.format('M/D/YYYY h:mm a')} - ${endDate.format('M/D/YYYY h:mm a')}`;
-    }
-    return (
-      <View style={styles.body}>
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>{this.props.title}</Text>
-          <Text style={styles.date}>{whenString}</Text>
-        </View>
-        <View style={styles.imageContainer}>
-          {this.state.isLoading && <ActivityIndicator color="#0033A0" size="large" />}
-          {!this.state.isLoading && (
-            <Image style={styles.image} source={{ uri: this.state.imageRef }} />
-          )}
-        </View>
-      </View>
-    );
+  const startDateMoment = moment(startDate);
+  const endDateMoment = moment(endDate);
+  let whenString = '';
+  if (startDateMoment.isSame(endDateMoment, 'day')) {
+    whenString = `${startDateMoment.format('M/D/YYYY h:mm a')} - ${endDateMoment.format('h:mm a')}`;
+  } else {
+    whenString = `${startDateMoment.format('M/D/YYYY h:mm a')} - ${endDateMoment.format(
+      'M/D/YYYY h:mm a'
+    )}`;
   }
-}
+  return (
+    <View style={styles.body}>
+      <View style={styles.textContainer}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.date}>{whenString}</Text>
+      </View>
+      <View style={styles.imageContainer}>
+        {isLoading && <ActivityIndicator color="#0033A0" size="large" />}
+        {!isLoading && <Image style={styles.image} source={{ uri: imageRef }} />}
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   body: {
