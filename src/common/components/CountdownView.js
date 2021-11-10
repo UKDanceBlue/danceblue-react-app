@@ -21,7 +21,11 @@ const TimeUnit = ({ value, label }) => (
  * A component to show a countdown loaded form firebase
  * Loads the active countdown from firebase (if applicably) and then counts down by the second until the end of that countodwn
  * @param {Object} props Properties of the component: title, firebase
- * @class
+ *
+ * TODO figure out how this works and then:
+ *  1. Simplify it
+ *  2. Add inline comments
+ *  3. Make it a function component if possible
  */
 class CountdownView extends React.Component {
   constructor(props) {
