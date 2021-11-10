@@ -12,15 +12,16 @@ const Badge = ({ imageURL, name, core }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageRef, setImageRef] = useState('');
 
-  useEffect(() =>
+  // Run on mount
+  useEffect(() => {
     core
-      .getDocumentURL(this.props.imageURL)
+      .getDocumentURL(imageURL)
       .then((url) => {
         setIsLoading(false);
         setImageRef(url);
       })
-      .catch((error) => console.log(error.message))
-  );
+      .catch((error) => console.log(error.message));
+  }, []);
 
   return (
     <View style={styles.container}>

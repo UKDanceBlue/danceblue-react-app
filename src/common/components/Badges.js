@@ -15,6 +15,7 @@ const Badges = ({ userID, firestore }) => {
   [badges, setBadges] = useState(true);
   [isLoading, setIsLoading] = useState(true);
 
+  // Run on mount
   useEffect(() => {
     const loadedBadges = [];
     firestore.getUserBadges(userID).then((snapshot) => {
@@ -24,7 +25,7 @@ const Badges = ({ userID, firestore }) => {
       setBadges(loadedBadges);
       setIsLoading(false);
     });
-  });
+  }, []);
 
   return (
     <>

@@ -16,6 +16,7 @@ const HomeScreen = ({ navigation, navigation: { navigate }, firestore, auth }) =
   [activeCountdown, setActiveCountDown] = useState(true);
   [userID, setUserID] = useState(undefined);
 
+  // Run on mount and when userID changes
   useEffect(() => {
     firestore.getConfig().then((doc) => {
       setActiveCountDown(doc.data().activeCountdown);
@@ -27,7 +28,7 @@ const HomeScreen = ({ navigation, navigation: { navigate }, firestore, auth }) =
         }
       }
     });
-  });
+  }, [userID]);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
