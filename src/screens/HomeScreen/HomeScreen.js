@@ -14,7 +14,7 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
  */
 const HomeScreen = ({ navigation, navigation: { navigate }, firestore, auth }) => {
   [activeCountdown, setActiveCountDown] = useState(true);
-  [userID, setUserID] = useState('');
+  [userID, setUserID] = useState(undefined);
 
   useEffect(() => {
     firestore.getConfig().then((doc) => {
