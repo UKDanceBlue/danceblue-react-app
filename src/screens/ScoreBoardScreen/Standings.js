@@ -10,7 +10,11 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 /**
  * Standings implementation for the Morale Cup leaderboard
  * @param {Object} props Properties of the component: shownNumber, topNumber, isExpanded, isExpandable, navigate(), firebase
- * @class
+ *
+ * TODO figure out how this works and then:
+ *  1. Simplify it
+ *  2. Add inline comments
+ *  3. Make it a function component if possible
  */
 class Standings extends React.Component {
   constructor(props) {
