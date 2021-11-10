@@ -25,7 +25,11 @@ const danceBlueCalendarConfig = {
  * A component for showing a particular calendar event
  * @param {Object} props Properties of the component: route, firebase
  * @see {@link https://docs.expo.dev/versions/latest/sdk/calendar/ Expo's Calendar API}
- * @class
+ *
+ * TODO figure out how this works and then:
+ *  1. Simplify it
+ *  2. Add inline comments
+ *  3. Make it a function component if possible
  */
 class EventView extends Component {
   constructor(props) {

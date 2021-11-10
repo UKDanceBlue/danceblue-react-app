@@ -10,7 +10,11 @@ import EventView from './EventView';
 /**
  * Component for "Events" screen in main navigation
  * @param {Object} props Properties of the component: navigation, firebase
- * @class
+ *
+ * TODO figure out how this works and then:
+ *  1. Simplify it
+ *  2. Add inline comments
+ *  3. Make it a function component if possible
  */
 class EventScreen extends React.Component {
   constructor(props) {
