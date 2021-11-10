@@ -26,7 +26,7 @@ class HomeScreen extends React.Component {
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
    */
   componentDidMount() {
-    this.props.firebase.getConfig().then((doc) => {
+    this.props.firestore.getConfig().then((doc) => {
       this.setState({ activeCountdown: doc.data().activeCountdown });
     });
     this.props.auth.checkAuthUser((user) => {

@@ -23,7 +23,7 @@ class SponsorCarousel extends React.Component {
    */
   componentDidMount() {
     const dbSponsors = [];
-    this.props.firebase.getSponsors().then((snapshot) => {
+    this.props.firestore.getSponsors().then((snapshot) => {
       snapshot.forEach((doc) => {
         dbSponsors.push({ ...doc.data(), id: doc.id });
       });

@@ -31,7 +31,7 @@ class EventScreen extends React.Component {
    */
   componentDidMount() {
     const events = [];
-    this.props.firebase.getUpcomingEvents().then((snapshot) => {
+    this.props.firestore.getUpcomingEvents().then((snapshot) => {
       snapshot.forEach((doc) => events.push({ id: doc.id, ...doc.data() }));
       this.setState({ events, isLoading: false }, () => this.splitEventArray());
     });

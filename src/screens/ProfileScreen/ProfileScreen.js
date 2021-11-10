@@ -32,7 +32,7 @@ class ProfileScreen extends React.Component {
       if (user !== null) {
         if (!user.isAnonymous) {
           const userID = user.uid;
-          this.props.firebase.getUser(userID).then((doc) => {
+          this.props.firestore.getUser(userID).then((doc) => {
             const userData = doc.data();
             this.setState({
               loggedIn: true,

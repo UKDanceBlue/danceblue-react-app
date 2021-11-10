@@ -30,7 +30,7 @@ export const withFirebaseHOC = (Component) => (props) =>
   (
     <FirebaseConsumer>
       {(value) => (
-        <Component {...props} firebase={value.firestore} auth={value.auth} core={value.core} />
+        <Component {...props} firestore={value.firestore} auth={value.auth} core={value.core} />
       )}
     </FirebaseConsumer>
   );

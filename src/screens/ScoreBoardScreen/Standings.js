@@ -46,7 +46,7 @@ class Standings extends React.Component {
     // Get list of users, for switching scoreboard to display people instead of teams.
     const users = [];
     promises.push(
-      this.props.firebase.getUsersWithPoints().then((snapshot) => {
+      this.props.firestore.getUsersWithPoints().then((snapshot) => {
         snapshot.forEach((doc) => {
           users.push({ id: doc.id, ...doc.data() });
         });
@@ -61,7 +61,7 @@ class Standings extends React.Component {
       if (user !== null) {
         if (!user.isAnonymous) {
           promises.push(
-            this.props.firebase.getUser(user.uid).then((data) => {
+            this.props.firestore.getUser(user.uid).then((data) => {
               if (data.data().teamNumber) this.setState({ userTeamNum: data.data().teamNumber });
               this.setState({ userID: data.id });
             })
@@ -81,7 +81,7 @@ class Standings extends React.Component {
   loadTeams() {
     const teams = [];
     let { shownNumber } = this.state;
-    return this.props.firebase.getTeams().then((snapshot) => {
+    return this.props.firestore.getTeams().then((snapshot) => {
       snapshot.forEach((doc) => {
         teams.push({ id: doc.id, ...doc.data() });
       });

@@ -50,7 +50,7 @@ class EventView extends Component {
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
    */
   componentDidMount() {
-    this.props.firebase
+    this.props.firestore
       .getEvent(this.state.id)
       .then((doc) => {
         this.setState({ isLoading: false, ...doc.data() });
