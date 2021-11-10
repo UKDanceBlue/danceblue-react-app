@@ -8,28 +8,16 @@ import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png';
 
 /**
  * A header image container used on the home screen
- * @param {Object} props Properties of the component: firebase
- * @class
  */
-class HeaderImage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  /**
-   * Called to generate a React Native component
-   * @returns A JSX formatted component
-   */
-  render() {
-    return (
-      <View style={styles.container}>
-        <ImageBackground source={backgroundImg} style={styles.background}>
-          <Image source={dbLogo} style={styles.logo} />
-        </ImageBackground>
-      </View>
-    );
-  }
-}
+const HeaderImage = () => {
+  return (
+    <View style={styles.container}>
+      <ImageBackground source={backgroundImg} style={styles.background}>
+        <Image source={dbLogo} style={styles.logo} />
+      </ImageBackground>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
