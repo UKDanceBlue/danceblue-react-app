@@ -7,19 +7,15 @@ import Standings from './Standings';
 
 /**
  * Wrapper for a Standings component
- * @param {Object} props Properties of the component: navigation, firebase
- * @class
  */
-export class ScoreboardScreen extends React.Component {
-  render() {
-    return (
-      <ScrollView showsVerticalScrollIndicator>
-        <SafeAreaView style={{ flex: 1 }}>
-          <Standings isExpanded />
-        </SafeAreaView>
-      </ScrollView>
-    );
-  }
-}
+export const ScoreboardScreen = () => {
+  return (
+    <ScrollView showsVerticalScrollIndicator>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Standings isExpanded />
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
 
 export default ScoreboardScreen;
