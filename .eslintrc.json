@@ -21,6 +21,9 @@
     "no-use-before-define": ["error", { "variables": false }],
 
     // allow prop spreading
-    "react/jsx-props-no-spreading": [false]
+    "react/jsx-props-no-spreading": [0],
+
+    // allow unchecked prop-types
+    "react/prop-types": [0]
   }
 }
