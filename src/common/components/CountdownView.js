@@ -9,23 +9,19 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
  * A label for a unit of time
  * @param {Object} props Properties of the component: value, label
  * @returns A React Native component
- * @author Kenton Carrier
- * @since 1.0.1
  * @class
  */
 const TimeUnit = (props) => (
-    <View style={{ alignItems: 'center', paddingLeft: 7, paddingRight: 7 }}>
-      <Text style={styles.countdownText}>{props.value}</Text>
-      <Text style={{ fontSize: 20, color: 'white' }}>{props.label}</Text>
-    </View>
-  );
+  <View style={{ alignItems: 'center', paddingLeft: 7, paddingRight: 7 }}>
+    <Text style={styles.countdownText}>{props.value}</Text>
+    <Text style={{ fontSize: 20, color: 'white' }}>{props.label}</Text>
+  </View>
+);
 
 /**
  * A component to show a countdown loaded form firebase
  * Loads the active countdown from firebase (if applicably) and then counts down by the second until the end of that countodwn
  * @param {Object} props Properties of the component: title, firebase
- * @author Kenton Carrier
- * @since 1.0.1
  * @class
  */
 class CountdownView extends React.Component {
@@ -51,8 +47,6 @@ class CountdownView extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   componentDidMount() {
     this.props.firebase.getActiveCountdown().then((snapshot) => {
@@ -71,8 +65,6 @@ class CountdownView extends React.Component {
 
   /**
    * Every 1 second subtract 1 second from the timer (stored in CountdownView.state) until it is less than or equal to 0,  then stop
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   updateTimer() {
     const x = setInterval(() => {
@@ -104,8 +96,6 @@ class CountdownView extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   render() {
     const { months, days, hours, mins, secs } = this.state;

@@ -12,8 +12,6 @@ const FirebaseAuthWrappers = {
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinwithemailandpassword signinwithemailandpassword}
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   loginWithEmail: (email, password) => firebase.auth().signInWithEmailAndPassword(email, password),
   /**
@@ -26,17 +24,14 @@ const FirebaseAuthWrappers = {
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#createuserwithemailandpassword createuserwithemailandpassword}
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
-  signupWithEmail: (email, password) => firebase.auth().createUserWithEmailAndPassword(email, password),
+  signupWithEmail: (email, password) =>
+    firebase.auth().createUserWithEmailAndPassword(email, password),
   /**
    * Signs out the user
    * @returns A promise that resolves once the signout is complete
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signout signOut}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   signOut: () => firebase.auth().signOut(),
   /**
@@ -45,16 +40,12 @@ const FirebaseAuthWrappers = {
    * @returns A callback which can be invoked to remove the observer
    * @see {@link hhttps://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#onauthstatechanged onauthstatechanged}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   checkAuthUser: (user) => firebase.auth().onAuthStateChanged(user),
   /**
    * Gets the currently signed in user from Firebase
    * @returns The currently signed in user
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   getAuthUserInstance: () => firebase.auth().currentUser,
   /**
@@ -65,8 +56,6 @@ const FirebaseAuthWrappers = {
    * @function
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinanonymously signinanonymously}
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   signInAnon: () => firebase.auth().signInAnonymously(),
 };

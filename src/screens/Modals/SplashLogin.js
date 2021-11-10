@@ -7,8 +7,6 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 /**
  * A simplified sign in page shown when the user first opens the app
  * @param {Object} props Properties of the component: navigation, firebase
- * @author Kenton Carrier
- * @since 1.0.1
  * @class
  */
 class SplashLoginScreen extends React.Component {
@@ -32,8 +30,6 @@ class SplashLoginScreen extends React.Component {
   /**
    * Called by React Native when rendering the screen
    * @returns A JSX formatted Component
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   render() {
     return (

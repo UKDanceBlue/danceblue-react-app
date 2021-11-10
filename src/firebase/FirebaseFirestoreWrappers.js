@@ -12,8 +12,6 @@ const FirebaseFirestoreWrappers = {
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.User#linkwithcredential linkWithCredential}
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   linkAnon: (email, password) => {
     const credentials = firebase.auth.EmailAuthProvider.credential(email, password);
@@ -29,8 +27,6 @@ const FirebaseFirestoreWrappers = {
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.User#reauthenticatewithcredential reauthenticateWithCredential}
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   reauthenticate: (email, password) => {
     const credentials = firebase.auth.EmailAuthProvider.credential(email, password);
@@ -45,8 +41,6 @@ const FirebaseFirestoreWrappers = {
    * @returns A promise that resolves once the data is written
    * @see {@link https://firebase.google.com Firebase}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   createNewUser: (userData, id) => firebase.firestore().collection('users').doc(id).set(userData),
   /**
@@ -54,8 +48,6 @@ const FirebaseFirestoreWrappers = {
    * @returns A promise containing a collection of teams
    * @see {@link https://firebase.google.com Firebase}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   getTeams: () => firebase.firestore().collection('teams').get(),
   /**
@@ -63,8 +55,6 @@ const FirebaseFirestoreWrappers = {
    * @returns A promise containing a collection of the requested sponsors
    * @see {@link https://firebase.google.com Firebase}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   getSponsors: () => firebase.firestore().collection('sponsors').get(),
   /**
@@ -72,17 +62,14 @@ const FirebaseFirestoreWrappers = {
    * @returns A promise containing a collection the requested countdowns
    * @see {@link https://firebase.google.com Firebase}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
-  getActiveCountdown: () => firebase.firestore().collection('countdowns').where('active', '==', true).get(),
+  getActiveCountdown: () =>
+    firebase.firestore().collection('countdowns').where('active', '==', true).get(),
   /**
    * Gets all the annoucnemnets in Firebase
    * @returns A promise containing the requested announcemnts
    * @see {@link https://firebase.google.com Firebase}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   getAnnouncements: () => firebase.firestore().collection('announcements').get(),
   /**
@@ -90,8 +77,6 @@ const FirebaseFirestoreWrappers = {
    * @returns A promise containing a collection of users
    * @see {@link https://firebase.google.com Firebase}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   getUsers: () => firebase.firestore().collection('users').get(),
   /**
@@ -99,17 +84,14 @@ const FirebaseFirestoreWrappers = {
    * @returns A promise containing a collection of the requested users
    * @see {@link https://firebase.google.com Firebase}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
-  getUsersWithPoints: () => firebase.firestore().collection('users').where('points', '!=', null).get(),
+  getUsersWithPoints: () =>
+    firebase.firestore().collection('users').where('points', '!=', null).get(),
   /**
    * Get all events from Firebase
    * @returns A promise containing a collection of the requested users
    * @see {@link https://firebase.google.com Firebase}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   getEvents: () => firebase.firestore().collection('events').get(),
   /**
@@ -118,8 +100,6 @@ const FirebaseFirestoreWrappers = {
    * @returns A promise containg the a collection of the requested events
    * @see {@link https://firebase.google.com Firebase}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   getEvent: (id) => firebase.firestore().collection('events').doc(id).get(),
   /**
@@ -127,8 +107,6 @@ const FirebaseFirestoreWrappers = {
    * @returns A promise containg the a collection of the requested events
    * @see {@link https://firebase.google.com Firebase}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   getUpcomingEvents: () => {
     const now = new Date();
@@ -140,8 +118,6 @@ const FirebaseFirestoreWrappers = {
    * @returns A promise containing a collection with the requested user(s)
    * @see {@link https://firebase.google.com Firebase}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   getUser: (userId) => firebase.firestore().collection('users').doc(userId).get(),
   /**
@@ -151,16 +127,12 @@ const FirebaseFirestoreWrappers = {
    * @returns A promise contiang a collection with the requested team(s)
    * @see {@link https://firebase.google.com Firebase}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   getTeam: (teamId) => firebase.firestore().collection('teams').where('number', '==', teamId).get(),
   /**
    * Get current configs from Firebase
    * @returns A promise containing the requested data
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   getConfig: () => firebase.firestore().collection('configs').doc('mobile-app').get(),
   /**
@@ -168,18 +140,15 @@ const FirebaseFirestoreWrappers = {
    * @param {string} userID The user's UUID
    * @returns A promise contiang a collection of the requested user's badges
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
-  getUserBadges: (userID) => firebase.firestore().collection('users').doc(userID).collection('badges').get(),
+  getUserBadges: (userID) =>
+    firebase.firestore().collection('users').doc(userID).collection('badges').get(),
   /**
    * Load an expo push notification token into Firebase
    * @param {string} token The Expo push token generated by *Notifications.getExpoPushTokenAsync()*
    * @returns A promise for the new document in Firebase
    * @see {@link https://docs.expo.dev/push-notifications/push-notifications-setup/ Expo notifications documentation}
    * @function
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   addPushToken: (token) => {
     const dbRef = firebase.firestore().collection('expo-push-tokens');

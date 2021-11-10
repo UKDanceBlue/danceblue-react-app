@@ -11,8 +11,6 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 /**
  * Component for home screen in main navigation
  * @param {Object} props Properties of the component: navigation, firebase
- * @author Tag Howard, Kenton Carrier
- * @since 1.0.1
  * @class
  */
 class HomeScreen extends React.Component {
@@ -26,8 +24,6 @@ class HomeScreen extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   componentDidMount() {
     this.props.firebase.getConfig().then((doc) => {
@@ -45,8 +41,6 @@ class HomeScreen extends React.Component {
   /**
    * Called by React Native when rendering the screen
    * @returns A JSX formatted Component
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   render() {
     /* eslint-disable */

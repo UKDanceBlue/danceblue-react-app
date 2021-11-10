@@ -8,8 +8,6 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 /**
  * Component for "Profile" screen in main navigation
  * @param {Object} props Properties of the component: navigation, firebase
- * @author Kenton Carrier
- * @since 1.0.1
  * @class
  */
 class ProfileScreen extends React.Component {
@@ -28,8 +26,6 @@ class ProfileScreen extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   componentDidMount() {
     this.props.auth.checkAuthUser((user) => {
@@ -63,8 +59,6 @@ class ProfileScreen extends React.Component {
   /**
    * Called by React Native when rendering the screen
    * @returns A JSX formatted Component
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   render() {
     const { navigate } = this.props.navigation;

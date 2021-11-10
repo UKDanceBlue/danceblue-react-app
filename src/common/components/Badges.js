@@ -9,8 +9,6 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 /**
  * A row of a user's {@link Badge}s loaded from Firebase
  * @param {Object} props Properties of the component: (imageURL, name)
- * @author Kenton Carrier
- * @since 1.0.1
  * @class
  */
 class Badges extends React.Component {
@@ -26,8 +24,6 @@ class Badges extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   componentDidMount() {
     const badges = [];
@@ -42,8 +38,6 @@ class Badges extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   render() {
     return (

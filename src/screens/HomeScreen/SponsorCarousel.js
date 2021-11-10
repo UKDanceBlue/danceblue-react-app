@@ -7,8 +7,6 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 /**
  * A horizontally scrolling carousel of SponsorCards
  * @param {Object} props Properties of the component: firebase
- * @author Kenton Carrier
- * @since 1.0.1
  * @class
  */
 class SponsorCarousel extends React.Component {
@@ -22,8 +20,6 @@ class SponsorCarousel extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   componentDidMount() {
     const dbSponsors = [];
@@ -38,8 +34,6 @@ class SponsorCarousel extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   render() {
     const cards = this.state.sponsors.map((sponsor, index) => (

@@ -35,8 +35,6 @@ Notifications.setNotificationHandler({
 
 /**
  * Main app container
- * @author Kenton Carrier
- * @since 1.0.1
  */
 class App extends React.Component {
   constructor(props) {
@@ -49,8 +47,6 @@ class App extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   componentDidMount() {
     this.registerForPushNotificationsAsync();
@@ -65,8 +61,6 @@ class App extends React.Component {
    * Adds *notification* to *this.state*
    * @param {Notifications.Notification} notification
    * @private
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   _handleNotification = (notification) => {
     this.setState({ notification: notification });
@@ -76,16 +70,12 @@ class App extends React.Component {
    * Called by Expo
    * @param {Notifications.NotificationResponse} response
    * @private
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   _handleNotificationResponse = (response) => {};
 
   /**
    * Register notification support with the OS
    * Adds *expoPushToken* to *this.state* if successfull
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   async registerForPushNotificationsAsync() {
     if (Constants.isDevice) {
@@ -121,8 +111,6 @@ class App extends React.Component {
    * Called to generate a React Native component
    * @see {@link https://heartbeat.comet.ml/upload-images-in-react-native-apps-using-firebase-and-firestore-297934c9bae8#:~:text=the%20below%20snippet%3A-,Using%20the%20Context%20API,-Using%20the%20Context The article Kenton got the FirebaseProvider from}
    * @returns A JSX formatted component
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   render() {
     return (

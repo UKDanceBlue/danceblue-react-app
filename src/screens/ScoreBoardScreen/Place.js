@@ -6,25 +6,23 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 /**
  * A component showing a team name, their morale cup rank (if applicable), and their points
  * @param {Object} props Properties of the component: isHighlighted, rank, teamName, teamNumber, showPointsPerMember, points
- * @author Kenton Carrier
- * @since 1.0.1
  * @class
  */
 class Place extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   render() {
     // The 'top3Icon function adds an award icon to the top 3 teams
     const top3Icon = (rank) => {
       if (rank === 1) {
         return <Icon name="award" size={30} color="gold" />;
-      } if (rank === 2) {
+      }
+      if (rank === 2) {
         return <Icon name="award" size={30} color="silver" />;
-      } if (rank === 3) {
+      }
+      if (rank === 3) {
         return <Icon name="award" size={30} color="blue" />;
       }
     };

@@ -7,8 +7,6 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 /**
  * A card showing a Sponsor's logo that link's to their website
  * @param {Object} props Properties of the component: imageLink, sponsorLink, firebase
- * @author Kenton Carrier
- * @since 1.0.1
  * @class
  */
 class SponsorCard extends React.Component {
@@ -23,8 +21,6 @@ class SponsorCard extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   componentDidMount() {
     this.props.core
@@ -38,8 +34,6 @@ class SponsorCard extends React.Component {
   /**
    * Called to generate a React Native component
    * @returns A JSX formatted component
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   render() {
     return (
