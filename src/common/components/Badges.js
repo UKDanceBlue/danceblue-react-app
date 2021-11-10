@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
 
-import Badge from './Badge.js';
+import Badge from './Badge';
 
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
@@ -11,9 +11,9 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
  * @param {Object} props Properties of the component: (imageURL, name)
  */
 const Badges = ({ userID, firestore }) => {
-  //userID used to also be part of state, I couldn't find where that was used so I removed it, if this stops working; check there
-  [badges, setBadges] = useState(true);
-  [isLoading, setIsLoading] = useState(true);
+  // userID used to also be part of state, I couldn't find where that was used so I removed it, if this stops working; check there
+  const [badges, setBadges] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Run on mount
   useEffect(() => {
@@ -25,7 +25,7 @@ const Badges = ({ userID, firestore }) => {
       setBadges(loadedBadges);
       setIsLoading(false);
     });
-  }, []);
+  }, [firestore, userID]);
 
   return (
     <>
@@ -33,7 +33,9 @@ const Badges = ({ userID, firestore }) => {
       {!isLoading && (
         <>
           {badges.length === 0 ? (
-            <Text>You currently have no badges. Check back later to see if you've earned any!</Text>
+            <Text>
+              You currently have no badges. Check back later to see if you&apos;ve earned any!
+            </Text>
           ) : (
             <FlatGrid
               itemDimension={130}

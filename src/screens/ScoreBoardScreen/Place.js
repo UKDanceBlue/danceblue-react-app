@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 // Import third-party dependencies
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
@@ -9,21 +10,34 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
  * @param {number} rank The rank to show (if any)
  * @param {string} teamName The team's name
  * @param {number} teamNumber The team's ID number
- * @param {bool} showPointsPerMember Should per-member points be displayed?
  * @param {number} points Earned points
+ * @param {number} key [UNUSED]
+ * @param {number} size How many members on the team [UNUSED]
+ * @param {bool} showScoresByTeam Should score be shown by the team?  [UNUSED]
+ * @param {bool} showPointsPerMember Should per-member points be displayed?
+ * @param {number} pointsPerMember How many points were earned per member
  */
-const Place = ({ isHighlighted, rank, teamName, teamNumber, showPointsPerMember, points }) => {
+const Place = ({
+  isHighlighted,
+  rank,
+  teamName,
+  teamNumber,
+  showPointsPerMember,
+  points,
+  pointsPerMember,
+}) => {
   // The 'top3Icon function adds an award icon to the top 3 teams
-  const top3Icon = (rank) => {
-    if (rank === 1) {
+  const top3Icon = (rankForIcon) => {
+    if (rankForIcon === 1) {
       return <Icon name="award" size={30} color="gold" />;
     }
-    if (rank === 2) {
+    if (rankForIcon === 2) {
       return <Icon name="award" size={30} color="silver" />;
     }
-    if (rank === 3) {
+    if (rankForIcon === 3) {
       return <Icon name="award" size={30} color="blue" />;
     }
+    return null;
   };
   return (
     // Renders the individual row of the leaderboard for each team

@@ -9,15 +9,13 @@ import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png';
 /**
  * A header image container used on the home screen
  */
-const HeaderImage = () => {
-  return (
+const HeaderImage = () => (
     <View style={styles.container}>
       <ImageBackground source={backgroundImg} style={styles.background}>
         <Image source={dbLogo} style={styles.logo} />
       </ImageBackground>
     </View>
   );
-};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native';
 
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
@@ -21,7 +21,7 @@ const Badge = ({ imageURL, name, core }) => {
         setImageRef(url);
       })
       .catch((error) => console.log(error.message));
-  }, []);
+  }, [core, imageURL]);
 
   return (
     <View style={styles.container}>

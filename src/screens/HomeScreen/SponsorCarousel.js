@@ -8,7 +8,7 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
  * A horizontally scrolling carousel of SponsorCards
  */
 const SponsorCarousel = ({ firestore }) => {
-  [sponsors, setSponsors] = useState([]);
+  const [sponsors, setSponsors] = useState([]);
 
   useEffect(() => {
     const dbSponsors = [];
@@ -18,9 +18,9 @@ const SponsorCarousel = ({ firestore }) => {
       });
       setSponsors(dbSponsors);
     });
-  }, []);
+  }, [firestore]);
 
-  const cards = sponsors.map((sponsor, index) => (
+  const cards = sponsors.map((sponsor) => (
     <SponsorCard imageLink={sponsor.logo} sponsorLink={sponsor.link} key={sponsor.id} />
   ));
 

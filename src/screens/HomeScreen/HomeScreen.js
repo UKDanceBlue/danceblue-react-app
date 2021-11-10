@@ -12,9 +12,9 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
  * Component for home screen in main navigation
  * @param {Object} props Properties of the component: navigation, firebase
  */
-const HomeScreen = ({ navigation, navigation: { navigate }, firestore, auth }) => {
-  [activeCountdown, setActiveCountDown] = useState(true);
-  [userID, setUserID] = useState(undefined);
+const HomeScreen = ({ firestore, auth }) => {
+  const [activeCountdown, setActiveCountDown] = useState(true);
+  const [userID, setUserID] = useState(undefined);
 
   // Run on mount and when userID changes
   useEffect(() => {
@@ -28,7 +28,7 @@ const HomeScreen = ({ navigation, navigation: { navigate }, firestore, auth }) =
         }
       }
     });
-  }, [userID]);
+  }, [auth, firestore, userID]);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
