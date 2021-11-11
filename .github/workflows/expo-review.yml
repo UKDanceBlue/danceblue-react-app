@@ -19,6 +19,8 @@ jobs:
         with:
           expo-version: 4.x
           token: ${{ secrets.EXPO_TOKEN }}
+          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
       - run: npm ci
       - run: expo publish --release-channel dev-pr-${{ github.event.number }}
       - uses: unsplash/comment-on-pr@master
