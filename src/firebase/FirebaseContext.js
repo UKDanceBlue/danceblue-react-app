@@ -2,7 +2,7 @@ import React, { createContext } from 'react';
 import firebase from 'firebase';
 
 // Initialize firebase, called when Firebase imports this file
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: 'AIzaSyDIOW4mnUoM568wgxQP9MOtP6-vLZZruy8',
   authDomain: 'react-danceblue.firebaseapp.com',
   databaseURL: 'https://react-danceblue.firebaseio.com',

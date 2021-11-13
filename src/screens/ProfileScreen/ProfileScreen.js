@@ -1,101 +1,91 @@
 // Import third-party dependencies
-import React from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, ActivityIndicator, Button } from 'react-native';
 import { Text } from 'react-native-elements';
+import SingleSignOn from '../../common/SingleSignOn';
 
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * Component for "Profile" screen in main navigation
- * @param {Object} props Properties of the component: navigation, firebase
- * @class
  */
-class ProfileScreen extends React.Component {
-  constructor(props) {
-    super(props);
+const ProfileScreen = ({ auth, firestore }) => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState(undefined);
+  const [isLoading, setIsLoading] = useState(true);
 
-    this.state = {
-      loggedIn: false,
-      user: undefined,
-      formShown: 'signup',
-      isLoading: true,
-    };
-
-    this.handleSignOut = this.handleSignOut.bind(this);
-  }
-
-  /**
-   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   */
-  componentDidMount() {
-    this.props.auth.checkAuthUser((user) => {
-      if (user !== null) {
-        if (!user.isAnonymous) {
-          const userID = user.uid;
-          this.props.firestore.getUser(userID).then((doc) => {
+  useEffect(() => {
+    auth.checkAuthUser((authUser) => {
+      if (authUser !== null) {
+        if (!authUser.isAnonymous) {
+          firestore.getUser(authUser.uid).then((doc) => {
             const userData = doc.data();
-            this.setState({
-              loggedIn: true,
-              user: { id: user.uid, ...userData },
-              isLoading: false,
-            });
+            setUser({ id: authUser.uid, ...userData });
+            setLoggedIn(true);
+            setIsLoading(false);
           });
         }
       }
     });
-    this.setState({ isLoading: false });
-  }
+    setIsLoading(false);
+  }, [auth, firestore]);
 
   /**
    * Have firebase sign out the current user and then sign in an anonomous user
    */
-  handleSignOut() {
-    this.props.auth
+  const handleSignOut = () => {
+    auth
       .signOut()
-      .then(() => this.props.auth.signInAnon())
-      .then(() => this.setState({ loggedIn: false, user: undefined }));
-  }
+      .then(() => auth.signInAnon())
+      .then(() => {
+        setLoggedIn(false);
+        setUser(undefined);
+      });
+  };
 
-  /**
-   * Called by React Native when rendering the screen
-   * @returns A JSX formatted Component
-   */
-  render() {
-    const { navigate } = this.props.navigation;
-
-    return (
-      <View style={styles.container}>
-        <>
-          {
-            /* Start of still loading view */ this.state.isLoading && (
-              <ActivityIndicator style={styles.image} size="large" color="blue" />
-            ) /* End of still loading view */
-          }
-          {
-            /* Start of finished loading view */ !this.state.isLoading && (
-              <>
-                {
-                  /* Start of logged in view */ this.state.loggedIn && (
-                    <>
-                      <Text>WIP</Text>
-                    </>
-                  ) /* End of logged in view */
-                }
-                {
-                  /* Start of logged out view */ !this.state.loggedIn && (
-                    <>
-                      <Text>WIP</Text>
-                    </>
-                  ) /* End of logged in view */
-                }
-              </>
-            ) /* End of finished loading view */
-          }
-        </>
-      </View>
-    );
-  }
-}
+  return (
+    <View style={styles.container}>
+      <>
+        {
+          /* Start of still loading view */ isLoading && (
+            <ActivityIndicator style={styles.image} size="large" color="blue" />
+          ) /* End of still loading view */
+        }
+        {
+          /* Start of loaded view */ !isLoading && (
+            <>
+              {
+                /* Start of logged in view */ loggedIn && (
+                  <>
+                    <Text>
+                      You are logged in as {user.firstName} {user.lastName}
+                    </Text>
+                    <Text>{user.email}</Text>
+                    <Button onPress={handleSignOut} title="Log out" />
+                  </>
+                ) /* End of logged in view */
+              }
+              {
+                /* Start of logged out view */ !loggedIn && (
+                  <>
+                    <Text>You are logged out, to log in:</Text>
+                    <Button
+                      onPress={() => {
+                        const sso = new SingleSignOn(auth, firestore);
+                        sso.authenticate('saml-sign-in');
+                      }}
+                      title="Press me"
+                    />
+                  </>
+                ) /* End of logged in view */
+              }
+            </>
+          ) /* End of loaded view */
+        }
+      </>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   headerText: {
