@@ -8,9 +8,6 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * Component for "Profile" screen in main navigation
- * @author Kenton Carrier
- * @since 1.0.1
- * @class
  */
 const ProfileScreen = ({ auth, firestore }) => {
   const [loggedIn, setLoggedIn] = useState(false);

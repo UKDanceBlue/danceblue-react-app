@@ -14,8 +14,6 @@ const aboutButtonImage = require('../../../assets/more/About_Button.jpg');
 /**
  * Component for "More" screen in main navigation
  * @param {Object} props Properties of the component: navigation, firebase
- * @author Kenton Carrier
- * @since 1.0.1
  * @class
  * @deprecated I want to at least redesign this, but ideally this whole screen will be gone
  */
@@ -26,16 +24,12 @@ class MoreScreen extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   componentDidMount() {}
 
   /**
    * Called by React Native when rendering the screen
    * @returns A JSX formatted Component
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   render() {
     const { navigate } = this.props.navigation;

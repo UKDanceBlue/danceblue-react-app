@@ -25,19 +25,12 @@ export const FirebaseConsumer = FirebaseContext.Consumer;
  * @see {@link https://heartbeat.comet.ml/upload-images-in-react-native-apps-using-firebase-and-firestore-297934c9bae8#:~:text=the%20below%20snippet%3A-,Using%20the%20Context%20API,-Using%20the%20Context The article Kenton got this from}
  * @param {Component} Component
  * @returns a component wrapped in a Firebaseconsumer that should add a firebase prop
- * @author Kenton Carrier
- * @since 1.0.1
  */
 export const withFirebaseHOC = (Component) => (props) =>
   (
     <FirebaseConsumer>
       {(value) => (
-        <Component
-          {...props}
-          firebase={value.firestore}
-          auth={value.auth}
-          core={value.core}
-        />
+        <Component {...props} firestore={value.firestore} auth={value.auth} core={value.core} />
       )}
     </FirebaseConsumer>
   );

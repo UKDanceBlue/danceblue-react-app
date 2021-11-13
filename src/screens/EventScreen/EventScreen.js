@@ -10,8 +10,6 @@ import EventView from './EventView';
 /**
  * Component for "Events" screen in main navigation
  * @param {Object} props Properties of the component: navigation, firebase
- * @author Kenton Carrier
- * @since 1.0.1
  * @class
  */
 class EventScreen extends React.Component {
@@ -30,12 +28,10 @@ class EventScreen extends React.Component {
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   componentDidMount() {
     const events = [];
-    this.props.firebase.getUpcomingEvents().then((snapshot) => {
+    this.props.firestore.getUpcomingEvents().then((snapshot) => {
       snapshot.forEach((doc) => events.push({ id: doc.id, ...doc.data() }));
       this.setState({ events, isLoading: false }, () => this.splitEventArray());
     });
@@ -43,8 +39,6 @@ class EventScreen extends React.Component {
 
   /**
    * Splits *this.state.events* into *this.state.today* and *this.state.upcoming* based on the events' start day
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   splitEventArray() {
     const today = [];
@@ -61,8 +55,6 @@ class EventScreen extends React.Component {
   /**
    * Called by React Native when rendering the screen
    * @returns A JSX formatted Component
-   * @author Kenton Carrier
-   * @since 1.0.1
    */
   render() {
     const { navigate } = this.props.navigation;

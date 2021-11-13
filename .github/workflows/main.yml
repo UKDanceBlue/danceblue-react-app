@@ -24,5 +24,7 @@ jobs:
           expo-version: 4.x
           expo-cache: true
           token: ${{ secrets.EXPO_CLI_TOKEN }}
+          username: ${{ secrets.EXPO_CLI_USERNAME }}
+          password: ${{ secrets.EXPO_CLI_PASSWORD }}
       - run: npm ci
       - run: expo publish --release-channel dev-main
