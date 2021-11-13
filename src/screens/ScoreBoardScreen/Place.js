@@ -1,71 +1,75 @@
+/* eslint-disable no-nested-ternary */
 // Import third-party dependencies
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 /**
- * A component showing a team name, their morale cup rank (if applicable), and their points
- * @param {Object} props Properties of the component: isHighlighted, rank, teamName, teamNumber, showPointsPerMember, points
- * @class
+ * A row-based component showing a team name, their rank (if applicable), and their points
+ * @param {bool} isHighlighted Is this row highlighted
+ * @param {number} rank The rank to show (if any)
+ * @param {string} teamName The team's name
+ * @param {number} teamNumber The team's ID number
+ * @param {number} points Earned points
+ * @param {number} key [UNUSED]
+ * @param {number} size How many members on the team [UNUSED]
+ * @param {bool} showScoresByTeam Should score be shown by the team?  [UNUSED]
+ * @param {bool} showPointsPerMember Should per-member points be displayed?
+ * @param {number} pointsPerMember How many points were earned per member
  */
-class Place extends React.Component {
-  /**
-   * Called to generate a React Native component
-   * @returns A JSX formatted component
-   */
-  render() {
-    // The 'top3Icon function adds an award icon to the top 3 teams
-    const top3Icon = (rank) => {
-      if (rank === 1) {
-        return <Icon name="award" size={30} color="gold" />;
-      }
-      if (rank === 2) {
-        return <Icon name="award" size={30} color="silver" />;
-      }
-      if (rank === 3) {
-        return <Icon name="award" size={30} color="blue" />;
-      }
-    };
-    return (
-      // Renders the individual row of the leaderboard for each team
-      <View style={this.props.isHighlighted ? styles.highlightedRow : styles.row}>
-        <View style={styles.left}>
-          <Text style={styles.place}>
-            {/* Renders the rank/place of the team */}
-            {this.props.rank}
-          </Text>
-          {/* Calls the top3Icon function */}
-          {top3Icon(this.props.rank)}
-        </View>
-        <View style={styles.middle}>
-          <Text style={styles.name}>
-            {/* Renders the team name */}
-            {this.props.teamName}
-          </Text>
-          <Text style={styles.team}>
-            {/* Renders the team number */}
-            {this.props.teamNumber}
-          </Text>
-        </View>
-        <View style={styles.right}>
-          <Text style={styles.bold}>
-            {/* Renders the number of points earned */}
-            {this.props.showPointsPerMember
-              ? this.props.pointsPerMember < 1
-                ? '< 1 '
-                : this.props.pointsPerMember
-              : this.props.points}
-            {this.props.showPointsPerMember
-              ? ' points'
-              : this.props.points === 1
-              ? ' point'
-              : ' points'}
-          </Text>
-        </View>
+const Place = ({
+  isHighlighted,
+  rank,
+  teamName,
+  teamNumber,
+  showPointsPerMember,
+  points,
+  pointsPerMember,
+}) => {
+  // The 'top3Icon function adds an award icon to the top 3 teams
+  const top3Icon = (rankForIcon) => {
+    if (rankForIcon === 1) {
+      return <Icon name="award" size={30} color="gold" />;
+    }
+    if (rankForIcon === 2) {
+      return <Icon name="award" size={30} color="silver" />;
+    }
+    if (rankForIcon === 3) {
+      return <Icon name="award" size={30} color="blue" />;
+    }
+    return null;
+  };
+  return (
+    // Renders the individual row of the leaderboard for each team
+    <View style={isHighlighted ? styles.highlightedRow : styles.row}>
+      <View style={styles.left}>
+        <Text style={styles.place}>
+          {/* Renders the rank/place of the team */}
+          {rank}
+        </Text>
+        {/* Calls the top3Icon function */}
+        {top3Icon(rank)}
       </View>
-    );
-  }
-}
+      <View style={styles.middle}>
+        <Text style={styles.name}>
+          {/* Renders the team name */}
+          {teamName}
+        </Text>
+        <Text style={styles.team}>
+          {/* Renders the team number */}
+          {teamNumber}
+        </Text>
+      </View>
+      <View style={styles.right}>
+        <Text style={styles.bold}>
+          {/* Renders the number of points earned */}
+          {showPointsPerMember ? (pointsPerMember < 1 ? '< 1 ' : pointsPerMember) : points}
+          {showPointsPerMember ? ' points' : points === 1 ? ' point' : ' points'}
+        </Text>
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   row: {

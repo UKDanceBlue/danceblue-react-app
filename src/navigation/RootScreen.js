@@ -1,5 +1,5 @@
 // Import third-party dependencies
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -10,53 +10,46 @@ import MainStackRoot from './MainStackRoot';
 
 const RootStack = createStackNavigator();
 
-class RootScreen extends React.Component {
-  constructor(props) {
-    super(props);
+const RootScreen = ({ auth }) => {
+  const [userID, setUserID] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    this.state = {
-      userID: null,
-      isLoading: true,
-    };
-  }
-
-  componentDidMount() {
-    this.props.auth.checkAuthUser((user) => {
-      if (user !== null) this.setState({ userID: user.uid, isLoading: false });
-      else this.setState({ isLoading: false });
+  useEffect(() => {
+    auth.checkAuthUser((user) => {
+      if (user !== null) {
+        setUserID(user.uid);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+      }
     });
-  }
+  }, [auth]);
 
-  render() {
-    if (this.state.isLoading)
-      return (
-        <Image
-          style={{
-            width: Dimensions.get('window').width,
-            height: Dimensions.get('window').height,
-          }}
-          source={require('../../assets/splash2.png')}
-        />
-      );
+  if (isLoading) {
     return (
-      <RootStack.Navigator screenOptions={{ presentation: 'modal' }}>
-        {this.state.userID && (
-          <RootStack.Screen
-            name="Main"
-            component={MainStackRoot}
-            options={{ headerShown: false }}
-          />
-        )}
-        {!this.state.userID && (
-          <RootStack.Screen
-            name="SplashLogin"
-            component={SplashLogin}
-            options={{ headerShown: false }}
-          />
-        )}
-      </RootStack.Navigator>
+      <Image
+        style={{
+          width: Dimensions.get('window').width,
+          height: Dimensions.get('window').height,
+        }}
+        source={require('../../assets/splash2.png')}
+      />
     );
   }
-}
+  return (
+    <RootStack.Navigator screenOptions={{ presentation: 'modal' }}>
+      {userID && (
+        <RootStack.Screen name="Main" component={MainStackRoot} options={{ headerShown: false }} />
+      )}
+      {!userID && (
+        <RootStack.Screen
+          name="SplashLogin"
+          component={SplashLogin}
+          options={{ headerShown: false }}
+        />
+      )}
+    </RootStack.Navigator>
+  );
+};
 
 export default withFirebaseHOC(RootScreen);

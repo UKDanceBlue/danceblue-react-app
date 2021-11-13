@@ -7,14 +7,13 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * A label for a unit of time
- * @param {Object} props Properties of the component: value, label
+ * @param {string} props Properties of the component: value, label
  * @returns A React Native component
- * @class
  */
-const TimeUnit = (props) => (
+const TimeUnit = ({ value, label }) => (
   <View style={{ alignItems: 'center', paddingLeft: 7, paddingRight: 7 }}>
-    <Text style={styles.countdownText}>{props.value}</Text>
-    <Text style={{ fontSize: 20, color: 'white' }}>{props.label}</Text>
+    <Text style={styles.countdownText}>{value}</Text>
+    <Text style={{ fontSize: 20, color: 'white' }}>{label}</Text>
   </View>
 );
 
@@ -22,7 +21,8 @@ const TimeUnit = (props) => (
  * A component to show a countdown loaded form firebase
  * Loads the active countdown from firebase (if applicably) and then counts down by the second until the end of that countodwn
  * @param {Object} props Properties of the component: title, firebase
- * @class
+ *
+ * TODO rewrite
  */
 class CountdownView extends React.Component {
   constructor(props) {

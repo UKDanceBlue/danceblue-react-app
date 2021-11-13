@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 
@@ -7,52 +7,33 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 /**
  * A card showing a Sponsor's logo that link's to their website
  * @param {Object} props Properties of the component: imageLink, sponsorLink, firebase
- * @class
  */
-class SponsorCard extends React.Component {
-  constructor(props) {
-    super(props);
+const SponsorCard = ({ imageLink, sponsorLink, core }) => {
+  const [imageRef, setImageRef] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
-    this.state = {
-      imageRef: '',
-      isLoading: true,
-    };
-  }
-
-  /**
-   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   */
-  componentDidMount() {
-    this.props.core
-      .getDocumentURL(this.props.imageLink)
+  useEffect(() => {
+    core
+      .getDocumentURL(imageLink)
       .then((url) => {
-        this.setState({ imageRef: url, isLoading: false });
+        setImageRef(url);
+        setIsLoading(false);
       })
       .catch((error) => console.log(error.message));
-  }
+  }, [core, imageLink]);
 
-  /**
-   * Called to generate a React Native component
-   * @returns A JSX formatted component
-   */
-  render() {
-    return (
-      <TouchableHighlight
-        onPress={() => WebBrowser.openBrowserAsync(this.props.sponsorLink)}
-        underlayColor="#dddddd"
-      >
-        <View style={styles.border}>
-          {this.state.isLoading && (
-            <ActivityIndicator style={styles.image} size="large" color="blue" />
-          )}
-          {!this.state.isLoading && (
-            <Image source={{ uri: this.state.imageRef }} style={styles.image} />
-          )}
-        </View>
-      </TouchableHighlight>
-    );
-  }
-}
+  return (
+    <TouchableHighlight
+      onPress={() => WebBrowser.openBrowserAsync(sponsorLink)}
+      underlayColor="#dddddd"
+    >
+      <View style={styles.border}>
+        {isLoading && <ActivityIndicator style={styles.image} size="large" color="blue" />}
+        {!isLoading && <Image source={{ uri: imageRef }} style={styles.image} />}
+      </View>
+    </TouchableHighlight>
+  );
+};
 
 const styles = StyleSheet.create({
   border: {

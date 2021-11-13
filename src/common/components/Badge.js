@@ -1,54 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native';
 
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * A badge icon for use with profiles
- * @param {Object} props Properties of the component: (imageURL, name)
- * @class
+ * @param {string} imageURL Badge url to fetch from firebase storage
+ * @param {string} name Name of the badge
  */
-class Badge extends React.Component {
-  constructor(props) {
-    super(props);
+const Badge = ({ imageURL, name, core }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageRef, setImageRef] = useState('');
 
-    this.state = {
-      isLoading: true,
-    };
-  }
-
-  /**
-   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   */
-  componentDidMount() {
-    this.props.core
-      .getDocumentURL(this.props.imageURL)
+  // Run on mount
+  useEffect(() => {
+    core
+      .getDocumentURL(imageURL)
       .then((url) => {
-        this.setState({ imageRef: url, isLoading: false });
+        setIsLoading(false);
+        setImageRef(url);
       })
       .catch((error) => console.log(error.message));
-  }
+  }, [core, imageURL]);
 
-  /**
-   * Called to generate a React Native component
-   * @returns A JSX formatted component
-   */
-  render() {
-    return (
-      <View style={styles.container}>
-        {this.state.isLoading && (
-          <ActivityIndicator style={styles.image} size="large" color="blue" />
-        )}
-        {!this.state.isLoading && (
-          <>
-            <Image style={styles.icon} source={{ uri: this.state.imageRef }} />
-            <Text>{this.props.name}</Text>
-          </>
-        )}
-      </View>
-    );
-  }
-}
+  return (
+    <View style={styles.container}>
+      {isLoading && <ActivityIndicator style={styles.image} size="large" color="blue" />}
+      {!isLoading && (
+        <>
+          <Image style={styles.icon} source={{ uri: imageRef }} />
+          <Text>{name}</Text>
+        </>
+      )}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

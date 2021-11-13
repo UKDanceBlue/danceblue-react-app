@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, ScrollView, StyleSheet } from 'react-native';
 import SponsorCard from '../../common/components/ImageCard';
 
@@ -6,58 +6,41 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * A horizontally scrolling carousel of SponsorCards
- * @param {Object} props Properties of the component: firebase
- * @class
  */
-class SponsorCarousel extends React.Component {
-  constructor(props) {
-    super(props);
+const SponsorCarousel = ({ firestore }) => {
+  const [sponsors, setSponsors] = useState([]);
 
-    this.state = {
-      sponsors: [],
-    };
-  }
-
-  /**
-   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   */
-  componentDidMount() {
+  useEffect(() => {
     const dbSponsors = [];
-    this.props.firestore.getSponsors().then((snapshot) => {
+    firestore.getSponsors().then((snapshot) => {
       snapshot.forEach((doc) => {
         dbSponsors.push({ ...doc.data(), id: doc.id });
       });
-      this.setState({ sponsors: dbSponsors });
+      setSponsors(dbSponsors);
     });
-  }
+  }, [firestore]);
 
-  /**
-   * Called to generate a React Native component
-   * @returns A JSX formatted component
-   */
-  render() {
-    const cards = this.state.sponsors.map((sponsor, index) => (
-      <SponsorCard imageLink={sponsor.logo} sponsorLink={sponsor.link} key={sponsor.id} />
-    ));
+  const cards = sponsors.map((sponsor) => (
+    <SponsorCard imageLink={sponsor.logo} sponsorLink={sponsor.link} key={sponsor.id} />
+  ));
 
-    return (
-      <View style={styles.container}>
-        <ScrollView ScrollEventThrottle={16}>
-          <View style={styles.sponsorView}>
-            <View style={styles.sponsorTitleView}>
-              <Text style={styles.sponsorTitle}> SPONSORS </Text>
-            </View>
-            <View style={styles.cardScrollView}>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ padding: 10 }}>
-                {cards}
-              </ScrollView>
-            </View>
+  return (
+    <View style={styles.container}>
+      <ScrollView ScrollEventThrottle={16}>
+        <View style={styles.sponsorView}>
+          <View style={styles.sponsorTitleView}>
+            <Text style={styles.sponsorTitle}> SPONSORS </Text>
           </View>
-        </ScrollView>
-      </View>
-    );
-  }
-}
+          <View style={styles.cardScrollView}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ padding: 10 }}>
+              {cards}
+            </ScrollView>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

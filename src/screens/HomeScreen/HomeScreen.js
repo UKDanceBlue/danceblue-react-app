@@ -1,5 +1,5 @@
 // Import third-party dependencies
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
 
 // Import first-party dependencies
@@ -11,52 +11,35 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 /**
  * Component for home screen in main navigation
  * @param {Object} props Properties of the component: navigation, firebase
- * @class
  */
-class HomeScreen extends React.Component {
-  constructor(props) {
-    super(props);
+const HomeScreen = ({ firestore, auth }) => {
+  const [activeCountdown, setActiveCountDown] = useState(true);
+  const [userID, setUserID] = useState(undefined);
 
-    this.state = {
-      activeCountdown: true,
-    };
-  }
-
-  /**
-   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   */
-  componentDidMount() {
-    this.props.firestore.getConfig().then((doc) => {
-      this.setState({ activeCountdown: doc.data().activeCountdown });
+  // Run on mount and when userID changes
+  useEffect(() => {
+    firestore.getConfig().then((doc) => {
+      setActiveCountDown(doc.data().activeCountdown);
     });
-    this.props.auth.checkAuthUser((user) => {
+    auth.checkAuthUser((user) => {
       if (user !== null) {
         if (!user.isAnonymous) {
-          this.setState({ userID: user.uid });
+          setUserID(user.uid);
         }
       }
     });
-  }
+  }, [auth, firestore, userID]);
 
-  /**
-   * Called by React Native when rendering the screen
-   * @returns A JSX formatted Component
-   */
-  render() {
-    /* eslint-disable */
-    const { navigate } = this.props.navigation;
-
-    return (
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <SafeAreaView style={{ flex: 1 }}>
-          <HeaderImage />
-          {this.state.activeCountdown && <CountdownView />}
-          <SponsorCarousel />
-        </SafeAreaView>
-      </ScrollView>
-    );
-  }
-}
+  return (
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <HeaderImage />
+        {activeCountdown && <CountdownView />}
+        <SponsorCarousel />
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
 
 HomeScreen.navigationOptions = {
   title: 'Home',
