@@ -14,6 +14,7 @@ import FirebaseAuthWrappers from './firebase/FirebaseAuthWrappers';
 import FirebaseCoreWrappers from './firebase/FirebaseCoreWrappers';
 import { FirebaseProvider } from './firebase/FirebaseContext';
 import RootScreen from './navigation/RootScreen';
+import { showMessage } from './common/AlertUtils';
 
 // Fix firestore error - can be removed if issue is resolved in package
 if (!global.btoa) {
@@ -55,14 +56,20 @@ const App = ({}) => {
       }
       if (Platform.OS === 'ios' && finalStatus === 1) finalStatus = 'granted';
       if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
+        showMessage(
+          'Failed to get push token for push notification!',
+          'Error',
+          () => {},
+          true,
+          `Final Status: ${finalStatus}`
+        );
         return;
       }
       const token = (await Notifications.getExpoPushTokenAsync()).data;
       FirebaseFirestoreWrappers.addPushToken(token);
       setExpoPushToken(token);
     } else {
-      alert('Must use physical device for Push Notifications');
+      showMessage('Must use physical device for Push Notifications');
     }
 
     if (Platform.OS === 'android') {
