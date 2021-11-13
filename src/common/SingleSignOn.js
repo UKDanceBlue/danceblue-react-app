@@ -1,6 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import { firebaseConfig } from '../firebase/FirebaseContext';
+import { handleFirebaeError, showMessage } from './AlertUtils';
 
 export default class SingleSignOn {
   constructor(firebaseAuthWrapper, firebaseFirestoreWrapper) {
@@ -26,13 +27,12 @@ export default class SingleSignOn {
         `${this.backendUrl}?linkingUri=${Linking.makeUrl(`/${operation}`)}&apiKey=${
           this.firebaseApiKey
         }&authDomain=${this.firebaseAuthDomain}`
-      );
+      ).catch(() => showMessage('failed to open login page'));
       if (result.url) {
         this.redirectData = Linking.parse(result.url);
       }
     } catch (error) {
-      alert(error);
-      console.log(error);
+      showMessage(error);
       return undefined;
     }
 
@@ -55,10 +55,13 @@ export default class SingleSignOn {
         this.redirectData.queryParams.credential
       )
       .then((userCredential) => {
-        userCredential.user.updateProfile({
-          displayName: userCredential?.additionalUserInfo?.profile?.displayName,
-        });
-      });
+        userCredential.user
+          .updateProfile({
+            displayName: userCredential?.additionalUserInfo?.profile['display-name'],
+          })
+          .catch(handleFirebaeError);
+      })
+      .catch(handleFirebaeError);
     // }
   }
 }
