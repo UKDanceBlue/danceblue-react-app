@@ -5,6 +5,8 @@ import SingleSignOn from '../../common/SingleSignOn';
 
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
+const splashBackgorund = require('../../../assets/home/Dancing-min.jpg');
+
 /**
  * A simplified sign in page shown when the user first opens the app
  * @param {Object} props Properties of the component: navigation, firebase
@@ -12,76 +14,46 @@ import { withFirebaseHOC } from '../../firebase/FirebaseContext';
  * @since 1.0.1
  * @class
  */
-class SplashLoginScreen extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      formShown: 'signup',
-    };
-
-    this.signInAnon = this.signInAnon.bind(this);
-  }
-
-  /**
-   * Wraps config/Firebase's firebase.signInAnon()
-   */
-  signInAnon() {
-    this.props.auth.signInAnon();
-  }
-
-  /**
-   * Called by React Native when rendering the screen
-   * @returns A JSX formatted Component
-   * @author Kenton Carrier
-   * @since 1.0.1
-   */
-  render() {
-    return (
-      <View style={styles.container}>
-        <ImageBackground
-          source={require('../../../assets/home/Dancing-min.jpg')}
-          style={styles.image}
-        >
-          <View style={styles.textBackground}>
-            <View style={styles.header}>
-              <Text h2 style={{ textAlign: 'center' }}>
-                Welcome to UK DanceBlue!
-              </Text>
-              <Text style={styles.headerText}>
-                The UK DanceBlue app has many features that are only available with a user account.
-              </Text>
-              <Text />
-              <Text style={styles.headerText}>
-                With an account you get access to profile badges, team info, and other features
-                coming soon!
-              </Text>
-            </View>
-            <View style={styles.form}>
-              <Text h3 style={{ textAlign: 'center' }}>
-                Sign in with your UK LinkBlue account
-              </Text>
-              <Button
-                title="SSO Login!"
-                onPress={() => {
-                  const sso = new SingleSignOn(this.props.auth, this.props.firestore);
-                  sso.authenticate('saml-sign-in');
-                }}
-                type="clear"
-              />
-            </View>
-            <View style={styles.footer}>
-              <Text style={{ textAlign: 'center' }}>
-                Want to look around first? You can always sign in later on the profile page
-              </Text>
-              <Button type="clear" title="Continue as a Guest" onPress={() => this.signInAnon()} />
-            </View>
-          </View>
-        </ImageBackground>
+const SplashLoginScreen = ({ auth, firestore }) => (
+  <View style={styles.container}>
+    <ImageBackground source={splashBackgorund} style={styles.image}>
+      <View style={styles.textBackground}>
+        <View style={styles.header}>
+          <Text h2 style={{ textAlign: 'center' }}>
+            Welcome to UK DanceBlue!
+          </Text>
+          <Text style={styles.headerText}>
+            The UK DanceBlue app has many features that are only available with a user account.
+          </Text>
+          <Text />
+          <Text style={styles.headerText}>
+            With an account you get access to profile badges, team info, and other features coming
+            soon!
+          </Text>
+        </View>
+        <View style={styles.form}>
+          <Text h3 style={{ textAlign: 'center' }}>
+            Sign in with your UK LinkBlue account
+          </Text>
+          <Button
+            title="SSO Login!"
+            onPress={() => {
+              const sso = new SingleSignOn(auth, firestore);
+              sso.authenticate('saml-sign-in');
+            }}
+            type="clear"
+          />
+        </View>
+        <View style={styles.footer}>
+          <Text style={{ textAlign: 'center' }}>
+            Want to look around first? You can always sign in later on the profile page
+          </Text>
+          <Button type="clear" title="Continue as a Guest" onPress={() => auth.signInAnon()} />
+        </View>
       </View>
-    );
-  }
-}
+    </ImageBackground>
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
