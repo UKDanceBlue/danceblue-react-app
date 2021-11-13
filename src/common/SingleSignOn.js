@@ -2,6 +2,8 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import { firebaseConfig } from '../firebase/FirebaseContext';
 import { handleFirebaeError, showMessage } from './AlertUtils';
+import FirebaseFirestoreWrappers from '../firebase/FirebaseFirestoreWrappers';
+import FirebaseAuthWrappers from '../firebase/FirebaseAuthWrappers';
 
 export default class SingleSignOn {
   constructor(firebaseAuthWrapper, firebaseFirestoreWrapper) {
@@ -23,11 +25,12 @@ export default class SingleSignOn {
    */
   async authenticate(operation) {
     try {
+      // Open a browser that goes to backendUrl and passes the desired operation, firebase config, and a link back to the app
       const result = await WebBrowser.openAuthSessionAsync(
         `${this.backendUrl}?linkingUri=${Linking.makeUrl(`/${operation}`)}&apiKey=${
           this.firebaseApiKey
         }&authDomain=${this.firebaseAuthDomain}`
-      ).catch(() => showMessage('failed to open login page'));
+      ).catch(showMessage('failed to open login page'));
       if (result.url) {
         this.redirectData = Linking.parse(result.url);
       }
@@ -36,32 +39,33 @@ export default class SingleSignOn {
       return undefined;
     }
 
-    // if (this.firebaseAuthWrapper.getAuthUserInstance()) {
-    //   if (!this.firebaseAuthWrapper.getAuthUserInstance().isAnonomous) {
-    //     //If the user is logged in but not anonomous don't try and sign them in again, just return undefined
-    //     alert('Error: Invalid login state for SSO\nCancelling');
-    //     return undefined;
-    //   }
-    //   this.firebaseAuthWrapper
-    //     .linkCurrentUserWithCredentialJSON(
-    //       // If the user is anonomous, link the anonomous credential with the SSO credential
-    //       this.redirectData.queryParams.credential
-    //     )
-    //     .then((uCredential) => (userCredential = uCredential));
-    // } else {
     return this.firebaseAuthWrapper
-      .loginWithCredentialJSON(
-        // If the user is not signed in at all, then sign them in with SSO
-        this.redirectData.queryParams.credential
-      )
+      .loginWithCredentialJSON(this.redirectData.queryParams.credential)
       .then((userCredential) => {
-        userCredential.user
-          .updateProfile({
-            displayName: userCredential?.additionalUserInfo?.profile['display-name'],
-          })
-          .catch(handleFirebaeError);
+        // Make sure firebase sent a profile option
+        const profile = userCredential?.additionalUserInfo?.profile;
+        if (!profile) {
+          // If it didn't then tell the user, sign out, and log a message including the complete userCredential
+          showMessage(
+            'Profile not recieved\nSign in failed',
+            'Invalid server response',
+            FirebaseAuthWrappers.signOut,
+            true,
+            userCredential
+          );
+        }
+
+        FirebaseFirestoreWrappers.setUserFirestoreDoc(
+          {
+            linkblue: profile['name-id'],
+            displayName: profile['display-name'],
+            firstName: profile['first-name'],
+            lastName: profile['last-name'],
+            email: profile.email,
+          },
+          userCredential.user.uid
+        );
       })
       .catch(handleFirebaeError);
-    // }
   }
 }
