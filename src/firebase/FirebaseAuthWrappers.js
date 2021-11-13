@@ -32,7 +32,7 @@ const FirebaseAuthWrappers = {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  reauthenticate: (email, password) => {
+  reauthenticateWithEmail: (email, password) => {
     const credentials = firebase.auth.EmailAuthProvider.credential(email, password);
     return firebase.auth().currentUser.reauthenticateWithCredential(credentials);
   },
@@ -63,7 +63,8 @@ const FirebaseAuthWrappers = {
    * @author Kenton Carrier
    * @since 1.0.1
    */
-  signupWithEmail: (email, password) => firebase.auth().createUserWithEmailAndPassword(email, password),
+  signupWithEmail: (email, password) =>
+    firebase.auth().createUserWithEmailAndPassword(email, password),
   /**
    * Signs out the user
    * @returns A promise that resolves once the signout is complete
@@ -110,16 +111,37 @@ const FirebaseAuthWrappers = {
    * @author Tag Howard
    * @since 1.1.0
    */
-  loginWithCredentialJSON: (credential) => firebase.auth().signInWithCredential(firebase.auth.AuthCredential.fromJSON(JSON.parse(credential))),
+  loginWithCredentialJSON: (credential) =>
+    firebase
+      .auth()
+      .signInWithCredential(firebase.auth.AuthCredential.fromJSON(JSON.parse(credential))),
   /**
    * Links the currently signed in user's account with the given credential
    * This function is mostly for upgrading an anonomous account
    * @param {String} credential The AuthCredential, obtained from another sign in method in a JSON string
-   * @returns 
+   * @returns
    * @author Tag Howard
    * @since 1.1.0
    */
-  linkCurrentUserWithCredentialJSON: (credential) => firebase.auth().currentUser.linkWithCredential(firebase.auth.AuthCredential.fromJSON(JSON.parse(credential)))
+  linkCurrentUserWithCredentialJSON: (credential) =>
+    firebase
+      .auth()
+      .currentUser.linkWithCredential(
+        firebase.auth.AuthCredential.fromJSON(JSON.parse(credential))
+      ),
+  /**
+   * Signs a user in using a pre-existing auth credential
+   * @param {String} credential The AuthCredential, obtained from another sign in method in a JSON string
+   * @returns {UserCredential} The authenticated user's user credential
+   * @author Tag Howard
+   * @since 1.1.0
+   */
+  reauthenticateWithCredentialJSON: (credential) =>
+    firebase
+      .auth()
+      .currentUser.reauthenticateWithCredential(
+        firebase.auth.AuthCredential.fromJSON(JSON.parse(credential))
+      ),
 };
 
 export default FirebaseAuthWrappers;
