@@ -8,10 +8,7 @@
     "notification": {
       "icon": "./assets/icon.png"
     },
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,11 +18,9 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "enabled": false
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.danceblue.mobile",
@@ -34,10 +29,7 @@
     "android": {
       "package": "com.danceblue.dancebluemarathon",
       "versionCode": 5,
-      "permissions": [
-        "WRITE_CALENDAR",
-        "READ_CALENDAR"
-      ],
+      "permissions": ["WRITE_CALENDAR", "READ_CALENDAR"],
       "useNextNotificationsApi": true
     },
     "description": "University of Kentucky DanceBlue Mobile Application",
