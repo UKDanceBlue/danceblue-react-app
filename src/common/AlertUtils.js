@@ -7,13 +7,22 @@ import { Alert } from 'react-native';
  * @param {string} title
  * @param {function} action
  */
-export function showMessage(message, title = 'Error', action = () => {}) {
+export function showMessage(
+  message,
+  title = 'Error',
+  action = () => {},
+  log = false,
+  logInfo = ''
+) {
   Alert.alert(title, message, [{ text: 'OK', onPress: action }]);
+  if (log) {
+    console.log(`${title}\n${message}\n${logInfo}`);
+  }
 }
 
 /**
  * Show a two button prompt that can execute one of two functions depending on the user's selection
- * @param {string} errorMessage
+ * @param {string} message
  * @param {string} title
  * @param {function} negativeAction
  * @param {function} positiveAction
@@ -21,17 +30,22 @@ export function showMessage(message, title = 'Error', action = () => {}) {
  * @param {string} positiveText
  */
 export function showPrompt(
-  errorMessage,
+  message,
   title = 'Error',
   negativeAction = () => {},
   positiveAction = () => {},
   negativeText = 'No',
-  positiveText = 'Yes'
+  positiveText = 'Yes',
+  log = false,
+  logInfo = ''
 ) {
-  Alert.alert(title, errorMessage, [
+  Alert.alert(title, message, [
     { text: negativeText, onPress: negativeAction, style: 'cancel' },
     { text: positiveText, onPress: positiveAction },
   ]);
+  if (log) {
+    console.log(`${title}\n${message}\n${logInfo}`);
+  }
 }
 
 /**
