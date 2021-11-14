@@ -23,10 +23,9 @@ const danceBlueCalendarConfig = {
 
 /**
  * A component for showing a particular calendar event
- * @param {Object} props Properties of the component: route, firebase
  * @see {@link https://docs.expo.dev/versions/latest/sdk/calendar/ Expo's Calendar API}
  */
-const EventView = ({ route: { params }, firebase, core }) => {
+const EventView = ({ route: { params }, firestore, core }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [id, setId] = useState(params.id);
   const [isOnCalendar, setIsOnCalendar] = useState(false);
@@ -57,7 +56,7 @@ const EventView = ({ route: { params }, firebase, core }) => {
   };
 
   useEffect(() => {
-    firebase
+    firestore
       .getEvent(id)
       .then((doc) => {
         const { eventTitle, eventStartTime, eventEndTime, eventAddress, eventDescription } =
@@ -97,7 +96,7 @@ const EventView = ({ route: { params }, firebase, core }) => {
             }
           });
       });
-  }, [calendarID, core, endTime, firebase, id, startTime, title]);
+  }, [calendarID, core, endTime, firestore, id, startTime, title]);
 
   /**
    * Creates a new calendar on the user's device and adds *calendarID* to *this.state*
