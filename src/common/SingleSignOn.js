@@ -1,14 +1,14 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import { firebaseConfig } from '../firebase/FirebaseContext';
+import { firebaseApp } from '../firebase/FirebaseContext';
 import { handleFirebaeError, showMessage } from './AlertUtils';
 import FirebaseFirestoreWrappers from '../firebase/FirebaseFirestoreWrappers';
 import FirebaseAuthWrappers from '../firebase/FirebaseAuthWrappers';
 
 export default class SingleSignOn {
   constructor(firebaseAuthWrapper, firebaseFirestoreWrapper) {
-    this.firebaseApiKey = firebaseConfig.apiKey;
-    this.firebaseAuthDomain = firebaseConfig.authDomain;
+    this.firebaseApiKey = firebaseApp.options.apiKey;
+    this.firebaseAuthDomain = firebaseApp.options.authDomain;
     this.firebaseAuthWrapper = firebaseAuthWrapper;
     this.firebaseFirestoreWrapper = firebaseFirestoreWrapper;
 

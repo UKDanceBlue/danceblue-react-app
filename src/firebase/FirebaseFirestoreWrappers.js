@@ -1,5 +1,5 @@
-import firebase from 'firebase';
-import 'firebase/firestore';
+import 'firebase/compat/firestore';
+import firebase from 'firebase/compat/app';
 
 const FirebaseFirestoreWrappers = {
   /**

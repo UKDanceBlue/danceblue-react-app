@@ -1,5 +1,25 @@
-import firebase from 'firebase';
-import 'firebase/auth';
+import {
+  getAuth,
+  onAuthStateChanged,
+  linkWithCredential,
+  EmailAuthProvider,
+  AuthCredential,
+  reauthenticateWithCredential,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  signInAnonymously,
+  signInWithCredential,
+} from 'firebase/auth';
+import { firebaseApp } from './FirebaseContext';
+
+const auth = getAuth(firebaseApp);
+
+// Keep an up to date currentUser reference available
+let { currentUser } = auth;
+onAuthStateChanged(auth, (newUser) => {
+  currentUser = newUser;
+});
 
 const FirebaseAuthWrappers = {
   /**
@@ -16,8 +36,8 @@ const FirebaseAuthWrappers = {
    * @since 1.0.1
    */
   linkAnon: (email, password) => {
-    const credentials = firebase.auth.EmailAuthProvider.credential(email, password);
-    return firebase.auth().currentUser.linkWithCredential(credentials);
+    const credentials = EmailAuthProvider.credential(email, password);
+    return linkWithCredential(currentUser, credentials);
   },
   /**
    * Send a reauthentication request to firebse
@@ -33,8 +53,8 @@ const FirebaseAuthWrappers = {
    * @since 1.0.1
    */
   reauthenticateWithEmail: (email, password) => {
-    const credentials = firebase.auth.EmailAuthProvider.credential(email, password);
-    return firebase.auth().currentUser.reauthenticateWithCredential(credentials);
+    const credentials = EmailAuthProvider.credential(email, password);
+    return reauthenticateWithCredential(currentUser, credentials);
   },
   /**
    * Login a user using email/passowrd authentication
@@ -47,7 +67,7 @@ const FirebaseAuthWrappers = {
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
    * @function
    */
-  loginWithEmail: (email, password) => firebase.auth().signInWithEmailAndPassword(email, password),
+  loginWithEmail: (email, password) => signInWithEmailAndPassword(auth, email, password),
   /**
    * Signup a user using email/password authentication
    *
@@ -59,29 +79,31 @@ const FirebaseAuthWrappers = {
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
    * @function
    */
-  signupWithEmail: (email, password) =>
-    firebase.auth().createUserWithEmailAndPassword(email, password),
+  signupWithEmail: (email, password) => createUserWithEmailAndPassword(auth, email, password),
   /**
    * Signs out the user
    * @returns A promise that resolves once the signout is complete
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signout signOut}
    * @function
    */
-  signOut: () => firebase.auth().signOut(),
+  signOut: () => signOut(auth),
   /**
    * Adds an observer for changes to the user's sign-in state.
-   * @param {function} user An observer function
+   * @param {function} observer An observer function
+   * @param {function} onError A function called on error
+   * @param {function} onCompleted A function called when the listener is removed
    * @returns A callback which can be invoked to remove the observer
    * @see {@link hhttps://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#onauthstatechanged onauthstatechanged}
    * @function
    */
-  checkAuthUser: (user) => firebase.auth().onAuthStateChanged(user),
+  checkAuthUser: (observer, onError, onCompleted) =>
+    onAuthStateChanged(auth, observer, onError, onCompleted),
   /**
    * Gets the currently signed in user from Firebase
    * @returns The currently signed in user
    * @function
    */
-  getAuthUserInstance: () => firebase.auth().currentUser,
+  getAuthUserInstance: () => currentUser,
   /**
    * Asynchronously signs in as an anonymous user.
    * @returns A promise for a user credential
@@ -91,7 +113,7 @@ const FirebaseAuthWrappers = {
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinanonymously signinanonymously}
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
    */
-  signInAnon: () => firebase.auth().signInAnonymously(),
+  signInAnon: () => signInAnonymously(),
   /**
    * Signs a user in using a pre-existing auth credential
    * @param {String} credential The AuthCredential, obtained from another sign in method in a JSON string
@@ -99,10 +121,10 @@ const FirebaseAuthWrappers = {
    * @author Tag Howard
    * @since 1.1.0
    */
-  loginWithCredentialJSON: (credential) =>
-    firebase
-      .auth()
-      .signInWithCredential(firebase.auth.AuthCredential.fromJSON(JSON.parse(credential))),
+  loginWithCredentialJSON: (jsonCredential) => {
+    const credentials = AuthCredential.fromJSON(JSON.parse(jsonCredential));
+    return signInWithCredential(currentUser, credentials);
+  },
   /**
    * Links the currently signed in user's account with the given credential
    * This function is mostly for upgrading an anonomous account
@@ -111,12 +133,10 @@ const FirebaseAuthWrappers = {
    * @author Tag Howard
    * @since 1.1.0
    */
-  linkCurrentUserWithCredentialJSON: (credential) =>
-    firebase
-      .auth()
-      .currentUser.linkWithCredential(
-        firebase.auth.AuthCredential.fromJSON(JSON.parse(credential))
-      ),
+  linkCurrentUserWithCredentialJSON: (jsonCredential) => {
+    const credentials = AuthCredential.fromJSON(JSON.parse(jsonCredential));
+    return linkWithCredential(currentUser, credentials);
+  },
   /**
    * Signs a user in using a pre-existing auth credential
    * @param {String} credential The AuthCredential, obtained from another sign in method in a JSON string
@@ -124,12 +144,10 @@ const FirebaseAuthWrappers = {
    * @author Tag Howard
    * @since 1.1.0
    */
-  reauthenticateWithCredentialJSON: (credential) =>
-    firebase
-      .auth()
-      .currentUser.reauthenticateWithCredential(
-        firebase.auth.AuthCredential.fromJSON(JSON.parse(credential))
-      ),
+  reauthenticateWithCredentialJSON: (jsonCredential) => {
+    const credentials = AuthCredential.fromJSON(JSON.parse(jsonCredential));
+    return reauthenticateWithCredential(currentUser, credentials);
+  },
 };
 
 export default FirebaseAuthWrappers;
