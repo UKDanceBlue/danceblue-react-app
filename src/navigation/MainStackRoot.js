@@ -5,17 +5,21 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 
 // Import first-party dependencies
-import ScoreboardScreen from '../screens/ScoreBoardScreen';
 import { EventView } from '../screens/EventScreen';
 import GenericWebviewScreen from '../screens/GenericWebviewScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import TabBar from './TabBar';
+import HeaderIcons from './HeaderIcons';
 
 const MainStack = createStackNavigator();
 
 const MainStackRoot = () => (
-  <MainStack.Navigator>
-    <MainStack.Screen name="Tab" component={TabBar} options={{ headerShown: false }} />
+  <MainStack.Navigator
+    screenOptions={({ navigation }) => ({
+      headerRight: ({ tintColor }) => <HeaderIcons navigation={navigation} color={tintColor} />,
+    })}
+  >
+    <MainStack.Screen name="Tab" options={{ headerShown: false }} component={TabBar} />
     <MainStack.Screen name="Profile" component={ProfileScreen} />
     <MainStack.Screen
       name="FAQ"
@@ -34,7 +38,6 @@ const MainStackRoot = () => (
       component={GenericWebviewScreen}
       initialParams={{ uri: 'https://www.danceblue.org/about/' }}
     />
-    <MainStack.Screen name="Scoreboard" component={ScoreboardScreen} />
     <MainStack.Screen
       name="Event"
       component={EventView}
