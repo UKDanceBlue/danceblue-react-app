@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore';
 import { firebaseApp } from './FirebaseContext';
 
-const firestore = getFirestore(firebaseApp);
+export const firestore = getFirestore(firebaseApp);
 
 const FirebaseFirestoreWrappers = {
   /**

@@ -1,7 +1,7 @@
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { firebaseApp } from './FirebaseContext';
 
-const storage = getStorage(firebaseApp);
+export const storage = getStorage(firebaseApp);
 
 const FirebaseCoreWrappers = {
   /**
