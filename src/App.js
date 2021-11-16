@@ -1,7 +1,7 @@
 // Import third-party dependencies
 import { registerRootComponent } from 'expo';
 import React, { useEffect, useState } from 'react';
-import { StatusBar, LogBox } from 'react-native';
+import { StatusBar, LogBox, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
@@ -70,6 +70,7 @@ const App = ({}) => {
       setExpoPushToken(token);
     } else {
       showMessage('Must use physical device for Push Notifications');
+      return;
     }
 
     if (Platform.OS === 'android') {
