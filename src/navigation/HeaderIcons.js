@@ -1,6 +1,6 @@
 // Import third-party dependencies
 import React from 'react';
-import { View, Pressable } from 'react-native';
+import { View, Pressable, PixelRatio } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const HeaderIcons = ({ navigation, color }) => (
@@ -14,17 +14,15 @@ const HeaderIcons = ({ navigation, color }) => (
     <Pressable onPress={() => navigation.navigate('Profile')}>
       <Icon
         name="bell"
-        size="25%"
         color={color}
-        style={{ textAlignVertical: 'center', padding: '5%' }}
+        style={{ textAlignVertical: 'center', padding: '5%', fontSize: PixelRatio.get() * 8 }}
       />
     </Pressable>
     <Pressable onPress={() => navigation.navigate('Profile')}>
       <Icon
         name="user"
-        size="25%"
         color={color}
-        style={{ textAlignVertical: 'center', padding: '5%' }}
+        style={{ textAlignVertical: 'center', padding: '5%', fontSize: PixelRatio.get() * 8 }}
       />
     </Pressable>
   </View>
