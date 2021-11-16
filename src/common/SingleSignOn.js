@@ -1,5 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
+import { getAdditionalUserInfo } from 'firebase/auth';
 import { firebaseApp } from '../firebase/FirebaseContext';
 import { handleFirebaeError, showMessage } from './AlertUtils';
 import FirebaseFirestoreWrappers from '../firebase/FirebaseFirestoreWrappers';
@@ -30,7 +31,7 @@ export default class SingleSignOn {
         `${this.backendUrl}?linkingUri=${Linking.makeUrl(`/${operation}`)}&apiKey=${
           this.firebaseApiKey
         }&authDomain=${this.firebaseAuthDomain}`
-      ).catch(showMessage('failed to open login page'));
+      );
       if (result.url) {
         this.redirectData = Linking.parse(result.url);
       }
@@ -43,7 +44,7 @@ export default class SingleSignOn {
       .loginWithCredentialJSON(this.redirectData.queryParams.credential)
       .then((userCredential) => {
         // Make sure firebase sent a profile option
-        const profile = userCredential?.additionalUserInfo?.profile;
+        const profile = getAdditionalUserInfo(userCredential)?.profile;
         if (!profile) {
           // If it didn't then tell the user, sign out, and log a message including the complete userCredential
           showMessage(

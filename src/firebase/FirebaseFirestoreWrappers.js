@@ -1,5 +1,17 @@
-import 'firebase/compat/firestore';
-import firebase from 'firebase/compat/app';
+import {
+  doc,
+  setDoc,
+  collection,
+  getDoc,
+  getDocs,
+  getFirestore,
+  where,
+  query,
+  addDoc,
+} from 'firebase/firestore';
+import { firebaseApp } from './FirebaseContext';
+
+const firestore = getFirestore(firebaseApp);
 
 const FirebaseFirestoreWrappers = {
   /**
@@ -13,58 +25,51 @@ const FirebaseFirestoreWrappers = {
    * @function
    */
   setUserFirestoreDoc: (userData, id) =>
-    firebase.firestore().collection('users').doc(id).set(userData),
+    setDoc(doc(firestore, 'users', id), userData, { merge: true }),
   /**
    * Get all teams in Firebase
    * @returns A promise containing a collection of teams
    * @see {@link https://firebase.google.com Firebase}
    * @function
    */
-  getTeams: () => firebase.firestore().collection('teams').get(),
+  getTeams: async () => getDocs(collection(firestore, 'teams')),
   /**
    * Get the sponsors listed in Firebase
    * @returns A promise containing a collection of the requested sponsors
    * @see {@link https://firebase.google.com Firebase}
    * @function
    */
-  getSponsors: () => firebase.firestore().collection('sponsors').get(),
+  getSponsors: async () => getDocs(collection(firestore, 'sponsors')),
   /**
    * Get a list of any active ocuntdowns
    * @returns A promise containing a collection the requested countdowns
    * @see {@link https://firebase.google.com Firebase}
    * @function
    */
-  getActiveCountdown: () =>
-    firebase.firestore().collection('countdowns').where('active', '==', true).get(),
-  /**
-   * Gets all the annoucnemnets in Firebase
-   * @returns A promise containing the requested announcemnts
-   * @see {@link https://firebase.google.com Firebase}
-   * @function
-   */
-  getAnnouncements: () => firebase.firestore().collection('announcements').get(),
+  getActiveCountdown: async () =>
+    getDocs(query(collection(firestore, 'countdowns'), where('active', '==', true))),
   /**
    * Get all users in Firebase
    * @returns A promise containing a collection of users
    * @see {@link https://firebase.google.com Firebase}
    * @function
    */
-  getUsers: () => firebase.firestore().collection('users').get(),
+  getUsers: async () => getDocs(collection(firestore, 'users')),
   /**
    * Get all users who have points
    * @returns A promise containing a collection of the requested users
    * @see {@link https://firebase.google.com Firebase}
    * @function
    */
-  getUsersWithPoints: () =>
-    firebase.firestore().collection('users').where('points', '!=', null).get(),
+  getUsersWithPoints: async () =>
+    getDocs(query(collection(firestore, 'users'), where('points', '!=', null))),
   /**
    * Get all events from Firebase
    * @returns A promise containing a collection of the requested users
    * @see {@link https://firebase.google.com Firebase}
    * @function
    */
-  getEvents: () => firebase.firestore().collection('events').get(),
+  getEvents: async () => getDocs(collection(firestore, 'events')),
   /**
    * Get a particualr event from Firebase
    * @param {string} id The event's Firebase ID
@@ -72,16 +77,16 @@ const FirebaseFirestoreWrappers = {
    * @see {@link https://firebase.google.com Firebase}
    * @function
    */
-  getEvent: (id) => firebase.firestore().collection('events').doc(id).get(),
+  getEvent: async (id) => getDoc(doc(firestore, 'events', id)),
   /**
    * Get events whose *endTime* is after the current date/time
    * @returns A promise containg the a collection of the requested events
    * @see {@link https://firebase.google.com Firebase}
    * @function
    */
-  getUpcomingEvents: () => {
+  getUpcomingEvents: async () => {
     const now = new Date();
-    return firebase.firestore().collection('events').where('endTime', '>', now).get();
+    return getDocs(query(collection(firestore, 'events'), where('endTime', '>', now)));
   },
   /**
    * Get the specified user
@@ -90,7 +95,7 @@ const FirebaseFirestoreWrappers = {
    * @see {@link https://firebase.google.com Firebase}
    * @function
    */
-  getUser: (userId) => firebase.firestore().collection('users').doc(userId).get(),
+  getUser: async (userId) => getDoc(doc(firestore, 'users', userId)),
   /**
    * Get the specified team from Firebase
    * This can be used to pull team information based on user's team.
@@ -99,21 +104,22 @@ const FirebaseFirestoreWrappers = {
    * @see {@link https://firebase.google.com Firebase}
    * @function
    */
-  getTeam: (teamId) => firebase.firestore().collection('teams').where('number', '==', teamId).get(),
+  getTeam: async (teamId) =>
+    getDocs(query(collection(firestore, 'teams'), where('number', '==', teamId))),
   /**
    * Get current configs from Firebase
    * @returns A promise containing the requested data
    * @function
    */
-  getConfig: () => firebase.firestore().collection('configs').doc('mobile-app').get(),
+  getConfig: async () => getDoc(doc(firestore, 'configs', 'mobile-app')),
   /**
    * Get a user's badges
    * @param {string} userID The user's UUID
    * @returns A promise contiang a collection of the requested user's badges
    * @function
    */
-  getUserBadges: (userID) =>
-    firebase.firestore().collection('users').doc(userID).collection('badges').get(),
+  getUserBadges: async (userId) =>
+    getDocs(collection(getDoc(doc(firestore, 'users', userId)), 'badges')),
   /**
    * Load an expo push notification token into Firebase
    * @param {string} token The Expo push token generated by *Notifications.getExpoPushTokenAsync()*
@@ -121,19 +127,15 @@ const FirebaseFirestoreWrappers = {
    * @see {@link https://docs.expo.dev/push-notifications/push-notifications-setup/ Expo notifications documentation}
    * @function
    */
-  addPushToken: (token) => {
-    const dbRef = firebase.firestore().collection('expo-push-tokens');
-    return dbRef.get().then((snapshot) => {
-      let found = false;
-      snapshot.forEach((doc) => {
-        if (doc.data().token === token) found = true;
-      });
-      if (found === false) {
-        return dbRef.add({
-          token,
-        });
-      }
-    });
+  addPushToken: async (token) => {
+    const tokenQuery = await getDocs(
+      query(collection(firestore, 'expo-push-tokens')),
+      where('token', '==', token)
+    );
+    if (!tokenQuery.empty) {
+      return tokenQuery.forEach((tokenDocument) => tokenDocument.token);
+    }
+    return addDoc(collection(firestore, 'expo-push-tokens'), { token });
   },
 };
 

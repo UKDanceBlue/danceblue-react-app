@@ -1,6 +1,5 @@
 import React, { createContext } from 'react';
 import { initializeApp } from 'firebase/app';
-import firebase from 'firebase/compat/app';
 
 // Initialize firebase, called when Firebase imports this file
 const firebaseConfig = {
@@ -14,7 +13,6 @@ const firebaseConfig = {
   measurementId: 'G-BP0CDEHW3B',
 };
 export const firebaseApp = initializeApp(firebaseConfig);
-firebase.initializeApp(firebaseConfig);
 
 const FirebaseContext = createContext({});
 

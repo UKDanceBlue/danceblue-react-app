@@ -1,7 +1,6 @@
 // Import third-party dependencies
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ActivityIndicator, Button } from 'react-native';
-import { Text } from 'react-native-elements';
+import { Text, View, StyleSheet, ActivityIndicator, Button } from 'react-native';
 import SingleSignOn from '../../common/SingleSignOn';
 
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
@@ -62,6 +61,7 @@ const ProfileScreen = ({ auth, firestore }) => {
                     </Text>
                     <Text>{user.email}</Text>
                     <Button onPress={handleSignOut} title="Log out" />
+                    <Button onPress={auth.signOut} title="Log out hard" />
                   </>
                 ) /* End of logged in view */
               }

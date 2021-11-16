@@ -1,6 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, ImageBackground, Dimensions } from 'react-native';
-import { Text, Button } from 'react-native-elements';
+import {
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  ImageBackground,
+  Dimensions,
+} from 'react-native';
 import SingleSignOn from '../../common/SingleSignOn';
 
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
@@ -33,20 +39,20 @@ const SplashLoginScreen = ({ auth, firestore }) => (
           <Text h3 style={{ textAlign: 'center' }}>
             Sign in with your UK LinkBlue account
           </Text>
-          <Button
-            title="SSO Login!"
+          <TouchableOpacity
             onPress={() => {
               const sso = new SingleSignOn(auth, firestore);
               sso.authenticate('saml-sign-in');
             }}
-            type="clear"
-          />
+          >
+            <Text>SSO Login!</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.footer}>
-          <Text style={{ textAlign: 'center' }}>
-            Want to look around first? You can always sign in later on the profile page
-          </Text>
-          <Button type="clear" title="Continue as a Guest" onPress={() => auth.signInAnon()} />
+          <Text>Want to look around first? You can always sign in later on the profile page</Text>
+          <TouchableOpacity onPress={() => auth.signInAnon()}>
+            <Text>Continue as a Guest</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ImageBackground>

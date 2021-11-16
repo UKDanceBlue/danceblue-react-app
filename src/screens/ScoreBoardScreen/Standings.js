@@ -35,24 +35,34 @@ const Standings = ({
 
   /**
    * Loads teams from Firebase and then stores them into allTeams and their points into allTeamsPPm
-   * @returns Teams loaded from Firebase
    */
-  const loadTeams = useCallback(() => {
+  const loadTeams = useCallback(async () => {
     const teams = [];
-    return firestore.getTeams().then((snapshot) => {
-      snapshot.forEach((doc) => {
-        teams.push({ id: doc.id, ...doc.data() });
-      });
-      // SortedTeams is an array that sorts the teams' points in descending order
-      const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points);
-      const sortedTeamsPPM = [].concat(teams).sort((a, b) => a.points / a.size < b.points / b.size);
-      setAllTeams(sortedTeams);
-      setAllTeamPPM(sortedTeamsPPM);
-      if (isExpanded) {
-        setRowsToShow(sortedTeams.length);
-      }
+    const snapshot = await firestore.getTeams();
+    snapshot.forEach((doc) => {
+      teams.push({ id: doc.id, ...doc.data() });
     });
+    // SortedTeams is an array that sorts the teams' points in descending order
+    const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points);
+    const sortedTeamsPPM = [].concat(teams).sort((a, b) => a.points / a.size < b.points / b.size);
+
+    setAllTeams(sortedTeams);
+    setAllTeamPPM(sortedTeamsPPM);
+    if (isExpanded) {
+      setRowsToShow(sortedTeams.length);
+    }
   }, [firestore, isExpanded]);
+
+  // Get list of users, for switching scoreboard to display people instead of teams.
+  const loadUsers = useCallback(async () => {
+    const users = [];
+    const snapshot = firestore.getUsersWithPoints();
+    snapshot.forEach((doc) => {
+      users.push({ id: doc.id, ...doc.data() });
+    });
+    const sortedUsers = [].concat(users).sort((a, b) => a.points < b.points);
+    setAllUsers(sortedUsers);
+  }, [firestore]);
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
@@ -63,17 +73,7 @@ const Standings = ({
 
     promises.push(loadTeams());
 
-    // Get list of users, for switching scoreboard to display people instead of teams.
-    const users = [];
-    promises.push(
-      firestore.getUsersWithPoints().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          users.push({ id: doc.id, ...doc.data() });
-        });
-        const sortedUsers = [].concat(users).sort((a, b) => a.points < b.points);
-        setAllUsers(sortedUsers);
-      })
-    );
+    promises.push(loadUsers);
 
     // Get the team number and user ID of the current user.
     // These are for highlighting the user's position in the teams and users scoreboards
@@ -94,7 +94,7 @@ const Standings = ({
 
     // Display loading indicator until all promises resolve
     Promise.all(promises).then(setIsLoading(false));
-  }, [auth, firestore, loadTeams]);
+  }, [auth, firestore, loadTeams, loadUsers]);
 
   // Creates places list for teams, which renders Place object for each team in order
   let places = [];

@@ -22,12 +22,14 @@ const EventScreen = ({ navigation: { navigate }, firestore }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const firestoreEvents = [];
-    firestore.getUpcomingEvents().then((snapshot) => {
+    async function getSnapshot() {
+      const firestoreEvents = [];
+      const snapshot = await firestore.getUpcomingEvents();
       snapshot.forEach((doc) => firestoreEvents.push({ id: doc.id, ...doc.data() }));
       setEvents(firestoreEvents);
       setIsLoading(false);
-    });
+    }
+    getSnapshot();
   }, [firestore]);
 
   /**

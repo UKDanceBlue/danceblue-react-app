@@ -7,6 +7,7 @@ import moment from 'moment';
 
 // Import first-party dependencies
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
+import { handleFirebaeError } from '../../common/AlertUtils';
 
 const danceBlueCalendarConfig = {
   title: 'DanceBlue',
@@ -56,47 +57,47 @@ const EventView = ({ route: { params }, firestore, core }) => {
   };
 
   useEffect(() => {
-    firestore
-      .getEvent(id)
-      .then((doc) => {
-        const { eventTitle, eventStartTime, eventEndTime, eventAddress, eventDescription } =
-          doc.data();
-        setTitle(eventTitle);
-        setStartTime(eventStartTime);
-        setEndTime(eventEndTime);
-        setAddress(eventAddress);
-        setIsLoading(false);
-        setDescription(eventDescription);
-        core
-          .getDocumentURL(doc.data().image)
-          .then(setImageRef)
-          .catch((error) => console.log(error.message));
-      })
-      .then(Calendar.requestCalendarPermissionsAsync())
-      .then(() => {
-        /**
-         * Check if the event exists on the DanceBlue calendar
-         * If it exisits then it adds *{isOnCalendar: true}* and *eventCalendarID* to *this.state*
-         */
-        Calendar.requestCalendarPermissionsAsync()
-          .then(checkDBCalendar)
-          .then(async (calendarExists) => {
-            if (calendarExists) {
-              const events = await Calendar.getEventsAsync(
-                [calendarID],
-                startTime.toDate(),
-                endTime.toDate()
-              );
-              events.forEach((event) => {
-                if (event.title === title) {
-                  setIsOnCalendar(true);
-                  setEventCalendarID(event.id);
-                }
-              });
-            }
-          });
-      });
-  }, [calendarID, core, endTime, firestore, id, startTime, title]);
+    setIsLoading(true);
+    async function getDoc() {
+      const doc = await firestore.getEvent(id);
+      const { eventTitle, eventStartTime, eventEndTime, eventAddress, eventDescription } =
+        doc.data();
+      setTitle(eventTitle);
+      setStartTime(eventStartTime);
+      setEndTime(eventEndTime);
+      setAddress(eventAddress);
+      setDescription(eventDescription);
+      core.getDocumentURL(doc.data().image).then(setImageRef).catch(handleFirebaeError);
+      setIsLoading(false);
+    }
+    getDoc();
+  }, [core, firestore, id]);
+
+  /**
+   * Check if the event exists on the DanceBlue calendar
+   * If it exisits then it adds *{isOnCalendar: true}* and *eventCalendarID* to *this.state*
+   */
+  useEffect(() => {
+    if (!isLoading) {
+      Calendar.requestCalendarPermissionsAsync()
+        .then(checkDBCalendar)
+        .then(async (calendarExists) => {
+          if (calendarExists) {
+            const events = await Calendar.getEventsAsync(
+              [calendarID],
+              startTime.toDate(),
+              endTime.toDate()
+            );
+            events.forEach((event) => {
+              if (event.title === title) {
+                setIsOnCalendar(true);
+                setEventCalendarID(event.id);
+              }
+            });
+          }
+        });
+    }
+  }, [calendarID, endTime, startTime, title, isLoading]);
 
   /**
    * Creates a new calendar on the user's device and adds *calendarID* to *this.state*
@@ -185,7 +186,7 @@ const EventView = ({ route: { params }, firestore, core }) => {
                   onPress={isOnCalendar ? removeFromCalendar : addToCalendar}
                 >
                   <Text style={styles.buttonText}>
-                    {isOnCalendar ? 'Remove Event' : 'Add to Calendar'}
+                    {isOnCalendar ? 'Remove from Calendar' : 'Add to Calendar'}
                   </Text>
                 </TouchableHighlight>
               )}

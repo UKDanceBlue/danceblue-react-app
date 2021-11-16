@@ -11,13 +11,15 @@ const SponsorCarousel = ({ firestore }) => {
   const [sponsors, setSponsors] = useState([]);
 
   useEffect(() => {
-    const dbSponsors = [];
-    firestore.getSponsors().then((snapshot) => {
+    async function getSnapshot() {
+      const dbSponsors = [];
+      const snapshot = await firestore.getSponsors();
       snapshot.forEach((doc) => {
         dbSponsors.push({ ...doc.data(), id: doc.id });
       });
       setSponsors(dbSponsors);
-    });
+    }
+    getSnapshot();
   }, [firestore]);
 
   const cards = sponsors.map((sponsor) => (

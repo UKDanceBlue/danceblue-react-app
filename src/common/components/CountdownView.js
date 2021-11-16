@@ -49,17 +49,20 @@ class CountdownView extends React.Component {
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
    */
   componentDidMount() {
-    this.props.firestore.getActiveCountdown().then((snapshot) => {
-      snapshot.forEach((doc) => {
-        const countdown = doc.data();
-        this.setState({
-          title: countdown.title,
-          date: moment.duration(moment(countdown.time.toDate()).diff(moment())),
-          finishMessage: countdown.finishMessage || '',
-          isLoading: false,
-        });
-        this.updateTimer();
+    this.retrieveCountdown();
+  }
+
+  async retrieveCountdown() {
+    const snapshot = await this.props.firestore.getActiveCountdown();
+    snapshot.forEach((doc) => {
+      const countdown = doc.data();
+      this.setState({
+        title: countdown.title,
+        date: moment.duration(moment(countdown.time.toDate()).diff(moment())),
+        finishMessage: countdown.finishMessage || '',
+        isLoading: false,
       });
+      this.updateTimer();
     });
   }
 

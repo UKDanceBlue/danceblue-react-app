@@ -2,6 +2,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { getHeaderTitle, Header } from '@react-navigation/elements';
 import { BlurView } from 'expo-blur';
 
 // Import first-party dependencies
@@ -14,7 +15,15 @@ import TabBar from './TabBar';
 const MainStack = createStackNavigator();
 
 const MainStackRoot = () => (
-  <MainStack.Navigator>
+  <MainStack.Navigator
+  // screenOptions={{
+  //   header: ({ navigation, route, options, back }) => {
+  //     const title = getHeaderTitle(options, route.name);
+
+  //     return <Header />;
+  //   },
+  // }}
+  >
     <MainStack.Screen name="Tab" component={TabBar} options={{ headerShown: false }} />
     <MainStack.Screen name="Profile" component={ProfileScreen} />
     <MainStack.Screen

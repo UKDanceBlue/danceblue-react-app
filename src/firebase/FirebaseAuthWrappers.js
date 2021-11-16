@@ -1,19 +1,23 @@
 import {
-  getAuth,
+  initializeAuth,
   onAuthStateChanged,
   linkWithCredential,
   EmailAuthProvider,
-  AuthCredential,
   reauthenticateWithCredential,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
   signInAnonymously,
   signInWithCredential,
+  SAMLAuthProvider,
 } from 'firebase/auth';
+import { getReactNativePersistence } from 'firebase/auth/react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { firebaseApp } from './FirebaseContext';
 
-const auth = getAuth(firebaseApp);
+const auth = initializeAuth(firebaseApp, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
 
 // Keep an up to date currentUser reference available
 let { currentUser } = auth;
@@ -118,34 +122,28 @@ const FirebaseAuthWrappers = {
    * Signs a user in using a pre-existing auth credential
    * @param {String} credential The AuthCredential, obtained from another sign in method in a JSON string
    * @returns {UserCredential} The authenticated user's user credential
-   * @author Tag Howard
-   * @since 1.1.0
    */
   loginWithCredentialJSON: (jsonCredential) => {
-    const credentials = AuthCredential.fromJSON(JSON.parse(jsonCredential));
-    return signInWithCredential(currentUser, credentials);
+    const credentials = SAMLAuthProvider.credentialFromJSON(JSON.parse(jsonCredential));
+    return signInWithCredential(auth, credentials);
   },
   /**
    * Links the currently signed in user's account with the given credential
    * This function is mostly for upgrading an anonomous account
    * @param {String} credential The AuthCredential, obtained from another sign in method in a JSON string
-   * @returns
-   * @author Tag Howard
-   * @since 1.1.0
+   * @returns {UserCredential} The authenticated user's user credential
    */
   linkCurrentUserWithCredentialJSON: (jsonCredential) => {
-    const credentials = AuthCredential.fromJSON(JSON.parse(jsonCredential));
+    const credentials = SAMLAuthProvider.credentialFromJSON(JSON.parse(jsonCredential));
     return linkWithCredential(currentUser, credentials);
   },
   /**
    * Signs a user in using a pre-existing auth credential
    * @param {String} credential The AuthCredential, obtained from another sign in method in a JSON string
    * @returns {UserCredential} The authenticated user's user credential
-   * @author Tag Howard
-   * @since 1.1.0
    */
   reauthenticateWithCredentialJSON: (jsonCredential) => {
-    const credentials = AuthCredential.fromJSON(JSON.parse(jsonCredential));
+    const credentials = SAMLAuthProvider.credentialFromJSON(JSON.parse(jsonCredential));
     return reauthenticateWithCredential(currentUser, credentials);
   },
 };
