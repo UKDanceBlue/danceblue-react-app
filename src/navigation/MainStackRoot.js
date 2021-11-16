@@ -2,7 +2,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { getHeaderTitle, Header } from '@react-navigation/elements';
 import { BlurView } from 'expo-blur';
 
 // Import first-party dependencies
