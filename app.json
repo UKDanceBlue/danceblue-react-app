@@ -28,7 +28,7 @@
       "buildNumber": "1.1.0"
     },
     "android": {
-      "package": "com.danceblue.dancebluemarathon",
+      "package": "com.danceblue.mobile",
       "versionCode": 5,
       "permissions": ["WRITE_CALENDAR", "READ_CALENDAR"],
       "useNextNotificationsApi": true
