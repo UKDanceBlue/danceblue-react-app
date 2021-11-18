@@ -31,7 +31,7 @@
       "package": "com.danceblue.mobile",
       "versionCode": 5,
       "permissions": ["WRITE_CALENDAR", "READ_CALENDAR"],
-      "useNextNotificationsApi": true
+      "googleServicesFile": "./google-services.json"
     },
     "description": "University of Kentucky DanceBlue Mobile Application",
     "sdkVersion": "43.0.0"
