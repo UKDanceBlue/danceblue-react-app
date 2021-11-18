@@ -1,15 +1,12 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import { getAdditionalUserInfo } from 'firebase/auth';
-import { firebaseApp } from '../firebase/FirebaseContext';
 import { handleFirebaeError, showMessage } from './AlertUtils';
 import FirebaseFirestoreWrappers from '../firebase/FirebaseFirestoreWrappers';
 import FirebaseAuthWrappers from '../firebase/FirebaseAuthWrappers';
 
 export default class SingleSignOn {
   constructor(firebaseAuthWrapper, firebaseFirestoreWrapper) {
-    this.firebaseApiKey = firebaseApp.options.apiKey;
-    this.firebaseAuthDomain = firebaseApp.options.authDomain;
     this.firebaseAuthWrapper = firebaseAuthWrapper;
     this.firebaseFirestoreWrapper = firebaseFirestoreWrapper;
 
@@ -28,9 +25,7 @@ export default class SingleSignOn {
     try {
       // Open a browser that goes to backendUrl and passes the desired operation, firebase config, and a link back to the app
       const result = await WebBrowser.openAuthSessionAsync(
-        `${this.backendUrl}?linkingUri=${Linking.makeUrl(`/${operation}`)}&apiKey=${
-          this.firebaseApiKey
-        }&authDomain=${this.firebaseAuthDomain}`
+        `${this.backendUrl}?linkingUri=${Linking.makeUrl(`/${operation}`)}`
       );
       if (result.url) {
         this.redirectData = Linking.parse(result.url);
