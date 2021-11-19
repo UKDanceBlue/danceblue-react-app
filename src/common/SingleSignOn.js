@@ -10,7 +10,7 @@ export default class SingleSignOn {
     this.firebaseAuthWrapper = firebaseAuthWrapper;
     this.firebaseFirestoreWrapper = firebaseFirestoreWrapper;
 
-    this.backendUrl = 'https://www.danceblue.org/firebase-wrapper-app.html';
+    this.backendUrl = 'https://app.danceblue.org/saml-relay.html';
   }
 
   /**
