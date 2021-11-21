@@ -6,7 +6,14 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "gen-doc": "jsdoc -p -c jsdoc.conf.json"
+    "gen-doc": "jsdoc -p -c jsdoc.conf.json",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
+    ]
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.9",
@@ -45,7 +52,6 @@
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "0.17.5",
     "react-native-webview": "11.13.0",
-    "react-test-renderer": "17.0.1",
     "recompose": "npm:react-recompose@^0.31.1"
   },
   "devDependencies": {
@@ -59,7 +65,9 @@
     "eslint-plugin-react-hooks": "^4",
     "eslint-plugin-react-native": "^3.11.0",
     "jest": "^27.3.1",
-    "prettier": "^2.4.1"
+    "jest-expo": "^43.0.1",
+    "prettier": "^2.4.1",
+    "react-test-renderer": "^17.0.1"
   },
   "private": true
 }
