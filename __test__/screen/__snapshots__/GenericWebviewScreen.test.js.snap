@@ -35,7 +35,7 @@ exports[`renders correctly 1`] = `
       onShouldStartLoadWithRequest={[Function]}
       source={
         Object {
-          "uri": "www.google.com",
+          "uri": "www.example.com",
         }
       }
       style={
