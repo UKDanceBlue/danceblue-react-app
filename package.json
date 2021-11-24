@@ -14,7 +14,7 @@
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
     ],
-    "collectCoverage": true,
+    "collectCoverage": false,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
       "!**/coverage/**",
@@ -60,7 +60,8 @@
     "react-native-super-grid": "^4.1.1",
     "react-native-web": "0.17.5",
     "react-native-webview": "11.13.0",
-    "recompose": "npm:react-recompose@^0.31.1"
+    "recompose": "npm:react-recompose@^0.31.1",
+    "expo-font": "~10.0.3"
   },
   "devDependencies": {
     "babel-jest": "^27.3.1",
