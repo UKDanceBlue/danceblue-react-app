@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, ImageBackground, Image, StyleSheet } from 'react-native';
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
-
 import backgroundImg from '../../../assets/home/db20_ribbon.jpg';
 import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png';
 
@@ -10,12 +8,12 @@ import dbLogo from '../../../assets/home/DB_Primary_Logo-01.png';
  * A header image container used on the home screen
  */
 const HeaderImage = () => (
-    <View style={styles.container}>
-      <ImageBackground source={backgroundImg} style={styles.background}>
-        <Image source={dbLogo} style={styles.logo} />
-      </ImageBackground>
-    </View>
-  );
+  <View style={styles.container}>
+    <ImageBackground source={backgroundImg} style={styles.background}>
+      <Image source={dbLogo} style={styles.logo} />
+    </ImageBackground>
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -40,4 +38,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withFirebaseHOC(HeaderImage);
+export default HeaderImage;
