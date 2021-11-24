@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import { getAdditionalUserInfo } from 'firebase/auth';
+import { getAdditionalUserInfo, updateProfile } from 'firebase/auth';
 import { handleFirebaeError, showMessage } from './AlertUtils';
 import FirebaseFirestoreWrappers from '../firebase/FirebaseFirestoreWrappers';
 import FirebaseAuthWrappers from '../firebase/FirebaseAuthWrappers';
@@ -31,7 +31,7 @@ export default class SingleSignOn {
         this.redirectData = Linking.parse(result.url);
       }
     } catch (error) {
-      showMessage(error);
+      showMessage(error, 'Error with web browser');
       return undefined;
     }
 
@@ -39,28 +39,37 @@ export default class SingleSignOn {
       .loginWithCredentialJSON(this.redirectData.queryParams.credential)
       .then((userCredential) => {
         // Make sure firebase sent a profile option
-        const profile = getAdditionalUserInfo(userCredential)?.profile;
-        if (!profile) {
+        const additionalInfo = getAdditionalUserInfo(userCredential);
+        if (!additionalInfo.profile || !userCredential.user?.email) {
           // If it didn't then tell the user, sign out, and log a message including the complete userCredential
           showMessage(
-            'Profile not recieved\nSign in failed',
+            'Required information not recieved\nSign in failed',
             'Invalid server response',
             FirebaseAuthWrappers.signOut,
             true,
             userCredential
           );
+          return undefined;
         }
 
-        FirebaseFirestoreWrappers.setUserFirestoreDoc(
-          {
-            linkblue: profile['name-id'],
-            displayName: profile['display-name'],
-            firstName: profile['first-name'],
-            lastName: profile['last-name'],
-            email: profile.email,
-          },
-          userCredential.user.uid
-        );
+        if (additionalInfo.providerId === 'saml.danceblue-firebase-linkblue-saml') {
+          FirebaseFirestoreWrappers.setUserFirestoreDoc(
+            {
+              linkblue: userCredential.user.email.substring(
+                0,
+                userCredential.user.email.indexOf('@')
+              ),
+              firstName: additionalInfo.profile['first-name'],
+              lastName: additionalInfo.profile['last-name'],
+              email: additionalInfo.profile.email,
+            },
+            userCredential.user.uid
+          );
+          updateProfile(userCredential.user, {
+            displayName: additionalInfo.profile['display-name'],
+          });
+        }
+        return userCredential;
       })
       .catch(handleFirebaeError);
   }
