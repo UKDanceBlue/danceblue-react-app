@@ -61,7 +61,6 @@ const ProfileScreen = ({ auth, firestore }) => {
                     </Text>
                     <Text>{user.email}</Text>
                     <Button onPress={handleSignOut} title="Log out" />
-                    <Button onPress={auth.signOut} title="Log out hard" />
                   </>
                 ) /* End of logged in view */
               }
