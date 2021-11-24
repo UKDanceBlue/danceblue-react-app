@@ -118,7 +118,7 @@ const FirebaseAuthWrappers = {
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinanonymously signinanonymously}
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
    */
-  signInAnon: () => signInAnonymously(),
+  signInAnon: () => signInAnonymously(authInstance),
   /**
    * Signs a user in using a pre-existing auth credential
    * @param {String} credential The AuthCredential, obtained from another sign in method in a JSON string
