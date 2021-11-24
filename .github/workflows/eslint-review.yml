@@ -12,6 +12,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Install modules
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --non-interactive
       - name: Run ESLint
         run: eslint .

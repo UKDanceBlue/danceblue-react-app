@@ -21,10 +21,5 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
           username: ${{ secrets.EXPO_CLI_USERNAME }}
           password: ${{ secrets.EXPO_CLI_PASSWORD }}
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --frozen-lockfile --non-interactive
       - run: expo publish --release-channel dev-pr-${{ github.event.number }}
-      - uses: unsplash/comment-on-pr@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          msg: App is ready for review, you can [see it here](https://expo.dev/@bycedric/use-expo?release-channel=dev-pr-${{ github.event.number }}).
