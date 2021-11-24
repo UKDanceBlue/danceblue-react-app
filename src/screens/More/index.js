@@ -110,4 +110,4 @@ MoreScreen.navigationOptions = {
   title: 'More',
 };
 
-export default withFirebaseHOC(MoreScreen);
+export default MoreScreen;
