@@ -11,14 +11,15 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.yarn
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 14.x
+      - run: yarn test
       - uses: expo/expo-github-action@v6
         with:
           expo-version: 4.x
@@ -26,5 +27,5 @@ jobs:
           token: ${{ secrets.EXPO_CLI_TOKEN }}
           username: ${{ secrets.EXPO_CLI_USERNAME }}
           password: ${{ secrets.EXPO_CLI_PASSWORD }}
-      - run: npm ci
+      - run: yarn install --frozen-lockfile
       - run: expo publish --release-channel dev-main

@@ -62,7 +62,7 @@ through giving them and their parent’s comfort.
 
 - [React Native](https://reactnative.dev/)
 - [Expo](https://expo.dev/)
-- [npm](https://www.npmjs.com/)
+- [yarn](https://yarnpkg.com/)
 - [VS Code](https://code.visualstudio.com/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -78,15 +78,15 @@ To get a local copy up and running follow these simple steps.
 After you clone the repository install expo CLI
 
 ```sh
-npm install expo-cli@latest -g
+yarn install expo-cli@latest -g
 ```
 
 ### Getting up and running
 
-1. Run `npm ci` to install the same dependency tree I use or `npm install` to generate a new dependency tree
-2. (optional) run `npm run gen-doc` and open doc/index.html to see an overview of the project
+1. Run `yarn --frozen-lockfile` to install the same dependency tree I use or `yarn install` to generate a new dependency tree
+2. (optional) run `yarn gen-doc` and open doc/index.html to see an overview of the project
 3. Install expo go on your phone or on an emulator
-4. Run `npm run start` to start Expo's testing environment
+4. Run `yarn start` to start Expo's testing environment
 5. Scan the QR code shown in the browser window that shows up
 6. You should now be able to work on the code and live reload the app on expo go as you work
 
