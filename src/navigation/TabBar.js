@@ -1,7 +1,7 @@
 // Import third-party dependencies
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 // Import first-party dependencies
 import ScoreboardScreen from '../screens/ScoreBoardScreen';
@@ -28,7 +28,7 @@ const TabBar = () => (
 
         // You can return any component that you like here!
         return (
-          <Icon
+          <FontAwesome5
             name={iconMap[route.name]}
             size={size}
             color={color}

@@ -1,7 +1,6 @@
 // Import third-party dependencies
 import React, { useEffect, useState, useCallback } from 'react';
 import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 
 // Import first-party dependencies
 import Place from './Place';

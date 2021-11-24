@@ -2,7 +2,7 @@
 // Import third-party dependencies
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 /**
  * A row-based component showing a team name, their rank (if applicable), and their points
@@ -29,13 +29,13 @@ const Place = ({
   // The 'top3Icon function adds an award icon to the top 3 teams
   const top3Icon = (rankForIcon) => {
     if (rankForIcon === 1) {
-      return <Icon name="award" size={30} color="gold" />;
+      return <FontAwesome5 name="award" size={30} color="gold" />;
     }
     if (rankForIcon === 2) {
-      return <Icon name="award" size={30} color="silver" />;
+      return <FontAwesome5 name="award" size={30} color="silver" />;
     }
     if (rankForIcon === 3) {
-      return <Icon name="award" size={30} color="blue" />;
+      return <FontAwesome5 name="award" size={30} color="blue" />;
     }
     return null;
   };

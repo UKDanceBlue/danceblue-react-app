@@ -42,6 +42,7 @@
     "expo-linking": "~2.4.2",
     "expo-notifications": "~0.13.3",
     "expo-web-browser": "~10.0.3",
+    "@expo/vector-icons": "^12.0.0",
     "firebase": "^9.4.1",
     "formik": "^2.2.9",
     "moment": "^2.29.1",
@@ -57,7 +58,6 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.8.0",
     "react-native-super-grid": "^4.1.1",
-    "react-native-vector-icons": "^8.1.0",
     "react-native-web": "0.17.5",
     "react-native-webview": "11.13.0",
     "recompose": "npm:react-recompose@^0.31.1"
