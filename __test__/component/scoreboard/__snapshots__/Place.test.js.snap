@@ -1,0 +1,513 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Place component renders correctly 1st place 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "borderBottomColor": "#999999",
+      "borderBottomWidth": 0.2,
+      "flexDirection": "row",
+      "justifyContent": "space-between",
+      "paddingBottom": 10,
+      "paddingTop": 10,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+        "width": "20%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 20,
+          "fontWeight": "bold",
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+    >
+      1
+    </Text>
+    <Text
+      allowFontScaling={false}
+      style={
+        Array [
+          Object {
+            "color": "gold",
+            "fontSize": 30,
+          },
+          undefined,
+          Object {
+            "fontFamily": "FontAwesome5Free-Solid",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {
+            "fontWeight": "700",
+          },
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "column",
+        "width": "50%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 15,
+          "fontWeight": "bold",
+        }
+      }
+    >
+      Team Name
+    </Text>
+    <Text
+      style={
+        Object {
+          "fontStyle": "italic",
+          "fontWeight": "normal",
+        }
+      }
+    >
+      69
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "justifyContent": "flex-end",
+        "width": "30%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 17,
+          "fontWeight": "bold",
+          "paddingRight": 10,
+          "textAlign": "right",
+        }
+      }
+    >
+      420
+       points
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Place component renders correctly 2nd place 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "borderBottomColor": "#999999",
+      "borderBottomWidth": 0.2,
+      "flexDirection": "row",
+      "justifyContent": "space-between",
+      "paddingBottom": 10,
+      "paddingTop": 10,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+        "width": "20%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 20,
+          "fontWeight": "bold",
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+    >
+      1
+    </Text>
+    <Text
+      allowFontScaling={false}
+      style={
+        Array [
+          Object {
+            "color": "gold",
+            "fontSize": 30,
+          },
+          undefined,
+          Object {
+            "fontFamily": "FontAwesome5Free-Solid",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {
+            "fontWeight": "700",
+          },
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "column",
+        "width": "50%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 15,
+          "fontWeight": "bold",
+        }
+      }
+    >
+      Team Name
+    </Text>
+    <Text
+      style={
+        Object {
+          "fontStyle": "italic",
+          "fontWeight": "normal",
+        }
+      }
+    >
+      69
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "justifyContent": "flex-end",
+        "width": "30%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 17,
+          "fontWeight": "bold",
+          "paddingRight": 10,
+          "textAlign": "right",
+        }
+      }
+    >
+      420
+       points
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Place component renders correctly 3rd place 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "borderBottomColor": "#999999",
+      "borderBottomWidth": 0.2,
+      "flexDirection": "row",
+      "justifyContent": "space-between",
+      "paddingBottom": 10,
+      "paddingTop": 10,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+        "width": "20%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 20,
+          "fontWeight": "bold",
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+    >
+      1
+    </Text>
+    <Text
+      allowFontScaling={false}
+      style={
+        Array [
+          Object {
+            "color": "gold",
+            "fontSize": 30,
+          },
+          undefined,
+          Object {
+            "fontFamily": "FontAwesome5Free-Solid",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {
+            "fontWeight": "700",
+          },
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "column",
+        "width": "50%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 15,
+          "fontWeight": "bold",
+        }
+      }
+    >
+      Team Name
+    </Text>
+    <Text
+      style={
+        Object {
+          "fontStyle": "italic",
+          "fontWeight": "normal",
+        }
+      }
+    >
+      69
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "justifyContent": "flex-end",
+        "width": "30%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 17,
+          "fontWeight": "bold",
+          "paddingRight": 10,
+          "textAlign": "right",
+        }
+      }
+    >
+      420
+       points
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Place component renders correctly highlighted 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "#ffffc8",
+      "borderBottomColor": "#999999",
+      "borderBottomWidth": 0.2,
+      "flexDirection": "row",
+      "justifyContent": "space-between",
+      "paddingBottom": 10,
+      "paddingTop": 10,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+        "width": "20%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 20,
+          "fontWeight": "bold",
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+    >
+      4
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "column",
+        "width": "50%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 15,
+          "fontWeight": "bold",
+        }
+      }
+    >
+      Team Name
+    </Text>
+    <Text
+      style={
+        Object {
+          "fontStyle": "italic",
+          "fontWeight": "normal",
+        }
+      }
+    >
+      69
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "justifyContent": "flex-end",
+        "width": "30%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 17,
+          "fontWeight": "bold",
+          "paddingRight": 10,
+          "textAlign": "right",
+        }
+      }
+    >
+      420
+       points
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Place component renders correctly normally 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "borderBottomColor": "#999999",
+      "borderBottomWidth": 0.2,
+      "flexDirection": "row",
+      "justifyContent": "space-between",
+      "paddingBottom": 10,
+      "paddingTop": 10,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+        "width": "20%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 20,
+          "fontWeight": "bold",
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+    >
+      4
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "column",
+        "width": "50%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 15,
+          "fontWeight": "bold",
+        }
+      }
+    >
+      Team Name
+    </Text>
+    <Text
+      style={
+        Object {
+          "fontStyle": "italic",
+          "fontWeight": "normal",
+        }
+      }
+    >
+      69
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "justifyContent": "flex-end",
+        "width": "30%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "fontSize": 17,
+          "fontWeight": "bold",
+          "paddingRight": 10,
+          "textAlign": "right",
+        }
+      }
+    >
+      420
+       points
+    </Text>
+  </View>
+</View>
+`;
