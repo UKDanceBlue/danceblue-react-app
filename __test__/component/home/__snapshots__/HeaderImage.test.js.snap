@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "alignSelf": "center",
+      "height": 280,
+      "justifyContent": "center",
+      "overflow": "hidden",
+      "width": "100%",
+    }
+  }
+>
+  <View
+    accessibilityIgnoresInvertColors={true}
+    style={
+      Object {
+        "flex": 3,
+        "height": "100%",
+        "resizeMode": "contain",
+        "width": "100%",
+      }
+    }
+  >
+    <Image
+      source={1}
+      style={
+        Array [
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          Object {
+            "height": "100%",
+            "width": "100%",
+          },
+          undefined,
+        ]
+      }
+    />
+    <Image
+      source={1}
+      style={
+        Object {
+          "backgroundColor": "#FFFFFF99",
+          "flex": 1,
+          "height": null,
+          "resizeMode": "contain",
+          "width": null,
+        }
+      }
+    />
+  </View>
+</View>
+`;
