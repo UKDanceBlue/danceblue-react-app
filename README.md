@@ -1,4 +1,4 @@
-[![Test codebase](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/jest-review.yml/badge.svg?branch=main)](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/jest-review.yml)
+[![Test codebase](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/jest-review.yml/badge.svg)](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/jest-review.yml)
 <div id="top"></div>
 
 <!-- PROJECT LOGO -->
