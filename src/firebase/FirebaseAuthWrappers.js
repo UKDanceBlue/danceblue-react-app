@@ -15,13 +15,13 @@ import { getReactNativePersistence } from 'firebase/auth/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { firebaseApp } from './FirebaseContext';
 
-export const auth = initializeAuth(firebaseApp, {
+export const authInstance = initializeAuth(firebaseApp, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
 
 // Keep an up to date currentUser reference available
-let { currentUser } = auth;
-onAuthStateChanged(auth, (newUser) => {
+let { currentUser } = authInstance;
+onAuthStateChanged(authInstance, (newUser) => {
   currentUser = newUser;
 });
 
@@ -71,7 +71,7 @@ const FirebaseAuthWrappers = {
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
    * @function
    */
-  loginWithEmail: (email, password) => signInWithEmailAndPassword(auth, email, password),
+  loginWithEmail: (email, password) => signInWithEmailAndPassword(authInstance, email, password),
   /**
    * Signup a user using email/password authentication
    *
@@ -83,14 +83,15 @@ const FirebaseAuthWrappers = {
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth#usercredential UserCredential}
    * @function
    */
-  signupWithEmail: (email, password) => createUserWithEmailAndPassword(auth, email, password),
+  signupWithEmail: (email, password) =>
+    createUserWithEmailAndPassword(authInstance, email, password),
   /**
    * Signs out the user
    * @returns A promise that resolves once the signout is complete
    * @see {@link https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signout signOut}
    * @function
    */
-  signOut: () => signOut(auth),
+  signOut: () => signOut(authInstance),
   /**
    * Adds an observer for changes to the user's sign-in state.
    * @param {function} observer An observer function
@@ -101,7 +102,7 @@ const FirebaseAuthWrappers = {
    * @function
    */
   checkAuthUser: (observer, onError, onCompleted) =>
-    onAuthStateChanged(auth, observer, onError, onCompleted),
+    onAuthStateChanged(authInstance, observer, onError, onCompleted),
   /**
    * Gets the currently signed in user from Firebase
    * @returns The currently signed in user
@@ -125,7 +126,7 @@ const FirebaseAuthWrappers = {
    */
   loginWithCredentialJSON: (jsonCredential) => {
     const credentials = SAMLAuthProvider.credentialFromJSON(JSON.parse(jsonCredential));
-    return signInWithCredential(auth, credentials);
+    return signInWithCredential(authInstance, credentials);
   },
   /**
    * Links the currently signed in user's account with the given credential
