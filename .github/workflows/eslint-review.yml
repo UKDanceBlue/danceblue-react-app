@@ -1,4 +1,4 @@
-name: ESlint Review
+name: Lint codebase
 on: pull_request
 jobs:
   build:
