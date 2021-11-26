@@ -87,47 +87,4 @@ const ProfileScreen = ({ auth, firestore }) => {
   );
 };
 
-const localStyles = StyleSheet.create({
-  headerText: {
-    flex: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  header: {
-    flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  badges: {
-    flex: 5,
-  },
-  avatar: {
-    flex: 1,
-    height: 100,
-    width: 100,
-    resizeMode: 'contain',
-    paddingLeft: 50,
-  },
-  footer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  sectionTitleView: {
-    borderBottomColor: '#0033A0',
-    borderBottomWidth: 1,
-    textAlign: 'center',
-  },
-  container: {
-    overflow: 'hidden',
-    padding: 10,
-    flex: 1,
-  },
-});
-
 export default withFirebaseHOC(ProfileScreen);
