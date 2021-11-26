@@ -1,10 +1,12 @@
 // Import third-party dependencies
 import React, { useEffect, useState, useCallback } from 'react';
 import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 // Import first-party dependencies
 import Place from './Place';
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
+import { globalColors } from '../../theme';
 
 /**
  * Standings implementation for the Morale Cup leaderboard
@@ -111,7 +113,7 @@ const Standings = ({
           showScoresByTeam={showScoresByTeam}
           showPointsPerMember={showPointsPerMember}
           pointsPerMember={Math.floor((team.points / team.size) * 10) / 10} // rounds to 1 decimal point
-          isHighlighted={team.number === userTeamNum}
+          isHighlighted={team.number === userTeamNum && userTeamNum}
         />
       ));
     // Creates places list for people, which renders Place object for each user in order
@@ -128,7 +130,7 @@ const Standings = ({
           size={1}
           showPerMember={showPointsPerMember}
           pointsPerMember={user.points}
-          isHighlighted={user.id === userID}
+          isHighlighted={user.id === userID && userID}
         />
       ));
   }
@@ -159,7 +161,7 @@ const Standings = ({
         onPress={() => {
           navigate('Scoreboard');
         }}
-        underlayColor="#dddddd"
+        underlayColor={globalColors.white}
         style={styles.more}
       >
         <Text>Show more...</Text>
@@ -173,7 +175,7 @@ const Standings = ({
         <View style={styles.ListTitleView}>
           <Text style={styles.ListTitle}>MORALE POINTS STANDINGS </Text>
           <TouchableHighlight style={styles.syncIcon} onPress={() => loadTeams()}>
-            <Icon name="sync" size={20} color="#0033A0" />
+            <FontAwesome5 name="sync" size={20} color={globalColors.dbBlue} />
           </TouchableHighlight>
         </View>
         {!isLoading && (

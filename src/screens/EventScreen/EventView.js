@@ -6,12 +6,13 @@ import * as Calendar from 'expo-calendar';
 import moment from 'moment';
 
 // Import first-party dependencies
+import { globalColors } from '../../theme';
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 import { handleFirebaeError } from '../../common/AlertUtils';
 
 const danceBlueCalendarConfig = {
   title: 'DanceBlue',
-  color: '#0033A0',
+  color: globalColors.dbBlue,
   enitityType: Calendar.EntityTypes.EVENT,
   source: {
     isLocalAccount: true,

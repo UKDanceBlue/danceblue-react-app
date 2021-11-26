@@ -15,6 +15,7 @@ import FirebaseCoreWrappers from './firebase/FirebaseCoreWrappers';
 import { FirebaseProvider } from './firebase/FirebaseContext';
 import RootScreen from './navigation/RootScreen';
 import { showMessage } from './common/AlertUtils';
+import { globalColors } from './theme';
 
 // Fix firestore error - can be removed if issue is resolved in package
 if (!global.btoa) {
@@ -78,7 +79,7 @@ const App = ({}) => {
         name: 'default',
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
+        lightColor: globalColors.red,
       });
     }
   };

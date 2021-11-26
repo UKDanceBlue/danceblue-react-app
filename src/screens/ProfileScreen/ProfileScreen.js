@@ -4,6 +4,7 @@ import { Text, View, StyleSheet, ActivityIndicator, Button } from 'react-native'
 import SingleSignOn from '../../common/SingleSignOn';
 
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
+import { globalStyles, globalColors } from '../../theme';
 
 /**
  * Component for "Profile" screen in main navigation
@@ -43,11 +44,11 @@ const ProfileScreen = ({ auth, firestore }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={globalStyles.genericView}>
       <>
         {
           /* Start of still loading view */ isLoading && (
-            <ActivityIndicator style={styles.image} size="large" color="blue" />
+            <ActivityIndicator size="large" color={globalColors.dbBlue} />
           ) /* End of still loading view */
         }
         {
@@ -86,7 +87,7 @@ const ProfileScreen = ({ auth, firestore }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   headerText: {
     flex: 3,
     alignItems: 'center',
