@@ -17,10 +17,11 @@ const MainStackRoot = () => (
   <MainStack.Navigator
     screenOptions={({ navigation }) => ({
       headerRight: ({ tintColor }) => <HeaderIcons navigation={navigation} color={tintColor} />,
+      headerBackTitle: 'Back',
     })}
   >
     <MainStack.Screen name="Tab" options={{ headerShown: false }} component={TabBar} />
-    <MainStack.Screen name="Profile" component={ProfileScreen} />
+    <MainStack.Screen name="Profile" component={ProfileScreen} options={{ headerRight: null }} />
     <MainStack.Screen
       name="FAQ"
       component={GenericWebviewScreen}
