@@ -1,5 +1,9 @@
 import { StyleSheet } from 'react-native';
 
+/**
+ * This is still used by a couple of legacy components
+ * @deprecated
+ */
 export const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
