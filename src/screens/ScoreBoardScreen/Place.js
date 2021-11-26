@@ -28,8 +28,9 @@ const Place = ({
 }) => {
   // The 'top3Icon function adds an award icon to the top 3 teams
   const top3Icon = (rankForIcon) => {
-    if (rankForIcon === 1) {
-      return <FontAwesome5 name="award" size={30} color="gold" />;
+    switch (rankForIcon) {
+      case 1:
+        return <FontAwesome5 name="award" size={30} color="gold" />;
     }
     if (rankForIcon === 2) {
       return <FontAwesome5 name="award" size={30} color="silver" />;
