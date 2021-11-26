@@ -13,28 +13,11 @@ export const globalColors = {
 };
 
 export const globalStyles = StyleSheet.create({
-  genericBackground: {
-    flex: 3,
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain',
-  },
-  genericIcon: {
-    width: 50,
-    height: 50,
-  },
   genericHeaderContainer: {
     flex: 2,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: globalColors.lightBlue,
-  },
-  avatar: {
-    flex: 1,
-    height: 100,
-    width: 100,
-    resizeMode: 'contain',
-    paddingLeft: 50,
   },
   genericButton: {
     alignItems: 'center',
@@ -45,12 +28,10 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
   },
   genericView: {
-    ...StyleSheet.absoluteFill,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: globalColors.white,
     flex: 1,
-    borderRadius: 10,
   },
   genericText: {
     color: globalColors.darkNavy,
@@ -79,6 +60,18 @@ export const globalStyles = StyleSheet.create({
     width: '30%',
     justifyContent: 'flex-end',
     textAlign: 'right',
+  },
+  genericBackgroundImage: {
+    flex: 3,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+  },
+  genericIcon: {
+    flex: 1,
+    height: null,
+    width: null,
+    resizeMode: 'contain',
   },
 });
 

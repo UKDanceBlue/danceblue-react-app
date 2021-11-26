@@ -3,13 +3,20 @@
 exports[`renders correctly 1`] = `
 <View
   style={
-    Object {
-      "alignSelf": "center",
-      "height": 280,
-      "justifyContent": "center",
-      "overflow": "hidden",
-      "width": "100%",
-    }
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#F2F3F8",
+        "flex": 1,
+        "justifyContent": "center",
+      },
+      Object {
+        "alignSelf": "center",
+        "height": 280,
+        "overflow": "hidden",
+        "width": "100%",
+      },
+    ]
   }
 >
   <View
@@ -45,13 +52,17 @@ exports[`renders correctly 1`] = `
     <Image
       source={1}
       style={
-        Object {
-          "backgroundColor": "#FFFFFF99",
-          "flex": 1,
-          "height": null,
-          "resizeMode": "contain",
-          "width": null,
-        }
+        Array [
+          Object {
+            "flex": 1,
+            "height": null,
+            "resizeMode": "contain",
+            "width": null,
+          },
+          Object {
+            "backgroundColor": "#FFFFFF99",
+          },
+        ]
       }
     />
   </View>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, ImageBackground, Image, StyleSheet } from 'react-native';
+import { globalStyles } from '../../theme';
 
 const backgroundImg = require('../../../assets/home/db20_ribbon.jpg');
 const dbLogo = require('../../../assets/home/DB_Primary_Logo-01.png');
@@ -8,34 +9,21 @@ const dbLogo = require('../../../assets/home/DB_Primary_Logo-01.png');
  * A header image container used on the home screen
  */
 const HeaderImage = () => (
-  <View style={styles.container}>
-    <ImageBackground source={backgroundImg} style={styles.background}>
-      <Image source={dbLogo} style={styles.logo} />
+  <View style={localStyles.headerContainer}>
+    <ImageBackground source={backgroundImg} style={globalStyles.genericBackgroundImage}>
+      <Image source={dbLogo} style={localStyles.dbLogo} />
     </ImageBackground>
   </View>
 );
 
-const styles = StyleSheet.create({
-  container: {
+const localStyles = {
+  headerContainer: StyleSheet.compose(globalStyles.genericView, {
     height: 280,
     width: '100%',
-    justifyContent: 'center',
     alignSelf: 'center',
     overflow: 'hidden',
-  },
-  background: {
-    flex: 3,
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain',
-  },
-  logo: {
-    flex: 1,
-    height: null,
-    width: null,
-    resizeMode: 'contain',
-    backgroundColor: '#FFFFFF99',
-  },
-});
+  }),
+  dbLogo: StyleSheet.compose(globalStyles.genericIcon, { backgroundColor: '#FFFFFF99' }),
+};
 
 export default HeaderImage;
