@@ -5,8 +5,8 @@ exports[`Place component renders correctly 1st place 1`] = `
   style={
     Object {
       "alignItems": "center",
-      "borderBottomColor": "#999999",
-      "borderBottomWidth": 0.2,
+      "borderBottomColor": "#1F2236",
+      "borderBottomWidth": 0.5,
       "flexDirection": "row",
       "justifyContent": "space-between",
       "paddingBottom": 10,
@@ -24,12 +24,18 @@ exports[`Place component renders correctly 1st place 1`] = `
   >
     <Text
       style={
-        Object {
-          "fontSize": 20,
-          "fontWeight": "bold",
-          "marginLeft": 10,
-          "marginRight": 10,
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 20,
+            "marginLeft": 10,
+            "marginRight": 10,
+          },
+        ]
       }
     >
       1
@@ -61,16 +67,23 @@ exports[`Place component renders correctly 1st place 1`] = `
     style={
       Object {
         "flexDirection": "column",
+        "textAlign": "center",
         "width": "50%",
       }
     }
   >
     <Text
       style={
-        Object {
-          "fontSize": 15,
-          "fontWeight": "bold",
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 15,
+          },
+        ]
       }
     >
       Team Name
@@ -78,8 +91,10 @@ exports[`Place component renders correctly 1st place 1`] = `
     <Text
       style={
         Object {
+          "color": "#1F2236",
+          "fontSize": 15,
           "fontStyle": "italic",
-          "fontWeight": "normal",
+          "fontWeight": "bold",
         }
       }
     >
@@ -90,18 +105,24 @@ exports[`Place component renders correctly 1st place 1`] = `
     style={
       Object {
         "justifyContent": "flex-end",
+        "textAlign": "right",
         "width": "30%",
       }
     }
   >
     <Text
       style={
-        Object {
-          "fontSize": 17,
-          "fontWeight": "bold",
-          "paddingRight": 10,
-          "textAlign": "right",
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 17,
+            "paddingRight": 10,
+          },
+        ]
       }
     >
       420
@@ -116,8 +137,8 @@ exports[`Place component renders correctly 2nd place 1`] = `
   style={
     Object {
       "alignItems": "center",
-      "borderBottomColor": "#999999",
-      "borderBottomWidth": 0.2,
+      "borderBottomColor": "#1F2236",
+      "borderBottomWidth": 0.5,
       "flexDirection": "row",
       "justifyContent": "space-between",
       "paddingBottom": 10,
@@ -135,12 +156,18 @@ exports[`Place component renders correctly 2nd place 1`] = `
   >
     <Text
       style={
-        Object {
-          "fontSize": 20,
-          "fontWeight": "bold",
-          "marginLeft": 10,
-          "marginRight": 10,
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 20,
+            "marginLeft": 10,
+            "marginRight": 10,
+          },
+        ]
       }
     >
       1
@@ -172,16 +199,23 @@ exports[`Place component renders correctly 2nd place 1`] = `
     style={
       Object {
         "flexDirection": "column",
+        "textAlign": "center",
         "width": "50%",
       }
     }
   >
     <Text
       style={
-        Object {
-          "fontSize": 15,
-          "fontWeight": "bold",
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 15,
+          },
+        ]
       }
     >
       Team Name
@@ -189,8 +223,10 @@ exports[`Place component renders correctly 2nd place 1`] = `
     <Text
       style={
         Object {
+          "color": "#1F2236",
+          "fontSize": 15,
           "fontStyle": "italic",
-          "fontWeight": "normal",
+          "fontWeight": "bold",
         }
       }
     >
@@ -201,18 +237,24 @@ exports[`Place component renders correctly 2nd place 1`] = `
     style={
       Object {
         "justifyContent": "flex-end",
+        "textAlign": "right",
         "width": "30%",
       }
     }
   >
     <Text
       style={
-        Object {
-          "fontSize": 17,
-          "fontWeight": "bold",
-          "paddingRight": 10,
-          "textAlign": "right",
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 17,
+            "paddingRight": 10,
+          },
+        ]
       }
     >
       420
@@ -227,8 +269,8 @@ exports[`Place component renders correctly 3rd place 1`] = `
   style={
     Object {
       "alignItems": "center",
-      "borderBottomColor": "#999999",
-      "borderBottomWidth": 0.2,
+      "borderBottomColor": "#1F2236",
+      "borderBottomWidth": 0.5,
       "flexDirection": "row",
       "justifyContent": "space-between",
       "paddingBottom": 10,
@@ -246,12 +288,18 @@ exports[`Place component renders correctly 3rd place 1`] = `
   >
     <Text
       style={
-        Object {
-          "fontSize": 20,
-          "fontWeight": "bold",
-          "marginLeft": 10,
-          "marginRight": 10,
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 20,
+            "marginLeft": 10,
+            "marginRight": 10,
+          },
+        ]
       }
     >
       1
@@ -283,16 +331,23 @@ exports[`Place component renders correctly 3rd place 1`] = `
     style={
       Object {
         "flexDirection": "column",
+        "textAlign": "center",
         "width": "50%",
       }
     }
   >
     <Text
       style={
-        Object {
-          "fontSize": 15,
-          "fontWeight": "bold",
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 15,
+          },
+        ]
       }
     >
       Team Name
@@ -300,8 +355,10 @@ exports[`Place component renders correctly 3rd place 1`] = `
     <Text
       style={
         Object {
+          "color": "#1F2236",
+          "fontSize": 15,
           "fontStyle": "italic",
-          "fontWeight": "normal",
+          "fontWeight": "bold",
         }
       }
     >
@@ -312,18 +369,24 @@ exports[`Place component renders correctly 3rd place 1`] = `
     style={
       Object {
         "justifyContent": "flex-end",
+        "textAlign": "right",
         "width": "30%",
       }
     }
   >
     <Text
       style={
-        Object {
-          "fontSize": 17,
-          "fontWeight": "bold",
-          "paddingRight": 10,
-          "textAlign": "right",
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 17,
+            "paddingRight": 10,
+          },
+        ]
       }
     >
       420
@@ -336,16 +399,20 @@ exports[`Place component renders correctly 3rd place 1`] = `
 exports[`Place component renders correctly highlighted 1`] = `
 <View
   style={
-    Object {
-      "alignItems": "center",
-      "backgroundColor": "#ffffc8",
-      "borderBottomColor": "#999999",
-      "borderBottomWidth": 0.2,
-      "flexDirection": "row",
-      "justifyContent": "space-between",
-      "paddingBottom": 10,
-      "paddingTop": 10,
-    }
+    Array [
+      Object {
+        "alignItems": "center",
+        "borderBottomColor": "#1F2236",
+        "borderBottomWidth": 0.5,
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "paddingBottom": 10,
+        "paddingTop": 10,
+      },
+      Object {
+        "backgroundColor": "#8BA9FC",
+      },
+    ]
   }
 >
   <View
@@ -358,12 +425,18 @@ exports[`Place component renders correctly highlighted 1`] = `
   >
     <Text
       style={
-        Object {
-          "fontSize": 20,
-          "fontWeight": "bold",
-          "marginLeft": 10,
-          "marginRight": 10,
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 20,
+            "marginLeft": 10,
+            "marginRight": 10,
+          },
+        ]
       }
     >
       4
@@ -373,16 +446,23 @@ exports[`Place component renders correctly highlighted 1`] = `
     style={
       Object {
         "flexDirection": "column",
+        "textAlign": "center",
         "width": "50%",
       }
     }
   >
     <Text
       style={
-        Object {
-          "fontSize": 15,
-          "fontWeight": "bold",
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 15,
+          },
+        ]
       }
     >
       Team Name
@@ -390,8 +470,10 @@ exports[`Place component renders correctly highlighted 1`] = `
     <Text
       style={
         Object {
+          "color": "#1F2236",
+          "fontSize": 15,
           "fontStyle": "italic",
-          "fontWeight": "normal",
+          "fontWeight": "bold",
         }
       }
     >
@@ -402,18 +484,24 @@ exports[`Place component renders correctly highlighted 1`] = `
     style={
       Object {
         "justifyContent": "flex-end",
+        "textAlign": "right",
         "width": "30%",
       }
     }
   >
     <Text
       style={
-        Object {
-          "fontSize": 17,
-          "fontWeight": "bold",
-          "paddingRight": 10,
-          "textAlign": "right",
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 17,
+            "paddingRight": 10,
+          },
+        ]
       }
     >
       420
@@ -428,8 +516,8 @@ exports[`Place component renders correctly normally 1`] = `
   style={
     Object {
       "alignItems": "center",
-      "borderBottomColor": "#999999",
-      "borderBottomWidth": 0.2,
+      "borderBottomColor": "#1F2236",
+      "borderBottomWidth": 0.5,
       "flexDirection": "row",
       "justifyContent": "space-between",
       "paddingBottom": 10,
@@ -447,12 +535,18 @@ exports[`Place component renders correctly normally 1`] = `
   >
     <Text
       style={
-        Object {
-          "fontSize": 20,
-          "fontWeight": "bold",
-          "marginLeft": 10,
-          "marginRight": 10,
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 20,
+            "marginLeft": 10,
+            "marginRight": 10,
+          },
+        ]
       }
     >
       4
@@ -462,16 +556,23 @@ exports[`Place component renders correctly normally 1`] = `
     style={
       Object {
         "flexDirection": "column",
+        "textAlign": "center",
         "width": "50%",
       }
     }
   >
     <Text
       style={
-        Object {
-          "fontSize": 15,
-          "fontWeight": "bold",
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 15,
+          },
+        ]
       }
     >
       Team Name
@@ -479,8 +580,10 @@ exports[`Place component renders correctly normally 1`] = `
     <Text
       style={
         Object {
+          "color": "#1F2236",
+          "fontSize": 15,
           "fontStyle": "italic",
-          "fontWeight": "normal",
+          "fontWeight": "bold",
         }
       }
     >
@@ -491,18 +594,24 @@ exports[`Place component renders correctly normally 1`] = `
     style={
       Object {
         "justifyContent": "flex-end",
+        "textAlign": "right",
         "width": "30%",
       }
     }
   >
     <Text
       style={
-        Object {
-          "fontSize": 17,
-          "fontWeight": "bold",
-          "paddingRight": 10,
-          "textAlign": "right",
-        }
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 17,
+            "paddingRight": 10,
+          },
+        ]
       }
     >
       420
