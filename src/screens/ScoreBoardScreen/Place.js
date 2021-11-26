@@ -3,6 +3,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { globalColors, globalStyles, globalTextStyles } from '../../theme';
 
 /**
  * A row-based component showing a team name, their rank (if applicable), and their points
@@ -31,38 +32,45 @@ const Place = ({
     switch (rankForIcon) {
       case 1:
         return <FontAwesome5 name="award" size={30} color="gold" />;
+      case 2:
+        return <FontAwesome5 name="award" size={30} color="silver" />;
+      case 3:
+        return <FontAwesome5 name="award" size={30} color="blue" />;
+      default:
+        return null;
     }
-    if (rankForIcon === 2) {
-      return <FontAwesome5 name="award" size={30} color="silver" />;
-    }
-    if (rankForIcon === 3) {
-      return <FontAwesome5 name="award" size={30} color="blue" />;
-    }
-    return null;
   };
   return (
     // Renders the individual row of the leaderboard for each team
-    <View style={isHighlighted ? styles.highlightedRow : styles.row}>
-      <View style={styles.left}>
-        <Text style={styles.place}>
+    <View
+      style={
+        isHighlighted
+          ? StyleSheet.compose(globalStyles.genericRow, {
+              backgroundColor: globalColors.lightBlue,
+            })
+          : globalStyles.genericRow
+      }
+    >
+      <View style={globalStyles.genericRowLeft}>
+        <Text style={localStyles.place}>
           {/* Renders the rank/place of the team */}
           {rank}
         </Text>
         {/* Calls the top3Icon function */}
         {top3Icon(rank)}
       </View>
-      <View style={styles.middle}>
-        <Text style={styles.name}>
+      <View style={globalStyles.genericRowCenter}>
+        <Text style={localStyles.name}>
           {/* Renders the team name */}
           {teamName}
         </Text>
-        <Text style={styles.team}>
+        <Text style={globalTextStyles.italicText}>
           {/* Renders the team number */}
           {teamNumber}
         </Text>
       </View>
-      <View style={styles.right}>
-        <Text style={styles.bold}>
+      <View style={globalStyles.genericRowRight}>
+        <Text style={localStyles.points}>
           {/* Renders the number of points earned */}
           {showPointsPerMember ? (pointsPerMember < 1 ? '< 1 ' : pointsPerMember) : points}
           {showPointsPerMember ? ' points' : points === 1 ? ' point' : ' points'}
@@ -72,58 +80,19 @@ const Place = ({
   );
 };
 
-const styles = StyleSheet.create({
-  row: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 0.2,
-    borderBottomColor: '#999999',
-  },
-  highlightedRow: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 0.2,
-    borderBottomColor: '#999999',
-    backgroundColor: '#ffffc8',
-  },
-  left: {
-    width: '20%',
-    flexDirection: 'row',
-  },
-  right: {
-    width: '30%',
-    justifyContent: 'flex-end',
-  },
-  middle: {
-    width: '50%',
-    flexDirection: 'column',
-  },
-  place: {
+const localStyles = {
+  place: StyleSheet.compose(globalTextStyles.boldText, {
     fontSize: 20,
-    fontWeight: 'bold',
     marginLeft: 10,
     marginRight: 10,
-  },
-  bold: {
-    fontWeight: 'bold',
-    textAlign: 'right',
+  }),
+  name: StyleSheet.compose(globalTextStyles.boldText, {
+    fontSize: 15,
+  }),
+  points: StyleSheet.compose(globalTextStyles.boldText, {
     paddingRight: 10,
     fontSize: 17,
-  },
-  name: {
-    fontWeight: 'bold',
-    fontSize: 15,
-  },
-  team: {
-    fontWeight: 'normal',
-    fontStyle: 'italic',
-  },
-});
+  }),
+};
 
 export default Place;

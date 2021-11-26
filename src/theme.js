@@ -4,6 +4,7 @@ export const globalColors = {
   white: '#F2F3F8',
   darkNavy: '#1F2236',
   grey: '#8697B0',
+  lightGrey: '#ffffc8',
   dbBlue: '#212FA1',
   lightBlue: '#8BA9FC',
   red: '#BA0725',
@@ -11,7 +12,7 @@ export const globalColors = {
   dbSaffron: '#F6D139',
 };
 
-export const globalGenericStyles = StyleSheet.create({
+export const globalStyles = StyleSheet.create({
   genericBackground: {
     flex: 3,
     width: '100%',
@@ -54,34 +55,49 @@ export const globalGenericStyles = StyleSheet.create({
   genericText: {
     color: globalColors.darkNavy,
     fontWeight: 'bold',
-    fontSize: 50,
+    fontSize: 15,
   },
   genericRow: {
-    ...StyleSheet.absoluteFill,
-    justifyContent: 'center',
+    paddingTop: 10,
+    paddingBottom: 10,
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: globalColors.white,
-    flex: 1,
+    justifyContent: 'space-between',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: globalColors.darkNavy,
+  },
+  genericRowLeft: {
+    width: '20%',
+    flexDirection: 'row',
+  },
+  genericRowCenter: {
+    width: '50%',
+    flexDirection: 'column',
+    textAlign: 'center',
+  },
+  genericRowRight: {
+    width: '30%',
+    justifyContent: 'flex-end',
+    textAlign: 'right',
   },
 });
 
 export const globalTextStyles = StyleSheet.create({
   headerText: {
-    ...globalGenericStyles.genericText,
+    ...globalStyles.genericText,
     fontSize: 16,
     textAlign: 'center',
   },
   boldText: {
-    ...globalGenericStyles.genericText,
+    ...globalStyles.genericText,
     fontWeight: 'bold',
   },
   underlineText: {
-    ...globalGenericStyles.genericText,
+    ...globalStyles.genericText,
     textDecorationLine: 'underline',
   },
   italicText: {
-    ...globalGenericStyles.genericText,
+    ...globalStyles.genericText,
     fontStyle: 'italic',
   },
 });
