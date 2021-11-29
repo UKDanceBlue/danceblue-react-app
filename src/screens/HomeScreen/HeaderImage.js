@@ -17,7 +17,7 @@ const HeaderImage = () => (
 );
 
 const localStyles = {
-  headerContainer: StyleSheet.compose(globalStyles.genericView, {
+  headerContainer: StyleSheet.compose(globalStyles.genericCenteredView, {
     height: 280,
     width: '100%',
     alignSelf: 'center',

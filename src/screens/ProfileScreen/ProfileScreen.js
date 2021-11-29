@@ -44,7 +44,7 @@ const ProfileScreen = ({ auth, firestore }) => {
   };
 
   return (
-    <View style={globalStyles.genericView}>
+    <View style={globalStyles.genericCenteredView}>
       <>
         {
           /* Start of still loading view */ isLoading && (

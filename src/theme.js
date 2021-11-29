@@ -17,7 +17,6 @@ export const globalStyles = StyleSheet.create({
     flex: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: globalColors.lightBlue,
   },
   genericButton: {
     alignItems: 'center',
@@ -28,6 +27,10 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
   },
   genericView: {
+    backgroundColor: globalColors.white,
+    flex: 1,
+  },
+  genericCenteredView: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: globalColors.white,
