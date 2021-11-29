@@ -5,7 +5,6 @@ import { StatusBar, LogBox, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
-import { compose } from 'recompose';
 
 // Import Firebase Context Provider
 import { decode, encode } from 'base-64';
@@ -132,4 +131,4 @@ const App = ({}) => {
   );
 };
 
-export default compose(registerRootComponent)(App);
+export default registerRootComponent(App);
