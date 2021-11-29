@@ -22,7 +22,7 @@ exports[`renders correctly 1`] = `
     accessibilityIgnoresInvertColors={true}
     style={
       Object {
-        "flex": 3,
+        "flex": 1,
         "height": "100%",
         "resizeMode": "contain",
         "width": "100%",
