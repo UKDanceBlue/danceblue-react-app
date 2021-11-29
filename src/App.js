@@ -115,18 +115,20 @@ const App = ({}) => {
    * @returns A JSX formatted component
    */
   return (
-    <FirebaseProvider
-      value={{
-        firestore: FirebaseFirestoreWrappers,
-        auth: FirebaseAuthWrappers,
-        core: FirebaseCoreWrappers,
-      }}
-    >
-      <StatusBar />
-      <NavigationContainer>
-        <RootScreen />
-      </NavigationContainer>
-    </FirebaseProvider>
+    <>
+      <StatusBar backgroundColor="blue" barStyle="dark-content" />
+      <FirebaseProvider
+        value={{
+          firestore: FirebaseFirestoreWrappers,
+          auth: FirebaseAuthWrappers,
+          core: FirebaseCoreWrappers,
+        }}
+      >
+        <NavigationContainer>
+          <RootScreen />
+        </NavigationContainer>
+      </FirebaseProvider>
+    </>
   );
 };
 

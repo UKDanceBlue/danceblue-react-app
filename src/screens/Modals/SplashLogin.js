@@ -7,9 +7,10 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native';
-import SingleSignOn from '../../common/SingleSignOn';
 
+import SingleSignOn from '../../common/SingleSignOn';
 import { withFirebaseHOC } from '../../firebase/FirebaseContext';
+import { globalStyles, globalTextStyles } from '../../theme';
 
 const splashBackgorund = require('../../../assets/home/Dancing-min.jpg');
 
@@ -19,24 +20,24 @@ const splashBackgorund = require('../../../assets/home/Dancing-min.jpg');
  * @class
  */
 const SplashLoginScreen = ({ auth, firestore }) => (
-  <View style={styles.container}>
-    <ImageBackground source={splashBackgorund} style={styles.image}>
-      <View style={styles.textBackground}>
-        <View style={styles.header}>
+  <View style={globalStyles.genericCenteredView}>
+    <ImageBackground source={splashBackgorund} style={localStyles.image}>
+      <View style={localStyles.textContainerWithBackground}>
+        <View style={globalStyles.genericHeaderContainer}>
           <Text h2 style={{ textAlign: 'center' }}>
             Welcome to UK DanceBlue!
           </Text>
-          <Text style={styles.headerText}>
+          <Text style={globalTextStyles.headerText}>
             The UK DanceBlue app has many features that are only available with a user account.
           </Text>
           <Text />
-          <Text style={styles.headerText}>
+          <Text style={globalTextStyles.headerText}>
             With an account you get access to profile badges, team info, and other features coming
             soon!
           </Text>
         </View>
-        <View style={styles.form}>
-          <Text h3 style={{ textAlign: 'center' }}>
+        <View style={globalStyles.genericHeaderContainer}>
+          <Text h3 style={globalStyles.genericText}>
             Sign in with your UK LinkBlue account
           </Text>
           <TouchableOpacity
@@ -44,14 +45,17 @@ const SplashLoginScreen = ({ auth, firestore }) => (
               const sso = new SingleSignOn(auth, firestore);
               sso.authenticate('saml-sign-in');
             }}
+            style={globalStyles.genericButton}
           >
-            <Text>SSO Login!</Text>
+            <Text style={globalStyles.genericText}>SSO Login!</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.footer}>
-          <Text>Want to look around first? You can always sign in later on the profile page</Text>
-          <TouchableOpacity onPress={() => auth.signInAnon()}>
-            <Text>Continue as a Guest</Text>
+        <View style={globalStyles.genericCenteredView}>
+          <Text style={globalStyles.genericText}>
+            Want to look around first? You can always sign in later on the profile page
+          </Text>
+          <TouchableOpacity onPress={() => auth.signInAnon()} style={globalStyles.genericButton}>
+            <Text style={globalStyles.genericText}>Continue as a Guest</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -59,33 +63,15 @@ const SplashLoginScreen = ({ auth, firestore }) => (
   </View>
 );
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  textBackground: {
-    backgroundColor: '#FFFFFF99',
-    flex: 1,
-  },
-  header: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerText: {
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  form: {
-    flex: 2,
-  },
-  footer: {
-    flex: 1,
-  },
+const localStyles = {
   image: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
-});
+  textContainerWithBackground: StyleSheet.compose(globalStyles.genericView, {
+    backgroundColor: '#FFFFFF99',
+    justifyContent: 'space-around;',
+  }),
+};
 
 export default withFirebaseHOC(SplashLoginScreen);

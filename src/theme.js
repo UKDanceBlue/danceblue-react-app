@@ -14,7 +14,7 @@ export const globalColors = {
 
 export const globalStyles = StyleSheet.create({
   genericHeaderContainer: {
-    flex: 2,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -22,23 +22,19 @@ export const globalStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: globalColors.dbSaffron,
     margin: 10,
-    height: '30%',
-    borderRadius: 10,
-    flex: 1,
+    borderRadius: 5,
+    padding: 10,
   },
   genericView: {
-    backgroundColor: globalColors.white,
     flex: 1,
   },
   genericCenteredView: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: globalColors.white,
     flex: 1,
   },
   genericText: {
     color: globalColors.darkNavy,
-    fontWeight: 'bold',
     fontSize: 15,
   },
   genericRow: {
@@ -64,8 +60,8 @@ export const globalStyles = StyleSheet.create({
     justifyContent: 'flex-end',
     textAlign: 'right',
   },
-  genericBackgroundImage: {
-    flex: 3,
+  genericFillImage: {
+    flex: 1,
     width: '100%',
     height: '100%',
     resizeMode: 'contain',

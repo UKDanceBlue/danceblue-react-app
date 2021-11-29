@@ -10,7 +10,7 @@ const dbLogo = require('../../../assets/home/DB_Primary_Logo-01.png');
  */
 const HeaderImage = () => (
   <View style={localStyles.headerContainer}>
-    <ImageBackground source={backgroundImg} style={globalStyles.genericBackgroundImage}>
+    <ImageBackground source={backgroundImg} style={globalStyles.genericFillImage}>
       <Image source={dbLogo} style={localStyles.dbLogo} />
     </ImageBackground>
   </View>
