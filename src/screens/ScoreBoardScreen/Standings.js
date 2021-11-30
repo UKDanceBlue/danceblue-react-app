@@ -61,31 +61,26 @@ const Standings = ({ rowsToShowDefault, topNumber, isExpanded, isExpandable, nav
     setAllUsers(sortedUsers);
   }, [firestore]);
 
-  /**
-   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   */
   useEffect(() => {
     // Create arrays for team list, one for team total scores and one for team scores per member.
     const promises = [];
 
-    promises.push(loadTeams());
+    promises.push(loadTeams);
 
     promises.push(loadUsers);
 
     // Get the team number and user ID of the current user.
     // These are for highlighting the user's position in the teams and users scoreboards
     auth.addUserObserver((user) => {
-      if (user !== null) {
-        if (!user.isAnonymous) {
-          promises.push(
-            firestore.getUser(user.uid).then((data) => {
-              if (data?.data().teamNumber) {
-                setUserTeamNum(data.data().teamNumber);
-              }
-              setUserID(data?.id);
-            })
-          );
-        }
+      if (user !== null && !user.isAnonymous) {
+        promises.push(
+          firestore.getUser(user.uid).then((data) => {
+            if (data?.data?.().teamNumber) {
+              setUserTeamNum(data.data?.().teamNumber);
+            }
+            setUserID(data?.id);
+          })
+        );
       }
     });
 
