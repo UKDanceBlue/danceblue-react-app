@@ -12,7 +12,7 @@ import { globalStyles, globalColors } from '../../theme';
  */
 const ProfileScreen = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState(undefined);
+  const [userData, setUserData] = useState(undefined);
   const [isLoading, setIsLoading] = useState(true);
 
   const auth = useAuth();
@@ -20,32 +20,18 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     auth.addUserObserver((authUser) => {
-      if (authUser !== null) {
-        if (!authUser.isAnonymous) {
-          firestore.getUser(authUser.uid).then((doc) => {
-            const userData = doc.data();
-            setUser({ id: authUser.uid, ...userData });
-            setLoggedIn(true);
-            setIsLoading(false);
-          });
-        }
+      if (authUser !== null && !authUser.isAnonymous) {
+        firestore.getUser(authUser.uid).then((doc) => {
+          const firestoreUserData = doc.data();
+          setUserData({ id: authUser.uid, ...firestoreUserData });
+          setLoggedIn(true);
+        });
+      } else {
+        setLoggedIn(false);
       }
     });
     setIsLoading(false);
   }, [auth, firestore]);
-
-  /**
-   * Have firebase sign out the current user and then sign in an anonomous user
-   */
-  const handleSignOut = () => {
-    auth
-      .signOut()
-      .then(() => auth.signInAnon())
-      .then(() => {
-        setLoggedIn(false);
-        setUser(undefined);
-      });
-  };
 
   return (
     <View style={globalStyles.genericView}>
@@ -62,10 +48,10 @@ const ProfileScreen = () => {
                 /* Start of logged in view */ loggedIn && (
                   <>
                     <Text>
-                      You are logged in as {user.firstName} {user.lastName}
+                      You are logged in as {userData.firstName} {userData.lastName}
                     </Text>
-                    <Text>{user.email}</Text>
-                    <Button onPress={handleSignOut} title="Log out" />
+                    <Text>{userData.email}</Text>
+                    <Button onPress={auth.signOut} title="Log out" />
                   </>
                 ) /* End of logged in view */
               }
