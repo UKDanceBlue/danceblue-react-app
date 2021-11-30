@@ -74,7 +74,7 @@ const Standings = ({ rowsToShowDefault, topNumber, isExpanded, isExpandable, nav
 
     // Get the team number and user ID of the current user.
     // These are for highlighting the user's position in the teams and users scoreboards
-    auth.checkAuthUser((user) => {
+    auth.addUserObserver((user) => {
       if (user !== null) {
         if (!user.isAnonymous) {
           promises.push(

@@ -25,7 +25,7 @@ const HomeScreen = () => {
     firestore.getConfig().then((doc) => {
       setActiveCountDown(doc.data().activeCountdown);
     });
-    auth.checkAuthUser((user) => {
+    auth.addUserObserver((user) => {
       if (user !== null) {
         if (!user.isAnonymous) {
           setUserID(user.uid);

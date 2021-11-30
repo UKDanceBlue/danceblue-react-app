@@ -101,14 +101,8 @@ const FirebaseAuthWrappers = {
    * @see {@link hhttps://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#onauthstatechanged onauthstatechanged}
    * @function
    */
-  checkAuthUser: (observer, onError, onCompleted) =>
-    onAuthStateChanged(authInstance, observer, onError, onCompleted),
-  /**
-   * Gets the currently signed in user from Firebase
-   * @returns The currently signed in user
-   * @function
-   */
-  getAuthUserInstance: () => currentUser,
+  addUserObserver: (observer, onError, onRemoved) =>
+    onAuthStateChanged(authInstance, observer, onError, onRemoved),
   /**
    * Asynchronously signs in as an anonymous user.
    * @returns A promise for a user credential

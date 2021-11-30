@@ -19,7 +19,7 @@ const ProfileScreen = () => {
   const firestore = useFirestore();
 
   useEffect(() => {
-    auth.checkAuthUser((authUser) => {
+    auth.addUserObserver((authUser) => {
       if (authUser !== null) {
         if (!authUser.isAnonymous) {
           firestore.getUser(authUser.uid).then((doc) => {

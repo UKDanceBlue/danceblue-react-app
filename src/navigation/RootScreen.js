@@ -37,7 +37,7 @@ const RootScreen = () => {
   ]);
 
   useEffect(() => {
-    auth.checkAuthUser((user) => {
+    auth.addUserObserver((user) => {
       if (user !== null) {
         setUserID(user.uid);
       }
