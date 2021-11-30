@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from 'react-native';
 
 // Import first-party dependencies
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
+import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
 import EventRow from './EventRow';
 
 /**
@@ -15,11 +15,13 @@ import EventRow from './EventRow';
  *  2. Add inline comments
  *  3. Make it a function component if possible
  */
-const EventScreen = ({ navigation: { navigate }, firestore }) => {
+const EventScreen = ({ navigation: { navigate } }) => {
   const [events, setEvents] = useState([]);
   const [today, setToday] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const firestore = useFirestore();
 
   useEffect(() => {
     async function getSnapshot() {
@@ -124,4 +126,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withFirebaseHOC(EventScreen);
+export default EventScreen;

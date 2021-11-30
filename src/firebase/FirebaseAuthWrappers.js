@@ -13,7 +13,7 @@ import {
 } from 'firebase/auth';
 import { getReactNativePersistence } from 'firebase/auth/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { firebaseApp } from './FirebaseContext';
+import firebaseApp from './FirebaseApp';
 
 export const authInstance = initializeAuth(firebaseApp, {
   persistence: getReactNativePersistence(AsyncStorage),
@@ -149,4 +149,6 @@ const FirebaseAuthWrappers = {
   },
 };
 
-export default FirebaseAuthWrappers;
+export function useAuth() {
+  return FirebaseAuthWrappers;
+}

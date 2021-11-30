@@ -5,8 +5,9 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 // Import first-party dependencies
 import Place from './Place';
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 import { globalColors } from '../../theme';
+import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
+import { useAuth } from '../../firebase/FirebaseAuthWrappers';
 
 /**
  * Standings implementation for the Morale Cup leaderboard
@@ -15,15 +16,7 @@ import { globalColors } from '../../theme';
  * @param {bool} isExpanded Are the standings expanded
  * @param {bool} isExpandable Should there be a button to expand the standings [CURRENTLY BORKED]
  */
-const Standings = ({
-  rowsToShowDefault,
-  topNumber,
-  isExpanded,
-  isExpandable,
-  navigate,
-  firestore,
-  auth,
-}) => {
+const Standings = ({ rowsToShowDefault, topNumber, isExpanded, isExpandable, navigate }) => {
   const [allTeams, setAllTeams] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [allTeamsPPM, setAllTeamPPM] = useState([]); // PPM = points per member
@@ -33,6 +26,9 @@ const Standings = ({
   const [showPointsPerMember, setShowPointsPerMember] = useState(false);
   const [userTeamNum, setUserTeamNum] = useState(undefined);
   const [userID, setUserID] = useState(undefined);
+
+  const firestore = useFirestore();
+  const auth = useAuth();
 
   /**
    * Loads teams from Firebase and then stores them into allTeams and their points into allTeamsPPm
@@ -232,4 +228,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withFirebaseHOC(Standings);
+export default Standings;

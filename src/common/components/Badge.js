@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native';
-
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
+import { useCore } from '../../firebase/FirebaseCoreWrappers';
 
 /**
  * A badge icon for use with profiles
  * @param {string} imageURL Badge url to fetch from firebase storage
  * @param {string} name Name of the badge
  */
-const Badge = ({ imageURL, name, core }) => {
+const Badge = ({ imageURL, name }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageRef, setImageRef] = useState('');
+
+  const core = useCore();
 
   // Run on mount
   useEffect(() => {
@@ -48,4 +49,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withFirebaseHOC(Badge);
+export default Badge;

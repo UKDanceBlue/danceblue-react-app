@@ -2,17 +2,21 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ActivityIndicator, Button } from 'react-native';
 import SingleSignOn from '../../common/SingleSignOn';
+import { useAuth } from '../../firebase/FirebaseAuthWrappers';
+import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 import { globalStyles, globalColors } from '../../theme';
 
 /**
  * Component for "Profile" screen in main navigation
  */
-const ProfileScreen = ({ auth, firestore }) => {
+const ProfileScreen = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(undefined);
   const [isLoading, setIsLoading] = useState(true);
+
+  const auth = useAuth();
+  const firestore = useFirestore();
 
   useEffect(() => {
     auth.checkAuthUser((authUser) => {
@@ -87,4 +91,4 @@ const ProfileScreen = ({ auth, firestore }) => {
   );
 };
 
-export default withFirebaseHOC(ProfileScreen);
+export default ProfileScreen;

@@ -1,5 +1,5 @@
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
-import { firebaseApp } from './FirebaseContext';
+import firebaseApp from './FirebaseApp';
 
 export const storageInstance = getStorage(firebaseApp);
 
@@ -13,4 +13,6 @@ const FirebaseCoreWrappers = {
   getDocumentURL: (path) => getDownloadURL(ref(storageInstance, path)),
 };
 
-export default FirebaseCoreWrappers;
+export function useCore() {
+  return FirebaseCoreWrappers;
+}

@@ -9,7 +9,7 @@ import {
   query,
   addDoc,
 } from 'firebase/firestore';
-import { firebaseApp } from './FirebaseContext';
+import firebaseApp from './FirebaseApp';
 
 export const firestoreInstance = getFirestore(firebaseApp);
 
@@ -139,4 +139,6 @@ const FirebaseFirestoreWrappers = {
   },
 };
 
-export default FirebaseFirestoreWrappers;
+export function useFirestore() {
+  return FirebaseFirestoreWrappers;
+}

@@ -8,13 +8,10 @@ import * as Notifications from 'expo-notifications';
 
 // Import Firebase Context Provider
 import { decode, encode } from 'base-64';
-import FirebaseFirestoreWrappers from './firebase/FirebaseFirestoreWrappers';
-import FirebaseAuthWrappers from './firebase/FirebaseAuthWrappers';
-import FirebaseCoreWrappers from './firebase/FirebaseCoreWrappers';
-import { FirebaseProvider } from './firebase/FirebaseContext';
 import RootScreen from './navigation/RootScreen';
 import { showMessage } from './common/AlertUtils';
 import { globalColors } from './theme';
+import { useFirestore } from './firebase/FirebaseFirestoreWrappers';
 
 // Fix firestore error - can be removed if issue is resolved in package
 if (!global.btoa) {
@@ -41,6 +38,8 @@ const App = ({}) => {
   const [isReady, setIsReady] = useState(false);
   const [expoPushToken, setExpoPushToken] = useState(undefined);
   const [notification, setNotification] = useState(undefined);
+
+  const FirebaseFirestoreWrappers = useFirestore();
 
   /**
    * Register notification support with the OS
@@ -116,17 +115,9 @@ const App = ({}) => {
   return (
     <>
       <StatusBar backgroundColor="blue" barStyle="dark-content" />
-      <FirebaseProvider
-        value={{
-          firestore: FirebaseFirestoreWrappers,
-          auth: FirebaseAuthWrappers,
-          core: FirebaseCoreWrappers,
-        }}
-      >
-        <NavigationContainer>
-          <RootScreen />
-        </NavigationContainer>
-      </FirebaseProvider>
+      <NavigationContainer>
+        <RootScreen />
+      </NavigationContainer>
     </>
   );
 };

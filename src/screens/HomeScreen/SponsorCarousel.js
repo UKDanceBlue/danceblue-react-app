@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, ScrollView, StyleSheet } from 'react-native';
 import SponsorCard from '../../common/components/ImageCard';
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
+import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
 
 /**
  * A horizontally scrolling carousel of SponsorCards
  */
-const SponsorCarousel = ({ firestore }) => {
+const SponsorCarousel = () => {
   const [sponsors, setSponsors] = useState([]);
+
+  const firestore = useFirestore();
 
   useEffect(() => {
     async function getSnapshot() {
@@ -67,4 +69,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withFirebaseHOC(SponsorCarousel);
+export default SponsorCarousel;

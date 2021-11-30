@@ -6,15 +6,19 @@ import { SafeAreaView, ScrollView } from 'react-native';
 import SponsorCarousel from './SponsorCarousel';
 import CountdownView from '../../common/components/CountdownView';
 import HeaderImage from './HeaderImage';
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
+import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
+import { useAuth } from '../../firebase/FirebaseAuthWrappers';
 
 /**
  * Component for home screen in main navigation
  * @param {Object} props Properties of the component: navigation, firebase
  */
-const HomeScreen = ({ firestore, auth }) => {
+const HomeScreen = () => {
   const [activeCountdown, setActiveCountDown] = useState(true);
   const [userID, setUserID] = useState(undefined);
+
+  const firestore = useFirestore();
+  const auth = useAuth();
 
   // Run on mount and when userID changes
   useEffect(() => {
@@ -45,4 +49,4 @@ HomeScreen.navigationOptions = {
   title: 'Home',
 };
 
-export default withFirebaseHOC(HomeScreen);
+export default HomeScreen;

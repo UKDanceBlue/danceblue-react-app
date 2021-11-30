@@ -7,9 +7,9 @@ import AppLoading from 'expo-app-loading';
 
 // Import first-party dependencies
 import SplashLogin from '../screens/Modals/SplashLogin';
-import { withFirebaseHOC } from '../firebase/FirebaseContext';
 import MainStackRoot from './MainStackRoot';
 import { showMessage } from '../common/AlertUtils';
+import { useAuth } from '../firebase/FirebaseAuthWrappers';
 
 // All assets that should be preloaded:
 const profileButtonImage = require('../../assets/more/Profile_Button.jpg');
@@ -21,9 +21,11 @@ const dbLogo = require('../../assets/home/DB_Primary_Logo-01.png');
 
 const RootStack = createStackNavigator();
 
-const RootScreen = ({ auth }) => {
+const RootScreen = () => {
   const [userID, setUserID] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const auth = useAuth();
 
   const [assets, error] = useAssets([
     profileButtonImage,
@@ -66,4 +68,4 @@ const RootScreen = ({ auth }) => {
   );
 };
 
-export default withFirebaseHOC(RootScreen);
+export default RootScreen;

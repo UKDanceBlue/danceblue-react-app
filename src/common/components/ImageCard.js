@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
+import { useCore } from '../../firebase/FirebaseCoreWrappers';
 
 /**
  * A card showing a Sponsor's logo that link's to their website
  * @param {Object} props Properties of the component: imageLink, sponsorLink, firebase
  */
-const SponsorCard = ({ imageLink, sponsorLink, core }) => {
+const SponsorCard = ({ imageLink, sponsorLink }) => {
   const [imageRef, setImageRef] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+
+  const core = useCore();
 
   useEffect(() => {
     core
@@ -47,4 +49,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withFirebaseHOC(SponsorCard);
+export default SponsorCard;

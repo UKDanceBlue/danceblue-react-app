@@ -4,15 +4,17 @@ import { Text, Image, ActivityIndicator, StyleSheet, View } from 'react-native';
 import moment from 'moment';
 
 // Import first-party dependencies
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
+import { useCore } from '../../firebase/FirebaseCoreWrappers';
 
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
  * @param {Object} props Properties of the component: imageLink, startDate, endDate, title, firebase
  */
-const EventRow = ({ imageLink, startDate, endDate, title, core }) => {
+const EventRow = ({ imageLink, startDate, endDate, title }) => {
   const [imageRef, setImageRef] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+
+  const core = useCore();
 
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
@@ -97,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withFirebaseHOC(EventRow);
+export default EventRow;

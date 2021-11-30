@@ -7,8 +7,9 @@ import moment from 'moment';
 
 // Import first-party dependencies
 import { globalColors } from '../../theme';
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 import { handleFirebaeError } from '../../common/AlertUtils';
+import { useCore } from '../../firebase/FirebaseCoreWrappers';
+import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
 
 const danceBlueCalendarConfig = {
   title: 'DanceBlue',
@@ -27,7 +28,7 @@ const danceBlueCalendarConfig = {
  * A component for showing a particular calendar event
  * @see {@link https://docs.expo.dev/versions/latest/sdk/calendar/ Expo's Calendar API}
  */
-const EventView = ({ route: { params }, firestore, core }) => {
+const EventView = ({ route: { params } }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [id, setId] = useState(params.id);
   const [isOnCalendar, setIsOnCalendar] = useState(false);
@@ -40,6 +41,9 @@ const EventView = ({ route: { params }, firestore, core }) => {
   const [address, setAddress] = useState('');
   const [imageRef, setImageRef] = useState('');
   const [description, setDescription] = useState('');
+
+  const core = useCore();
+  const firestore = useFirestore();
 
   /**
    * Check if the DanceBlue calendar exist's on the user's device
@@ -233,4 +237,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withFirebaseHOC(EventView);
+export default EventView;

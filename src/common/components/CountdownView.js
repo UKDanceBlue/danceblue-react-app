@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 
 import moment from 'moment';
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
+import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
 
 /**
  * A label for a unit of time
@@ -53,7 +53,7 @@ class CountdownView extends React.Component {
   }
 
   async retrieveCountdown() {
-    const snapshot = await this.props.firestore.getActiveCountdown();
+    const snapshot = await useFirestore().getActiveCountdown();
     snapshot.forEach((doc) => {
       const countdown = doc.data();
       this.setState({
@@ -257,4 +257,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withFirebaseHOC(CountdownView);
+export default CountdownView;

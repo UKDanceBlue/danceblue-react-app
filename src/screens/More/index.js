@@ -4,8 +4,6 @@ import { View, ImageBackground, TouchableHighlight, Text, SafeAreaView } from 'r
 
 import { styles } from '../../styles';
 
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
-
 const profileButtonImage = require('../../../assets/more/Profile_Button.jpg');
 const donateButtonImage = require('../../../assets/more/Donate_Button.jpg');
 const faqsButtonImage = require('../../../assets/more/FAQs_Button.jpg');

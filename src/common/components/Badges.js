@@ -2,18 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
 
+import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
 import Badge from './Badge';
-
-import { withFirebaseHOC } from '../../firebase/FirebaseContext';
 
 /**
  * A row of a user's {@link Badge}s loaded from Firebase
  * @param {Object} props Properties of the component: (imageURL, name)
  */
-const Badges = ({ userID, firestore }) => {
+const Badges = ({ userID }) => {
   // userID used to also be part of state, I couldn't find where that was used so I removed it, if this stops working; check there
   const [badges, setBadges] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+
+  const firestore = useFirestore();
 
   // Run on mount
   useEffect(() => {
@@ -54,4 +55,4 @@ const Badges = ({ userID, firestore }) => {
 
 const styles = StyleSheet.create({});
 
-export default withFirebaseHOC(Badges);
+export default Badges;
