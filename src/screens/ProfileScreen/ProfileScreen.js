@@ -1,10 +1,9 @@
-// Import third-party dependencies
+import { getDoc, doc } from 'firebase/firestore';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ActivityIndicator, Button } from 'react-native';
 import SingleSignOn from '../../common/SingleSignOn';
-import { useAuth } from '../../firebase/FirebaseAuthWrappers';
-import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
-
+import { firebaseAuth, firebaseFirestore } from '../../firebase/FirebaseApp';
 import { globalStyles, globalColors } from '../../theme';
 
 /**
@@ -15,23 +14,22 @@ const ProfileScreen = () => {
   const [userData, setUserData] = useState(undefined);
   const [isLoading, setIsLoading] = useState(true);
 
-  const auth = useAuth();
-  const firestore = useFirestore();
-
-  useEffect(() => {
-    auth.addUserObserver((authUser) => {
-      if (authUser !== null && !authUser.isAnonymous) {
-        firestore.getUser(authUser.uid).then((doc) => {
-          const firestoreUserData = doc.data();
-          setUserData({ id: authUser.uid, ...firestoreUserData });
-          setLoggedIn(true);
-        });
-      } else {
-        setLoggedIn(false);
-      }
-    });
-    setIsLoading(false);
-  }, [auth, firestore]);
+  useEffect(
+    () =>
+      onAuthStateChanged(firebaseAuth, (authUser) => {
+        if (authUser !== null && !authUser.isAnonymous) {
+          getDoc(doc(firebaseFirestore, 'users', authUser.uid)).then((document) => {
+            const firestoreUserData = document.data();
+            setUserData({ id: authUser.uid, ...firestoreUserData });
+            setLoggedIn(true);
+          });
+        } else {
+          setLoggedIn(false);
+        }
+        setIsLoading(false);
+      }),
+    []
+  );
 
   return (
     <View style={globalStyles.genericView}>
@@ -51,7 +49,7 @@ const ProfileScreen = () => {
                       You are logged in as {userData.firstName} {userData.lastName}
                     </Text>
                     <Text>{userData.email}</Text>
-                    <Button onPress={auth.signOut} title="Log out" />
+                    <Button onPress={signOut(firebaseAuth)} title="Log out" />
                   </>
                 ) /* End of logged in view */
               }
@@ -61,7 +59,7 @@ const ProfileScreen = () => {
                     <Text>You are logged out, to log in:</Text>
                     <Button
                       onPress={() => {
-                        const sso = new SingleSignOn(auth, firestore);
+                        const sso = new SingleSignOn();
                         sso.authenticate('saml-sign-in');
                       }}
                       title="Press me"

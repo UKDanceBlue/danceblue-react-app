@@ -7,10 +7,10 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native';
+import { signInAnonymously } from 'firebase/auth';
 
 import SingleSignOn from '../../common/SingleSignOn';
-import { useAuth } from '../../firebase/FirebaseAuthWrappers';
-import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
+import { firebaseAuth } from '../../firebase/FirebaseApp';
 import { globalStyles, globalTextStyles } from '../../theme';
 
 const splashBackgorund = require('../../../assets/home/Dancing-min.jpg');
@@ -20,53 +20,52 @@ const splashBackgorund = require('../../../assets/home/Dancing-min.jpg');
  * @param {Object} props Properties of the component: navigation, firebase
  * @class
  */
-const SplashLoginScreen = () => {
-  const auth = useAuth();
-  const firestore = useFirestore();
-  return (
-    <View style={globalStyles.genericCenteredView}>
-      <ImageBackground source={splashBackgorund} style={localStyles.image}>
-        <View style={localStyles.textContainerWithBackground}>
-          <View style={globalStyles.genericHeaderContainer}>
-            <Text h2 style={{ textAlign: 'center' }}>
-              Welcome to UK DanceBlue!
-            </Text>
-            <Text style={globalTextStyles.headerText}>
-              The UK DanceBlue app has many features that are only available with a user account.
-            </Text>
-            <Text />
-            <Text style={globalTextStyles.headerText}>
-              With an account you get access to profile badges, team info, and other features coming
-              soon!
-            </Text>
-          </View>
-          <View style={globalStyles.genericHeaderContainer}>
-            <Text h3 style={globalStyles.genericText}>
-              Sign in with your UK LinkBlue account
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                const sso = new SingleSignOn(auth, firestore);
-                sso.authenticate('saml-sign-in');
-              }}
-              style={globalStyles.genericButton}
-            >
-              <Text style={globalStyles.genericText}>SSO Login!</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={globalStyles.genericCenteredView}>
-            <Text style={globalStyles.genericText}>
-              Want to look around first? You can always sign in later on the profile page
-            </Text>
-            <TouchableOpacity onPress={() => auth.signInAnon()} style={globalStyles.genericButton}>
-              <Text style={globalStyles.genericText}>Continue as a Guest</Text>
-            </TouchableOpacity>
-          </View>
+const SplashLoginScreen = () => (
+  <View style={globalStyles.genericCenteredView}>
+    <ImageBackground source={splashBackgorund} style={localStyles.image}>
+      <View style={localStyles.textContainerWithBackground}>
+        <View style={globalStyles.genericHeaderContainer}>
+          <Text h2 style={{ textAlign: 'center' }}>
+            Welcome to UK DanceBlue!
+          </Text>
+          <Text style={globalTextStyles.headerText}>
+            The UK DanceBlue app has many features that are only available with a user account.
+          </Text>
+          <Text />
+          <Text style={globalTextStyles.headerText}>
+            With an account you get access to profile badges, team info, and other features coming
+            soon!
+          </Text>
         </View>
-      </ImageBackground>
-    </View>
-  );
-};
+        <View style={globalStyles.genericHeaderContainer}>
+          <Text h3 style={globalStyles.genericText}>
+            Sign in with your UK LinkBlue account
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              const sso = new SingleSignOn();
+              sso.authenticate('saml-sign-in');
+            }}
+            style={globalStyles.genericButton}
+          >
+            <Text style={globalStyles.genericText}>SSO Login!</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={globalStyles.genericCenteredView}>
+          <Text style={globalStyles.genericText}>
+            Want to look around first? You can always sign in later on the profile page
+          </Text>
+          <TouchableOpacity
+            onPress={signInAnonymously(firebaseAuth)}
+            style={globalStyles.genericButton}
+          >
+            <Text style={globalStyles.genericText}>Continue as a Guest</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ImageBackground>
+  </View>
+);
 
 const localStyles = {
   image: {

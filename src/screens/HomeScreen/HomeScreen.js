@@ -1,13 +1,11 @@
-// Import third-party dependencies
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
-
-// Import first-party dependencies
+import { doc, getDoc } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 import SponsorCarousel from './SponsorCarousel';
 import CountdownView from '../../common/components/CountdownView';
 import HeaderImage from './HeaderImage';
-import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
-import { useAuth } from '../../firebase/FirebaseAuthWrappers';
+import { firebaseAuth, firebaseFirestore } from '../../firebase/FirebaseApp';
 
 /**
  * Component for home screen in main navigation
@@ -17,22 +15,19 @@ const HomeScreen = () => {
   const [activeCountdown, setActiveCountDown] = useState(true);
   const [userID, setUserID] = useState(undefined);
 
-  const firestore = useFirestore();
-  const auth = useAuth();
-
   // Run on mount and when userID changes
   useEffect(() => {
-    firestore.getConfig().then((doc) => {
-      setActiveCountDown(doc.data().activeCountdown);
+    getDoc(doc(firebaseFirestore, 'configs', 'mobile-app')).then((document) => {
+      setActiveCountDown(document.data().activeCountdown);
     });
-    auth.addUserObserver((user) => {
+    return onAuthStateChanged(firebaseAuth, (user) => {
       if (user !== null) {
         if (!user.isAnonymous) {
           setUserID(user.uid);
         }
       }
     });
-  }, [auth, firestore, userID]);
+  }, [userID]);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>

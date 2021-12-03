@@ -1,15 +1,13 @@
-// Import third-party dependencies
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useAssets } from 'expo-asset';
 import AppLoading from 'expo-app-loading';
-
-// Import first-party dependencies
+import { onAuthStateChanged } from 'firebase/auth';
 import SplashLogin from '../screens/Modals/SplashLogin';
 import MainStackRoot from './MainStackRoot';
 import { showMessage } from '../common/AlertUtils';
-import { useAuth } from '../firebase/FirebaseAuthWrappers';
+import { firebaseAuth } from '../firebase/FirebaseApp';
 
 // All assets that should be preloaded:
 const profileButtonImage = require('../../assets/more/Profile_Button.jpg');
@@ -25,8 +23,6 @@ const RootScreen = () => {
   const [userID, setUserID] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const auth = useAuth();
-
   const [assets, error] = useAssets([
     profileButtonImage,
     donateButtonImage,
@@ -36,14 +32,16 @@ const RootScreen = () => {
     dbLogo,
   ]);
 
-  useEffect(() => {
-    auth.addUserObserver((user) => {
-      if (user !== null) {
-        setUserID(user.uid);
-      }
-      setIsLoading(false);
-    });
-  }, [auth]);
+  useEffect(
+    () =>
+      onAuthStateChanged(firebaseAuth, (user) => {
+        if (user !== null) {
+          setUserID(user.uid);
+        }
+        setIsLoading(false);
+      }),
+    []
+  );
 
   if (error) {
     showMessage(error, 'Error loading assets');

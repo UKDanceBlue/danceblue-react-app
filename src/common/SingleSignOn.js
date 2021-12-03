@@ -1,15 +1,18 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import { getAdditionalUserInfo, updateProfile } from 'firebase/auth';
+import {
+  getAdditionalUserInfo,
+  updateProfile,
+  signOut,
+  SAMLAuthProvider,
+  signInWithCredential,
+} from 'firebase/auth';
 import { handleFirebaeError, showMessage } from './AlertUtils';
-import FirebaseFirestoreWrappers from '../firebase/FirebaseFirestoreWrappers';
-import FirebaseAuthWrappers from '../firebase/FirebaseAuthWrappers';
+import { setUserData } from '../firebase/FirebaseUtils';
+import { firebaseFirestore, firebaseAuth } from '../firebase/FirebaseApp';
 
 export default class SingleSignOn {
-  constructor(firebaseAuthWrapper, firebaseFirestoreWrapper) {
-    this.firebaseAuthWrapper = firebaseAuthWrapper;
-    this.firebaseFirestoreWrapper = firebaseFirestoreWrapper;
-
+  constructor() {
     this.backendUrl = 'https://app.danceblue.org/saml-relay.html';
   }
 
@@ -35,8 +38,10 @@ export default class SingleSignOn {
       return undefined;
     }
 
-    return this.firebaseAuthWrapper
-      .loginWithCredentialJSON(this.redirectData.queryParams.credential)
+    const credentials = SAMLAuthProvider.credentialFromJSON(
+      JSON.parse(this.redirectData.queryParams.credential)
+    );
+    return signInWithCredential(firebaseAuth, credentials)
       .then((userCredential) => {
         // Make sure firebase sent a profile option
         const additionalInfo = getAdditionalUserInfo(userCredential);
@@ -45,7 +50,7 @@ export default class SingleSignOn {
           showMessage(
             'Required information not recieved\nSign in failed',
             'Invalid server response',
-            FirebaseAuthWrappers.signOut,
+            signOut(),
             true,
             userCredential
           );
@@ -53,17 +58,13 @@ export default class SingleSignOn {
         }
 
         if (additionalInfo.providerId === 'saml.danceblue-firebase-linkblue-saml') {
-          FirebaseFirestoreWrappers.setUserFirestoreDoc(
-            {
-              linkblue: userCredential.user.email.substring(
-                0,
-                userCredential.user.email.indexOf('@')
-              ),
-              firstName: additionalInfo.profile['first-name'],
-              lastName: additionalInfo.profile['last-name'],
-              email: additionalInfo.profile.email,
-            },
-            userCredential.user.uid
+          setUserData(
+            firebaseFirestore,
+            userCredential.user.uid,
+            additionalInfo.profile['first-name'],
+            additionalInfo.profile['last-name'],
+            additionalInfo.profile.email,
+            userCredential.user.email.substring(0, userCredential.user.email.indexOf('@'))
           );
           updateProfile(userCredential.user, {
             displayName: additionalInfo.profile['display-name'],

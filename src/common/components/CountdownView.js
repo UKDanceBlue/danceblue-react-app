@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
-
+import { collection, getDocs, where, query } from 'firebase/firestore';
 import moment from 'moment';
 
-import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
+import { firebaseFirestore } from '../../firebase/FirebaseApp';
 
 /**
  * A label for a unit of time
@@ -53,7 +53,9 @@ class CountdownView extends React.Component {
   }
 
   async retrieveCountdown() {
-    const snapshot = await useFirestore().getActiveCountdown();
+    const snapshot = await getDocs(
+      query(collection(firebaseFirestore, 'countdowns'), where('active', '==', true))
+    );
     snapshot.forEach((doc) => {
       const countdown = doc.data();
       this.setState({

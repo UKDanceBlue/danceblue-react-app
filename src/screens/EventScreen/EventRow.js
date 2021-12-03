@@ -1,10 +1,9 @@
-// Import third-party dependencies
 import React, { useEffect, useState } from 'react';
 import { Text, Image, ActivityIndicator, StyleSheet, View } from 'react-native';
 import moment from 'moment';
-
-// Import first-party dependencies
-import { useCore } from '../../firebase/FirebaseCoreWrappers';
+import { ref, getDownloadURL } from 'firebase/storage';
+import { firebaseStorage } from '../../firebase/FirebaseApp';
+import { handleFirebaeError } from '../../common/AlertUtils';
 
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
@@ -14,25 +13,22 @@ const EventRow = ({ imageLink, startDate, endDate, title }) => {
   const [imageRef, setImageRef] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  const core = useCore();
-
   /**
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
    */
   useEffect(() => {
     if (imageLink) {
-      core
-        .getDocumentURL(imageLink)
+      getDownloadURL(ref(firebaseStorage, imageLink))
         .then((url) => {
           setImageRef(url);
           setIsLoading(false);
         })
-        .catch((error) => console.log(error.message));
+        .catch(handleFirebaeError);
     } else {
       setImageRef('');
       setIsLoading(false);
     }
-  }, [core, imageLink]);
+  }, [imageLink]);
 
   /**
    * Called to generate a React Native component

@@ -1,10 +1,10 @@
-// Import third-party dependencies
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from 'react-native';
-
-// Import first-party dependencies
-import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
+import { collection, getDocs, where, query } from 'firebase/firestore';
 import EventRow from './EventRow';
+import { firebaseFirestore } from '../../firebase/FirebaseApp';
+
+const now = new Date();
 
 /**
  * Component for "Events" screen in main navigation
@@ -21,18 +21,18 @@ const EventScreen = ({ navigation: { navigate } }) => {
   const [upcoming, setUpcoming] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const firestore = useFirestore();
-
   useEffect(() => {
     async function getSnapshot() {
       const firestoreEvents = [];
-      const snapshot = await firestore.getUpcomingEvents();
-      snapshot.forEach((doc) => firestoreEvents.push({ id: doc.id, ...doc.data() }));
+      const snapshot = await getDocs(
+        query(collection(firebaseFirestore, 'events'), where('endTime', '>', now))
+      );
+      snapshot.forEach((document) => firestoreEvents.push({ id: document.id, ...document.data() }));
       setEvents(firestoreEvents);
       setIsLoading(false);
     }
     getSnapshot();
-  }, [firestore]);
+  }, []);
 
   /**
    * Splits *events* into *today* and *upcoming* based on the events' start day
@@ -40,7 +40,6 @@ const EventScreen = ({ navigation: { navigate } }) => {
   useEffect(() => {
     const todayFromEvents = [];
     const upcomingFromEvents = [];
-    const now = new Date();
     events.forEach((event) => {
       const startTime = event.startTime.toDate();
       if (startTime <= now) todayFromEvents.push(event);

@@ -1,13 +1,11 @@
-// Import third-party dependencies
 import React, { useEffect, useState, useCallback } from 'react';
 import { Text, View, StyleSheet, TouchableHighlight, ActivityIndicator } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
-
-// Import first-party dependencies
+import { onAuthStateChanged } from 'firebase/auth';
+import { getDoc, doc, getDocs, collection, where, query } from 'firebase/firestore';
 import Place from './Place';
 import { globalColors } from '../../theme';
-import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
-import { useAuth } from '../../firebase/FirebaseAuthWrappers';
+import { firebaseAuth, firebaseFirestore } from '../../firebase/FirebaseApp';
 
 /**
  * Standings implementation for the Morale Cup leaderboard
@@ -27,17 +25,14 @@ const Standings = ({ rowsToShowDefault, topNumber, isExpanded, isExpandable, nav
   const [userTeamNum, setUserTeamNum] = useState(undefined);
   const [userID, setUserID] = useState(undefined);
 
-  const firestore = useFirestore();
-  const auth = useAuth();
-
   /**
    * Loads teams from Firebase and then stores them into allTeams and their points into allTeamsPPm
    */
   const loadTeams = useCallback(async () => {
     const teams = [];
-    const snapshot = await firestore.getTeams();
-    snapshot.forEach((doc) => {
-      teams.push({ id: doc.id, ...doc.data() });
+    const snapshot = await getDocs(collection(firebaseFirestore, 'teams'));
+    snapshot.forEach((document) => {
+      teams.push({ id: document.id, ...document.data() });
     });
     // SortedTeams is an array that sorts the teams' points in descending order
     const sortedTeams = [].concat(teams).sort((a, b) => a.points < b.points);
@@ -48,18 +43,20 @@ const Standings = ({ rowsToShowDefault, topNumber, isExpanded, isExpandable, nav
     if (isExpanded) {
       setRowsToShow(sortedTeams.length);
     }
-  }, [firestore, isExpanded]);
+  }, [isExpanded]);
 
   // Get list of users, for switching scoreboard to display people instead of teams.
   const loadUsers = useCallback(async () => {
     const users = [];
-    const snapshot = firestore.getUsersWithPoints();
-    snapshot.forEach((doc) => {
-      users.push({ id: doc.id, ...doc.data() });
+    const snapshot = getDocs(
+      query(collection(firebaseFirestore, 'users'), where('points', '!=', null))
+    );
+    snapshot.forEach((document) => {
+      users.push({ id: document.id, ...document.data() });
     });
     const sortedUsers = [].concat(users).sort((a, b) => a.points < b.points);
     setAllUsers(sortedUsers);
-  }, [firestore]);
+  }, []);
 
   useEffect(() => {
     // Create arrays for team list, one for team total scores and one for team scores per member.
@@ -71,10 +68,10 @@ const Standings = ({ rowsToShowDefault, topNumber, isExpanded, isExpandable, nav
 
     // Get the team number and user ID of the current user.
     // These are for highlighting the user's position in the teams and users scoreboards
-    auth.addUserObserver((user) => {
+    const authObserver = onAuthStateChanged(firebaseAuth, (user) => {
       if (user !== null && !user.isAnonymous) {
         promises.push(
-          firestore.getUser(user.uid).then((data) => {
+          getDoc(doc(firebaseFirestore, 'users', user.uid)).then((data) => {
             if (data?.data?.().teamNumber) {
               setUserTeamNum(data.data?.().teamNumber);
             }
@@ -86,7 +83,8 @@ const Standings = ({ rowsToShowDefault, topNumber, isExpanded, isExpandable, nav
 
     // Display loading indicator until all promises resolve
     Promise.all(promises).then(setIsLoading(false));
-  }, [auth, firestore, loadTeams, loadUsers]);
+    return authObserver;
+  }, [loadTeams, loadUsers]);
 
   // Creates places list for teams, which renders Place object for each team in order
   let places = [];

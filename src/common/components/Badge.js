@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native';
-import { useCore } from '../../firebase/FirebaseCoreWrappers';
+import { ref, getDownloadURL } from 'firebase/storage';
+import { firebaseStorage } from '../../firebase/FirebaseApp';
+import { handleFirebaeError } from '../AlertUtils';
 
 /**
  * A badge icon for use with profiles
@@ -11,18 +13,15 @@ const Badge = ({ imageURL, name }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageRef, setImageRef] = useState('');
 
-  const core = useCore();
-
   // Run on mount
   useEffect(() => {
-    core
-      .getDocumentURL(imageURL)
+    getDownloadURL(ref(firebaseStorage, imageURL))
       .then((url) => {
         setIsLoading(false);
         setImageRef(url);
       })
-      .catch((error) => console.log(error.message));
-  }, [core, imageURL]);
+      .catch(handleFirebaeError);
+  }, [imageURL]);
 
   return (
     <View style={styles.container}>

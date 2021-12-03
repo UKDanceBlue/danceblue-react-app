@@ -11,7 +11,9 @@ import { decode, encode } from 'base-64';
 import RootScreen from './navigation/RootScreen';
 import { showMessage } from './common/AlertUtils';
 import { globalColors } from './theme';
-import { useFirestore } from './firebase/FirebaseFirestoreWrappers';
+
+import { firebaseFirestore } from './firebase/FirebaseApp';
+import { addPushTokenToFirebase } from './firebase/FirebaseUtils';
 
 // Fix firestore error - can be removed if issue is resolved in package
 if (!global.btoa) {
@@ -39,8 +41,6 @@ const App = ({}) => {
   const [expoPushToken, setExpoPushToken] = useState(undefined);
   const [notification, setNotification] = useState(undefined);
 
-  const FirebaseFirestoreWrappers = useFirestore();
-
   /**
    * Register notification support with the OS
    * Adds *expoPushToken* to *this.state* if successfull
@@ -65,7 +65,7 @@ const App = ({}) => {
         return;
       }
       const token = (await Notifications.getExpoPushTokenAsync()).data;
-      FirebaseFirestoreWrappers.addPushToken(token);
+      addPushTokenToFirebase(firebaseFirestore, token);
       setExpoPushToken(token);
     } else {
       showMessage('Must use physical device for Push Notifications');

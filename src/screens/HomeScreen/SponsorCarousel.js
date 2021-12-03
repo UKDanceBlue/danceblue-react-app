@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, ScrollView, StyleSheet } from 'react-native';
+import { collection, getDocs } from 'firebase/firestore';
 import SponsorCard from '../../common/components/ImageCard';
-
-import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
+import { firebaseFirestore } from '../../firebase/FirebaseApp';
 
 /**
  * A horizontally scrolling carousel of SponsorCards
@@ -10,19 +10,17 @@ import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
 const SponsorCarousel = () => {
   const [sponsors, setSponsors] = useState([]);
 
-  const firestore = useFirestore();
-
   useEffect(() => {
     async function getSnapshot() {
       const dbSponsors = [];
-      const snapshot = await firestore.getSponsors();
-      snapshot.forEach((doc) => {
-        dbSponsors.push({ ...doc.data(), id: doc.id });
+      const snapshot = await getDocs(collection(firebaseFirestore, 'sponsors'));
+      snapshot.forEach((document) => {
+        dbSponsors.push({ ...document.data(), id: document.id });
       });
       setSponsors(dbSponsors);
     }
     getSnapshot();
-  }, [firestore]);
+  }, []);
 
   const cards = sponsors.map((sponsor) => (
     <SponsorCard imageLink={sponsor.logo} sponsorLink={sponsor.link} key={sponsor.id} />

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
+import { ref, getDownloadURL } from 'firebase/storage';
 
-import { useCore } from '../../firebase/FirebaseCoreWrappers';
+import { firebaseStorage } from '../../firebase/FirebaseApp';
+import { handleFirebaeError } from '../AlertUtils';
 
 /**
  * A card showing a Sponsor's logo that link's to their website
@@ -12,17 +14,14 @@ const SponsorCard = ({ imageLink, sponsorLink }) => {
   const [imageRef, setImageRef] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  const core = useCore();
-
   useEffect(() => {
-    core
-      .getDocumentURL(imageLink)
+    getDownloadURL(ref(firebaseStorage, imageLink))
       .then((url) => {
         setImageRef(url);
         setIsLoading(false);
       })
-      .catch((error) => console.log(error.message));
-  }, [core, imageLink]);
+      .catch(handleFirebaeError);
+  }, [imageLink]);
 
   return (
     <TouchableHighlight

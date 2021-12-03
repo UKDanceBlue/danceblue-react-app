@@ -1,15 +1,13 @@
-// Import third-party dependencies
 import React, { useEffect, useState } from 'react';
 import { Text, ActivityIndicator, StyleSheet, TouchableHighlight, View, Image } from 'react-native';
 import openMap from 'react-native-open-maps';
 import * as Calendar from 'expo-calendar';
 import moment from 'moment';
-
-// Import first-party dependencies
+import { doc, getDoc } from 'firebase/firestore';
+import { ref, getDownloadURL } from 'firebase/storage';
 import { globalColors } from '../../theme';
 import { handleFirebaeError } from '../../common/AlertUtils';
-import { useCore } from '../../firebase/FirebaseCoreWrappers';
-import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
+import { firebaseFirestore, firebaseStorage } from '../../firebase/FirebaseApp';
 
 const danceBlueCalendarConfig = {
   title: 'DanceBlue',
@@ -42,9 +40,6 @@ const EventView = ({ route: { params } }) => {
   const [imageRef, setImageRef] = useState('');
   const [description, setDescription] = useState('');
 
-  const core = useCore();
-  const firestore = useFirestore();
-
   /**
    * Check if the DanceBlue calendar exist's on the user's device
    * @returns true if the calendar exists, false if not
@@ -63,20 +58,22 @@ const EventView = ({ route: { params } }) => {
 
   useEffect(() => {
     setIsLoading(true);
-    async function getDoc() {
-      const doc = await firestore.getEvent(id);
+    async function getDocument() {
+      const document = await getDoc(doc(firebaseFirestore, 'events', id));
       const { eventTitle, eventStartTime, eventEndTime, eventAddress, eventDescription } =
-        doc.data();
+        document.data();
       setTitle(eventTitle);
       setStartTime(eventStartTime);
       setEndTime(eventEndTime);
       setAddress(eventAddress);
       setDescription(eventDescription);
-      core.getDocumentURL(doc.data().image).then(setImageRef).catch(handleFirebaeError);
+      getDownloadURL(ref(firebaseStorage, document.data().image))
+        .then(setImageRef)
+        .catch(handleFirebaeError);
       setIsLoading(false);
     }
-    getDoc();
-  }, [core, firestore, id]);
+    getDocument();
+  }, [id]);
 
   /**
    * Check if the event exists on the DanceBlue calendar
