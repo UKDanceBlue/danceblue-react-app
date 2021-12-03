@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import GenericWebviewScreen from '../../src/screens/GenericWebviewScreen';
+import GenericWebviewScreen from '../../src/screens/GenericWebviewScreen/GenericWebviewScreen';
 
 describe('generic webview', () => {
   test('renders correctly', () => {

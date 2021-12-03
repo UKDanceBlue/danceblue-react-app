@@ -13,10 +13,7 @@
     ],
     "moduleNameMapper": {
       "@firebase/(.*)/react-native": "<rootDir>/node_modules/@firebase/$1/dist/rn"
-    },
-    "setupFiles": [
-      "./__test__/jestSetup.js"
-    ]
+    }
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.0",

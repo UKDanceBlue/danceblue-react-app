@@ -2,7 +2,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { loadAsync } from 'expo-font';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { Place } from '../../../src/screens/ScoreBoardScreen';
+import Place from '../../../src/screens/ScoreBoardScreen/Place';
 
 beforeAll(async () => loadAsync(FontAwesome5.font));
 
