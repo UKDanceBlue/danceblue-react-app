@@ -1,32 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
 
-import { useFirestore } from '../../firebase/FirebaseFirestoreWrappers';
 import Badge from './Badge';
 
 /**
  * A row of a user's {@link Badge}s loaded from Firebase
  * @param {Object} props Properties of the component: (imageURL, name)
  */
-const Badges = ({ userID }) => {
+const Badges = ({ badges }) => {
   // userID used to also be part of state, I couldn't find where that was used so I removed it, if this stops working; check there
-  const [badges, setBadges] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-
-  const firestore = useFirestore();
-
-  // Run on mount
-  useEffect(() => {
-    const loadedBadges = [];
-    firestore.getUserBadges(userID).then((snapshot) => {
-      snapshot.forEach((doc) => {
-        loadedBadges.push(doc.data());
-      });
-      setBadges(loadedBadges);
-      setIsLoading(false);
-    });
-  }, [firestore, userID]);
 
   return (
     <>
