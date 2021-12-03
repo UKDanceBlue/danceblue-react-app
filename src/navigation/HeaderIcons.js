@@ -1,6 +1,6 @@
 // Import third-party dependencies
 import React from 'react';
-import { View, Pressable, PixelRatio } from 'react-native';
+import { View, PixelRatio, TouchableOpacity } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const HeaderIcons = ({ navigation, color }) => (
@@ -11,20 +11,20 @@ const HeaderIcons = ({ navigation, color }) => (
       },
     ]}
   >
-    <Pressable onPress={() => navigation.navigate('Profile')}>
+    <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
       <FontAwesome5
         name="bell"
         color={color}
         style={{ textAlignVertical: 'center', padding: '5%', fontSize: PixelRatio.get() * 8 }}
       />
-    </Pressable>
-    <Pressable onPress={() => navigation.navigate('Profile')}>
+    </TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
       <FontAwesome5
         name="user"
         color={color}
         style={{ textAlignVertical: 'center', padding: '5%', fontSize: PixelRatio.get() * 8 }}
       />
-    </Pressable>
+    </TouchableOpacity>
   </View>
 );
 
