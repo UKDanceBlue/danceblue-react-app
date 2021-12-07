@@ -6,6 +6,7 @@ import {
   signOut,
   SAMLAuthProvider,
   signInWithCredential,
+  signInAnonymously,
 } from 'firebase/auth';
 import { handleFirebaeError, showMessage } from './AlertUtils';
 import { setUserData } from '../firebase/FirebaseUtils';
@@ -50,7 +51,10 @@ export default class SingleSignOn {
           showMessage(
             'Required information not recieved\nSign in failed',
             'Invalid server response',
-            signOut(),
+            () => {
+              signInAnonymously();
+              signOut();
+            },
             true,
             userCredential
           );

@@ -36,7 +36,7 @@ const Standings = ({
     const sortedStandings = standingData;
     sortedStandings.sort((a, b) => b.points - a.points);
     const tempRows = [];
-    for (let i = 0; i < rowsToShow; i++) {
+    for (let i = 0; i < sortedStandings.length && i < rowsToShow; i++) {
       tempRows.push(
         <Place
           key={sortedStandings[i].id}
@@ -56,7 +56,13 @@ const Standings = ({
       <View style={styles.ListView}>
         <View style={styles.ListTitleView}>
           {refreshCallback && (
-            <TouchableOpacity style={styles.syncIcon} onPress={refreshCallback}>
+            <TouchableOpacity
+              style={styles.syncIcon}
+              onPress={() => {
+                refreshCallback();
+                setIsLoading(true);
+              }}
+            >
               <FontAwesome5 name="sync" size={20} color={globalColors.dbBlue} />
             </TouchableOpacity>
           )}
@@ -66,21 +72,11 @@ const Standings = ({
             {rows}
             {expandable &&
               (expanded ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    setExpanded(false);
-                    setIsLoading(true);
-                  }}
-                >
+                <TouchableOpacity onPress={() => setExpanded(false)}>
                   <Text>Show less...</Text>
                 </TouchableOpacity>
               ) : (
-                <TouchableOpacity
-                  onPress={() => {
-                    setExpanded(true);
-                    setIsLoading(true);
-                  }}
-                >
+                <TouchableOpacity onPress={() => setExpanded(true)}>
                   <Text>Show more...</Text>
                 </TouchableOpacity>
               ))}

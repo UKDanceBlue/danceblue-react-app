@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useAssets } from 'expo-asset';
 import AppLoading from 'expo-app-loading';
