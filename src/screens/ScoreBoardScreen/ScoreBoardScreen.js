@@ -11,7 +11,7 @@ import Standings from './Standings';
 const ScoreBoardScreen = () => (
   <ScrollView showsVerticalScrollIndicator>
     <SafeAreaView style={{ flex: 1 }}>
-      <Standings isExpanded />
+      <Standings expandable highlightedId="Tag-Howard" />
     </SafeAreaView>
   </ScrollView>
 );

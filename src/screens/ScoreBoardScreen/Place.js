@@ -6,28 +6,17 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { globalColors, globalStyles, globalTextStyles } from '../../theme';
 
 /**
- * A row-based component showing a team name, their rank (if applicable), and their points
+ * A row-based component showing a target name, their rank (if applicable), and their points
  * @param {bool} isHighlighted Is this row highlighted
  * @param {number} rank The rank to show (if any)
- * @param {string} teamName The team's name
- * @param {number} teamNumber The team's ID number
+ * @param {string} name The target's name
+ * @param {number} id The target's ID number
  * @param {number} points Earned points
- * @param {number} key [UNUSED]
- * @param {number} size How many members on the team [UNUSED]
- * @param {bool} showScoresByTeam Should score be shown by the team?  [UNUSED]
  * @param {bool} showPointsPerMember Should per-member points be displayed?
  * @param {number} pointsPerMember How many points were earned per member
  */
-const Place = ({
-  isHighlighted,
-  rank,
-  teamName,
-  teamNumber,
-  showPointsPerMember,
-  points,
-  pointsPerMember,
-}) => {
-  // The 'top3Icon function adds an award icon to the top 3 teams
+const Place = ({ isHighlighted, rank, name, points }) => {
+  // The 'top3Icon function adds an award icon to the top 3 targets
   const top3Icon = (rankForIcon) => {
     switch (rankForIcon) {
       case 1:
@@ -41,7 +30,7 @@ const Place = ({
     }
   };
   return (
-    // Renders the individual row of the leaderboard for each team
+    // Renders the individual row of the leaderboard for each target
     <View
       style={
         isHighlighted
@@ -53,7 +42,7 @@ const Place = ({
     >
       <View style={globalStyles.genericRowLeft}>
         <Text style={localStyles.place}>
-          {/* Renders the rank/place of the team */}
+          {/* Renders the rank/place of the target */}
           {rank}
         </Text>
         {/* Calls the top3Icon function */}
@@ -61,19 +50,19 @@ const Place = ({
       </View>
       <View style={globalStyles.genericRowCenter}>
         <Text style={localStyles.name}>
-          {/* Renders the team name */}
-          {teamName}
+          {/* Renders the target name */}
+          {name}
         </Text>
-        <Text style={globalTextStyles.italicText}>
-          {/* Renders the team number */}
-          {teamNumber}
-        </Text>
+        {/* <Text style={globalTextStyles.italicText}> */}
+        {/* Renders the target number */}
+        {/* {teamNumber} */}
+        {/* </Text> */}
       </View>
       <View style={globalStyles.genericRowRight}>
         <Text style={localStyles.points}>
           {/* Renders the number of points earned */}
-          {showPointsPerMember ? (pointsPerMember < 1 ? '< 1 ' : pointsPerMember) : points}
-          {showPointsPerMember ? ' points' : points === 1 ? ' point' : ' points'}
+          {points}
+          {points === 1 ? ' point' : ' points'}
         </Text>
       </View>
     </View>
