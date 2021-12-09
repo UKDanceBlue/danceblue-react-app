@@ -34,8 +34,10 @@ const RootScreen = () => {
   useEffect(
     () =>
       onAuthStateChanged(firebaseAuth, (user) => {
-        if (user !== null) {
+        if (user) {
           setUserID(user.uid);
+        } else {
+          setUserID(user);
         }
         setIsLoading(false);
       }),

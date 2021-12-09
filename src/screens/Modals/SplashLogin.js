@@ -56,7 +56,7 @@ const SplashLoginScreen = () => (
             Want to look around first? You can always sign in later on the profile page
           </Text>
           <TouchableOpacity
-            onPress={signInAnonymously(firebaseAuth)}
+            onPress={() => signInAnonymously(firebaseAuth)}
             style={globalStyles.genericButton}
           >
             <Text style={globalStyles.genericText}>Continue as a Guest</Text>

@@ -39,6 +39,10 @@ export default class SingleSignOn {
       return undefined;
     }
 
+    if (firebaseAuth.currentUser && firebaseAuth.currentUser.isAnonymous) {
+      signOut(firebaseAuth);
+    }
+
     const credentials = SAMLAuthProvider.credentialFromJSON(
       JSON.parse(this.redirectData.queryParams.credential)
     );
