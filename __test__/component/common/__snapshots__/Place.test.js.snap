@@ -5,8 +5,8 @@ exports[`Place component renders correctly 1st place 1`] = `
   style={
     Object {
       "alignItems": "center",
-      "borderBottomColor": "#1F2236",
-      "borderBottomWidth": 0.5,
+      "borderTopColor": "#1F2236",
+      "borderTopWidth": 0.5,
       "flexDirection": "row",
       "justifyContent": "space-between",
       "paddingBottom": 10,
@@ -123,8 +123,8 @@ exports[`Place component renders correctly 2nd place 1`] = `
   style={
     Object {
       "alignItems": "center",
-      "borderBottomColor": "#1F2236",
-      "borderBottomWidth": 0.5,
+      "borderTopColor": "#1F2236",
+      "borderTopWidth": 0.5,
       "flexDirection": "row",
       "justifyContent": "space-between",
       "paddingBottom": 10,
@@ -241,8 +241,8 @@ exports[`Place component renders correctly 3rd place 1`] = `
   style={
     Object {
       "alignItems": "center",
-      "borderBottomColor": "#1F2236",
-      "borderBottomWidth": 0.5,
+      "borderTopColor": "#1F2236",
+      "borderTopWidth": 0.5,
       "flexDirection": "row",
       "justifyContent": "space-between",
       "paddingBottom": 10,
@@ -360,8 +360,8 @@ exports[`Place component renders correctly highlighted 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "borderBottomColor": "#1F2236",
-        "borderBottomWidth": 0.5,
+        "borderTopColor": "#1F2236",
+        "borderTopWidth": 0.5,
         "flexDirection": "row",
         "justifyContent": "space-between",
         "paddingBottom": 10,
@@ -460,8 +460,8 @@ exports[`Place component renders correctly normally 1`] = `
   style={
     Object {
       "alignItems": "center",
-      "borderBottomColor": "#1F2236",
-      "borderBottomWidth": 0.5,
+      "borderTopColor": "#1F2236",
+      "borderTopWidth": 0.5,
       "flexDirection": "row",
       "justifyContent": "space-between",
       "paddingBottom": 10,
