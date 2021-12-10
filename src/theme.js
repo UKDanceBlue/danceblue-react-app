@@ -43,8 +43,8 @@ export const globalStyles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: globalColors.darkNavy,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: globalColors.darkNavy,
   },
   genericRowLeft: {
     width: '20%',
