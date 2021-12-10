@@ -49,7 +49,7 @@ const ScoreBoardScreen = () => {
   return (
     <ScrollView showsVerticalScrollIndicator>
       <SafeAreaView style={globalStyles.genericView}>
-        <Standings standingData={standingData} expandable />
+        <Standings titleText="Spirit Point Standings" standingData={standingData} startExpanded />
       </SafeAreaView>
     </ScrollView>
   );

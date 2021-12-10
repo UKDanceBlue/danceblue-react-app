@@ -10,7 +10,7 @@ import { globalColors, globalStyles, globalTextStyles } from '../../theme';
  * @param {bool} expanded Are the standings expanded by default (defalt: false)
  * @param {number} collapsedRows How many rows should be shown when collapsed (default: 3)
  */
-const Standings = ({ standingData, expandable, startExpanded, collapsedRows = 3 }) => {
+const Standings = ({ titleText, standingData, expandable, startExpanded, collapsedRows = 3 }) => {
   const [rows, setRows] = useState([]);
   const [expanded, setExpanded] = useState(!!startExpanded);
   const [rowsToShow, setRowsToShow] = useState(collapsedRows);
@@ -36,14 +36,15 @@ const Standings = ({ standingData, expandable, startExpanded, collapsedRows = 3 
           isHighlighted={sortedStandings[i].highlighted}
         />
       );
-      setRows(tempRows);
     }
+    setRows(tempRows);
     setIsLoading(false);
   }, [standingData, rowsToShow]);
 
   return (
     <View style={globalStyles.genericView}>
       <View style={localStyles.ListView}>
+        <Text style={globalTextStyles.headerText}>{titleText}</Text>
         {!isLoading && (
           <>
             {rows}
