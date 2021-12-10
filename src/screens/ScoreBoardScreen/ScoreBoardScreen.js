@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { getDoc, doc, getDocs, collection } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import Standings from './Standings';
+import Standings from '../../common/components/Standings';
 import { firebaseAuth, firebaseFirestore } from '../../firebase/FirebaseApp';
 import { globalStyles } from '../../theme';
 
