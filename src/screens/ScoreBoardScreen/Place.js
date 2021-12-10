@@ -10,10 +10,7 @@ import { globalColors, globalStyles, globalTextStyles } from '../../theme';
  * @param {bool} isHighlighted Is this row highlighted
  * @param {number} rank The rank to show (if any)
  * @param {string} name The target's name
- * @param {number} id The target's ID number
  * @param {number} points Earned points
- * @param {bool} showPointsPerMember Should per-member points be displayed?
- * @param {number} pointsPerMember How many points were earned per member
  */
 const Place = ({ isHighlighted, rank, name, points }) => {
   // The 'top3Icon function adds an award icon to the top 3 targets
