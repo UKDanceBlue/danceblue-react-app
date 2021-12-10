@@ -4,51 +4,52 @@ import { getDoc, doc, getDocs, collection } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import Standings from './Standings';
 import { firebaseAuth, firebaseFirestore } from '../../firebase/FirebaseApp';
+import { globalStyles } from '../../theme';
 
 /**
  * Wrapper for a Standings component
  */
 const ScoreBoardScreen = () => {
-  const [user, setUser] = useState();
   const [userTeam, setUserTeam] = useState();
   const [standingData, setStandingData] = useState([]);
-  const [standingInvalidation, setStandingInvalidation] = useState(0);
 
-  useEffect(() => onAuthStateChanged(firebaseAuth, setUser), []);
-
+  // Add an observer that sets the User object anytime the auth state changes
   useEffect(() => {
-    async function refresh() {
-      if (user?.uid) {
-        const userSnapshot = await getDoc(doc(firebaseFirestore, 'users', user.uid));
-        if (userSnapshot.data()?.team) {
-          const teamSnapshot = await getDoc(userSnapshot.data().team);
-          setUserTeam(teamSnapshot.data().name);
-        }
-      }
-
-      const tempStandingData = [];
-      const querySnapshot = await getDocs(collection(firebaseFirestore, 'teams'));
-      querySnapshot.forEach((document) => {
-        tempStandingData.push({
-          id: document.id,
-          name: document.data().name,
-          points: document.data().totalSpiritPoints,
+    onAuthStateChanged(firebaseAuth, (newUser) => {
+      if (newUser?.uid) {
+        getDoc(doc(firebaseFirestore, 'users', newUser.uid)).then((userSnapshot) => {
+          if (userSnapshot.data()?.team) {
+            getDoc(userSnapshot.data().team).then((teamSnapshot) =>
+              setUserTeam(teamSnapshot.data())
+            );
+          }
         });
-      });
-      setStandingData(tempStandingData);
-    }
-    refresh();
-  }, [user, standingInvalidation]);
+      }
+    });
+  }, []);
+
+  useEffect(
+    () =>
+      getDocs(collection(firebaseFirestore, 'teams')).then((querySnapshot) => {
+        const tempStandingData = [];
+        querySnapshot.forEach((document) => {
+          const teamData = document.data();
+          tempStandingData.push({
+            id: document.id,
+            name: teamData.name,
+            points: teamData.totalSpiritPoints,
+            highlighted: userTeam?.name === document.id,
+          });
+        });
+        setStandingData(tempStandingData);
+      }),
+    [userTeam]
+  );
 
   return (
     <ScrollView showsVerticalScrollIndicator>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Standings
-          standingData={standingData}
-          expandable
-          highlightedId={userTeam?.name}
-          refreshCallback={() => setStandingInvalidation(standingInvalidation + 1)}
-        />
+      <SafeAreaView style={globalStyles.genericView}>
+        <Standings standingData={standingData} expandable />
       </SafeAreaView>
     </ScrollView>
   );
