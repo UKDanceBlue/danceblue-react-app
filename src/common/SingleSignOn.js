@@ -56,8 +56,8 @@ export default class SingleSignOn {
             'Required information not recieved\nSign in failed',
             'Invalid server response',
             () => {
-              signInAnonymously();
               signOut();
+              signInAnonymously();
             },
             true,
             userCredential
