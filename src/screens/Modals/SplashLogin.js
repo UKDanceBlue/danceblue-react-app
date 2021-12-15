@@ -74,7 +74,6 @@ const localStyles = {
   },
   textContainerWithBackground: StyleSheet.compose(globalStyles.genericView, {
     backgroundColor: '#FFFFFF99',
-    justifyContent: 'space-around;',
   }),
 };
 
