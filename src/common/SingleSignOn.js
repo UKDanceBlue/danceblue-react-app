@@ -56,8 +56,8 @@ export default class SingleSignOn {
             'Required information not recieved\nSign in failed',
             'Invalid server response',
             () => {
-              signOut();
-              signInAnonymously();
+              signOut(firebaseAuth).catch(handleFirebaeError);
+              signInAnonymously(firebaseAuth).catch(handleFirebaeError);
             },
             true,
             userCredential
