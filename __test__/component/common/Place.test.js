@@ -21,6 +21,13 @@ describe('Place component', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  test('renders correctly with no point value defined', () => {
+    const tree = renderer
+      .create(<Place isHighlighted rank={4} teamName="Team Name" teamNumber={69} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
   test('renders correctly 1st place', () => {
     const tree = renderer
       .create(<Place rank={1} teamName="Team Name" teamNumber={69} points={420} />)

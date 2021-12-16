@@ -550,3 +550,104 @@ exports[`Place component renders correctly normally 1`] = `
   </View>
 </View>
 `;
+
+exports[`Place component renders correctly with no point value defined 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "borderTopColor": "#1F2236",
+        "borderTopWidth": 0.5,
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "paddingBottom": 10,
+        "paddingTop": 10,
+      },
+      Object {
+        "backgroundColor": "#8BA9FC",
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+        "width": "20%",
+      }
+    }
+  >
+    <Text
+      style={
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 20,
+            "marginLeft": 10,
+            "marginRight": 10,
+          },
+        ]
+      }
+    >
+      4
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "column",
+        "textAlign": "center",
+        "width": "50%",
+      }
+    }
+  >
+    <Text
+      style={
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 15,
+          },
+        ]
+      }
+    />
+  </View>
+  <View
+    style={
+      Object {
+        "justifyContent": "flex-end",
+        "textAlign": "right",
+        "width": "30%",
+      }
+    }
+  >
+    <Text
+      style={
+        Array [
+          Object {
+            "color": "#1F2236",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          },
+          Object {
+            "fontSize": 17,
+            "paddingRight": 10,
+          },
+        ]
+      }
+    >
+      0
+       points
+    </Text>
+  </View>
+</View>
+`;
