@@ -2,7 +2,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { loadAsync } from 'expo-font';
 import { FontAwesome5 } from '@expo/vector-icons';
-import Place from '../../../src/screens/ScoreBoardScreen/Place';
+import Place from '../../../src/common/components/Place';
 
 beforeAll(async () => loadAsync(FontAwesome5.font));
 
@@ -17,6 +17,13 @@ describe('Place component', () => {
   test('renders correctly highlighted', () => {
     const tree = renderer
       .create(<Place isHighlighted rank={4} teamName="Team Name" teamNumber={69} points={420} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  test('renders correctly with no point value defined', () => {
+    const tree = renderer
+      .create(<Place isHighlighted rank={4} teamName="Team Name" teamNumber={69} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });

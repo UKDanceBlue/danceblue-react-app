@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useAssets } from 'expo-asset';
 import AppLoading from 'expo-app-loading';
@@ -35,8 +34,10 @@ const RootScreen = () => {
   useEffect(
     () =>
       onAuthStateChanged(firebaseAuth, (user) => {
-        if (user !== null) {
+        if (user) {
           setUserID(user.uid);
+        } else {
+          setUserID(user);
         }
         setIsLoading(false);
       }),

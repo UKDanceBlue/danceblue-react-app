@@ -1,19 +1,58 @@
-// Import third-party dependencies
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
-
-// Import first-party dependencies
-import Standings from './Standings';
+import { getDoc, doc, getDocs, collection } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import Standings from '../../common/components/Standings';
+import { firebaseAuth, firebaseFirestore } from '../../firebase/FirebaseApp';
+import { globalStyles } from '../../theme';
 
 /**
  * Wrapper for a Standings component
  */
-const ScoreBoardScreen = () => (
-  <ScrollView showsVerticalScrollIndicator>
-    <SafeAreaView style={{ flex: 1 }}>
-      <Standings isExpanded />
-    </SafeAreaView>
-  </ScrollView>
-);
+const ScoreBoardScreen = () => {
+  const [userTeam, setUserTeam] = useState();
+  const [standingData, setStandingData] = useState([]);
+
+  // Add an observer that sets the User object anytime the auth state changes
+  useEffect(() => {
+    onAuthStateChanged(firebaseAuth, (newUser) => {
+      if (newUser?.uid) {
+        getDoc(doc(firebaseFirestore, 'users', newUser.uid)).then((userSnapshot) => {
+          if (userSnapshot.data()?.team) {
+            getDoc(userSnapshot.data().team).then((teamSnapshot) =>
+              setUserTeam(teamSnapshot.data())
+            );
+          }
+        });
+      }
+    });
+  }, []);
+
+  useEffect(
+    () =>
+      getDocs(collection(firebaseFirestore, 'teams')).then((querySnapshot) => {
+        const tempStandingData = [];
+        querySnapshot.forEach((document) => {
+          const teamData = document.data();
+          tempStandingData.push({
+            id: document.id,
+            name: teamData.name,
+            points: teamData.totalSpiritPoints,
+            highlighted: userTeam?.name === document.id,
+          });
+        });
+        setStandingData(tempStandingData);
+      }),
+    [userTeam]
+  );
+
+  return (
+    <ScrollView showsVerticalScrollIndicator>
+      <SafeAreaView style={globalStyles.genericView}>
+        <Standings titleText="Spirit Point Standings" standingData={standingData} startExpanded />
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
 
 export default ScoreBoardScreen;
