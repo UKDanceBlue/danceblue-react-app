@@ -5,11 +5,11 @@ export const globalColors = {
   darkNavy: '#1F2236',
   grey: '#8697B0',
   lightGrey: '#ffffc8',
-  dbBlue: '#212FA1',
+  dbBlue: '#0033A0',
   lightBlue: '#8BA9FC',
   red: '#BA0725',
   green: '#55D128',
-  dbSaffron: '#F6D139',
+  dbSaffron: '#FFC72C',
 };
 
 export const globalStyles = StyleSheet.create({
@@ -43,8 +43,8 @@ export const globalStyles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: globalColors.darkNavy,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: globalColors.darkNavy,
   },
   genericRowLeft: {
     width: '20%',

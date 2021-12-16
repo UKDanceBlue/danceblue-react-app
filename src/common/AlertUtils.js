@@ -14,7 +14,7 @@ export function showMessage(
   log = false,
   logInfo = ''
 ) {
-  Alert.alert(title, message, [{ text: 'OK', onPress: action }]);
+  Alert.alert(title.toString(), message.toString(), [{ text: 'OK', onPress: action }]);
   if (log) {
     console.log(`${title}\n${message}\n${logInfo}`);
   }
@@ -39,7 +39,7 @@ export function showPrompt(
   log = false,
   logInfo = ''
 ) {
-  Alert.alert(title, message, [
+  Alert.alert(title.toString(), message.toString(), [
     { text: negativeText, onPress: negativeAction, style: 'cancel' },
     { text: positiveText, onPress: positiveAction },
   ]);

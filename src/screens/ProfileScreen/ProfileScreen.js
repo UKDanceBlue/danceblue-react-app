@@ -5,6 +5,7 @@ import { Text, View, StyleSheet, ActivityIndicator, Button } from 'react-native'
 import SingleSignOn from '../../common/SingleSignOn';
 import { firebaseAuth, firebaseFirestore } from '../../firebase/FirebaseApp';
 import { globalStyles, globalColors } from '../../theme';
+import { handleFirebaeError } from '../../common/AlertUtils';
 
 /**
  * Component for "Profile" screen in main navigation
@@ -17,12 +18,14 @@ const ProfileScreen = () => {
   useEffect(
     () =>
       onAuthStateChanged(firebaseAuth, (authUser) => {
-        if (authUser !== null && !authUser.isAnonymous) {
-          getDoc(doc(firebaseFirestore, 'users', authUser.uid)).then((document) => {
-            const firestoreUserData = document.data();
-            setUserData({ id: authUser.uid, ...firestoreUserData });
-            setLoggedIn(true);
-          });
+        if (authUser && !authUser.isAnonymous) {
+          getDoc(doc(firebaseFirestore, 'users', authUser.uid))
+            .then((document) => {
+              const firestoreUserData = document.data();
+              setUserData({ id: authUser.uid, ...firestoreUserData });
+              setLoggedIn(true);
+            })
+            .catch(handleFirebaeError);
         } else {
           setLoggedIn(false);
         }
@@ -49,7 +52,7 @@ const ProfileScreen = () => {
                       You are logged in as {userData.firstName} {userData.lastName}
                     </Text>
                     <Text>{userData.email}</Text>
-                    <Button onPress={signOut(firebaseAuth)} title="Log out" />
+                    <Button onPress={() => signOut(firebaseAuth)} title="Log out" />
                   </>
                 ) /* End of logged in view */
               }
