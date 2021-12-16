@@ -27,10 +27,35 @@ export default class SingleSignOn {
    */
   async authenticate(operation) {
     try {
+      console.log(Linking.makeUrl(`/${operation}`));
       // Open a browser that goes to backendUrl and passes the desired operation, firebase config, and a link back to the app
       const result = await WebBrowser.openAuthSessionAsync(
         `${this.backendUrl}?linkingUri=${Linking.makeUrl(`/${operation}`)}`
-      );
+      ).catch((reason) => {
+        throw new Error(reason.toString());
+      });
+      switch (result.type) {
+        case WebBrowser.WebBrowserResultType.CANCEL:
+        case WebBrowser.WebBrowserResultType.DISMISS:
+        case WebBrowser.WebBrowserResultType.LOCKED:
+          console.log('HEY');
+          showMessage('Sign in cancelled', 'Browser closed');
+          return undefined;
+        case 'success':
+          if (result?.url) {
+            this.redirectData = Linking.parse(result.url);
+          }
+          break;
+        default:
+          showMessage(
+            `Browser responded with type ${result.type}`,
+            'Unexpected response',
+            undefined,
+            true,
+            result
+          );
+          break;
+      }
       if (result.url) {
         this.redirectData = Linking.parse(result.url);
       }
@@ -40,7 +65,16 @@ export default class SingleSignOn {
     }
 
     if (firebaseAuth.currentUser && firebaseAuth.currentUser.isAnonymous) {
-      signOut(firebaseAuth);
+      signOut(firebaseAuth).catch(handleFirebaeError);
+    }
+
+    if (!this.redirectData) {
+      showMessage(
+        'Browser did not respond or sign in was cancelled.\nSign in failed',
+        'No response',
+        true
+      );
+      return undefined;
     }
 
     const credentials = SAMLAuthProvider.credentialFromJSON(
@@ -50,7 +84,7 @@ export default class SingleSignOn {
       .then((userCredential) => {
         // Make sure firebase sent a profile option
         const additionalInfo = getAdditionalUserInfo(userCredential);
-        if (!additionalInfo.profile || !userCredential.user?.email) {
+        if (!additionalInfo?.profile || !userCredential?.user?.email) {
           // If it didn't then tell the user, sign out, and log a message including the complete userCredential
           showMessage(
             'Required information not recieved\nSign in failed',
@@ -73,10 +107,10 @@ export default class SingleSignOn {
             additionalInfo.profile['last-name'],
             additionalInfo.profile.email,
             userCredential.user.email.substring(0, userCredential.user.email.indexOf('@'))
-          );
+          ).catch(handleFirebaeError);
           updateProfile(userCredential.user, {
             displayName: additionalInfo.profile['display-name'],
-          });
+          }).catch(handleFirebaeError);
         }
         return userCredential;
       })
