@@ -12,7 +12,7 @@ import { globalColors, globalStyles, globalTextStyles } from '../../theme';
  * @param {string} name The target's name
  * @param {number} points Earned points
  */
-const Place = ({ isHighlighted, rank, name, points }) => {
+const Place = ({ isHighlighted, rank, name, points = 0 }) => {
   // The 'top3Icon function adds an award icon to the top 3 targets
   const top3Icon = (rankForIcon) => {
     switch (rankForIcon) {
