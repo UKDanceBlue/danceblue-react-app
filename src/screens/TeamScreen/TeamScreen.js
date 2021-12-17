@@ -51,18 +51,16 @@ const TeamScreen = () => {
               // Iterate through every record in the team's collection
               Object.entries(individualSpiritPoints.data()).forEach((record) => {
                 const [recordLinkblue, recordPoints] = record;
-                if (linkBlueToName[recordLinkblue]) {
-                  // Add the information from each team to the temporary standingData object
-                  tempStandingData.push({
-                    id: recordLinkblue,
-                    // This is neccecary because we only get the user's name once they have logged in; this is not optimal
-                    name: linkBlueToName[recordLinkblue]
-                      ? linkBlueToName[recordLinkblue]
-                      : recordLinkblue,
-                    points: recordPoints,
-                    highlighted: recordLinkblue === user.linkblue,
-                  });
-                }
+                // Add the information from each team to the temporary standingData object
+                tempStandingData.push({
+                  id: recordLinkblue,
+                  // This is neccecary because we only get the user's name once they have logged in; this is not optimal
+                  name: linkBlueToName[recordLinkblue]
+                    ? linkBlueToName[recordLinkblue]
+                    : recordLinkblue,
+                  points: recordPoints,
+                  highlighted: recordLinkblue === user.linkblue,
+                });
               });
               // Once all the data has been loaded in, we can update the state
               setStandingData(tempStandingData);
