@@ -8,6 +8,7 @@ import ScoreboardScreen from '../screens/ScoreBoardScreen';
 import HomeScreen from '../screens/HomeScreen';
 import EventScreen from '../screens/EventScreen';
 import GenericWebviewScreen from '../screens/GenericWebviewScreen';
+import TeamScreen from '../screens/TeamScreen';
 import MoreScreen from '../screens/More';
 import HeaderIcons from './HeaderIcons';
 
@@ -18,12 +19,14 @@ const TabBar = () => (
     screenOptions={({ route, navigation }) => ({
       tabBarIcon: ({ color, size }) => {
         const iconMap = {
+          // https://icons.expo.fyi/
           // Key: Screen   Value: Icon ID
           Home: 'home',
           Events: 'calendar',
           Store: 'store',
           More: 'ellipsis-h',
           Scoreboard: 'list-ol',
+          Team: 'users',
         };
 
         // You can return any component that you like here!
@@ -50,6 +53,7 @@ const TabBar = () => (
     <Tabs.Screen name="Home" component={HomeScreen} />
     <Tabs.Screen name="Events" component={EventScreen} />
     <Tabs.Screen name="Scoreboard" component={ScoreboardScreen} />
+    <Tabs.Screen name="Team" component={TeamScreen} />
     <Tabs.Screen
       name="Store"
       component={GenericWebviewScreen}
