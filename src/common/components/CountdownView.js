@@ -1,3 +1,5 @@
+/* eslint-disable */
+// TODO: rewrite this whole thing
 import React from 'react';
 import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 import { collection, getDocs, where, query } from 'firebase/firestore';

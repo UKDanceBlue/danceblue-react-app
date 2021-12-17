@@ -19,7 +19,6 @@ const EventScreen = ({ navigation: { navigate } }) => {
   const [events, setEvents] = useState([]);
   const [today, setToday] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function getSnapshot() {
@@ -29,7 +28,6 @@ const EventScreen = ({ navigation: { navigate } }) => {
       );
       snapshot.forEach((document) => firestoreEvents.push({ id: document.id, ...document.data() }));
       setEvents(firestoreEvents);
-      setIsLoading(false);
     }
     getSnapshot();
   }, []);

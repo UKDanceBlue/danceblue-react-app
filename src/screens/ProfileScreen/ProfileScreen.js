@@ -1,7 +1,7 @@
 import { getDoc, doc } from 'firebase/firestore';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ActivityIndicator, Button } from 'react-native';
+import { Text, View, ActivityIndicator, Button } from 'react-native';
 import SingleSignOn from '../../common/SingleSignOn';
 import { firebaseAuth, firebaseFirestore } from '../../firebase/FirebaseApp';
 import { globalStyles, globalColors } from '../../theme';

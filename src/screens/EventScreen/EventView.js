@@ -28,9 +28,7 @@ const danceBlueCalendarConfig = {
  */
 const EventView = ({ route: { params } }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [id, setId] = useState(params.id);
   const [isOnCalendar, setIsOnCalendar] = useState(false);
-  const [isAddingToCalendar, setIsAddingToCalendar] = useState(false);
   const [calendarID, setCalendarID] = useState(undefined);
   const [eventCalendarID, setEventCalendarID] = useState(null);
   const [startTime, setStartTime] = useState(moment());
@@ -59,7 +57,7 @@ const EventView = ({ route: { params } }) => {
   useEffect(() => {
     setIsLoading(true);
     async function getDocument() {
-      const document = await getDoc(doc(firebaseFirestore, 'events', id));
+      const document = await getDoc(doc(firebaseFirestore, 'events', params.id));
       const { eventTitle, eventStartTime, eventEndTime, eventAddress, eventDescription } =
         document.data();
       setTitle(eventTitle);
@@ -73,7 +71,7 @@ const EventView = ({ route: { params } }) => {
       setIsLoading(false);
     }
     getDocument();
-  }, [id]);
+  }, [params.id]);
 
   /**
    * Check if the event exists on the DanceBlue calendar
@@ -114,7 +112,6 @@ const EventView = ({ route: { params } }) => {
    * If the event is successfully created *{isAddingToCalendar: false, isOnCalendar: true}* and eventCalendarID will be added to this.state
    */
   const addToCalendar = () => {
-    setIsAddingToCalendar(true);
     Calendar.requestCalendarPermissionsAsync()
       .then(checkDBCalendar)
       .then(async (calendarExists) => {
@@ -129,7 +126,6 @@ const EventView = ({ route: { params } }) => {
         }).then((localId) => {
           setEventCalendarID(localId);
           setIsOnCalendar(true);
-          setIsAddingToCalendar(false);
         });
       });
   };
@@ -140,11 +136,9 @@ const EventView = ({ route: { params } }) => {
    * @returns A Promise for the completion of which ever callback is executed.
    */
   const removeFromCalendar = async () => {
-    setIsAddingToCalendar(true);
     await Calendar.deleteEventAsync(eventCalendarID);
     setIsOnCalendar(false);
     setEventCalendarID(null);
-    setIsAddingToCalendar(false);
   };
 
   let whenString = '';
