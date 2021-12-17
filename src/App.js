@@ -1,6 +1,6 @@
 // Import third-party dependencies
 import { registerRootComponent } from 'expo';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar, LogBox, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Constants from 'expo-constants';
@@ -36,11 +36,7 @@ Notifications.setNotificationHandler({
 /**
  * Main app container
  */
-const App = ({}) => {
-  const [isReady, setIsReady] = useState(false);
-  const [expoPushToken, setExpoPushToken] = useState(undefined);
-  const [notification, setNotification] = useState(undefined);
-
+const App = () => {
   /**
    * Register notification support with the OS
    * Adds *expoPushToken* to *this.state* if successfull
@@ -66,7 +62,6 @@ const App = ({}) => {
       }
       const token = (await Notifications.getExpoPushTokenAsync()).data;
       addPushTokenToFirebase(firebaseFirestore, token);
-      setExpoPushToken(token);
     } else {
       showMessage('Must use physical device for Push Notifications');
       return;
@@ -82,29 +77,10 @@ const App = ({}) => {
     }
   };
 
-  /**
-   * Called by Expo
-   * Adds *notification* to *this.state*
-   * @param {Notifications.Notification} notification
-   * @private
-   */
-  const handleNotification = (notificationToHandle) => {
-    setNotification(notificationToHandle);
-  };
-
-  /**
-   * Called by Expo
-   * @param {Notifications.NotificationResponse} response
-   * @private
-   */
-  const handleNotificationResponse = (response) => {};
-
   useEffect(() => {
     registerForPushNotificationsAsync();
 
-    Notifications.addNotificationReceivedListener(handleNotification);
-
-    Notifications.addNotificationResponseReceivedListener(handleNotificationResponse);
+    // TODO handle notifications here
   }, []);
 
   /**
