@@ -27,7 +27,6 @@ export default class SingleSignOn {
    */
   async authenticate(operation) {
     try {
-      console.log(Linking.makeUrl(`/${operation}`));
       // Open a browser that goes to backendUrl and passes the desired operation, firebase config, and a link back to the app
       const result = await WebBrowser.openAuthSessionAsync(
         `${this.backendUrl}?linkingUri=${Linking.makeUrl(`/${operation}`)}`
@@ -38,7 +37,6 @@ export default class SingleSignOn {
         case WebBrowser.WebBrowserResultType.CANCEL:
         case WebBrowser.WebBrowserResultType.DISMISS:
         case WebBrowser.WebBrowserResultType.LOCKED:
-          console.log('HEY');
           showMessage('Sign in cancelled', 'Browser closed');
           return undefined;
         case 'success':
