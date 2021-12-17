@@ -9,7 +9,6 @@ import HomeScreen from '../screens/HomeScreen';
 import EventScreen from '../screens/EventScreen';
 import GenericWebviewScreen from '../screens/GenericWebviewScreen';
 import TeamScreen from '../screens/TeamScreen';
-import MoreScreen from '../screens/More';
 import HeaderIcons from './HeaderIcons';
 
 const Tabs = createBottomTabNavigator();
@@ -59,7 +58,6 @@ const TabBar = () => (
       component={GenericWebviewScreen}
       initialParams={{ uri: 'https://www.danceblue.org/dancebluetique/' }}
     />
-    <Tabs.Screen name="More" component={MoreScreen} />
   </Tabs.Navigator>
 );
 
