@@ -1,4 +1,5 @@
 [![Test codebase](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/jest-review.yml/badge.svg)](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/jest-review.yml)
+[![Publish to expo](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/main.yml/badge.svg?branch=main)](https://expo.dev/@university-of-kentucky-danceblue/danceblue-mobile?release-channel=dev-main)
 <div id="top"></div>
 
 <!-- PROJECT LOGO -->
