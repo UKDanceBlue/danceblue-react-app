@@ -1,7 +1,7 @@
 // Import third-party dependencies
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, ScrollView, Text } from 'react-native';
-import { getDoc, doc, getDocs, collection, query, where } from 'firebase/firestore';
+import { getDoc, doc, collection } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { handleFirebaeError } from '../../common/AlertUtils';
 import Standings from '../../common/components/Standings';
@@ -37,18 +37,12 @@ const TeamScreen = () => {
     // Only run if the user has already been set
     if (user) {
       // Go ahead and set up some collection references
-      const usersRef = collection(firebaseFirestore, 'users');
       const teamConfidentialRef = collection(firebaseFirestore, `${user.team.path}/confidential`);
 
-      // Load an object to map linkblue IDs to names if a user has logged in before
-      const linkBlueToName = {};
-      const teamUsersQuery = query(usersRef, where('team', '==', user.team));
-      getDocs(teamUsersQuery)
-        .then((teamMembers) => {
-          teamMembers.forEach((teamMemberSnapshot) => {
-            const teamMember = teamMemberSnapshot.data();
-            linkBlueToName[teamMember.linkblue] = teamMember.name;
-          });
+      getDoc(user.team)
+        .then((userTeam) => {
+          // Get the user's teammate's names from firebase
+          const teamMemberNames = userTeam.get('members');
 
           // Get the spirit point data from the confidential collection
           const tempStandingData = [];
@@ -60,9 +54,9 @@ const TeamScreen = () => {
                 // Add the information from each team to the temporary standingData object
                 tempStandingData.push({
                   id: recordLinkblue,
-                  // This is neccecary because we only get the user's name once they have logged in; this is not optimal
-                  name: linkBlueToName[recordLinkblue]
-                    ? linkBlueToName[recordLinkblue]
+                  // Fallback in the unlikley case we don't have the team member's name
+                  name: teamMemberNames[recordLinkblue]
+                    ? teamMemberNames[recordLinkblue]
                     : recordLinkblue,
                   points: recordPoints,
                   highlighted: recordLinkblue === user.linkblue,
