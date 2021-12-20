@@ -9,7 +9,6 @@ import * as Notifications from 'expo-notifications';
 import * as Random from 'expo-random';
 
 // Import Firebase Context Provider
-import { decode, encode } from 'base-64';
 import { doc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import RootScreen from './navigation/RootScreen';
@@ -17,14 +16,6 @@ import { handleFirebaeError, showMessage } from './common/AlertUtils';
 import { globalColors } from './theme';
 
 import { firebaseAuth, firebaseFirestore } from './common/FirebaseApp';
-
-// Fix firestore error - can be removed if issue is resolved in package
-if (!global.btoa) {
-  global.btoa = encode;
-}
-if (!global.atob) {
-  global.atob = decode;
-}
 
 LogBox.ignoreLogs([
   `AsyncStorage has been extracted from react-native core and will be removed in a future release`,
