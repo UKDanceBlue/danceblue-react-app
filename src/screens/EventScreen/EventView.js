@@ -58,13 +58,11 @@ const EventView = ({ route: { params } }) => {
     setIsLoading(true);
     async function getDocument() {
       const document = await getDoc(doc(firebaseFirestore, 'events', params.id));
-      const { eventTitle, eventStartTime, eventEndTime, eventAddress, eventDescription } =
-        document.data();
-      setTitle(eventTitle);
-      setStartTime(eventStartTime);
-      setEndTime(eventEndTime);
-      setAddress(eventAddress);
-      setDescription(eventDescription);
+      setTitle(document.data().title);
+      setStartTime(moment(document.data().startTime.toDate()));
+      setEndTime(moment(document.data().endTime.toDate()));
+      setAddress(document.data().address);
+      setDescription(document.data().description);
       getDownloadURL(ref(firebaseStorage, document.data().image))
         .then(setImageRef)
         .catch(handleFirebaeError);
@@ -152,7 +150,7 @@ const EventView = ({ route: { params } }) => {
       {isLoading && <ActivityIndicator style={styles.image} size="large" color="blue" />}
       {!isLoading && (
         <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-          <Image source={{ uri: imageRef }} style={styles.image} />
+          {!!imageRef && <Image source={{ uri: imageRef }} style={styles.image} />}
           <View style={styles.body}>
             {description && <Text style={styles.text}>{description}</Text>}
             {address && (
