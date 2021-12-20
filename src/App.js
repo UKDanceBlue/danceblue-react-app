@@ -26,7 +26,9 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-LogBox.ignoreLogs(['Setting a timer']);
+LogBox.ignoreLogs([
+  `AsyncStorage has been extracted from react-native core and will be removed in a future release`,
+]);
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
