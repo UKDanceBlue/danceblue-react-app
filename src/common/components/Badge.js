@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import { ref, getDownloadURL } from 'firebase/storage';
-import { firebaseStorage } from '../../firebase/FirebaseApp';
+import { firebaseStorage } from '../FirebaseApp';
 import { handleFirebaeError } from '../AlertUtils';
 
 /**

@@ -16,7 +16,7 @@ import RootScreen from './navigation/RootScreen';
 import { handleFirebaeError, showMessage } from './common/AlertUtils';
 import { globalColors } from './theme';
 
-import { firebaseAuth, firebaseFirestore } from './firebase/FirebaseApp';
+import { firebaseAuth, firebaseFirestore } from './common/FirebaseApp';
 
 // Fix firestore error - can be removed if issue is resolved in package
 if (!global.btoa) {

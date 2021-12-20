@@ -3,7 +3,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { Text, View, ActivityIndicator, Button } from 'react-native';
 import SingleSignOn from '../../common/SingleSignOn';
-import { firebaseAuth, firebaseFirestore } from '../../firebase/FirebaseApp';
+import { firebaseAuth, firebaseFirestore } from '../../common/FirebaseApp';
 import { globalStyles, globalColors } from '../../theme';
 import { handleFirebaeError } from '../../common/AlertUtils';
 

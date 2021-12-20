@@ -10,7 +10,7 @@ import {
 import { signInAnonymously } from 'firebase/auth';
 
 import SingleSignOn from '../../common/SingleSignOn';
-import { firebaseAuth } from '../../firebase/FirebaseApp';
+import { firebaseAuth } from '../../common/FirebaseApp';
 import { globalStyles, globalTextStyles } from '../../theme';
 
 const splashBackgorund = require('../../../assets/home/Dancing-min.jpg');

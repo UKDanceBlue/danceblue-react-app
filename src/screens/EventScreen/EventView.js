@@ -7,7 +7,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { globalColors } from '../../theme';
 import { handleFirebaeError } from '../../common/AlertUtils';
-import { firebaseFirestore, firebaseStorage } from '../../firebase/FirebaseApp';
+import { firebaseFirestore, firebaseStorage } from '../../common/FirebaseApp';
 
 const danceBlueCalendarConfig = {
   title: 'DanceBlue',

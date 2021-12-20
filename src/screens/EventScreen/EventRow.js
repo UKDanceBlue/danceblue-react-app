@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, Image, ActivityIndicator, StyleSheet, View } from 'react-native';
 import moment from 'moment';
 import { ref, getDownloadURL } from 'firebase/storage';
-import { firebaseStorage } from '../../firebase/FirebaseApp';
+import { firebaseStorage } from '../../common/FirebaseApp';
 import { handleFirebaeError } from '../../common/AlertUtils';
 
 /**

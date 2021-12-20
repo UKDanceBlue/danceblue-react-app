@@ -5,7 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import SponsorCarousel from './SponsorCarousel';
 import CountdownView from '../../common/components/CountdownView';
 import HeaderImage from './HeaderImage';
-import { firebaseAuth, firebaseFirestore } from '../../firebase/FirebaseApp';
+import { firebaseAuth, firebaseFirestore } from '../../common/FirebaseApp';
 
 /**
  * Component for home screen in main navigation

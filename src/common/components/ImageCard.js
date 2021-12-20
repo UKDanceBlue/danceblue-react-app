@@ -3,7 +3,7 @@ import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from '
 import * as WebBrowser from 'expo-web-browser';
 import { ref, getDownloadURL } from 'firebase/storage';
 
-import { firebaseStorage } from '../../firebase/FirebaseApp';
+import { firebaseStorage } from '../FirebaseApp';
 import { handleFirebaeError } from '../AlertUtils';
 
 /**

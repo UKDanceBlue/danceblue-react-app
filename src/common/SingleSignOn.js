@@ -2,15 +2,15 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import {
   getAdditionalUserInfo,
-  updateProfile,
   signOut,
   SAMLAuthProvider,
   signInWithCredential,
   signInAnonymously,
+  updateProfile,
 } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { handleFirebaeError, showMessage } from './AlertUtils';
-import { setUserData } from '../firebase/FirebaseUtils';
-import { firebaseFirestore, firebaseAuth } from '../firebase/FirebaseApp';
+import { firebaseFirestore, firebaseAuth } from './FirebaseApp';
 
 export default class SingleSignOn {
   constructor() {
@@ -98,14 +98,19 @@ export default class SingleSignOn {
         }
 
         if (additionalInfo.providerId === 'saml.danceblue-firebase-linkblue-saml') {
-          setUserData(
-            firebaseFirestore,
-            userCredential.user.uid,
-            additionalInfo.profile['first-name'],
-            additionalInfo.profile['last-name'],
-            additionalInfo.profile.email,
-            userCredential.user.email.substring(0, userCredential.user.email.indexOf('@'))
-          ).catch(handleFirebaeError);
+          setDoc(
+            doc(firebaseFirestore, 'users', userCredential.user.uid),
+            {
+              firstName: additionalInfo.profile['first-name'],
+              lastName: additionalInfo.profile['last-name'],
+              email: additionalInfo.profile.email,
+              linkblue: userCredential.user.email.substring(
+                0,
+                userCredential.user.email.indexOf('@')
+              ),
+            },
+            { merge: true }
+          );
           updateProfile(userCredential.user, {
             displayName: additionalInfo.profile['display-name'],
           }).catch(handleFirebaeError);

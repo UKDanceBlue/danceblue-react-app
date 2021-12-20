@@ -6,7 +6,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import SplashLogin from '../screens/Modals/SplashLogin';
 import MainStackRoot from './MainStackRoot';
 import { showMessage } from '../common/AlertUtils';
-import { firebaseAuth } from '../firebase/FirebaseApp';
+import { firebaseAuth } from '../common/FirebaseApp';
 
 // All assets that should be preloaded:
 const profileButtonImage = require('../../assets/more/Profile_Button.jpg');

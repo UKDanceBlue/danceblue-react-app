@@ -5,7 +5,7 @@ import { getDoc, doc, collection } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { handleFirebaeError } from '../../common/AlertUtils';
 import Standings from '../../common/components/Standings';
-import { firebaseAuth, firebaseFirestore } from '../../firebase/FirebaseApp';
+import { firebaseAuth, firebaseFirestore } from '../../common/FirebaseApp';
 import { globalStyles, globalTextStyles } from '../../theme';
 
 // Formatter for the fundraising total

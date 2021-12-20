@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, ScrollView, StyleSheet } from 'react-native';
 import { collection, getDocs } from 'firebase/firestore';
 import SponsorCard from '../../common/components/ImageCard';
-import { firebaseFirestore } from '../../firebase/FirebaseApp';
+import { firebaseFirestore } from '../../common/FirebaseApp';
 
 /**
  * A horizontally scrolling carousel of SponsorCards

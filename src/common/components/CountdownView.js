@@ -5,7 +5,7 @@ import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 import { collection, getDocs, where, query } from 'firebase/firestore';
 import moment from 'moment';
 
-import { firebaseFirestore } from '../../firebase/FirebaseApp';
+import { firebaseFirestore } from '../FirebaseApp';
 
 /**
  * A label for a unit of time
