@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, ActivityIndicator, StyleSheet, TouchableHighlight, View, Image } from 'react-native';
 import openMap from 'react-native-open-maps';
-import * as Calendar from 'expo-calendar';
+// import * as Calendar from 'expo-calendar';
 import moment from 'moment';
 import { doc, getDoc } from 'firebase/firestore';
 import { ref, getDownloadURL } from 'firebase/storage';
@@ -9,18 +9,18 @@ import { globalColors } from '../../theme';
 import { handleFirebaeError } from '../../common/AlertUtils';
 import { firebaseFirestore, firebaseStorage } from '../../common/FirebaseApp';
 
-const danceBlueCalendarConfig = {
-  title: 'DanceBlue',
-  color: globalColors.dbBlue,
-  enitityType: Calendar.EntityTypes.EVENT,
-  source: {
-    isLocalAccount: true,
-    name: 'DanceBlue Mobile',
-  },
-  name: 'dancebluemobile',
-  ownerAccount: 'DanceBlue Mobile',
-  accessLevel: Calendar.CalendarAccessLevel.OWNER,
-};
+// const danceBlueCalendarConfig = {
+//   title: 'DanceBlue',
+//   color: globalColors.dbBlue,
+//   enitityType: Calendar.EntityTypes.EVENT,
+//   source: {
+//     isLocalAccount: true,
+//     name: 'DanceBlue Mobile',
+//   },
+//   name: 'dancebluemobile',
+//   ownerAccount: 'DanceBlue Mobile',
+//   accessLevel: Calendar.CalendarAccessLevel.OWNER,
+// };
 
 /**
  * A component for showing a particular calendar event
@@ -28,12 +28,12 @@ const danceBlueCalendarConfig = {
  */
 const EventView = ({ route: { params } }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isOnCalendar, setIsOnCalendar] = useState(false);
-  const [calendarID, setCalendarID] = useState(undefined);
-  const [eventCalendarID, setEventCalendarID] = useState(null);
+  // const [isOnCalendar, setIsOnCalendar] = useState(false);
+  // const [calendarID, setCalendarID] = useState(undefined);
+  // const [eventCalendarID, setEventCalendarID] = useState(null);
   const [startTime, setStartTime] = useState(moment());
   const [endTime, setEndTime] = useState(moment());
-  const [title, setTitle] = useState('');
+  // const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
   const [imageRef, setImageRef] = useState('');
   const [description, setDescription] = useState('');
@@ -42,23 +42,23 @@ const EventView = ({ route: { params } }) => {
    * Check if the DanceBlue calendar exist's on the user's device
    * @returns true if the calendar exists, false if not
    */
-  const checkDBCalendar = async () => {
-    let foundCalendar = false;
-    const calendars = await Calendar.getCalendarsAsync();
-    calendars.forEach((calendar) => {
-      if (calendar.name === 'dancebluemobile') {
-        setCalendarID(calendar.id);
-        foundCalendar = true;
-      }
-    });
-    return foundCalendar;
-  };
+  // const checkDBCalendar = async () => {
+  //   let foundCalendar = false;
+  //   const calendars = await Calendar.getCalendarsAsync();
+  //   calendars.forEach((calendar) => {
+  //     if (calendar.name === 'dancebluemobile') {
+  //       setCalendarID(calendar.id);
+  //       foundCalendar = true;
+  //     }
+  //   });
+  //   return foundCalendar;
+  // };
 
   useEffect(() => {
     setIsLoading(true);
     async function getDocument() {
       const document = await getDoc(doc(firebaseFirestore, 'events', params.id));
-      setTitle(document.data().title);
+      // setTitle(document.data().title);
       setStartTime(moment(document.data().startTime.toDate()));
       setEndTime(moment(document.data().endTime.toDate()));
       setAddress(document.data().address);
@@ -75,69 +75,69 @@ const EventView = ({ route: { params } }) => {
    * Check if the event exists on the DanceBlue calendar
    * If it exisits then it adds *{isOnCalendar: true}* and *eventCalendarID* to *this.state*
    */
-  useEffect(() => {
-    if (!isLoading) {
-      Calendar.requestCalendarPermissionsAsync()
-        .then(checkDBCalendar)
-        .then(async (calendarExists) => {
-          if (calendarExists) {
-            const events = await Calendar.getEventsAsync(
-              [calendarID],
-              startTime.toDate(),
-              endTime.toDate()
-            );
-            events.forEach((event) => {
-              if (event.title === title) {
-                setIsOnCalendar(true);
-                setEventCalendarID(event.id);
-              }
-            });
-          }
-        });
-    }
-  }, [calendarID, endTime, startTime, title, isLoading]);
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     Calendar.requestCalendarPermissionsAsync()
+  //       .then(checkDBCalendar)
+  //       .then(async (calendarExists) => {
+  //         if (calendarExists) {
+  //           const events = await Calendar.getEventsAsync(
+  //             [calendarID],
+  //             startTime.toDate(),
+  //             endTime.toDate()
+  //           );
+  //           events.forEach((event) => {
+  //             if (event.title === title) {
+  //               setIsOnCalendar(true);
+  //               setEventCalendarID(event.id);
+  //             }
+  //           });
+  //         }
+  //       });
+  //   }
+  // }, [calendarID, endTime, startTime, title, isLoading]);
 
   /**
    * Creates a new calendar on the user's device and adds *calendarID* to *this.state*
    * @returns A Promise for the completion of which ever callback is executed.
    */
-  const createDBCalendar = () =>
-    Calendar.createCalendarAsync(danceBlueCalendarConfig).then((localId) => setCalendarID(localId));
+  // const createDBCalendar = () =>
+  //   Calendar.createCalendarAsync(danceBlueCalendarConfig).then((localId) => setCalendarID(localId));
 
   /**
    * Add the event to the calendar
    * While the function is running *isAddingToCalendar* will return true
    * If the event is successfully created *{isAddingToCalendar: false, isOnCalendar: true}* and eventCalendarID will be added to this.state
    */
-  const addToCalendar = () => {
-    Calendar.requestCalendarPermissionsAsync()
-      .then(checkDBCalendar)
-      .then(async (calendarExists) => {
-        if (!calendarExists) {
-          await createDBCalendar();
-        }
-        return Calendar.createEventAsync(calendarID, {
-          title,
-          startDate: startTime.toDate(),
-          endDate: endTime.toDate(),
-          location: address,
-        }).then((localId) => {
-          setEventCalendarID(localId);
-          setIsOnCalendar(true);
-        });
-      });
-  };
+  // const addToCalendar = () => {
+  //   Calendar.requestCalendarPermissionsAsync()
+  //     .then(checkDBCalendar)
+  //     .then(async (calendarExists) => {
+  //       if (!calendarExists) {
+  //         await createDBCalendar();
+  //       }
+  //       return Calendar.createEventAsync(calendarID, {
+  //         title,
+  //         startDate: startTime.toDate(),
+  //         endDate: endTime.toDate(),
+  //         location: address,
+  //       }).then((localId) => {
+  //         setEventCalendarID(localId);
+  //         setIsOnCalendar(true);
+  //       });
+  //     });
+  // };
 
   /**
    * Removes an event from the calendar
    * While the function is running *isAddingToCalendar* will return true
    * @returns A Promise for the completion of which ever callback is executed.
    */
-  const removeFromCalendar = async () => {
-    await Calendar.deleteEventAsync(eventCalendarID);
-    setIsOnCalendar(false);
-    setEventCalendarID(null);
-  };
+  // const removeFromCalendar = async () => {
+  //   await Calendar.deleteEventAsync(eventCalendarID);
+  //   setIsOnCalendar(false);
+  //   setEventCalendarID(null);
+  // };
 
   let whenString = '';
   if (startTime.isSame(endTime, 'day')) {
@@ -174,7 +174,7 @@ const EventView = ({ route: { params } }) => {
                   <Text style={styles.buttonText}>Get Directions</Text>
                 </TouchableHighlight>
               )}
-              {startTime && (
+              {/* {startTime && (
                 <TouchableHighlight
                   style={styles.button}
                   onPress={isOnCalendar ? removeFromCalendar : addToCalendar}
@@ -183,7 +183,7 @@ const EventView = ({ route: { params } }) => {
                     {isOnCalendar ? 'Remove from Calendar' : 'Add to Calendar'}
                   </Text>
                 </TouchableHighlight>
-              )}
+              )} */}
             </View>
           </View>
         </View>
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   button: {
-    backgroundColor: '#0033A0E0',
+    backgroundColor: globalColors.dbBlue,
     borderRadius: 5,
     padding: 10,
     width: '45%',
