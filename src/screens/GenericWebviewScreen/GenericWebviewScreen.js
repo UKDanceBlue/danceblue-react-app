@@ -8,14 +8,31 @@ import { WebView } from 'react-native-webview';
  * @param {Object} route The route used by the navigator to reach this screen, should include a defaultParam *uri* that will be displayed by the component
  */
 const GenericWebviewScreen = ({ route }) => {
-  let { uri } = route.params;
-  if (!uri && uri !== '') {
-    // If a uri is not given (and I don't mean blank) then send a 404 from DanceBlue's website
-    uri = 'https://www.danceblue.org/404/';
+  // Is this a default case from react navigation deep linking?
+  if (route.path) {
+    console.log(
+      <View style={{ flex: 1 }}>
+        <WebView source={{ uri: `https://www.danceblue.org${route.path}` }} />
+      </View>
+    );
+    return (
+      <View style={{ flex: 1 }}>
+        <WebView source={{ uri: `https://www.danceblue.org${route.path}` }} />
+      </View>
+    );
   }
+  // Is this component being rendered by a navigator?
+  if (route?.params?.uri) {
+    return (
+      <View style={{ flex: 1 }}>
+        <WebView source={route.params} />
+      </View>
+    );
+  }
+  // Fallback to 404
   return (
     <View style={{ flex: 1 }}>
-      <WebView source={{ uri }} />
+      <WebView source={{ uri: 'https://www.danceblue.org/404/' }} />
     </View>
   );
 };
