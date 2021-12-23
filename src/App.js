@@ -50,7 +50,7 @@ const App = () => {
         await SecureStore.getItemAsync(secureStoreKey, secureStoreOptions).then(async (value) => {
           let uuid;
           let deviceRef;
-          // We have already set a UUID and can use the r etrieved value
+          // We have already set a UUID and can use the retrieved value
           if (value) {
             uuid = value;
             // Get this device's doc
@@ -68,26 +68,30 @@ const App = () => {
               showMessage
             );
           }
-          // Retrieve and store a push notification token
-          await setDoc(
-            deviceRef,
-            {
-              expoPushToken: await registerForPushNotificationsAsync(),
-            },
-            { mergeFields: ['expoPushToken'] }
-          ).catch(handleFirebaeError);
-          // Update the uid stored in firebase upon auth state change
-          observerUnsubscribe = onAuthStateChanged(firebaseAuth, (newUser) =>
-            setDoc(
+          const pushToken = await registerForPushNotificationsAsync();
+          if (pushToken) {
+            // Retrieve and store a push notification token
+            await setDoc(
               deviceRef,
-              { latestUserId: newUser.uid },
-              { mergeFields: ['latestUserId'] }
-            ).catch(handleFirebaeError)
-          );
+              {
+                expoPushToken: pushToken,
+              },
+              { mergeFields: ['expoPushToken'] }
+            ).catch(handleFirebaeError);
+            // Update the uid stored in firebase upon auth state change
+            observerUnsubscribe = onAuthStateChanged(firebaseAuth, (newUser) =>
+              setDoc(
+                deviceRef,
+                { latestUserId: newUser.uid, audiences: ['all', ...newUser.audiences] },
+                { mergeFields: ['latestUserId', 'audiences'] }
+              ).catch(handleFirebaeError)
+            );
+          }
         });
       } else {
         showMessage('Cannot save device ID, you will not recieve push notificatons');
       }
+      // Unsubscribe on unmount
       return observerUnsubscribe;
     }, []);
   });
