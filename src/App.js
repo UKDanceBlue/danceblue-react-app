@@ -17,6 +17,7 @@ import { globalColors } from './theme';
 
 import { firebaseAuth, firebaseFirestore } from './common/FirebaseApp';
 
+// Block the pop-up error box in dev-mode until firebase finds a way to remove the old AsyncStorage
 LogBox.ignoreLogs([
   `AsyncStorage has been extracted from react-native core and will be removed in a future release`,
 ]);
@@ -103,38 +104,51 @@ const App = () => {
    * Register notification support with the OS and get a token from expo
    */
   const registerForPushNotificationsAsync = async () => {
-    if (Device.osName === 'Android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: globalColors.red,
-      });
-    }
+    try {
+      if (Device.osName === 'Android') {
+        Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: globalColors.red,
+        });
+      }
 
-    if (Device.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
+      if (Device.isDevice) {
+        // Get the user's current preference
+        let settings = await Notifications.getPermissionsAsync();
+        // If the user hasn't set a preference yet, ask them.
+        if (
+          !(
+            settings.status === 'undetermined' ||
+            settings.ios?.status === Notifications.IosAuthorizationStatus.NOT_DETERMINED
+          )
+        ) {
+          settings = await Notifications.requestPermissionsAsync();
+        }
+        // If the user does not allow notifications, return null
+        if (
+          !(
+            settings.granted ||
+            settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL
+          )
+        ) {
+          return null;
+        }
+        return (await Notifications.getExpoPushTokenAsync()).data;
       }
-      if ((Device.osName === 'iOS' || Device.osName === 'iPadOS') && finalStatus === 1)
-        finalStatus = 'granted';
-      if (finalStatus !== 'granted') {
-        showMessage(
-          'Failed to get push token for push notification!',
-          'Error',
-          () => {},
-          true,
-          `Final Status: ${finalStatus}`
-        );
-        return undefined;
-      }
-      return (await Notifications.getExpoPushTokenAsync()).data;
+      showMessage('Emulators will not recieve push notifications');
+      return null;
+    } catch (error) {
+      showMessage(
+        'Failed to get push token for push notification!',
+        'Error',
+        () => {},
+        true,
+        error
+      );
+      return null;
     }
-    showMessage('Must use physical device for Push Notifications');
-    return undefined;
   };
 
   /**
