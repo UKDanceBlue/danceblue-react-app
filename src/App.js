@@ -1,12 +1,12 @@
 // Import third-party dependencies
 import { registerRootComponent } from 'expo';
 import React, { useEffect } from 'react';
-import { StatusBar, LogBox, Platform, Linking } from 'react-native';
+import { StatusBar, LogBox, Linking } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 import * as Notifications from 'expo-notifications';
 import * as Random from 'expo-random';
+import * as Device from 'expo-device';
 
 // Import Firebase Context Provider
 import { doc, setDoc } from 'firebase/firestore';
@@ -103,7 +103,7 @@ const App = () => {
    * Register notification support with the OS and get a token from expo
    */
   const registerForPushNotificationsAsync = async () => {
-    if (Platform.OS === 'android') {
+    if (Device.osName === 'Android') {
       Notifications.setNotificationChannelAsync('default', {
         name: 'default',
         importance: Notifications.AndroidImportance.MAX,
@@ -112,14 +112,15 @@ const App = () => {
       });
     }
 
-    if (Constants.isDevice) {
+    if (Device.isDevice) {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
       if (existingStatus !== 'granted') {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
-      if (Platform.OS === 'ios' && finalStatus === 1) finalStatus = 'granted';
+      if ((Device.osName === 'iOS' || Device.osName === 'iPadOS') && finalStatus === 1)
+        finalStatus = 'granted';
       if (finalStatus !== 'granted') {
         showMessage(
           'Failed to get push token for push notification!',
