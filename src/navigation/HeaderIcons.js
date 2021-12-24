@@ -11,7 +11,7 @@ const HeaderIcons = ({ navigation, color }) => (
       },
     ]}
   >
-    <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+    <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
       <FontAwesome5
         name="bell"
         color={color}

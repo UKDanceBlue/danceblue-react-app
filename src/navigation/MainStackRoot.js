@@ -6,6 +6,7 @@ import { BlurView } from 'expo-blur';
 
 // Import first-party dependencies
 import { EventView } from '../screens/EventScreen';
+import NotificationScreen from '../screens/NotificationScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import TabBar from './TabBar';
 import HeaderIcons from './HeaderIcons';
@@ -20,6 +21,11 @@ const MainStackRoot = () => (
     })}
   >
     <MainStack.Screen name="Tab" options={{ headerShown: false }} component={TabBar} />
+    <MainStack.Screen
+      name="Notifications"
+      component={NotificationScreen}
+      options={{ headerRight: null }}
+    />
     <MainStack.Screen name="Profile" component={ProfileScreen} options={{ headerRight: null }} />
     <MainStack.Screen
       name="Event"
