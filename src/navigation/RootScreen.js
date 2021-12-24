@@ -64,7 +64,11 @@ const RootScreen = () => {
           options={{ headerShown: false }}
         />
       )}
-      <RootStack.Screen name="DefaultRoute" component={GenericWebviewScreen} />
+      <RootStack.Screen
+        name="DefaultRoute"
+        component={GenericWebviewScreen}
+        options={{ headerBackTitle: 'Back', headerTitle: 'DanceBlue' }}
+      />
     </RootStack.Navigator>
   );
 };

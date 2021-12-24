@@ -1,7 +1,7 @@
 // Import third-party dependencies
 import { registerRootComponent } from 'expo';
 import React, { useEffect } from 'react';
-import { StatusBar, LogBox, Platform } from 'react-native';
+import { StatusBar, LogBox, Platform, Linking } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
@@ -82,7 +82,10 @@ const App = () => {
             observerUnsubscribe = onAuthStateChanged(firebaseAuth, (newUser) =>
               setDoc(
                 deviceRef,
-                { latestUserId: newUser.uid, audiences: ['all', ...newUser.audiences] },
+                {
+                  latestUserId: newUser.uid,
+                  audiences: newUser.attributes ? ['all', ...newUser.attributes] : ['all'],
+                },
                 { mergeFields: ['latestUserId', 'audiences'] }
               ).catch(handleFirebaeError)
             );
@@ -141,7 +144,73 @@ const App = () => {
   return (
     <>
       <StatusBar backgroundColor="blue" barStyle="dark-content" />
-      <NavigationContainer>
+      <NavigationContainer
+        linking={
+          // From https://docs.expo.dev/versions/latest/sdk/notifications/#handling-push-notifications-with-react-navigation
+          {
+            prefixes: ['danceblue.org', 'https://www.danceblue.org', 'danceblue://'],
+            config: {
+              screens: {
+                Main: {
+                  initialRouteName: 'Tab',
+                  screens: {
+                    Tab: {
+                      screens: {
+                        Home: 'redirect',
+                        Scoreboard: 'redirect/team-rankings',
+                        Team: 'redirect/my-team',
+                        Store: 'redirect/dancebluetique',
+                      },
+                    },
+                    Profile: 'redirect/app-profile',
+                  },
+                },
+                DefaultRoute: '*',
+              },
+            },
+            async getInitialURL() {
+              // First, you may want to do the default deep link handling
+              // Check if app was opened from a deep link
+              let url = await Linking.getInitialURL();
+
+              if (url != null) {
+                return url;
+              }
+
+              // Handle URL from expo push notifications
+              const response = await Notifications.getLastNotificationResponseAsync();
+              url = response?.notification.request.content.data.url;
+
+              return url;
+            },
+            subscribe(listener) {
+              const onReceiveURL = ({ url }) => listener(url);
+
+              // Listen to incoming links from deep linking
+              const deepLinkSubscription = Linking.addEventListener('url', onReceiveURL);
+
+              // Listen to expo push notifications
+              const expoSubscription = Notifications.addNotificationResponseReceivedListener(
+                (response) => {
+                  const { url } = response.notification.request.content.data;
+
+                  // Any custom logic to see whether the URL needs to be handled
+                  // ...
+
+                  // Let React Navigation handle the URL
+                  listener(url);
+                }
+              );
+
+              return () => {
+                // Clean up the event listeners
+                deepLinkSubscription.remove();
+                expoSubscription.remove();
+              };
+            },
+          }
+        }
+      >
         <RootScreen />
       </NavigationContainer>
     </>
