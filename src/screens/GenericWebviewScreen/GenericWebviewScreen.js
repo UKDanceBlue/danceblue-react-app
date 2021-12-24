@@ -10,11 +10,6 @@ import { WebView } from 'react-native-webview';
 const GenericWebviewScreen = ({ route }) => {
   // Is this a default case from react navigation deep linking?
   if (route.path) {
-    console.log(
-      <View style={{ flex: 1 }}>
-        <WebView source={{ uri: `https://www.danceblue.org${route.path}` }} />
-      </View>
-    );
     return (
       <View style={{ flex: 1 }}>
         <WebView source={{ uri: `https://www.danceblue.org${route.path}` }} />
