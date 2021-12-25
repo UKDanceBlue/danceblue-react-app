@@ -10,17 +10,33 @@ import { globalStyles } from '../../theme';
  */
 const GenericWebviewScreen = ({ route }) => {
   const [isWebpageLoading, setIsWebpageLoading] = useState(true);
-
-  let { uri } = route.params;
-  if (!uri && uri !== '') {
-    // If a uri is not given (and I don't mean blank) then send a 404 from DanceBlue's website
-    uri = 'https://www.danceblue.org/404/';
+  // Is this a default case from react navigation deep linking?
+  if (route.path) {
+    return (
+      <View style={globalStyles.genericView}>
+        <WebView
+          source={{ uri: `https://www.danceblue.org${route.path}` }}
+          onLoadEnd={() => setIsWebpageLoading(false)}
+        />
+      </View>
+    );
   }
-
+  // Is this component being rendered by a navigator?
+  if (route?.params?.uri) {
+    return (
+      <View style={globalStyles.genericView}>
+        <WebView source={route.params} onLoadEnd={() => setIsWebpageLoading(false)} />
+      </View>
+    );
+  }
+  // Fallback to 404
   return (
     <View style={globalStyles.genericView}>
       {isWebpageLoading && <ActivityIndicator />}
-      <WebView source={{ uri }} onLoadEnd={() => setIsWebpageLoading(false)} />
+      <WebView
+        source={{ uri: 'https://www.danceblue.org/404/' }}
+        onLoadEnd={() => setIsWebpageLoading(false)}
+      />
     </View>
   );
 };

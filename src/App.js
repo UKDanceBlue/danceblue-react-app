@@ -1,12 +1,12 @@
 // Import third-party dependencies
 import { registerRootComponent } from 'expo';
 import React, { useEffect } from 'react';
-import { StatusBar, LogBox, Platform } from 'react-native';
+import { StatusBar, LogBox, Linking } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 import * as Notifications from 'expo-notifications';
 import * as Random from 'expo-random';
+import * as Device from 'expo-device';
 
 // Import Firebase Context Provider
 import { doc, setDoc } from 'firebase/firestore';
@@ -17,6 +17,7 @@ import { globalColors } from './theme';
 
 import { firebaseAuth, firebaseFirestore } from './common/FirebaseApp';
 
+// Block the pop-up error box in dev-mode until firebase finds a way to remove the old AsyncStorage
 LogBox.ignoreLogs([
   `AsyncStorage has been extracted from react-native core and will be removed in a future release`,
 ]);
@@ -82,7 +83,10 @@ const App = () => {
             observerUnsubscribe = onAuthStateChanged(firebaseAuth, (newUser) =>
               setDoc(
                 deviceRef,
-                { latestUserId: newUser.uid, audiences: ['all', ...newUser.audiences] },
+                {
+                  latestUserId: newUser.uid,
+                  audiences: newUser.attributes ? ['all', ...newUser.attributes] : ['all'],
+                },
                 { mergeFields: ['latestUserId', 'audiences'] }
               ).catch(handleFirebaeError)
             );
@@ -100,37 +104,51 @@ const App = () => {
    * Register notification support with the OS and get a token from expo
    */
   const registerForPushNotificationsAsync = async () => {
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: globalColors.red,
-      });
-    }
+    try {
+      if (Device.osName === 'Android') {
+        Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: globalColors.red,
+        });
+      }
 
-    if (Constants.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
+      if (Device.isDevice) {
+        // Get the user's current preference
+        let settings = await Notifications.getPermissionsAsync();
+        // If the user hasn't set a preference yet, ask them.
+        if (
+          !(
+            settings.status === 'undetermined' ||
+            settings.ios?.status === Notifications.IosAuthorizationStatus.NOT_DETERMINED
+          )
+        ) {
+          settings = await Notifications.requestPermissionsAsync();
+        }
+        // If the user does not allow notifications, return null
+        if (
+          !(
+            settings.granted ||
+            settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL
+          )
+        ) {
+          return null;
+        }
+        return (await Notifications.getExpoPushTokenAsync()).data;
       }
-      if (Platform.OS === 'ios' && finalStatus === 1) finalStatus = 'granted';
-      if (finalStatus !== 'granted') {
-        showMessage(
-          'Failed to get push token for push notification!',
-          'Error',
-          () => {},
-          true,
-          `Final Status: ${finalStatus}`
-        );
-        return undefined;
-      }
-      return (await Notifications.getExpoPushTokenAsync()).data;
+      showMessage('Emulators will not recieve push notifications');
+      return null;
+    } catch (error) {
+      showMessage(
+        'Failed to get push token for push notification!',
+        'Error',
+        () => {},
+        true,
+        error
+      );
+      return null;
     }
-    showMessage('Must use physical device for Push Notifications');
-    return undefined;
   };
 
   /**
@@ -141,7 +159,74 @@ const App = () => {
   return (
     <>
       <StatusBar backgroundColor="blue" barStyle="dark-content" />
-      <NavigationContainer>
+      <NavigationContainer
+        linking={
+          // From https://docs.expo.dev/versions/latest/sdk/notifications/#handling-push-notifications-with-react-navigation
+          {
+            prefixes: ['danceblue.org', 'https://www.danceblue.org', 'danceblue://'],
+            config: {
+              screens: {
+                Main: {
+                  initialRouteName: 'Tab',
+                  screens: {
+                    Tab: {
+                      screens: {
+                        Home: 'redirect',
+                        Scoreboard: 'redirect/team-rankings',
+                        Team: 'redirect/my-team',
+                        Store: 'redirect/dancebluetique',
+                      },
+                    },
+                    Profile: 'redirect/app-profile',
+                    Notifications: 'redirect/app-notifications',
+                  },
+                },
+                DefaultRoute: '*',
+              },
+            },
+            async getInitialURL() {
+              // First, you may want to do the default deep link handling
+              // Check if app was opened from a deep link
+              let url = await Linking.getInitialURL();
+
+              if (url != null) {
+                return url;
+              }
+
+              // Handle URL from expo push notifications
+              const response = await Notifications.getLastNotificationResponseAsync();
+              url = response?.notification.request.content.data.url;
+
+              return url;
+            },
+            subscribe(listener) {
+              const onReceiveURL = ({ url }) => listener(url);
+
+              // Listen to incoming links from deep linking
+              const deepLinkSubscription = Linking.addEventListener('url', onReceiveURL);
+
+              // Listen to expo push notifications
+              const expoSubscription = Notifications.addNotificationResponseReceivedListener(
+                (response) => {
+                  const { url } = response.notification.request.content.data;
+
+                  // Any custom logic to see whether the URL needs to be handled
+                  // ...
+
+                  // Let React Navigation handle the URL
+                  listener(url);
+                }
+              );
+
+              return () => {
+                // Clean up the event listeners
+                deepLinkSubscription.remove();
+                expoSubscription.remove();
+              };
+            },
+          }
+        }
+      >
         <RootScreen />
       </NavigationContainer>
     </>

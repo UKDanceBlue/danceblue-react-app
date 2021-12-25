@@ -7,6 +7,7 @@ import SplashLogin from '../screens/Modals/SplashLogin';
 import MainStackRoot from './MainStackRoot';
 import { showMessage } from '../common/AlertUtils';
 import { firebaseAuth } from '../common/FirebaseApp';
+import GenericWebviewScreen from '../screens/GenericWebviewScreen';
 
 // All assets that should be preloaded:
 const profileButtonImage = require('../../assets/more/Profile_Button.jpg');
@@ -63,6 +64,11 @@ const RootScreen = () => {
           options={{ headerShown: false }}
         />
       )}
+      <RootStack.Screen
+        name="DefaultRoute"
+        component={GenericWebviewScreen}
+        options={{ headerBackTitle: 'Back', headerTitle: 'DanceBlue' }}
+      />
     </RootStack.Navigator>
   );
 };

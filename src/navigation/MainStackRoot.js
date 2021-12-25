@@ -6,7 +6,7 @@ import { BlurView } from 'expo-blur';
 
 // Import first-party dependencies
 import { EventView } from '../screens/EventScreen';
-import GenericWebviewScreen from '../screens/GenericWebviewScreen';
+import NotificationScreen from '../screens/NotificationScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import TabBar from './TabBar';
 import HeaderIcons from './HeaderIcons';
@@ -21,24 +21,12 @@ const MainStackRoot = () => (
     })}
   >
     <MainStack.Screen name="Tab" options={{ headerShown: false }} component={TabBar} />
+    <MainStack.Screen
+      name="Notifications"
+      component={NotificationScreen}
+      options={{ headerRight: null }}
+    />
     <MainStack.Screen name="Profile" component={ProfileScreen} options={{ headerRight: null }} />
-    <MainStack.Screen
-      name="FAQ"
-      component={GenericWebviewScreen}
-      initialParams={{
-        uri: 'https://www.danceblue.org/frequently-asked-questions/',
-      }}
-    />
-    <MainStack.Screen
-      name="Donate"
-      component={GenericWebviewScreen}
-      initialParams={{ uri: 'https://danceblue.networkforgood.com' }}
-    />
-    <MainStack.Screen
-      name="About"
-      component={GenericWebviewScreen}
-      initialParams={{ uri: 'https://www.danceblue.org/about/' }}
-    />
     <MainStack.Screen
       name="Event"
       component={EventView}
