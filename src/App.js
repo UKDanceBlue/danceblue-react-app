@@ -178,6 +178,7 @@ const App = () => {
                       },
                     },
                     Profile: 'redirect/app-profile',
+                    Notifications: 'redirect/app-notifications',
                   },
                 },
                 DefaultRoute: '*',
