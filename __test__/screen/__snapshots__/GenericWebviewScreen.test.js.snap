@@ -27,6 +27,7 @@ exports[`generic webview renders correctly 1`] = `
       messagingEnabled={false}
       onContentProcessDidTerminate={[Function]}
       onHttpError={[Function]}
+      onLoadEnd={[Function]}
       onLoadingError={[Function]}
       onLoadingFinish={[Function]}
       onLoadingProgress={[Function]}
@@ -64,6 +65,12 @@ exports[`generic webview shows 404 with no uri 1`] = `
     }
   }
 >
+  <ActivityIndicator
+    animating={true}
+    color="#999999"
+    hidesWhenStopped={true}
+    size="small"
+  />
   <View
     style={
       Array [
@@ -83,6 +90,7 @@ exports[`generic webview shows 404 with no uri 1`] = `
       messagingEnabled={false}
       onContentProcessDidTerminate={[Function]}
       onHttpError={[Function]}
+      onLoadEnd={[Function]}
       onLoadingError={[Function]}
       onLoadingFinish={[Function]}
       onLoadingProgress={[Function]}
