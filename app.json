@@ -1,7 +1,7 @@
 {
   "expo": {
     "entryPoint": "./src/App.js",
-    "name": "DanceBlue Mobile",
+    "name": "UK DanceBlue",
     "slug": "danceblue-mobile",
     "privacy": "unlisted",
     "owner": "university-of-kentucky-danceblue",
@@ -9,10 +9,7 @@
     "notification": {
       "icon": "./assets/icon.png"
     },
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,21 +21,16 @@
     "updates": {
       "enabled": false
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.danceblue.mobile",
-      "buildNumber": "1.1.0"
+      "bundleIdentifier": "org.danceblue.app",
+      "buildNumber": "1.1.0a2"
     },
     "android": {
-      "package": "com.danceblue.mobile",
+      "package": "org.danceblue.app",
       "versionCode": 5,
-      "permissions": [
-        "WRITE_CALENDAR",
-        "READ_CALENDAR"
-      ],
+      "permissions": ["WRITE_CALENDAR", "READ_CALENDAR"],
       "googleServicesFile": "./google-services.json"
     },
     "description": "University of Kentucky DanceBlue Mobile Application"
