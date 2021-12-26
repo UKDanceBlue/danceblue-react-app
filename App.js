@@ -11,11 +11,11 @@ import * as Device from 'expo-device';
 // Import Firebase Context Provider
 import { doc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import RootScreen from './navigation/RootScreen';
-import { handleFirebaeError, showMessage } from './common/AlertUtils';
-import { globalColors } from './theme';
+import RootScreen from './src/navigation/RootScreen';
+import { handleFirebaeError, showMessage } from './src/common/AlertUtils';
+import { globalColors } from './src/theme';
 
-import { firebaseAuth, firebaseFirestore } from './common/FirebaseApp';
+import { firebaseAuth, firebaseFirestore } from './src/common/FirebaseApp';
 
 // Block the pop-up error box in dev-mode until firebase finds a way to remove the old AsyncStorage
 LogBox.ignoreLogs([
