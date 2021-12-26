@@ -25,11 +25,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.danceblue.app",
-      "buildNumber": "1.1.1"
+      "buildNumber": "1.1.2"
     },
     "android": {
       "package": "org.danceblue.app",
-      "versionCode": 5,
+      "versionCode": 6,
       "permissions": ["WRITE_CALENDAR", "READ_CALENDAR"],
       "googleServicesFile": "./google-services.json"
     },
