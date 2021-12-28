@@ -41,65 +41,62 @@ const App = () => {
    * 4. Add an auth state listener to store the curent uid along with the push token in firebase
    */
   useEffect(() => {
-    let observerUnsubscribe;
+    try {
+      let observerUnsubscribe;
 
-    const secureStoreKey = 'danceblue-device-uuid';
-    const secureStoreOptions = { keychainAccessible: SecureStore.ALWAYS_THIS_DEVICE_ONLY };
+      const secureStoreKey = 'danceblue-device-uuid';
+      const secureStoreOptions = { keychainAccessible: SecureStore.ALWAYS_THIS_DEVICE_ONLY };
 
-    SecureStore.isAvailableAsync()
-      .then(async (isAvailable) => {
-        if (isAvailable) {
-          await SecureStore.getItemAsync(secureStoreKey, secureStoreOptions).then(async (value) => {
-            let uuid;
-            let deviceRef;
-            // We have already set a UUID and can use the retrieved value
-            if (value) {
-              uuid = value;
-              // Get this device's doc
-              deviceRef = doc(firebaseFirestore, 'devices', uuid);
-            }
-            // We need to generate and save the UUID
-            else {
-              // Magic code to generate a uuid (not uid) for this device from SO - https://stackoverflow.com/a/2117523
-              uuid = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-                // eslint-disable-next-line no-bitwise
-                (c ^ (Random.getRandomBytes(1)[0] & (15 >> (c / 4)))).toString(16)
-              );
-              deviceRef = doc(firebaseFirestore, 'devices', uuid);
-              await SecureStore.setItemAsync(secureStoreKey, uuid, secureStoreOptions).catch(
-                showMessage
-              );
-            }
-            const pushToken = await registerForPushNotificationsAsync();
-            if (pushToken) {
-              // Retrieve and store a push notification token
-              await setDoc(
-                deviceRef,
-                {
-                  expoPushToken: pushToken,
-                },
-                { mergeFields: ['expoPushToken'] }
-              ).catch(handleFirebaeError);
-              // Update the uid stored in firebase upon auth state change
-              observerUnsubscribe = onAuthStateChanged(firebaseAuth, (newUser) =>
-                setDoc(
-                  deviceRef,
-                  {
-                    latestUserId: newUser.uid,
-                    audiences: newUser.attributes ? ['all', ...newUser.attributes] : ['all'],
-                  },
-                  { mergeFields: ['latestUserId', 'audiences'] }
-                ).catch(handleFirebaeError)
-              );
-            }
-          });
-        } else {
-          showMessage('Cannot save device ID, you will not recieve push notificatons');
+      SecureStore.getItemAsync(secureStoreKey, secureStoreOptions).then(async (value) => {
+        let uuid;
+        let deviceRef;
+        // We have already set a UUID and can use the retrieved value
+        if (value) {
+          uuid = value;
+          // Get this device's doc
+          deviceRef = doc(firebaseFirestore, 'devices', uuid);
         }
-        // Unsubscribe on unmount
-        return observerUnsubscribe;
-      }, [])
-      .catch(showMessage);
+        // We need to generate and save the UUID
+        else {
+          // Magic code to generate a uuid (not uid) for this device from SO - https://stackoverflow.com/a/2117523
+          uuid = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+            // eslint-disable-next-line no-bitwise
+            (c ^ (Random.getRandomBytes(1)[0] & (15 >> (c / 4)))).toString(16)
+          );
+          deviceRef = doc(firebaseFirestore, 'devices', uuid);
+          await SecureStore.setItemAsync(secureStoreKey, uuid, secureStoreOptions).catch(
+            showMessage
+          );
+        }
+        const pushToken = await registerForPushNotificationsAsync();
+        if (pushToken) {
+          // Retrieve and store a push notification token
+          await setDoc(
+            deviceRef,
+            {
+              expoPushToken: pushToken,
+            },
+            { mergeFields: ['expoPushToken'] }
+          ).catch(handleFirebaeError);
+          // Update the uid stored in firebase upon auth state change
+          observerUnsubscribe = onAuthStateChanged(firebaseAuth, (newUser) =>
+            setDoc(
+              deviceRef,
+              {
+                latestUserId: newUser.uid,
+                audiences: newUser.attributes ? ['all', ...newUser.attributes] : ['all'],
+              },
+              { mergeFields: ['latestUserId', 'audiences'] }
+            ).catch(handleFirebaeError)
+          );
+        }
+      });
+      // Unsubscribe on unmount
+      return observerUnsubscribe;
+    } catch (e) {
+      showMessage(e);
+    }
+    return null;
   });
 
   /**
@@ -107,15 +104,6 @@ const App = () => {
    */
   const registerForPushNotificationsAsync = async () => {
     try {
-      if (Device.osName === 'Android') {
-        Notifications.setNotificationChannelAsync('default', {
-          name: 'default',
-          importance: Notifications.AndroidImportance.MAX,
-          vibrationPattern: [0, 250, 250, 250],
-          lightColor: globalColors.red,
-        }).catch(showMessage);
-      }
-
       if (Device.isDevice) {
         // Get the user's current preference
         let settings = await Notifications.getPermissionsAsync().catch(showMessage);
@@ -137,6 +125,16 @@ const App = () => {
         ) {
           return null;
         }
+
+        if (Device.osName === 'Android') {
+          Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: globalColors.red,
+          }).catch(showMessage);
+        }
+
         return (await Notifications.getExpoPushTokenAsync().catch(showMessage)).data;
       }
       showMessage('Emulators will not recieve push notifications');
