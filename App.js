@@ -153,11 +153,6 @@ const App = () => {
     }
   };
 
-  /**
-   * Called to generate a React Native component
-   * @see {@link https://heartbeat.comet.ml/upload-images-in-react-native-apps-using-firebase-and-firestore-297934c9bae8#:~:text=the%20below%20snippet%3A-,Using%20the%20Context%20API,-Using%20the%20Context The article Kenton got the FirebaseProvider from}
-   * @returns A JSX formatted component
-   */
   return (
     <>
       <StatusBar backgroundColor="blue" barStyle="dark-content" />
