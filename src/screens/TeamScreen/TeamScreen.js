@@ -8,12 +8,6 @@ import Standings from '../../common/components/Standings';
 import { firebaseAuth, firebaseFirestore } from '../../common/FirebaseApp';
 import { globalStyles, globalTextStyles } from '../../theme';
 
-// Formatter for the fundraising total
-const formatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-});
-
 /**
  * A screen shown to users with an assigned team that display's their teams fundriaising total, and spirit point numbers
  */
@@ -80,7 +74,8 @@ const TeamScreen = () => {
     <ScrollView showsVerticalScrollIndicator>
       <SafeAreaView style={globalStyles.genericView}>
         <Text style={globalTextStyles.headerText}>
-          Fundraising total: {formatter.format(fundraisingTotal)}
+          Fundraising total: $
+          {/* Format as decimal */ fundraisingTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
         </Text>
         <Standings titleText="Team Spirit Points" standingData={standingData} startExpanded />
       </SafeAreaView>

@@ -1,5 +1,4 @@
 // Import third-party dependencies
-import { registerRootComponent } from 'expo';
 import React, { useEffect } from 'react';
 import { StatusBar, LogBox, Linking } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -228,4 +227,4 @@ const App = () => {
   );
 };
 
-export default registerRootComponent(App);
+export default App;
