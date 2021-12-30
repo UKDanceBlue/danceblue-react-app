@@ -1,6 +1,5 @@
 {
   "expo": {
-    "entryPoint": "App.js",
     "name": "UK DanceBlue",
     "slug": "danceblue-mobile",
     "privacy": "unlisted",

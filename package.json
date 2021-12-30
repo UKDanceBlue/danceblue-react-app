@@ -1,5 +1,5 @@
 {
-  "main": "App.js",
+  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
     "gen-doc": "jsdoc -p -c jsdoc.conf.json",
