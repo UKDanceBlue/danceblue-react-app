@@ -14,19 +14,21 @@ const ScoreBoardScreen = () => {
   const [standingData, setStandingData] = useState([]);
 
   // Add an observer that sets the User object anytime the auth state changes
-  useEffect(() => {
-    onAuthStateChanged(firebaseAuth, (newUser) => {
-      if (newUser?.uid) {
-        getDoc(doc(firebaseFirestore, 'users', newUser.uid)).then((userSnapshot) => {
-          if (userSnapshot.data()?.team) {
-            getDoc(userSnapshot.data().team).then((teamSnapshot) =>
-              setUserTeam(teamSnapshot.data())
-            );
-          }
-        });
-      }
-    });
-  }, []);
+  useEffect(
+    () =>
+      onAuthStateChanged(firebaseAuth, (newUser) => {
+        if (newUser?.uid) {
+          getDoc(doc(firebaseFirestore, 'users', newUser.uid)).then((userSnapshot) => {
+            if (userSnapshot.data()?.team) {
+              getDoc(userSnapshot.data().team).then((teamSnapshot) =>
+                setUserTeam(teamSnapshot.data())
+              );
+            }
+          });
+        }
+      }),
+    []
+  );
 
   useEffect(
     () =>
