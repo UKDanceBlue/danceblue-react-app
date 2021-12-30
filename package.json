@@ -1,4 +1,5 @@
 {
+  "main": "App.js",
   "scripts": {
     "start": "expo start",
     "gen-doc": "jsdoc -p -c jsdoc.conf.json",
@@ -31,6 +32,8 @@
     "expo-notifications": "~0.14.0",
     "expo-random": "~12.1.1",
     "expo-secure-store": "~11.1.0",
+    "expo-splash-screen": "~0.14.1",
+    "expo-status-bar": "~1.2.0",
     "expo-web-browser": "~10.1.0",
     "firebase": "^9.4.1",
     "moment": "^2.29.1",
@@ -42,9 +45,7 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-super-grid": "^4.1.1",
-    "react-native-webview": "11.15.0",
-    "expo-splash-screen": "~0.14.1",
-    "expo-status-bar": "~1.2.0"
+    "react-native-webview": "11.15.0"
   },
   "devDependencies": {
     "babel-jest": "^27.3.1",

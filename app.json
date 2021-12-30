@@ -1,6 +1,6 @@
 {
   "expo": {
-    "entryPoint": "./App.js",
+    "entryPoint": "App.js",
     "name": "UK DanceBlue",
     "slug": "danceblue-mobile",
     "privacy": "unlisted",
@@ -21,7 +21,7 @@
     "updates": {
       "enabled": false
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": ["assets/**"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.danceblue.app",

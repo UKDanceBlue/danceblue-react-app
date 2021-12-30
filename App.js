@@ -10,6 +10,7 @@ import * as Device from 'expo-device';
 // Import Firebase Context Provider
 import { doc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+import { registerRootComponent } from 'expo';
 import RootScreen from './src/navigation/RootScreen';
 import { handleFirebaeError, showMessage } from './src/common/AlertUtils';
 import { globalColors } from './src/theme';
@@ -32,7 +33,7 @@ Notifications.setNotificationHandler({
 /**
  * Main app container
  */
-const App = () => {
+export default registerRootComponent(() => {
   /**
    * 1. Everytime the app starts get the uuid stored in the OS (creating one if it doesn't exist)
    * 2. Register for push notifications
@@ -225,6 +226,4 @@ const App = () => {
       </NavigationContainer>
     </>
   );
-};
-
-export default App;
+});
