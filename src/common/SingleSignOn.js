@@ -29,7 +29,7 @@ export default class SingleSignOn {
     try {
       // Open a browser that goes to backendUrl and passes the desired operation, firebase config, and a link back to the app
       const result = await WebBrowser.openAuthSessionAsync(
-        `${this.backendUrl}?linkingUri=${Linking.makeUrl(`/${operation}`)}`
+        `${this.backendUrl}?linkingUri=${Linking.createURL(`/${operation}`)}`
       ).catch((reason) => {
         throw new Error(reason.toString());
       });
