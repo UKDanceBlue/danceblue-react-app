@@ -83,8 +83,8 @@ export default registerRootComponent(() => {
             setDoc(
               deviceRef,
               {
-                latestUserId: newUser.uid,
-                audiences: newUser.attributes ? ['all', ...newUser.attributes] : ['all'],
+                latestUserId: newUser ? newUser.uid : null,
+                audiences: newUser && newUser.attributes ? ['all', ...newUser.attributes] : ['all'],
               },
               { mergeFields: ['latestUserId', 'audiences'] }
             ).catch(handleFirebaeError)
