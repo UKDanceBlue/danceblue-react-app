@@ -19,62 +19,49 @@ const NotificationScreen = () => {
   const [notifications, setNotifications] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const refresh = useCallback(() => {
+  const refresh = useCallback(async () => {
     // Start loading
     setIsLoading(true);
-    // Check if OS secure store is available
-    SecureStore.isAvailableAsync()
-      .then(async (isAvailable) => {
-        if (isAvailable) {
-          await SecureStore.getItemAsync(secureStoreKey, secureStoreOptions)
-            .then(async (uuid) => {
-              // We have already set a UUID and can use the retrieved value
-              if (uuid) {
-                // Get a reference to this device's firebase document
-                const deviceRef = doc(firebaseFirestore, 'devices', uuid);
-                let notificationReferences = [];
-                // Get the list of notifications sent to this device from firebase
-                await getDoc(deviceRef)
-                  .then((snapshot) => {
-                    notificationReferences = snapshot.get('pastNotifications');
-                  })
-                  .catch(() =>
-                    showMessage('Cannot connect to server, push notificatons unavailable')
-                  );
+    const uuid = await SecureStore.getItemAsync(secureStoreKey, secureStoreOptions);
+    // We have already set a UUID and can use the retrieved value
+    if (uuid) {
+      // Get a reference to this device's firebase document
+      const deviceRef = doc(firebaseFirestore, 'devices', uuid);
+      let notificationReferences = [];
+      // Get the list of notifications sent to this device from firebase
+      const snapshot = await getDoc(deviceRef).catch(() =>
+        showMessage('Cannot connect to server, push notificatons unavailable')
+      );
+      notificationReferences = snapshot.get('pastNotifications');
 
-                // An array of all notifications to be shown
-                const tempNotifications = [];
+      // An array of all notifications to be shown
+      const tempNotifications = [];
 
-                /* Ensure everything is in the cache */
-                // An array of getDoc promises for any new notifications we need to get
-                const newNotificationPromises = [];
-                // Get any new notifications and add any we already cached to tempNotifications
-                for (let i = 0; i < notificationReferences.length; i++) {
-                  if (!notificationsCache[notificationReferences[i].id]) {
-                    newNotificationPromises.push(getDoc(notificationReferences[i]));
-                  } else {
-                    tempNotifications.push(notificationsCache[notificationReferences[i].id]);
-                  }
-                }
-                // Wait for any new notifications to download and add them to tempNotifications as well
-                const newNotifications = await Promise.all(newNotificationPromises);
-                for (let i = 0; i < newNotifications.length; i++) {
-                  notificationsCache[newNotifications[i].ref.id] = newNotifications[i].data();
-                  tempNotifications.push(notificationsCache[notificationReferences[i].id]);
-                }
-
-                // Sort the list by time and update the state
-                setNotifications(
-                  tempNotifications.sort((a, b) => b.sendTime.seconds - a.sendTime.seconds)
-                );
-              }
-            })
-            .catch(() => showMessage('Cannot retrieve device ID, push notificatons unavailable'));
+      /* Ensure everything is in the cache */
+      // An array of getDoc promises for any new notifications we need to get
+      const newNotificationPromises = [];
+      // Get any new notifications and add any we already cached to tempNotifications
+      for (let i = 0; i < notificationReferences.length; i++) {
+        if (!notificationsCache[notificationReferences[i].id]) {
+          newNotificationPromises.push(
+            getDoc(notificationReferences[i]).catch(() =>
+              showMessage('Failed to get past notification from server')
+            )
+          );
         } else {
-          showMessage('Cannot retrieve device ID, push notificatons unavailable');
+          tempNotifications.push(notificationsCache[notificationReferences[i].id]);
         }
-      })
-      .catch(() => showMessage('Cannot retrieve device ID, push notificatons unavailable'));
+      }
+      // Wait for any new notifications to download and add them to tempNotifications as well
+      const newNotifications = await Promise.all(newNotificationPromises);
+      for (let i = 0; i < newNotifications.length; i++) {
+        notificationsCache[newNotifications[i].ref.id] = newNotifications[i].data();
+        tempNotifications.push(notificationsCache[notificationReferences[i].id]);
+      }
+
+      // Sort the list by time and update the state
+      setNotifications(tempNotifications.sort((a, b) => b.sendTime.seconds - a.sendTime.seconds));
+    }
 
     // Done loading
     setIsLoading(false);
