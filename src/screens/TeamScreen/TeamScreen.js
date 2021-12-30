@@ -1,6 +1,6 @@
 // Import third-party dependencies
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ScrollView, Text } from 'react-native';
+import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { getDoc, doc, collection } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { handleFirebaeError } from '../../common/AlertUtils';
@@ -71,15 +71,29 @@ const TeamScreen = () => {
   }, [user]);
 
   return (
-    <ScrollView showsVerticalScrollIndicator>
-      <SafeAreaView style={globalStyles.genericView}>
+    <View style={globalStyles.genericView}>
+      {(!user || user.isAnonymous) && (
         <Text style={globalTextStyles.headerText}>
-          Fundraising total: $
-          {/* Format as decimal */ fundraisingTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+          You are logged out, if you are on a team log in to see your standings and fundraising
+          information
         </Text>
-        <Standings titleText="Team Spirit Points" standingData={standingData} startExpanded />
-      </SafeAreaView>
-    </ScrollView>
+      )}
+      {user && !user.isAnonymous && (
+        <ScrollView showsVerticalScrollIndicator>
+          <SafeAreaView style={globalStyles.genericView}>
+            <Text style={globalTextStyles.headerText}>
+              Fundraising total: $
+              {
+                /* Format as decimal */ fundraisingTotal
+                  .toFixed(2)
+                  .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+              }
+            </Text>
+            <Standings titleText="Team Spirit Points" standingData={standingData} startExpanded />
+          </SafeAreaView>
+        </ScrollView>
+      )}
+    </View>
   );
 };
 
