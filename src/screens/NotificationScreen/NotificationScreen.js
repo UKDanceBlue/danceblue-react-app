@@ -1,14 +1,13 @@
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { RefreshControl, Text, View } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { doc, getDoc } from 'firebase/firestore';
 import { ScrollView } from 'react-native-gesture-handler';
 import { globalStyles, globalTextStyles } from '../../theme';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { showMessage } from '../../common/AlertUtils';
 
-const secureStoreKey = 'danceblue-device-uuid';
-const secureStoreOptions = { keychainAccessible: SecureStore.ALWAYS_THIS_DEVICE_ONLY };
+const asyncStorageKey = __DEV__ ? '@danceblue-device-dev-uuid' : '@danceblue-device-uuid';
 
 const notificationsCache = {};
 
@@ -22,49 +21,53 @@ const NotificationScreen = () => {
   const refresh = useCallback(async () => {
     // Start loading
     setIsLoading(true);
-    const uuid = await SecureStore.getItemAsync(secureStoreKey, secureStoreOptions);
-    // We have already set a UUID and can use the retrieved value
-    if (uuid) {
-      // Get a reference to this device's firebase document
-      const deviceRef = doc(firebaseFirestore, 'devices', uuid);
-      let notificationReferences = [];
-      // Get the list of notifications sent to this device from firebase
-      const snapshot = await getDoc(deviceRef).catch(() =>
-        showMessage('Cannot connect to server, push notificatons unavailable')
-      );
-      notificationReferences = snapshot.get('pastNotifications');
+    try {
+      const uuid = await AsyncStorage.getItem(asyncStorageKey);
+      // We have already set a UUID and can use the retrieved value
+      if (uuid) {
+        // Get a reference to this device's firebase document
+        const deviceRef = doc(firebaseFirestore, 'devices', uuid);
+        let notificationReferences = [];
+        // Get the list of notifications sent to this device from firebase
+        const snapshot = await getDoc(deviceRef).catch(() =>
+          showMessage('Cannot connect to server, push notificatons unavailable')
+        );
+        notificationReferences = snapshot.get('pastNotifications');
 
-      // An array of all notifications to be shown
-      const tempNotifications = [];
+        // An array of all notifications to be shown
+        const tempNotifications = [];
 
-      /* Ensure everything is in the cache */
-      // An array of getDoc promises for any new notifications we need to get
-      const newNotificationPromises = [];
-      // Get any new notifications and add any we already cached to tempNotifications
-      for (let i = 0; i < notificationReferences.length; i++) {
-        if (!notificationsCache[notificationReferences[i].id]) {
-          newNotificationPromises.push(
-            getDoc(notificationReferences[i]).catch(() =>
-              showMessage('Failed to get past notification from server')
-            )
-          );
-        } else {
+        /* Ensure everything is in the cache */
+        // An array of getDoc promises for any new notifications we need to get
+        const newNotificationPromises = [];
+        // Get any new notifications and add any we already cached to tempNotifications
+        for (let i = 0; i < notificationReferences.length; i++) {
+          if (!notificationsCache[notificationReferences[i].id]) {
+            newNotificationPromises.push(
+              getDoc(notificationReferences[i]).catch(() =>
+                showMessage('Failed to get past notification from server')
+              )
+            );
+          } else {
+            tempNotifications.push(notificationsCache[notificationReferences[i].id]);
+          }
+        }
+        // Wait for any new notifications to download and add them to tempNotifications as well
+        const newNotifications = await Promise.all(newNotificationPromises);
+        for (let i = 0; i < newNotifications.length; i++) {
+          notificationsCache[newNotifications[i].ref.id] = newNotifications[i].data();
           tempNotifications.push(notificationsCache[notificationReferences[i].id]);
         }
-      }
-      // Wait for any new notifications to download and add them to tempNotifications as well
-      const newNotifications = await Promise.all(newNotificationPromises);
-      for (let i = 0; i < newNotifications.length; i++) {
-        notificationsCache[newNotifications[i].ref.id] = newNotifications[i].data();
-        tempNotifications.push(notificationsCache[notificationReferences[i].id]);
-      }
 
-      // Sort the list by time and update the state
-      setNotifications(tempNotifications.sort((a, b) => b.sendTime.seconds - a.sendTime.seconds));
+        // Sort the list by time and update the state
+        setNotifications(tempNotifications.sort((a, b) => b.sendTime.seconds - a.sendTime.seconds));
+      }
+    } catch (error) {
+      showMessage(error, 'Error retrieving notifications');
+    } finally {
+      // Done loading
+      setIsLoading(false);
     }
-
-    // Done loading
-    setIsLoading(false);
   }, []);
 
   useEffect(() => {
