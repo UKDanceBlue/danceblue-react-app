@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar, LogBox, Linking } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
+import * as SecureStore from 'expo-secure-store';
 import * as Random from 'expo-random';
 import * as Device from 'expo-device';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
@@ -27,7 +27,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const asyncStorageKey = __DEV__ ? '@danceblue-device-dev-uuid' : '@danceblue-device-uuid';
+const uuidStoreKey = __DEV__ ? 'danceblue.device-uuid.dev' : 'danceblue.device-uuid';
 
 /**
  * Main app container
@@ -47,7 +47,9 @@ const App = () => {
       let deviceRef;
       try {
         // Get UUID from async storage
-        uuid = await AsyncStorage.getItem(asyncStorageKey);
+        uuid = await SecureStore.getItemAsync(uuidStoreKey, {
+          keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
+        });
 
         // If nothing was in async storage, generate a new uuid and store it
         if (!uuid) {
@@ -56,7 +58,9 @@ const App = () => {
             // eslint-disable-next-line no-bitwise
             (c ^ (Random.getRandomBytes(1)[0] & (15 >> (c / 4)))).toString(16)
           );
-          await AsyncStorage.setItem(asyncStorageKey, uuid);
+          await SecureStore.setItemAsync(uuidStoreKey, uuid, {
+            keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
+          });
         }
 
         deviceRef = doc(firebaseFirestore, 'devices', uuid);

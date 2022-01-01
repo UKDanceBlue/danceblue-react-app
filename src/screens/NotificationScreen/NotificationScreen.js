@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { RefreshControl, Text, View, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import { doc, getDoc } from 'firebase/firestore';
 import { globalStyles, globalTextStyles } from '../../theme';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { showMessage } from '../../common/AlertUtils';
 
-const asyncStorageKey = __DEV__ ? '@danceblue-device-dev-uuid' : '@danceblue-device-uuid';
+const uuidStoreKey = __DEV__ ? 'danceblue.device-uuid.dev' : 'danceblue.device-uuid';
 
 const notificationsCache = {};
 
@@ -21,7 +21,10 @@ const NotificationScreen = () => {
     // Start loading
     setIsLoading(true);
     try {
-      const uuid = await AsyncStorage.getItem(asyncStorageKey);
+      const uuid = await SecureStore.getItemAsync(uuidStoreKey, {
+        keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
+      });
+
       // We have already set a UUID and can use the retrieved value
       if (uuid) {
         // Get a reference to this device's firebase document
