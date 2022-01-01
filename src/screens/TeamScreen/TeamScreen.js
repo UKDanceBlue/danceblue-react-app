@@ -30,43 +30,48 @@ const TeamScreen = () => {
   useEffect(() => {
     // Only run if the user has already been set
     if (user) {
-      // Go ahead and set up some collection references
-      const teamConfidentialRef = collection(firebaseFirestore, `${user.team.path}/confidential`);
+      if (user.team) {
+        // Go ahead and set up some collection references
+        const teamConfidentialRef = collection(firebaseFirestore, `${user.team.path}/confidential`);
 
-      getDoc(user.team)
-        .then((userTeam) => {
-          // Get the user's teammate's names from firebase
-          const teamMemberNames = userTeam.get('members');
+        getDoc(user.team)
+          .then((userTeam) => {
+            // Get the user's teammate's names from firebase
+            const teamMemberNames = userTeam.get('members');
 
-          // Get the spirit point data from the confidential collection
-          const tempStandingData = [];
-          getDoc(doc(teamConfidentialRef, 'individualSpiritPoints'))
-            .then((individualSpiritPoints) => {
-              // Iterate through every record in the team's collection
-              Object.entries(individualSpiritPoints.data()).forEach((record) => {
-                const [recordLinkblue, recordPoints] = record;
-                // Add the information from each team to the temporary standingData object
-                tempStandingData.push({
-                  id: recordLinkblue,
-                  // Fallback in the unlikley case we don't have the team member's name
-                  name: teamMemberNames[recordLinkblue]
-                    ? teamMemberNames[recordLinkblue]
-                    : recordLinkblue,
-                  points: recordPoints,
-                  highlighted: recordLinkblue === user.linkblue,
+            // Get the spirit point data from the confidential collection
+            const tempStandingData = [];
+            getDoc(doc(teamConfidentialRef, 'individualSpiritPoints'))
+              .then((individualSpiritPoints) => {
+                // Iterate through every record in the team's collection
+                Object.entries(individualSpiritPoints.data()).forEach((record) => {
+                  const [recordLinkblue, recordPoints] = record;
+                  // Add the information from each team to the temporary standingData object
+                  tempStandingData.push({
+                    id: recordLinkblue,
+                    // Fallback in the unlikley case we don't have the team member's name
+                    name: teamMemberNames[recordLinkblue]
+                      ? teamMemberNames[recordLinkblue]
+                      : recordLinkblue,
+                    points: recordPoints,
+                    highlighted: recordLinkblue === user.linkblue,
+                  });
                 });
-              });
-              // Once all the data has been loaded in, we can update the state
-              setStandingData(tempStandingData);
-            })
-            .catch(handleFirebaeError);
-        })
-        .catch(handleFirebaeError);
+                // Once all the data has been loaded in, we can update the state
+                setStandingData(tempStandingData);
+              })
+              .catch(handleFirebaeError);
+          })
+          .catch(handleFirebaeError);
 
-      // Load the fundraising total
-      getDoc(doc(teamConfidentialRef, 'fundraising'))
-        .then((fundraising) => setFundraisingTotal(fundraising.get('total')))
-        .catch(handleFirebaeError);
+        // Load the fundraising total
+        getDoc(doc(teamConfidentialRef, 'fundraising'))
+          .then((fundraising) => setFundraisingTotal(fundraising.get('total')))
+          .catch(handleFirebaeError);
+      } else {
+        setStandingData(null);
+        setFundraisingTotal(null);
+      }
     }
   }, [user]);
 
@@ -81,15 +86,20 @@ const TeamScreen = () => {
       {user && !user.isAnonymous && (
         <ScrollView showsVerticalScrollIndicator>
           <SafeAreaView style={globalStyles.genericView}>
-            <Text style={globalTextStyles.headerText}>
-              Fundraising total: $
-              {
-                /* Format as decimal */ fundraisingTotal
-                  .toFixed(2)
-                  .replace(/\d(?=(\d{3})+\.)/g, '$&,')
-              }
-            </Text>
-            <Standings titleText="Team Spirit Points" standingData={standingData} startExpanded />
+            {fundraisingTotal && (
+              <Text style={globalTextStyles.headerText}>
+                Fundraising total: $
+                {
+                  /* Format as decimal */ fundraisingTotal
+                    .toFixed(2)
+                    .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                }
+              </Text>
+            )}
+            {standingData && (
+              <Standings titleText="Team Spirit Points" standingData={standingData} startExpanded />
+            )}
+            {!standingData && !fundraisingTotal && <Text>You are not on a team</Text>}
           </SafeAreaView>
         </ScrollView>
       )}
