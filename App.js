@@ -1,14 +1,12 @@
 // Import third-party dependencies
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar, LogBox, Linking } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import * as Random from 'expo-random';
 import * as Device from 'expo-device';
-
-// Import Firebase Context Provider
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import RootScreen from './src/navigation/RootScreen';
 import { handleFirebaeError, showMessage } from './src/common/AlertUtils';
@@ -29,74 +27,119 @@ Notifications.setNotificationHandler({
   }),
 });
 
+const asyncStorageKey = __DEV__ ? '@danceblue-device-dev-uuid' : '@danceblue-device-uuid';
+
 /**
  * Main app container
  */
 const App = () => {
+  const [authObserverUnsubscribe, setAuthObserverUnsubscribe] = useState(() => {});
+
   /**
    * 1. Everytime the app starts get the uuid stored in the OS (creating one if it doesn't exist)
    * 2. Register for push notifications
    * 3. Store/update the push token under the device's uuid
-   * 4. Add an auth state listener to store the curent uid along with the push token in firebase
+   * 4. Add an auth state listener to store the current uid and audiences along with the push token in firebase
    */
   useEffect(() => {
-    try {
-      let observerUnsubscribe;
+    const getDeviceInfo = async () => {
+      let uuid;
+      let deviceRef;
+      try {
+        // Get UUID from async storage
+        uuid = await AsyncStorage.getItem(asyncStorageKey);
 
-      const secureStoreKey = 'danceblue-device-uuid';
-      const secureStoreOptions = { keychainAccessible: SecureStore.ALWAYS_THIS_DEVICE_ONLY };
-
-      SecureStore.getItemAsync(secureStoreKey, secureStoreOptions).then(async (value) => {
-        let uuid;
-        let deviceRef;
-        // We have already set a UUID and can use the retrieved value
-        if (value) {
-          uuid = value;
-          // Get this device's doc
-          deviceRef = doc(firebaseFirestore, 'devices', uuid);
-        }
-        // We need to generate and save the UUID
-        else {
+        // If nothing was in async storage, generate a new uuid and store it
+        if (!uuid) {
           // Magic code to generate a uuid (not uid) for this device from SO - https://stackoverflow.com/a/2117523
           uuid = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
             // eslint-disable-next-line no-bitwise
             (c ^ (Random.getRandomBytes(1)[0] & (15 >> (c / 4)))).toString(16)
           );
-          deviceRef = doc(firebaseFirestore, 'devices', uuid);
-          await SecureStore.setItemAsync(secureStoreKey, uuid, secureStoreOptions).catch(
-            showMessage
-          );
+          await AsyncStorage.setItem(asyncStorageKey, uuid);
         }
+
+        deviceRef = doc(firebaseFirestore, 'devices', uuid);
+
+        // Register push notifications
         const pushToken = await registerForPushNotificationsAsync();
-        if (pushToken) {
-          // Retrieve and store a push notification token
-          await setDoc(
-            deviceRef,
-            {
-              expoPushToken: pushToken,
-            },
-            { mergeFields: ['expoPushToken'] }
-          ).catch(handleFirebaeError);
-          // Update the uid stored in firebase upon auth state change
-          observerUnsubscribe = onAuthStateChanged(firebaseAuth, (newUser) =>
+
+        // Store the push notification token in firebase
+        await setDoc(
+          deviceRef,
+          {
+            expoPushToken: pushToken || null,
+          },
+          { mergeFields: ['expoPushToken'] }
+        ).catch(handleFirebaeError);
+        // Update the uid and audience stored in firebase for this device upon auth state change
+        const observerUnsubscribe = onAuthStateChanged(firebaseAuth, (newUser) => {
+          if (newUser) {
+            // Get info about the user, including attributes
+            getDoc(doc(firebaseFirestore, 'users', newUser.uid)).then(async (newUserData) => {
+              const audiences = ['all'];
+              if (newUserData?.data().attributes) {
+                // Grab the user's attributes
+                const attributeNames = Object.keys(newUserData.data().attributes);
+                const audiencePromises = [];
+
+                // Add any attributes with isAudience to the audiences array
+                for (let i = 0; i < attributeNames.length; i++) {
+                  audiencePromises.push(
+                    getDoc(doc(firebaseFirestore, 'valid-attributes', attributeNames[i])).catch(
+                      handleFirebaeError
+                    )
+                  );
+                }
+                await Promise.all(audiencePromises).then((audienceDocs) => {
+                  for (let i = 0; i < audienceDocs.length; i++) {
+                    const attributeData = audienceDocs[i].data();
+                    const attributeName = audienceDocs[i].ref.id;
+                    const userAttributeValue = newUserData.data().attributes[attributeName];
+                    if (attributeData[userAttributeValue].isAudience) {
+                      audiences.push(userAttributeValue);
+                    }
+                  }
+                });
+              }
+
+              // If the user is on a team, add the team ID as an audience
+              if (newUserData?.data().team) {
+                audiences.push(newUserData?.data().team.id);
+              }
+
+              // Set the uid and audiences in firebase
+              setDoc(
+                deviceRef,
+                {
+                  latestUserId: newUser ? newUser.uid : null,
+                  audiences,
+                },
+                { mergeFields: ['latestUserId', 'audiences'] }
+              ).catch(handleFirebaeError);
+            });
+          } else {
             setDoc(
               deviceRef,
               {
-                latestUserId: newUser ? newUser.uid : null,
-                audiences: newUser && newUser.attributes ? ['all', ...newUser.attributes] : ['all'],
+                latestUserId: null,
+                audiences: ['all'],
               },
               { mergeFields: ['latestUserId', 'audiences'] }
-            ).catch(handleFirebaeError)
-          );
-        }
-      });
-      // Unsubscribe on unmount
-      return observerUnsubscribe;
-    } catch (e) {
-      showMessage(e);
-    }
-    return null;
+            ).catch(handleFirebaeError);
+          }
+        });
+
+        setAuthObserverUnsubscribe(observerUnsubscribe);
+      } catch (error) {
+        showMessage(error, 'Error setting notifications', null, true, { uuid, deviceRef });
+        setAuthObserverUnsubscribe(() => {});
+      }
+    };
+    getDeviceInfo();
   });
+
+  useEffect(() => authObserverUnsubscribe, [authObserverUnsubscribe]);
 
   /**
    * Register notification support with the OS and get a token from expo
@@ -106,38 +149,46 @@ const App = () => {
       if (Device.isDevice) {
         // Get the user's current preference
         let settings = await Notifications.getPermissionsAsync().catch(showMessage);
+
         // If the user hasn't set a preference yet, ask them.
         if (
-          !(
-            settings.status === 'undetermined' ||
-            settings.ios?.status === Notifications.IosAuthorizationStatus.NOT_DETERMINED
-          )
+          settings.status === 'undetermined' ||
+          settings.ios?.status === Notifications.IosAuthorizationStatus.NOT_DETERMINED
         ) {
-          settings = await Notifications.requestPermissionsAsync().catch(showMessage);
-        }
-        // If the user does not allow notifications, return null
-        if (
-          !(
-            settings.granted ||
-            settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL
-          )
-        ) {
-          return null;
-        }
-
-        if (Device.osName === 'Android') {
-          Notifications.setNotificationChannelAsync('default', {
-            name: 'default',
-            importance: Notifications.AndroidImportance.MAX,
-            vibrationPattern: [0, 250, 250, 250],
-            lightColor: globalColors.red,
+          settings = await Notifications.requestPermissionsAsync({
+            android: {},
+            ios: {
+              allowAlert: true,
+              allowBadge: true,
+              allowSound: true,
+              allowDisplayInCarPlay: false,
+              allowCriticalAlerts: true,
+              provideAppNotificationSettings: false,
+              allowProvisional: false,
+              allowAnnouncements: false,
+            },
           }).catch(showMessage);
         }
 
-        return (await Notifications.getExpoPushTokenAsync().catch(showMessage)).data;
+        // The user allows notifications, return the push token
+        if (
+          settings.granted ||
+          settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL
+        ) {
+          if (Device.osName === 'Android') {
+            Notifications.setNotificationChannelAsync('default', {
+              name: 'default',
+              importance: Notifications.AndroidImportance.MAX,
+              vibrationPattern: [0, 250, 250, 250],
+              lightColor: globalColors.red,
+            }).catch(showMessage);
+          }
+
+          return (await Notifications.getExpoPushTokenAsync().catch(showMessage)).data;
+        }
+      } else {
+        showMessage('Emulators will not recieve push notifications');
       }
-      showMessage('Emulators will not recieve push notifications');
-      return null;
     } catch (error) {
       showMessage(
         'Failed to get push token for push notification!',
@@ -146,8 +197,8 @@ const App = () => {
         true,
         error
       );
-      return null;
     }
+    return null;
   };
 
   return (
@@ -214,8 +265,12 @@ const App = () => {
 
               return () => {
                 // Clean up the event listeners
-                deepLinkSubscription.remove();
-                expoSubscription.remove();
+                if (deepLinkSubscription) {
+                  deepLinkSubscription.remove();
+                }
+                if (expoSubscription) {
+                  expoSubscription.remove();
+                }
               };
             },
           }
