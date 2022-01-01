@@ -24,7 +24,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.danceblue.app",
-      "buildNumber": "1.1.8",
+      "buildNumber": "1.1.9",
       "config": { "usesNonExemptEncryption": false },
       "infoPlist": {
         "NSRemindersUsageDescription": "Users may add DanceBlue events to their calendar."
@@ -32,7 +32,7 @@
     },
     "android": {
       "package": "org.danceblue.app",
-      "versionCode": 10,
+      "versionCode": 11,
       "permissions": ["WRITE_CALENDAR", "READ_CALENDAR"],
       "googleServicesFile": "./google-services.json"
     },

@@ -83,10 +83,10 @@ const TeamScreen = () => {
           information
         </Text>
       )}
-      {user && !user.isAnonymous && (
+      {!!user && !user.isAnonymous && (
         <ScrollView showsVerticalScrollIndicator>
           <SafeAreaView style={globalStyles.genericView}>
-            {fundraisingTotal && (
+            {!!fundraisingTotal && (
               <Text style={globalTextStyles.headerText}>
                 Fundraising total: $
                 {
@@ -96,10 +96,14 @@ const TeamScreen = () => {
                 }
               </Text>
             )}
-            {standingData && (
+            {!!standingData && (
               <Standings titleText="Team Spirit Points" standingData={standingData} startExpanded />
             )}
-            {!standingData && !fundraisingTotal && <Text>You are not on a team</Text>}
+            {!standingData && !fundraisingTotal && (
+              <Text>
+                You are not on a team, if this is incorrect please reach out to your team leader.
+              </Text>
+            )}
           </SafeAreaView>
         </ScrollView>
       )}
