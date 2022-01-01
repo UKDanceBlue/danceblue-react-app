@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
-import { RefreshControl, Text, View } from 'react-native';
+import { RefreshControl, Text, View, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { doc, getDoc } from 'firebase/firestore';
-import { ScrollView } from 'react-native-gesture-handler';
 import { globalStyles, globalTextStyles } from '../../theme';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { showMessage } from '../../common/AlertUtils';
