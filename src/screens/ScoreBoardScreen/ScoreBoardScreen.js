@@ -10,7 +10,7 @@ import { globalStyles } from '../../theme';
  * Wrapper for a Standings component
  */
 const ScoreBoardScreen = () => {
-  const [userTeam, setUserTeam] = useState();
+  const [userTeamId, setUserTeamId] = useState();
   const [standingData, setStandingData] = useState([]);
 
   // Add an observer that sets the User object anytime the auth state changes
@@ -20,9 +20,7 @@ const ScoreBoardScreen = () => {
         if (newUser?.uid) {
           getDoc(doc(firebaseFirestore, 'users', newUser.uid)).then((userSnapshot) => {
             if (userSnapshot.data()?.team) {
-              getDoc(userSnapshot.data().team).then((teamSnapshot) =>
-                setUserTeam(teamSnapshot.data())
-              );
+              setUserTeamId(userSnapshot.data()?.team.id);
             }
           });
         }
@@ -40,12 +38,12 @@ const ScoreBoardScreen = () => {
             id: document.id,
             name: teamData.name,
             points: teamData.totalSpiritPoints,
-            highlighted: userTeam?.name === document.id,
+            highlighted: userTeamId === document.id,
           });
         });
         setStandingData(tempStandingData);
       }),
-    [userTeam]
+    [userTeamId]
   );
 
   return (
