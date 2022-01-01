@@ -10,12 +10,9 @@ import { firebaseAuth } from '../common/FirebaseApp';
 import GenericWebviewScreen from '../screens/GenericWebviewScreen';
 
 // All assets that should be preloaded:
-const profileButtonImage = require('../../assets/more/Profile_Button.jpg');
-const donateButtonImage = require('../../assets/more/Donate_Button.jpg');
-const faqsButtonImage = require('../../assets/more/FAQs_Button.jpg');
-const aboutButtonImage = require('../../assets/more/About_Button.jpg');
-const backgroundImg = require('../../assets/home/db20_ribbon.jpg');
+const homeBackgroundImg = require('../../assets/home/db20_ribbon.jpg');
 const dbLogo = require('../../assets/home/DB_Primary_Logo-01.png');
+const splashLoginBackgorund = require('../../assets/home/Dancing-min.jpg');
 
 const RootStack = createStackNavigator();
 
@@ -23,14 +20,7 @@ const RootScreen = () => {
   const [userID, setUserID] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [assets, error] = useAssets([
-    profileButtonImage,
-    donateButtonImage,
-    faqsButtonImage,
-    aboutButtonImage,
-    backgroundImg,
-    dbLogo,
-  ]);
+  const [assets, error] = useAssets([splashLoginBackgorund, homeBackgroundImg, dbLogo]);
 
   useEffect(
     () =>
