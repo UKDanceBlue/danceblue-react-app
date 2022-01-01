@@ -54,6 +54,10 @@ class CountdownView extends React.Component {
     this.retrieveCountdown();
   }
 
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   async retrieveCountdown() {
     const snapshot = await getDocs(
       query(collection(firebaseFirestore, 'countdowns'), where('active', '==', true))
@@ -74,11 +78,11 @@ class CountdownView extends React.Component {
    * Every 1 second subtract 1 second from the timer (stored in CountdownView.state) until it is less than or equal to 0,  then stop
    */
   updateTimer() {
-    const x = setInterval(() => {
+    this.interval = setInterval(() => {
       let { date } = this.state;
 
       if (date <= 0) {
-        clearInterval(x);
+        clearInterval(this.interval);
       } else {
         date = date.subtract(1, 's');
         const months = date.months();
