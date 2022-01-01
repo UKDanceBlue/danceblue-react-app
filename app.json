@@ -25,6 +25,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "org.danceblue.app",
       "buildNumber": "1.1.8",
+      "config": { "usesNonExemptEncryption": false },
       "infoPlist": {
         "NSRemindersUsageDescription": "Users may add DanceBlue events to their calendar."
       }
