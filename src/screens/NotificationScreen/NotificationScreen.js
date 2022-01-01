@@ -15,7 +15,7 @@ const notificationsCache = {};
  */
 const NotificationScreen = () => {
   const [notifications, setNotifications] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const refresh = useCallback(async () => {
     // Start loading
@@ -28,10 +28,12 @@ const NotificationScreen = () => {
         const deviceRef = doc(firebaseFirestore, 'devices', uuid);
         let notificationReferences = [];
         // Get the list of notifications sent to this device from firebase
-        const snapshot = await getDoc(deviceRef).catch(() =>
-          showMessage('Cannot connect to server, push notificatons unavailable')
-        );
-        notificationReferences = snapshot.get('pastNotifications');
+        const deviceData = (
+          await getDoc(deviceRef).catch(() =>
+            showMessage('Cannot connect to server, push notificatons unavailable')
+          )
+        ).data();
+        notificationReferences = deviceData.pastNotifications ? deviceData.pastNotifications : [];
 
         // An array of all notifications to be shown
         const tempNotifications = [];
