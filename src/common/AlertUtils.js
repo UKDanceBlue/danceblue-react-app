@@ -111,5 +111,18 @@ export function handleFirebaeError(error, log = false) {
   if (log) {
     console.error(error.message);
   }
+  if (!__DEV__) {
+    try {
+      fetch('https://us-central1-react-danceblue.cloudfunctions.net/writeLog', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(error, undefined, '  '),
+      }).then(null, () => console.debug('Failed to upload log to firebase'));
+    } catch {
+      console.debug('Failed to upload log to firebase');
+    }
+  }
   return error;
 }
