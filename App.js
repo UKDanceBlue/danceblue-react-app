@@ -9,10 +9,12 @@ import { useAssets } from 'expo-asset';
 import AppLoading from 'expo-app-loading';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+import { Provider } from 'react-redux';
 import RootScreen from './src/navigation/RootScreen';
 import { handleFirebaeError, showMessage } from './src/common/AlertUtils';
 import { globalColors } from './src/theme';
 
+import store from './src/redux/store';
 import { firebaseAuth, firebaseFirestore } from './src/common/FirebaseApp';
 
 // All assets that should be preloaded:
@@ -222,10 +224,10 @@ const App = () => {
   }
 
   return (
-    <>
+    <Provider store={store}>
       <StatusBar backgroundColor="blue" barStyle="dark-content" />
       <RootScreen />
-    </>
+    </Provider>
   );
 };
 
