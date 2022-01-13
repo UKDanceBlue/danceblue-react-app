@@ -4,7 +4,7 @@ import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
 import * as Random from 'expo-random';
 import * as Device from 'expo-device';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { showMessage } from '../common/AlertUtils';
 import { firebaseFirestore } from '../common/FirebaseApp';
 import { globalColors } from '../theme';
@@ -68,7 +68,8 @@ export const registerPushNotifications = createAsyncThunk(
       // The user allows notifications, return the push token
       if (
         settings.granted ||
-        settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL
+        settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL ||
+        settings.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED
       ) {
         if (Device.osName === 'Android') {
           Notifications.setNotificationChannelAsync('default', {
@@ -102,8 +103,9 @@ export const registerPushNotifications = createAsyncThunk(
   }
 );
 
-export const refreshPastNotifications = createAsyncThunk('notification/updateConfig', async () =>
-  getDoc(doc(firebaseFirestore, 'configs', 'mobile-app'))
+export const refreshPastNotifications = createAsyncThunk(
+  'notification/updateConfig',
+  async () => {}
 );
 
 // Redux Toolkit allows us to write "mutating" logic in reducers. It
