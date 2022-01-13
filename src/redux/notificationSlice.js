@@ -14,6 +14,7 @@ const uuidStoreKey = __DEV__ ? 'danceblue.device-uuid.dev' : 'danceblue.device-u
 const initialState = {
   uuid: null,
   pushToken: null,
+  notificationPermissionsGranted: null,
 };
 
 export const obtainUuid = createAsyncThunk('notification/obtainUuid', async () =>
@@ -92,10 +93,10 @@ export const registerPushNotifications = createAsyncThunk(
               { mergeFields: ['expoPushToken'] }
             );
           }
-          return token;
+          return { token, notificationPermissionsGranted: true };
         });
       } else {
-        return thunkApi.rejectWithValue({ error: 'PERMISSION_NOT_GRANTED' });
+        return { token: null, notificationPermissionsGranted: false };
       }
     } else {
       return thunkApi.rejectWithValue({ error: 'DEVICE_IS_EMULATOR' });
@@ -126,14 +127,14 @@ export const notificationSlice = createSlice({
       })
 
       .addCase(registerPushNotifications.fulfilled, (state, action) => {
-        state.pushToken = action.payload.data;
+        state.notificationPermissionsGranted = action.payload.notificationPermissionsGranted;
+        if (action.payload.notificationPermissionsGranted) {
+          state.pushToken = action.payload.token.data;
+        }
       })
       .addCase(registerPushNotifications.rejected, (state, action) => {
         if (action.error.message === 'Rejected') {
           switch (action?.payload?.error) {
-            case 'PERMISSION_NOT_GRANTED':
-              // Just ignore this case
-              break;
             case 'DEVICE_IS_EMULATOR':
               showMessage('Emulators will not recieve push notifications');
               break;
