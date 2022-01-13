@@ -16,7 +16,7 @@ const initialState = {
   isLoggedIn: false,
   isAnononmous: false,
   uid: null,
-  attributes: [],
+  attributes: {},
   firstName: null,
   lastName: null,
   email: null,
@@ -28,14 +28,25 @@ const initialState = {
   teamFundraisingTotal: null,
 };
 
-export const logout = createAsyncThunk('auth/logout', async () => signOut(firebaseAuth));
+export const logout = createAsyncThunk('auth/logout', async (arg, thunkApi) =>
+  signOut(firebaseAuth).then(() => {
+    setDoc(
+      doc(firebaseFirestore, 'devices', thunkApi.getState().notification.uuid),
+      {
+        latestUserId: null,
+        audiences: ['all'],
+      },
+      { mergeFields: ['latestUserId', 'audiences'] }
+    );
+  })
+);
 
 export const syncAuthDataWithUser = createAsyncThunk(
   'auth/syncAuthDataWithUser',
   async (user, thunkApi) => {
     const userInfo = {
       uid: null,
-      attributes: [],
+      attributes: {},
       firstName: null,
       lastName: null,
       email: null,
@@ -46,13 +57,14 @@ export const syncAuthDataWithUser = createAsyncThunk(
       teamIndividualSpiritPoints: null,
       teamFundraisingTotal: null,
     };
-    if (user) {
+    if (user && !user.isAnononmous) {
       userInfo.uid = user.uid;
       userInfo.displayName = user.displayName;
 
       // Get information about the user's team
       const userSnapshot = await getDoc(doc(firebaseFirestore, 'users', user.uid));
 
+      // !!! copy all fields in firebase to userInfo !!!
       const firebaseUserData = userSnapshot.data();
       Object.assign(userInfo, firebaseUserData);
 
@@ -84,12 +96,24 @@ export const syncAuthDataWithUser = createAsyncThunk(
   }
 );
 
-export const loginAnon = createAsyncThunk('auth/loginAnon', async () =>
-  signInAnonymously(firebaseAuth)
+export const loginAnon = createAsyncThunk('auth/loginAnon', async (arg, thunkApi) =>
+  signInAnonymously(firebaseAuth).then(() => {
+    setDoc(
+      doc(firebaseFirestore, 'devices', thunkApi.getState().notification.uuid),
+      {
+        latestUserId: null,
+        audiences: ['all'],
+      },
+      { mergeFields: ['latestUserId', 'audiences'] }
+    );
+  })
 );
 
 export const loginSaml = createAsyncThunk('auth/loginSaml', async (credential, thunkApi) => {
+  // 1. Sign in
   const userCredential = await signInWithCredential(firebaseAuth, credential);
+
+  // 2. Do some verificaton
   // Make sure firebase sent a profile option
   const additionalInfo = getAdditionalUserInfo(userCredential);
 
@@ -103,8 +127,10 @@ export const loginSaml = createAsyncThunk('auth/loginSaml', async (credential, t
     return thunkApi.rejectWithValue({ error: 'INVALID_SERVER_RESPONSE' });
   }
 
+  // 3. Set up an object to be filled with data and then returned
   const userInfo = {
     uid: userCredential.user.uid,
+    attributes: {},
     firstName: additionalInfo.profile['first-name'] || null,
     lastName: additionalInfo.profile['last-name'] || null,
     email: additionalInfo.profile.email,
@@ -118,8 +144,8 @@ export const loginSaml = createAsyncThunk('auth/loginSaml', async (credential, t
     teamFundraisingTotal: null,
   };
 
-  // Upload SAML info to firebase
-  setDoc(
+  // 4. Upload SAML info to firebase
+  await setDoc(
     doc(firebaseFirestore, 'users', userCredential.user.uid),
     {
       firstName: userInfo.firstName,
@@ -133,8 +159,14 @@ export const loginSaml = createAsyncThunk('auth/loginSaml', async (credential, t
     displayName: additionalInfo.profile['display-name'] || null,
   });
 
-  // Get information about the user's team
+  // 5. Get the user's firebase document and add it's information to userInfo
   const userSnapshot = await getDoc(doc(firebaseFirestore, 'users', userCredential.user.uid));
+  // !!! copy all fields in firebase to userInfo !!!
+  const firebaseUserData = userSnapshot.data();
+  delete firebaseUserData.team;
+  Object.assign(userInfo, firebaseUserData);
+
+  // 6. Get information about the user's team (if any)
   if (userSnapshot.get('team')) {
     userInfo.teamId = userSnapshot.get('team').id;
 
@@ -158,7 +190,50 @@ export const loginSaml = createAsyncThunk('auth/loginSaml', async (credential, t
       userInfo.teamFundraisingTotal = teamPromiseResponses[2].value.data();
   }
 
-  // Fufill the thunk with the info we collected
+  // 7. Update the uid and audience data in this device's firebase document
+  const audiences = ['all'];
+  if (
+    typeof userInfo.attributes === 'object' &&
+    !Array.isArray(userInfo.attributes) &&
+    userInfo.attributes !== null &&
+    Object.keys(userInfo.attributes).length > 0
+  ) {
+    // Grab the user's attributes
+    const attributeNames = Object.keys(userInfo.attributes);
+    const audiencePromises = [];
+
+    // Add any attributes with isAudience to the audiences array
+    for (let i = 0; i < attributeNames.length; i++) {
+      audiencePromises.push(getDoc(doc(firebaseFirestore, 'valid-attributes', attributeNames[i])));
+    }
+    await Promise.all(audiencePromises).then((audienceDocs) => {
+      for (let i = 0; i < audienceDocs.length; i++) {
+        const attributeData = audienceDocs[i].data();
+        const attributeName = audienceDocs[i].ref.id;
+        const userAttributeValue = userInfo.attributes[attributeName];
+        if (attributeData[userAttributeValue].isAudience) {
+          audiences.push(userAttributeValue);
+        }
+      }
+    });
+  }
+
+  // If the user is on a team, add the team ID as an audience
+  if (userInfo.teamId) {
+    audiences.push(userInfo.teamId);
+  }
+
+  // Set the uid and audiences in firebase
+  await setDoc(
+    doc(firebaseFirestore, 'devices', thunkApi.getState().notification.uuid),
+    {
+      latestUserId: userInfo.uid || null,
+      audiences,
+    },
+    { mergeFields: ['latestUserId', 'audiences'] }
+  );
+
+  // 8. Fufill the thunk with the info we collected
   return thunkApi.fulfillWithValue(userInfo);
 });
 
@@ -180,7 +255,7 @@ export const authSlice = createSlice({
         state.isLoggedIn = false;
         state.isAnononmous = false;
         state.uid = null;
-        state.attributes = [];
+        state.attributes = {};
         state.teamId = null;
         state.team = null;
         state.teamIndividualSpiritPoints = null;
@@ -191,6 +266,7 @@ export const authSlice = createSlice({
         state.linkblue = null;
         state.displayName = null;
       })
+
       .addCase(loginAnon.pending, (state) => {
         Object.assign(state, initialState);
       })
@@ -199,7 +275,7 @@ export const authSlice = createSlice({
         state.isLoggedIn = true;
         state.isAnononmous = true;
         state.uid = null;
-        state.attributes = [];
+        state.attributes = {};
         state.teamId = null;
         state.team = null;
         state.teamIndividualSpiritPoints = null;
@@ -210,6 +286,7 @@ export const authSlice = createSlice({
         state.linkblue = null;
         state.displayName = null;
       })
+
       .addCase(loginSaml.pending, (state) => {
         Object.assign(state, initialState);
       })
