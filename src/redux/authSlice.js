@@ -16,17 +16,73 @@ const initialState = {
   isLoggedIn: false,
   isAnononmous: false,
   uid: null,
+  attributes: [],
   firstName: null,
   lastName: null,
   email: null,
   linkblue: null,
   displayName: null,
+  teamId: null,
   team: null,
   teamIndividualSpiritPoints: null,
   teamFundraisingTotal: null,
 };
 
 export const logout = createAsyncThunk('auth/logout', async () => signOut(firebaseAuth));
+
+export const syncAuthDataWithUser = createAsyncThunk(
+  'auth/syncAuthDataWithUser',
+  async (user, thunkApi) => {
+    const userInfo = {
+      uid: null,
+      attributes: [],
+      firstName: null,
+      lastName: null,
+      email: null,
+      linkblue: null,
+      displayName: null,
+      teamId: null,
+      team: null,
+      teamIndividualSpiritPoints: null,
+      teamFundraisingTotal: null,
+    };
+    if (user) {
+      userInfo.uid = user.uid;
+      userInfo.displayName = user.displayName;
+
+      // Get information about the user's team
+      const userSnapshot = await getDoc(doc(firebaseFirestore, 'users', user.uid));
+
+      const firebaseUserData = userSnapshot.data();
+      Object.assign(userInfo, firebaseUserData);
+
+      if (userSnapshot.get('team')) {
+        userInfo.teamId = userSnapshot.get('team').id;
+
+        // Go ahead and set up some collection references
+        const teamConfidentialRef = collection(
+          firebaseFirestore,
+          `${userSnapshot.get('team').path}/confidential`
+        );
+
+        const teamPromiseResponses = await Promise.allSettled([
+          getDoc(userSnapshot.get('team')),
+          getDoc(doc(teamConfidentialRef, 'individualSpiritPoints')),
+          getDoc(doc(teamConfidentialRef, 'fundraising')),
+        ]);
+
+        if (teamPromiseResponses[0].status === 'fulfilled')
+          userInfo.team = teamPromiseResponses[0].value.data();
+        if (teamPromiseResponses[1].status === 'fulfilled')
+          userInfo.teamIndividualSpiritPoints = teamPromiseResponses[1].value.data();
+        if (teamPromiseResponses[2].status === 'fulfilled')
+          userInfo.teamFundraisingTotal = teamPromiseResponses[2].value.data();
+      }
+    }
+    // Fufill the thunk with any info we collected
+    return thunkApi.fulfillWithValue(userInfo);
+  }
+);
 
 export const loginAnon = createAsyncThunk('auth/loginAnon', async () =>
   signInAnonymously(firebaseAuth)
@@ -56,6 +112,7 @@ export const loginSaml = createAsyncThunk('auth/loginSaml', async (credential, t
       ? userCredential.user.email.substring(0, userCredential.user.email.indexOf('@'))
       : null,
     displayName: additionalInfo.profile['display-name'] || null,
+    teamId: null,
     team: null,
     teamIndividualSpiritPoints: null,
     teamFundraisingTotal: null,
@@ -78,25 +135,27 @@ export const loginSaml = createAsyncThunk('auth/loginSaml', async (credential, t
 
   // Get information about the user's team
   const userSnapshot = await getDoc(doc(firebaseFirestore, 'users', userCredential.user.uid));
-  if (userSnapshot.team) {
+  if (userSnapshot.get('team')) {
+    userInfo.teamId = userSnapshot.get('team').id;
+
     // Go ahead and set up some collection references
     const teamConfidentialRef = collection(
       firebaseFirestore,
-      `${userSnapshot.team.path}/confidential`
+      `${userSnapshot.get('team').path}/confidential`
     );
 
     const teamPromiseResponses = await Promise.allSettled([
-      getDoc(userSnapshot.team),
+      getDoc(userSnapshot.get('team')),
       getDoc(doc(teamConfidentialRef, 'individualSpiritPoints')),
       getDoc(doc(teamConfidentialRef, 'fundraising')),
     ]);
 
     if (teamPromiseResponses[0].status === 'fulfilled')
-      userInfo.team = teamPromiseResponses[0].value;
+      userInfo.team = teamPromiseResponses[0].value.data();
     if (teamPromiseResponses[1].status === 'fulfilled')
-      userInfo.team = teamPromiseResponses[1].teamIndividualSpiritPoints;
+      userInfo.teamIndividualSpiritPoints = teamPromiseResponses[1].value.data();
     if (teamPromiseResponses[2].status === 'fulfilled')
-      userInfo.team = teamPromiseResponses[2].teamFundraisingTotal;
+      userInfo.teamFundraisingTotal = teamPromiseResponses[2].value.data();
   }
 
   // Fufill the thunk with the info we collected
@@ -121,6 +180,8 @@ export const authSlice = createSlice({
         state.isLoggedIn = false;
         state.isAnononmous = false;
         state.uid = null;
+        state.attributes = [];
+        state.teamId = null;
         state.team = null;
         state.teamIndividualSpiritPoints = null;
         state.teamFundraisingTotal = null;
@@ -138,6 +199,8 @@ export const authSlice = createSlice({
         state.isLoggedIn = true;
         state.isAnononmous = true;
         state.uid = null;
+        state.attributes = [];
+        state.teamId = null;
         state.team = null;
         state.teamIndividualSpiritPoints = null;
         state.teamFundraisingTotal = null;
@@ -153,15 +216,17 @@ export const authSlice = createSlice({
       .addCase(loginSaml.fulfilled, (state, action) => {
         state.isAuthLoaded = true;
         state.isLoggedIn = true;
-        state.uid = action.payload.payload.uid;
-        state.team = action.payload.payload.team;
-        state.teamIndividualSpiritPoints = action.payload.payload.teamIndividualSpiritPoints;
-        state.teamFundraisingTotal = action.payload.payload.teamFundraisingTotal;
-        state.firstName = action.payload.payload.firstName;
-        state.lastName = action.payload.payload.lastName;
-        state.email = action.payload.payload.email;
-        state.linkblue = action.payload.payload.linkblue;
-        state.displayName = action.payload.payload.displayName;
+        state.uid = action.payload.uid;
+        state.attributes = action.payload.attributes;
+        state.teamId = action.payload.teamId;
+        state.team = action.payload.team;
+        state.teamIndividualSpiritPoints = action.payload.teamIndividualSpiritPoints;
+        state.teamFundraisingTotal = action.payload.teamFundraisingTotal;
+        state.firstName = action.payload.firstName;
+        state.lastName = action.payload.lastName;
+        state.email = action.payload.email;
+        state.linkblue = action.payload.linkblue;
+        state.displayName = action.payload.displayName;
       })
       .addCase(loginSaml.rejected, (state, action) => {
         if (action.error.message === 'Rejected') {
@@ -194,6 +259,30 @@ export const authSlice = createSlice({
               );
           }
         } else {
+          showMessage(action.error.message, action.error.code, null, true, action.error.stack);
+        }
+      })
+
+      .addCase(syncAuthDataWithUser.pending, (state) => {
+        Object.assign(state, initialState);
+      })
+      .addCase(syncAuthDataWithUser.fulfilled, (state, action) => {
+        state.isAuthLoaded = true;
+        state.isLoggedIn = !!action.payload.uid;
+        state.uid = action.payload.uid;
+        state.attributes = action.payload.attributes;
+        state.teamId = action.payload.teamId;
+        state.team = action.payload.team;
+        state.teamIndividualSpiritPoints = action.payload.teamIndividualSpiritPoints;
+        state.teamFundraisingTotal = action.payload.teamFundraisingTotal;
+        state.firstName = action.payload.firstName;
+        state.lastName = action.payload.lastName;
+        state.email = action.payload.email;
+        state.linkblue = action.payload.linkblue;
+        state.displayName = action.payload.displayName;
+      })
+      .addCase(syncAuthDataWithUser.rejected, (state, action) => {
+        if (action.error.message === 'Rejected') {
           showMessage(action.error.message, action.error.code, null, true, action.error.stack);
         }
       });

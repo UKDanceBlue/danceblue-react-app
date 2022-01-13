@@ -15,6 +15,7 @@ import { handleFirebaeError, showMessage } from './src/common/AlertUtils';
 import { globalColors } from './src/theme';
 
 import store from './src/redux/store';
+import { syncAuthDataWithUser } from './src/redux/authSlice';
 import { firebaseAuth, firebaseFirestore } from './src/common/FirebaseApp';
 
 // All assets that should be preloaded:
@@ -27,6 +28,24 @@ LogBox.ignoreLogs([
   `AsyncStorage has been extracted from react-native core and will be removed in a future release`,
 ]);
 
+// Promise.allSettled polyfill
+Promise.allSettled =
+  Promise.allSettled ||
+  ((promises) =>
+    Promise.all(
+      promises.map((p) =>
+        p
+          .then((value) => ({
+            status: 'fulfilled',
+            value,
+          }))
+          .catch((reason) => ({
+            status: 'rejected',
+            reason,
+          }))
+      )
+    ));
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -36,6 +55,12 @@ Notifications.setNotificationHandler({
 });
 
 const uuidStoreKey = __DEV__ ? 'danceblue.device-uuid.dev' : 'danceblue.device-uuid';
+
+const firstTimeSync = onAuthStateChanged(firebaseAuth, (user) => {
+  // This will run after auth is initialized and never again
+  store.dispatch(syncAuthDataWithUser(user));
+  firstTimeSync();
+});
 
 /**
  * Main app container
