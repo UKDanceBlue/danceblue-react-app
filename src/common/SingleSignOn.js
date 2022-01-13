@@ -25,7 +25,8 @@ export default class SingleSignOn {
       const result = await WebBrowser.openAuthSessionAsync(
         `${this.backendUrl}?linkingUri=${Linking.createURL(`/${operation}`)}`
       ).catch((reason) => {
-        throw new Error(reason.toString());
+        showMessage(reason, 'Error with web browser');
+        return {};
       });
       switch (result.type) {
         case WebBrowser.WebBrowserResultType.CANCEL:
@@ -38,6 +39,10 @@ export default class SingleSignOn {
             this.redirectData = Linking.parse(result.url);
           }
           break;
+        case null:
+        case undefined:
+          showMessage('Browser did not respond.\nSign in failed', 'No response', true);
+          return;
         default:
           showMessage(
             `Browser responded with type ${result.type}`,
@@ -53,10 +58,7 @@ export default class SingleSignOn {
       }
     } catch (error) {
       showMessage(error, 'Error with web browser');
-    }
-
-    if (firebaseAuth.currentUser && firebaseAuth.currentUser.isAnonymous) {
-      signOut(firebaseAuth).catch(handleFirebaeError);
+      return;
     }
 
     if (!this.redirectData) {
@@ -65,6 +67,11 @@ export default class SingleSignOn {
         'No response',
         true
       );
+      return;
+    }
+
+    if (firebaseAuth.currentUser && firebaseAuth.currentUser.isAnonymous) {
+      signOut(firebaseAuth).catch(handleFirebaeError);
     }
 
     const credentials = SAMLAuthProvider.credentialFromJSON(
