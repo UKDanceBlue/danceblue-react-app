@@ -1,6 +1,7 @@
 import { signOut } from 'firebase/auth';
 import React from 'react';
 import { Text, View, ActivityIndicator, Button } from 'react-native';
+import * as Linking from 'expo-linking';
 import { useSelector } from 'react-redux';
 import SingleSignOn from '../../common/SingleSignOn';
 import { firebaseAuth } from '../../common/FirebaseApp';
@@ -42,11 +43,27 @@ const ProfileScreen = () => {
                         const sso = new SingleSignOn();
                         sso.authenticate('saml-sign-in');
                       }}
-                      title="Press me"
+                      title="Log in"
                     />
                   </>
                 ) /* End of logged in view */
               }
+              <Button
+                onPress={() => {
+                  Linking.openURL(
+                    'mailto:app@danceblue.org?subject=DanceBlue%20App%20Issue%20Report&body=What%20happened%3A%0A%3Ctype%20here%3E%0A%0AWhat%20I%20was%20doing%3A%0A%3Ctype%20here%3E%0A%0AOther%20information%3A%0A%3Ctype%20here%3E'
+                  );
+                }}
+                title="Report an issue"
+              />
+              <Button
+                onPress={() => {
+                  Linking.openURL(
+                    'mailto:app@danceblue.org?subject=DanceBlue%20App%20Suggestion&body=%3Ctype%20here%3E'
+                  );
+                }}
+                title="Suggest a change"
+              />
             </>
           ) /* End of loaded view */
         }
