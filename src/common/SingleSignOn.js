@@ -1,16 +1,10 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import {
-  getAdditionalUserInfo,
-  signOut,
-  SAMLAuthProvider,
-  signInWithCredential,
-  signInAnonymously,
-  updateProfile,
-} from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { signOut, SAMLAuthProvider } from 'firebase/auth';
 import { handleFirebaeError, showMessage } from './AlertUtils';
-import { firebaseFirestore, firebaseAuth } from './FirebaseApp';
+import { firebaseAuth } from './FirebaseApp';
+import { loginSaml } from '../redux/authSlice';
+import store from '../redux/store';
 
 export default class SingleSignOn {
   constructor() {
@@ -31,19 +25,24 @@ export default class SingleSignOn {
       const result = await WebBrowser.openAuthSessionAsync(
         `${this.backendUrl}?linkingUri=${Linking.createURL(`/${operation}`)}`
       ).catch((reason) => {
-        throw new Error(reason.toString());
+        showMessage(reason, 'Error with web browser');
+        return {};
       });
       switch (result.type) {
         case WebBrowser.WebBrowserResultType.CANCEL:
         case WebBrowser.WebBrowserResultType.DISMISS:
         case WebBrowser.WebBrowserResultType.LOCKED:
           showMessage('Sign in cancelled', 'Browser closed');
-          return undefined;
+          break;
         case 'success':
           if (result?.url) {
             this.redirectData = Linking.parse(result.url);
           }
           break;
+        case null:
+        case undefined:
+          showMessage('Browser did not respond.\nSign in failed', 'No response', true);
+          return;
         default:
           showMessage(
             `Browser responded with type ${result.type}`,
@@ -59,11 +58,7 @@ export default class SingleSignOn {
       }
     } catch (error) {
       showMessage(error, 'Error with web browser');
-      return undefined;
-    }
-
-    if (firebaseAuth.currentUser && firebaseAuth.currentUser.isAnonymous) {
-      signOut(firebaseAuth).catch(handleFirebaeError);
+      return;
     }
 
     if (!this.redirectData) {
@@ -72,51 +67,17 @@ export default class SingleSignOn {
         'No response',
         true
       );
-      return undefined;
+      return;
+    }
+
+    if (firebaseAuth.currentUser && firebaseAuth.currentUser.isAnonymous) {
+      signOut(firebaseAuth).catch(handleFirebaeError);
     }
 
     const credentials = SAMLAuthProvider.credentialFromJSON(
       JSON.parse(this.redirectData.queryParams.credential)
     );
-    return signInWithCredential(firebaseAuth, credentials)
-      .then((userCredential) => {
-        // Make sure firebase sent a profile option
-        const additionalInfo = getAdditionalUserInfo(userCredential);
-        if (!additionalInfo?.profile || !userCredential?.user?.email) {
-          // If it didn't then tell the user, sign out, and log a message including the complete userCredential
-          showMessage(
-            'Required information not recieved\nSign in failed',
-            'Invalid server response',
-            () => {
-              signOut(firebaseAuth).catch(handleFirebaeError);
-              signInAnonymously(firebaseAuth).catch(handleFirebaeError);
-            },
-            true,
-            userCredential
-          );
-          return undefined;
-        }
 
-        if (additionalInfo.providerId === 'saml.danceblue-firebase-linkblue-saml') {
-          setDoc(
-            doc(firebaseFirestore, 'users', userCredential.user.uid),
-            {
-              firstName: additionalInfo.profile['first-name'],
-              lastName: additionalInfo.profile['last-name'],
-              email: additionalInfo.profile.email,
-              linkblue: userCredential.user.email.substring(
-                0,
-                userCredential.user.email.indexOf('@')
-              ),
-            },
-            { merge: true }
-          );
-          updateProfile(userCredential.user, {
-            displayName: additionalInfo.profile['display-name'],
-          }).catch(handleFirebaeError);
-        }
-        return userCredential;
-      })
-      .catch(handleFirebaeError);
+    store.dispatch(loginSaml(credentials));
   }
 }

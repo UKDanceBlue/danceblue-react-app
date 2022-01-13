@@ -1,11 +1,11 @@
 /* eslint-disable */
-// TODO: rewrite this whole thing
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 import { collection, getDocs, where, query } from 'firebase/firestore';
 import moment from 'moment';
 
 import { firebaseFirestore } from '../FirebaseApp';
+import { useSelector } from 'react-redux';
 
 /**
  * A label for a unit of time
@@ -19,227 +19,180 @@ const TimeUnit = ({ value, label }) => (
   </View>
 );
 
-/**
- * A component to show a countdown loaded form firebase
- * Loads the active countdown from firebase (if applicably) and then counts down by the second until the end of that countodwn
- * @param {Object} props Properties of the component: title, firebase
- *
- * TODO rewrite
- */
-class CountdownView extends React.Component {
-  constructor(props) {
-    super(props);
+const CountdownView = () => {
+  const isConfigLoaded = useSelector((state) => state.appConfig.isConfigLoaded);
+  const countdownEventTimeStamp = useSelector((state) => state.appConfig.countdown.millis);
+  const title = useSelector((state) => state.appConfig.countdown.title);
+  const [countdownDisplayTime, setCurrentTime] = useState(new Date());
 
-    this.state = {
-      title: this.props.title || '',
-      finishMessage: '',
-      date: 0,
-      id: '0',
-      months: 0,
-      days: 0,
-      hours: 0,
-      mins: 0,
-      secs: 0,
-      isLoading: true,
-      timerSetup: true,
-    };
+  useEffect(
+    () =>
+      // 1 second timer
+      setInterval(
+        () =>
+          setCurrentTime(
+            // Create a date object with the difference between now and the countdown stored in firebase
+            new Date(Math.abs(countdownEventTimeStamp - new Date().getTime()))
+          ),
+        1000
+      ),
+    []
+  );
 
-    this.updateTimer = this.updateTimer.bind(this);
-  }
+  return (
+    <View style={styles.container}>
+      {!isConfigLoaded && <ActivityIndicator color="white" size="large" />}
+      {isConfigLoaded && (
+        <>
+          <View style={styles.countdownTitleView}>
+            <Text adjustsFontSizeToFit numberOfLines={1} style={styles.countdownText}>
+              {title}
+            </Text>
+          </View>
+          <View style={styles.countdownTimer}>
+            {countdownDisplayTime.getMonth() !== 0 && (
+              <>
+                <TimeUnit
+                  label={countdownDisplayTime.getMonth() === 1 ? 'month' : 'months'}
+                  value={countdownDisplayTime.getMonth()}
+                />
 
-  /**
-   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   */
-  componentDidMount() {
-    this.retrieveCountdown();
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  async retrieveCountdown() {
-    const snapshot = await getDocs(
-      query(collection(firebaseFirestore, 'countdowns'), where('active', '==', true))
-    );
-    snapshot.forEach((doc) => {
-      const countdown = doc.data();
-      this.setState({
-        title: countdown.title,
-        date: moment.duration(moment(countdown.time.toDate()).diff(moment())),
-        finishMessage: countdown.finishMessage || '',
-        isLoading: false,
-      });
-      this.updateTimer();
-    });
-  }
-
-  /**
-   * Every 1 second subtract 1 second from the timer (stored in CountdownView.state) until it is less than or equal to 0,  then stop
-   */
-  updateTimer() {
-    this.interval = setInterval(() => {
-      let { date } = this.state;
-
-      if (date <= 0) {
-        clearInterval(this.interval);
-      } else {
-        date = date.subtract(1, 's');
-        const months = date.months();
-        const days = date.days();
-        const hours = date.hours();
-        const mins = date.minutes();
-        const secs = date.seconds();
-
-        this.setState({
-          months,
-          days,
-          hours,
-          mins,
-          secs,
-          date,
-          timerSetup: false,
-        });
-      }
-    }, 1000);
-  }
-
-  /**
-   * Called to generate a React Native component
-   * @returns A JSX formatted component
-   */
-  render() {
-    const { months, days, hours, mins, secs } = this.state;
-    return (
-      <View style={styles.container}>
-        {this.state.isLoading && <ActivityIndicator color="white" size="large" />}
-        {!this.state.isLoading && (
-          <>
-            <View style={styles.countdownTitleView}>
-              <Text adjustsFontSizeToFit numberOfLines={1} style={styles.countdownText}>
-                {this.state.title}
-              </Text>
-            </View>
-            {this.state.timerSetup && <ActivityIndicator color="white" size="large" />}
-            {!this.state.timerSetup && (
-              /* jscpd:ignore-start */
-              <View style={styles.countdownTimer}>
-                {months !== 0 && (
-                  <>
-                    <TimeUnit label={months === 1 ? 'month' : 'months'} value={months} />
-
-                    <Text
-                      style={{
-                        fontWeight: 'bold',
-                        fontSize: 40,
-                        color: 'white',
-                      }}
-                    >
-                      :
-                    </Text>
-                  </>
-                )}
-                {(days !== 0 && (
-                  <>
-                    <TimeUnit label={days === 1 ? 'day' : 'days'} value={days} />
-                    <Text
-                      style={{
-                        fontWeight: 'bold',
-                        fontSize: 40,
-                        color: 'white',
-                      }}
-                    >
-                      :
-                    </Text>
-                  </>
-                )) ||
-                  (months !== 0 && (
-                    <>
-                      <TimeUnit label={days === 1 ? 'day' : 'days'} value={days} />
-                      <Text
-                        style={{
-                          fontWeight: 'bold',
-                          fontSize: 40,
-                          color: 'white',
-                        }}
-                      >
-                        :
-                      </Text>
-                    </>
-                  ))}
-                {(hours !== 0 && (
-                  <>
-                    <TimeUnit label={hours === 1 ? 'hour' : 'hours'} value={hours} />
-                    <Text
-                      style={{
-                        fontWeight: 'bold',
-                        fontSize: 40,
-                        color: 'white',
-                      }}
-                    >
-                      :
-                    </Text>
-                  </>
-                )) ||
-                  ((days !== 0 || months !== 0) && (
-                    <>
-                      <TimeUnit label={hours === 1 ? 'hour' : 'hours'} value={hours} />
-                      <Text
-                        style={{
-                          fontWeight: 'bold',
-                          fontSize: 40,
-                          color: 'white',
-                        }}
-                      >
-                        :
-                      </Text>
-                    </>
-                  ))}
-                {(mins !== 0 && (
-                  <>
-                    <TimeUnit label={mins === 1 ? 'min' : 'mins'} value={mins} />
-                    <Text
-                      style={{
-                        fontWeight: 'bold',
-                        fontSize: 40,
-                        color: 'white',
-                      }}
-                    >
-                      :
-                    </Text>
-                  </>
-                )) ||
-                  ((hours !== 0 || days !== 0 || months !== 0) && (
-                    <>
-                      <TimeUnit label={mins === 1 ? 'min' : 'mins'} value={mins} />
-                      <Text
-                        style={{
-                          fontWeight: 'bold',
-                          fontSize: 40,
-                          color: 'white',
-                        }}
-                      >
-                        :
-                      </Text>
-                    </>
-                  ))}
-                {(secs !== 0 && <TimeUnit label={secs === 1 ? 'sec' : 'secs'} value={secs} />) ||
-                  ((mins !== 0 || hours !== 0 || days !== 0 || months !== 0) && (
-                    /* eslint-disable */
-                    <TimeUnit label={secs === 1 ? 'sec' : 'secs'} value={secs} />
-                  ))}
-              </View>
-              /* jscpd:ignore-end */
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 40,
+                    color: 'white',
+                  }}
+                >
+                  :
+                </Text>
+              </>
             )}
-            {months === 0 && days === 0 && hours === 0 && mins === 0 && secs === 0 && (
-              <Text style={styles.coundownText}>{this.state.finishMessage}</Text>
-            )}
-          </>
-        )}
-      </View>
-    );
-  }
-}
+            {(countdownDisplayTime.getDate() !== 0 && (
+              <>
+                <TimeUnit
+                  label={countdownDisplayTime.getDate() === 1 ? 'day' : 'days'}
+                  value={countdownDisplayTime.getDate()}
+                />
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 40,
+                    color: 'white',
+                  }}
+                >
+                  :
+                </Text>
+              </>
+            )) ||
+              (countdownDisplayTime.getMonth() !== 0 && (
+                <>
+                  <TimeUnit
+                    label={countdownDisplayTime.getDate() === 1 ? 'day' : 'days'}
+                    value={countdownDisplayTime.getDate()}
+                  />
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: 40,
+                      color: 'white',
+                    }}
+                  >
+                    :
+                  </Text>
+                </>
+              ))}
+            {(countdownDisplayTime.getHours() !== 0 && (
+              <>
+                <TimeUnit
+                  label={countdownDisplayTime.getHours() === 1 ? 'hour' : 'hours'}
+                  value={countdownDisplayTime.getHours()}
+                />
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 40,
+                    color: 'white',
+                  }}
+                >
+                  :
+                </Text>
+              </>
+            )) ||
+              ((countdownDisplayTime.getDay() !== 0 || countdownDisplayTime.getMonth() !== 0) && (
+                <>
+                  <TimeUnit
+                    label={countdownDisplayTime.getHours() === 1 ? 'hour' : 'hours'}
+                    value={countdownDisplayTime.getHours()}
+                  />
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: 40,
+                      color: 'white',
+                    }}
+                  >
+                    :
+                  </Text>
+                </>
+              ))}
+            {(countdownDisplayTime.getMinutes() !== 0 && (
+              <>
+                <TimeUnit
+                  label={countdownDisplayTime.getMinutes() === 1 ? 'min' : 'mins'}
+                  value={countdownDisplayTime.getMinutes()}
+                />
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 40,
+                    color: 'white',
+                  }}
+                >
+                  :
+                </Text>
+              </>
+            )) ||
+              ((countdownDisplayTime.getHours() !== 0 ||
+                countdownDisplayTime.getDay() !== 0 ||
+                countdownDisplayTime.getMonth() !== 0) && (
+                <>
+                  <TimeUnit
+                    label={countdownDisplayTime.getMinutes() === 1 ? 'min' : 'mins'}
+                    value={countdownDisplayTime.getMinutes()}
+                  />
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: 40,
+                      color: 'white',
+                    }}
+                  >
+                    :
+                  </Text>
+                </>
+              ))}
+            {(countdownDisplayTime.getSeconds() !== 0 && (
+              <TimeUnit
+                label={countdownDisplayTime.getSeconds() === 1 ? 'sec' : 'secs'}
+                value={countdownDisplayTime.getSeconds()}
+              />
+            )) ||
+              ((countdownDisplayTime.getMonth() !== 0 ||
+                countdownDisplayTime.getHours() !== 0 ||
+                countdownDisplayTime.getDay() !== 0 ||
+                countdownDisplayTime.getMonth() !== 0) && (
+                <TimeUnit
+                  label={countdownDisplayTime.getSeconds() === 1 ? 'sec' : 'secs'}
+                  value={countdownDisplayTime.getSeconds()}
+                />
+              ))}
+          </View>
+        </>
+      )}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
