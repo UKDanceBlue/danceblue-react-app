@@ -33,6 +33,8 @@
     "react/prop-types": "off",
 
     //Allow unaries, but no spaces with nonword ones
-    "no-plusplus": "off"
+    "no-plusplus": "off",
+
+    "no-else-return": "off"
   }
 }
