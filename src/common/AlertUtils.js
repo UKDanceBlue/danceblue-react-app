@@ -118,7 +118,7 @@ export function handleFirebaeError(error, log = false) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(error, undefined, '  '),
+        body: { message: JSON.stringify(error, undefined, '  '), severity: 'ERROR' },
       }).then(null, () => console.debug('Failed to upload log to firebase'));
     } catch {
       console.debug('Failed to upload log to firebase');
