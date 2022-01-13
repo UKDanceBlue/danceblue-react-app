@@ -11,7 +11,18 @@ const initialState = {
 };
 
 export const updateConfig = createAsyncThunk('appConfig/updateConfig', async () =>
-  getDoc(doc(firebaseFirestore, 'configs/mobile-app'))
+  getDoc(doc(firebaseFirestore, 'configs', 'mobile-app')).then((snapshot) => {
+    const snapshotData = snapshot.data();
+    return {
+      countdown: snapshotData.countdown
+        ? {
+            title: snapshotData.countdown.title,
+            millis: snapshotData.countdown.time.seconds * 1000,
+          }
+        : null,
+      scoreboard: snapshotData.scoreboard,
+    };
+  })
 );
 
 // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -34,9 +45,8 @@ export const appConfigSlice = createSlice({
         Object.assign(state, initialState);
       })
       .addCase(updateConfig.fulfilled, (state, action) => {
-        const firebaseAppConfig = action.payload.data();
-        state.countdown = firebaseAppConfig.countdown;
-        state.scoreboard = firebaseAppConfig.scoreboard;
+        state.countdown = action.payload.countdown;
+        state.scoreboard = action.payload.scoreboard;
         state.isConfigLoaded = true;
       })
       .addCase(updateConfig.rejected, (state, action) => {
