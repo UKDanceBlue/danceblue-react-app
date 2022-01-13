@@ -79,7 +79,7 @@ const App = () => {
     showMessage(assetError, 'Error loading assets');
   }
 
-  if (!assets) {
+  if (!assets && hasPushRegistrationObserverFired) {
     return <AppLoading />;
   }
 
