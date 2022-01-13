@@ -67,22 +67,21 @@ const App = () => {
 
         // Register push notifications
         const pushToken = await registerForPushNotificationsAsync();
-        const audiences = ['all'];
 
         // Store the push notification token in firebase
         await setDoc(
           deviceRef,
           {
             expoPushToken: pushToken || null,
-            audiences,
           },
-          { mergeFields: ['expoPushToken', 'audiences'] }
+          { mergeFields: ['expoPushToken'] }
         ).catch(handleFirebaeError);
         // Update the uid and audience stored in firebase for this device upon auth state change
         const observerUnsubscribe = onAuthStateChanged(firebaseAuth, (newUser) => {
           if (newUser) {
             // Get info about the user, including attributes
             getDoc(doc(firebaseFirestore, 'users', newUser.uid)).then(async (newUserData) => {
+              const audiences = ['all'];
               if (newUserData?.data().attributes) {
                 // Grab the user's attributes
                 const attributeNames = Object.keys(newUserData.data().attributes);
@@ -128,6 +127,7 @@ const App = () => {
               deviceRef,
               {
                 latestUserId: null,
+                audiences: ['all'],
               },
               { mergeFields: ['latestUserId', 'audiences'] }
             ).catch(handleFirebaeError);
