@@ -1,52 +1,29 @@
-import { getDoc, doc } from 'firebase/firestore';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import React, { useEffect, useState } from 'react';
+import { signOut } from 'firebase/auth';
+import React from 'react';
 import { Text, View, ActivityIndicator, Button } from 'react-native';
+import { useSelector } from 'react-redux';
 import SingleSignOn from '../../common/SingleSignOn';
-import { firebaseAuth, firebaseFirestore } from '../../common/FirebaseApp';
+import { firebaseAuth } from '../../common/FirebaseApp';
 import { globalStyles, globalColors } from '../../theme';
-import { handleFirebaeError } from '../../common/AlertUtils';
-
 /**
  * Component for "Profile" screen in main navigation
  */
 const ProfileScreen = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [userData, setUserData] = useState(undefined);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(
-    () =>
-      onAuthStateChanged(firebaseAuth, (authUser) => {
-        if (authUser && !authUser.isAnonymous) {
-          getDoc(doc(firebaseFirestore, 'users', authUser.uid))
-            .then((document) => {
-              const firestoreUserData = document.data();
-              setUserData({ id: authUser.uid, ...firestoreUserData });
-              setLoggedIn(true);
-            })
-            .catch(handleFirebaeError);
-        } else {
-          setLoggedIn(false);
-        }
-        setIsLoading(false);
-      }),
-    []
-  );
+  const userData = useSelector((state) => state.auth);
 
   return (
     <View style={globalStyles.genericView}>
       <>
         {
-          /* Start of still loading view */ isLoading && (
+          /* Start of still loading view */ !userData.isAuthLoaded && (
             <ActivityIndicator size="large" color={globalColors.dbBlue} />
           ) /* End of still loading view */
         }
         {
-          /* Start of loaded view */ !isLoading && (
+          /* Start of loaded view */ userData.isAuthLoaded && (
             <>
               {
-                /* Start of logged in view */ loggedIn && (
+                /* Start of logged in view */ userData.isLoggedIn && (
                   <>
                     <Text>
                       You are logged in as {userData.firstName} {userData.lastName}
@@ -57,7 +34,7 @@ const ProfileScreen = () => {
                 ) /* End of logged in view */
               }
               {
-                /* Start of logged out view */ !loggedIn && (
+                /* Start of logged out view */ !userData.isLoggedIn && (
                   <>
                     <Text>You are logged out, to log in:</Text>
                     <Button

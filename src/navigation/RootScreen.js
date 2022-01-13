@@ -1,30 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Linking } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { onAuthStateChanged } from 'firebase/auth';
+import { useSelector } from 'react-redux';
 import SplashLogin from '../screens/Modals/SplashLogin';
 import MainStackRoot from './MainStackRoot';
-import { firebaseAuth } from '../common/FirebaseApp';
 import GenericWebviewScreen from '../screens/GenericWebviewScreen';
 
 const RootStack = createStackNavigator();
 
 const RootScreen = () => {
-  const [userID, setUserID] = useState(null);
-
-  useEffect(
-    () =>
-      onAuthStateChanged(firebaseAuth, (user) => {
-        if (user) {
-          setUserID(user.uid);
-        } else {
-          setUserID(user);
-        }
-      }),
-    []
-  );
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   return (
     <NavigationContainer
@@ -100,14 +87,14 @@ const RootScreen = () => {
       }
     >
       <RootStack.Navigator screenOptions={{ presentation: 'modal' }}>
-        {userID && (
+        {isLoggedIn && (
           <RootStack.Screen
             name="Main"
             component={MainStackRoot}
             options={{ headerShown: false }}
           />
         )}
-        {!userID && (
+        {!isLoggedIn && (
           <RootStack.Screen
             name="SplashLogin"
             component={SplashLogin}

@@ -1,32 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
-import { getDoc, doc, getDocs, collection } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
+import { getDocs, collection } from 'firebase/firestore';
+import { useSelector } from 'react-redux';
 import Standings from '../../common/components/Standings';
-import { firebaseAuth, firebaseFirestore } from '../../common/FirebaseApp';
+import { firebaseFirestore } from '../../common/FirebaseApp';
 import { globalStyles } from '../../theme';
 
 /**
  * Wrapper for a Standings component
  */
 const ScoreBoardScreen = () => {
-  const [userTeamId, setUserTeamId] = useState();
+  const userTeamId = useSelector((state) => state.auth.teamId);
   const [standingData, setStandingData] = useState([]);
-
-  // Add an observer that sets the User object anytime the auth state changes
-  useEffect(
-    () =>
-      onAuthStateChanged(firebaseAuth, (newUser) => {
-        if (newUser?.uid) {
-          getDoc(doc(firebaseFirestore, 'users', newUser.uid)).then((userSnapshot) => {
-            if (userSnapshot.data()?.team) {
-              setUserTeamId(userSnapshot.data()?.team.id);
-            }
-          });
-        }
-      }),
-    []
-  );
 
   useEffect(
     () =>
