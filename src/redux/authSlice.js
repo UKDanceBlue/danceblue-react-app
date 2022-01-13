@@ -164,33 +164,37 @@ export const authSlice = createSlice({
         state.displayName = action.payload.payload.displayName;
       })
       .addCase(loginSaml.rejected, (state, action) => {
-        switch (action.payload.error) {
-          case 'UNEXPECTED_AUTH_PROVIDER':
-            showMessage(
-              'DanceBlue Mobile recieved an unrecognized response from the login server. Did you log into a website other than UK?',
-              'Login Server Error',
-              () => {},
-              true,
-              action
-            );
-            break;
-          case 'INVALID_SERVER_RESPONSE':
-            showMessage(
-              'DanceBlue Mobile recieved an invalid response from the login server. Try again later.',
-              'Login Server Error',
-              () => {},
-              true,
-              action
-            );
-            break;
-          default:
-            showMessage(
-              'DanceBlue Mobile ran into an unexpected issue with the login server. This is a bug, please report it to the DanceBlue committee.',
-              'Login Server Error',
-              () => {},
-              true,
-              action
-            );
+        if (action.error.message === 'Rejected') {
+          switch (action?.payload?.error) {
+            case 'UNEXPECTED_AUTH_PROVIDER':
+              showMessage(
+                'DanceBlue Mobile recieved an unrecognized response from the login server. Did you log into a website other than UK?',
+                'Login Server Error',
+                () => {},
+                true,
+                action
+              );
+              break;
+            case 'INVALID_SERVER_RESPONSE':
+              showMessage(
+                'DanceBlue Mobile recieved an invalid response from the login server. Try again later.',
+                'Login Server Error',
+                () => {},
+                true,
+                action
+              );
+              break;
+            default:
+              showMessage(
+                'DanceBlue Mobile ran into an unexpected issue with the login server. This is a bug, please report it to the DanceBlue committee.',
+                'Login Server Error',
+                () => {},
+                true,
+                action
+              );
+          }
+        } else {
+          showMessage(action.error.message, action.error.code, null, true, action.error.stack);
         }
       });
   },
