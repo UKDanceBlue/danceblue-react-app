@@ -81,6 +81,8 @@ export default class SingleSignOn {
         .then(() => {
           store.dispatch(loginSaml(credentials));
         });
+    } else {
+      store.dispatch(loginSaml(credentials));
     }
   }
 }
