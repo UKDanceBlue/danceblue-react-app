@@ -24,7 +24,10 @@ const Standings = ({ titleText, standingData, expandable, startExpanded, collaps
 
   useEffect(() => {
     setIsLoading(true);
-    const sortedStandings = standingData;
+    const sortedStandings = standingData.map((standing) => ({
+      ...standing,
+      points: standing.points || 0,
+    }));
     sortedStandings.sort((a, b) => b.points - a.points);
     const tempRows = [];
     for (let i = 0; i < sortedStandings.length && i < rowsToShow; i++) {
@@ -33,7 +36,7 @@ const Standings = ({ titleText, standingData, expandable, startExpanded, collaps
           key={sortedStandings[i].id}
           rank={i + 1}
           name={sortedStandings[i].name}
-          points={sortedStandings[i].points || 0}
+          points={sortedStandings[i].points}
           isHighlighted={sortedStandings[i].highlighted}
         />
       );
