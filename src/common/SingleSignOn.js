@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import { signOut, SAMLAuthProvider } from 'firebase/auth';
+import { SAMLAuthProvider, signInWithCredential, linkWithCredential } from 'firebase/auth';
 import { handleFirebaeError, showMessage } from './AlertUtils';
 import { firebaseAuth } from './FirebaseApp';
 import { loginSaml } from '../redux/authSlice';
@@ -76,13 +76,13 @@ export default class SingleSignOn {
 
     // This is only used here because we are about to sign in again // TODO: replace with https://firebase.google.com/docs/auth/web/anonymous-auth#convert-an-anonymous-account-to-a-permanent-account
     if (firebaseAuth.currentUser && firebaseAuth.currentUser.isAnonymous) {
-      signOut(firebaseAuth)
-        .catch(handleFirebaeError)
-        .then(() => {
-          store.dispatch(loginSaml(credentials));
-        });
+      linkWithCredential(firebaseAuth.currentUser, credentials)
+        .then((userCredential) => {
+          store.dispatch(loginSaml(userCredential));
+        })
+        .catch(handleFirebaeError);
     } else {
-      store.dispatch(loginSaml(credentials));
+      store.dispatch(loginSaml(signInWithCredential(credentials)));
     }
   }
 }
