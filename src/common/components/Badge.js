@@ -15,12 +15,18 @@ const Badge = ({ imageURL, name }) => {
 
   // Run on mount
   useEffect(() => {
+    let shouldUpdateState = true;
     getDownloadURL(ref(firebaseStorage, imageURL))
       .then((url) => {
-        setIsLoading(false);
-        setImageRef(url);
+        if (shouldUpdateState) {
+          setIsLoading(false);
+          setImageRef(url);
+        }
       })
       .catch(handleFirebaeError);
+    return () => {
+      shouldUpdateState = false;
+    };
   }, [imageURL]);
 
   return (

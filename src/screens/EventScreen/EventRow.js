@@ -17,17 +17,23 @@ const EventRow = ({ imageLink, startDate, endDate, title }) => {
    * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
    */
   useEffect(() => {
+    let shouldUpdateState = true;
     if (imageLink) {
       getDownloadURL(ref(firebaseStorage, imageLink))
         .then((url) => {
-          setImageRef(url);
-          setIsLoading(false);
+          if (shouldUpdateState) {
+            setImageRef(url);
+            setIsLoading(false);
+          }
         })
         .catch(handleFirebaeError);
     } else {
       setImageRef('');
       setIsLoading(false);
     }
+    return () => {
+      shouldUpdateState = false;
+    };
   }, [imageLink]);
 
   /**

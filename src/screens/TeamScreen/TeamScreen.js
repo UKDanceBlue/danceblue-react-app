@@ -18,6 +18,7 @@ const TeamScreen = () => {
   const [standingData, setStandingData] = useState([]);
 
   useEffect(() => {
+    let shouldUpdateState = true;
     // Only run if the user has already been set
     if (teamIndividualSpiritPoints) {
       // Get the spirit point data from the confidential collection
@@ -34,11 +35,16 @@ const TeamScreen = () => {
           highlighted: recordLinkblue === linkblue,
         });
       });
-      // Once all the data has been loaded in, we can update the state
+      if (shouldUpdateState) {
+        // Once all the data has been loaded in, we can update the state
+      }
       setStandingData(tempStandingData);
-    } else {
+    } else if (shouldUpdateState) {
       setStandingData(null);
     }
+    return () => {
+      shouldUpdateState = false;
+    };
   }, [linkblue, teamIndividualSpiritPoints, teamMemberNames]);
 
   return (

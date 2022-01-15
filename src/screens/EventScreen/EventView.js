@@ -27,7 +27,6 @@ import { firebaseFirestore, firebaseStorage } from '../../common/FirebaseApp';
  * @see {@link https://docs.expo.dev/versions/latest/sdk/calendar/ Expo's Calendar API}
  */
 const EventView = ({ route: { params } }) => {
-  const [isLoading, setIsLoading] = useState(true);
   // const [isOnCalendar, setIsOnCalendar] = useState(false);
   // const [calendarID, setCalendarID] = useState(undefined);
   // const [eventCalendarID, setEventCalendarID] = useState(null);
@@ -35,7 +34,8 @@ const EventView = ({ route: { params } }) => {
   const [endTime, setEndTime] = useState(moment());
   // const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
-  const [imageRef, setImageRef] = useState('');
+  const [imageFirebaseRef, setImageFirebaseRef] = useState('');
+  const [image, setImage] = useState(null);
   const [description, setDescription] = useState('');
 
   /**
@@ -55,21 +55,37 @@ const EventView = ({ route: { params } }) => {
   // };
 
   useEffect(() => {
-    setIsLoading(true);
-    async function getDocument() {
-      const document = await getDoc(doc(firebaseFirestore, 'events', params.id));
-      // setTitle(document.data().title);
-      setStartTime(moment(document.data().startTime.toDate()));
-      setEndTime(moment(document.data().endTime.toDate()));
-      setAddress(document.data().address);
-      setDescription(document.data().description);
-      getDownloadURL(ref(firebaseStorage, document.data().image))
-        .then(setImageRef)
-        .catch(handleFirebaeError);
-      setIsLoading(false);
-    }
-    getDocument();
+    let shouldUpdateState = true;
+    getDoc(doc(firebaseFirestore, 'events', params.id)).then((document) => {
+      if (shouldUpdateState) {
+        // setTitle(document.data().title);
+        setStartTime(moment(document.data().startTime.toDate()));
+        setEndTime(moment(document.data().endTime.toDate()));
+        setAddress(document.data().address);
+        setDescription(document.data().description);
+        setImageFirebaseRef(document.data().image);
+      }
+    });
+    return () => {
+      shouldUpdateState = false;
+    };
   }, [params.id]);
+
+  useEffect(() => {
+    let shouldUpdateState = true;
+    if (imageFirebaseRef) {
+      getDownloadURL(ref(firebaseStorage, imageFirebaseRef))
+        .then((imageRef) => {
+          if (shouldUpdateState) {
+            setImage(<Image source={{ uri: imageRef }} style={styles.image} />);
+          }
+        })
+        .catch(handleFirebaeError);
+    }
+    return () => {
+      shouldUpdateState = false;
+    };
+  }, [imageFirebaseRef]);
 
   /**
    * Check if the event exists on the DanceBlue calendar
@@ -147,34 +163,29 @@ const EventView = ({ route: { params } }) => {
   }
   return (
     <>
-      {isLoading && <ActivityIndicator style={styles.image} size="large" color="blue" />}
-      {!isLoading && (
-        <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-          {!!imageRef && <Image source={{ uri: imageRef }} style={styles.image} />}
-          <View style={styles.body}>
-            {description && <Text style={styles.text}>{description}</Text>}
-            {address && (
-              <>
-                <Text style={styles.boldText}>Where?</Text>
-                <Text style={styles.text}>{address}</Text>
-              </>
+      <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+        {image || <ActivityIndicator style={styles.image} size="large" color="blue" />}
+        <View style={styles.body}>
+          {!!description && <Text style={styles.text}>{description}</Text>}
+          {!!address && (
+            <>
+              <Text style={styles.boldText}>Where?</Text>
+              <Text style={styles.text}>{address}</Text>
+            </>
+          )}
+          {!!startTime && (
+            <>
+              <Text style={styles.boldText}>When?</Text>
+              <Text style={styles.text}>{whenString}</Text>
+            </>
+          )}
+          <View style={styles.buttonContainer}>
+            {!!address && (
+              <TouchableHighlight onPress={() => openMap({ query: address })} style={styles.button}>
+                <Text style={styles.buttonText}>Get Directions</Text>
+              </TouchableHighlight>
             )}
-            {startTime && (
-              <>
-                <Text style={styles.boldText}>When?</Text>
-                <Text style={styles.text}>{whenString}</Text>
-              </>
-            )}
-            <View style={styles.buttonContainer}>
-              {address && (
-                <TouchableHighlight
-                  onPress={() => openMap({ query: address })}
-                  style={styles.button}
-                >
-                  <Text style={styles.buttonText}>Get Directions</Text>
-                </TouchableHighlight>
-              )}
-              {/* {startTime && (
+            {/* {startTime && (
                 <TouchableHighlight
                   style={styles.button}
                   onPress={isOnCalendar ? removeFromCalendar : addToCalendar}
@@ -184,10 +195,9 @@ const EventView = ({ route: { params } }) => {
                   </Text>
                 </TouchableHighlight>
               )} */}
-            </View>
           </View>
         </View>
-      )}
+      </View>
     </>
   );
 };

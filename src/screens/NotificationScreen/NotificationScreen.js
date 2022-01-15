@@ -27,6 +27,7 @@ const NotificationScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let shouldUpdateState = true;
     Notifications.getPermissionsAsync().then((settings) => {
       if (
         (settings.granted ||
@@ -34,9 +35,14 @@ const NotificationScreen = () => {
           settings.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED) !==
         notificationPermissionsGranted
       ) {
-        store.dispatch(registerPushNotifications());
+        if (shouldUpdateState) {
+          store.dispatch(registerPushNotifications());
+        }
       }
     });
+    return () => {
+      shouldUpdateState = false;
+    };
   }, [notificationPermissionsGranted]);
 
   const refresh = useCallback(async () => {

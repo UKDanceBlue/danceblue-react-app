@@ -21,15 +21,22 @@ const EventScreen = ({ navigation: { navigate } }) => {
   const [upcoming, setUpcoming] = useState([]);
 
   useEffect(() => {
-    async function getSnapshot() {
-      const firestoreEvents = [];
-      const snapshot = await getDocs(
-        query(collection(firebaseFirestore, 'events'), where('endTime', '>', now))
-      );
-      snapshot.forEach((document) => firestoreEvents.push({ id: document.id, ...document.data() }));
-      setEvents(firestoreEvents);
-    }
-    getSnapshot();
+    let shouldUpdateState = true;
+    const firestoreEvents = [];
+    getDocs(query(collection(firebaseFirestore, 'events'), where('endTime', '>', now))).then(
+      (snapshot) => {
+        snapshot.forEach((document) =>
+          firestoreEvents.push({ id: document.id, ...document.data() })
+        );
+
+        if (shouldUpdateState) {
+          setEvents(firestoreEvents);
+        }
+      }
+    );
+    return () => {
+      shouldUpdateState = false;
+    };
   }, []);
 
   /**

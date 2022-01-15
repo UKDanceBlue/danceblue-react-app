@@ -15,12 +15,18 @@ const SponsorCard = ({ imageLink, sponsorLink }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let shouldUpdateState = true;
     getDownloadURL(ref(firebaseStorage, imageLink))
       .then((url) => {
-        setImageRef(url);
-        setIsLoading(false);
+        if (shouldUpdateState) {
+          setImageRef(url);
+          setIsLoading(false);
+        }
       })
       .catch(handleFirebaeError);
+    return () => {
+      shouldUpdateState = false;
+    };
   }, [imageLink]);
 
   return (
