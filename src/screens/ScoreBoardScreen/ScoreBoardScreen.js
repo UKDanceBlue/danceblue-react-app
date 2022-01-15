@@ -19,12 +19,14 @@ const ScoreBoardScreen = () => {
         const tempStandingData = [];
         querySnapshot.forEach((document) => {
           const teamData = document.data();
-          tempStandingData.push({
-            id: document.id,
-            name: teamData.name,
-            points: teamData.totalSpiritPoints,
-            highlighted: userTeamId === document.id,
-          });
+          if (teamData.spiritSpreadsheetId) {
+            tempStandingData.push({
+              id: document.id,
+              name: teamData.name,
+              points: teamData.totalSpiritPoints,
+              highlighted: userTeamId === document.id,
+            });
+          }
         });
         setStandingData(tempStandingData);
       }),

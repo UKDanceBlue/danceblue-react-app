@@ -33,7 +33,7 @@ const Standings = ({ titleText, standingData, expandable, startExpanded, collaps
           key={sortedStandings[i].id}
           rank={i + 1}
           name={sortedStandings[i].name}
-          points={sortedStandings[i].points}
+          points={sortedStandings[i].points || 0}
           isHighlighted={sortedStandings[i].highlighted}
         />
       );
