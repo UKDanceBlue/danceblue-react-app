@@ -70,14 +70,17 @@ export default class SingleSignOn {
       return;
     }
 
-    if (firebaseAuth.currentUser && firebaseAuth.currentUser.isAnonymous) {
-      signOut(firebaseAuth).catch(handleFirebaeError);
-    }
-
     const credentials = SAMLAuthProvider.credentialFromJSON(
       JSON.parse(this.redirectData.queryParams.credential)
     );
 
-    store.dispatch(loginSaml(credentials));
+    // This is only used here because we are about to sign in again // TODO: replace with https://firebase.google.com/docs/auth/web/anonymous-auth#convert-an-anonymous-account-to-a-permanent-account
+    if (firebaseAuth.currentUser && firebaseAuth.currentUser.isAnonymous) {
+      signOut(firebaseAuth)
+        .catch(handleFirebaeError)
+        .then(() => {
+          store.dispatch(loginSaml(credentials));
+        });
+    }
   }
 }

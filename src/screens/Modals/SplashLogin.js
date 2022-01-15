@@ -7,11 +7,12 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native';
-import { signInAnonymously } from 'firebase/auth';
 
 import SingleSignOn from '../../common/SingleSignOn';
-import { firebaseAuth } from '../../common/FirebaseApp';
 import { globalStyles, globalTextStyles } from '../../theme';
+
+import store from '../../redux/store';
+import { loginAnon } from '../../redux/authSlice';
 
 const splashBackgorund = require('../../../assets/home/Dancing-min.jpg');
 
@@ -56,7 +57,7 @@ const SplashLoginScreen = () => (
             Want to look around first? You can always sign in later on the profile page
           </Text>
           <TouchableOpacity
-            onPress={() => signInAnonymously(firebaseAuth)}
+            onPress={() => store.dispatch(loginAnon())}
             style={globalStyles.genericButton}
           >
             <Text style={globalStyles.genericText}>Continue as a Guest</Text>

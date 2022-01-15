@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Linking } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { NavigationContainer } from '@react-navigation/native';
@@ -10,8 +10,15 @@ import GenericWebviewScreen from '../screens/GenericWebviewScreen';
 
 const RootStack = createStackNavigator();
 
-const RootScreen = () => {
+const RootScreen = ({ navigation }) => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const isAuthLoaded = useSelector((state) => state.auth.isAuthLoaded);
+
+  useEffect(() => {
+    if (isAuthLoaded && !isLoggedIn) {
+      navigation.navigate('SplashLogin');
+    }
+  }, [navigation, isAuthLoaded, isLoggedIn]);
 
   return (
     <NavigationContainer
@@ -86,21 +93,13 @@ const RootScreen = () => {
         }
       }
     >
-      <RootStack.Navigator screenOptions={{ presentation: 'modal' }}>
-        {isLoggedIn && (
-          <RootStack.Screen
-            name="Main"
-            component={MainStackRoot}
-            options={{ headerShown: false }}
-          />
-        )}
-        {!isLoggedIn && (
-          <RootStack.Screen
-            name="SplashLogin"
-            component={SplashLogin}
-            options={{ headerShown: false }}
-          />
-        )}
+      <RootStack.Navigator>
+        <RootStack.Screen name="Main" component={MainStackRoot} options={{ headerShown: false }} />
+        <RootStack.Screen
+          name="SplashLogin"
+          component={SplashLogin}
+          options={{ headerShown: false, presentation: 'modal' }}
+        />
         <RootStack.Screen
           name="DefaultRoute"
           component={GenericWebviewScreen}

@@ -1,11 +1,13 @@
-import { signOut } from 'firebase/auth';
 import React from 'react';
 import { Text, View, ActivityIndicator, Button } from 'react-native';
 import * as Linking from 'expo-linking';
 import { useSelector } from 'react-redux';
 import SingleSignOn from '../../common/SingleSignOn';
-import { firebaseAuth } from '../../common/FirebaseApp';
 import { globalStyles, globalColors } from '../../theme';
+
+import store from '../../redux/store';
+import { logout } from '../../redux/authSlice';
+
 /**
  * Component for "Profile" screen in main navigation
  */
@@ -30,7 +32,7 @@ const ProfileScreen = () => {
                       You are logged in as {userData.firstName} {userData.lastName}
                     </Text>
                     <Text>{userData.email}</Text>
-                    <Button onPress={() => signOut(firebaseAuth)} title="Log out" />
+                    <Button onPress={() => store.dispatch(logout())} title="Log out" />
                   </>
                 ) /* End of logged in view */
               }
