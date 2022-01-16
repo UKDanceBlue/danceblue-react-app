@@ -16,9 +16,10 @@ const RootScreen = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    if (isAuthLoaded && navigation.getState()) {
+    if (isAuthLoaded) {
       if (isLoggedIn) {
         if (
+          navigation.getState() &&
           navigation.getState().routes[navigation.getState().index].name === 'SplashLogin' &&
           navigation.canGoBack()
         ) {
