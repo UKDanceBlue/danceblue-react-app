@@ -26,15 +26,31 @@ const ProfileScreen = () => {
           /* Start of loaded view */ userData.isAuthLoaded && (
             <>
               {
-                /* Start of logged in view */ userData.isLoggedIn && (
-                  <>
-                    <Text>
-                      You are logged in as {userData.firstName} {userData.lastName}
-                    </Text>
-                    <Text>{userData.email}</Text>
-                    <Button onPress={() => store.dispatch(logout())} title="Log out" />
-                  </>
-                ) /* End of logged in view */
+                /* Start of logged in view */ userData.isLoggedIn &&
+                  !userData.isAnonymous && (
+                    <>
+                      <Text>
+                        You are logged in as {userData.firstName} {userData.lastName}
+                      </Text>
+                      <Text>{userData.email}</Text>
+                      <Button onPress={() => store.dispatch(logout())} title="Log out" />
+                    </>
+                  ) /* End of logged in view */
+              }
+              {
+                /* Start of logged in anonomously view */ userData.isLoggedIn &&
+                  userData.isAnonymous && (
+                    <>
+                      <Text>You are logged in anonomously</Text>
+                      <Button
+                        onPress={() => {
+                          const sso = new SingleSignOn();
+                          sso.authenticate('saml-sign-in');
+                        }}
+                        title="Log in"
+                      />
+                    </>
+                  ) /* End of logged in anonomously view */
               }
               {
                 /* Start of logged out view */ !userData.isLoggedIn && (
