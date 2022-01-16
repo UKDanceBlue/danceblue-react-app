@@ -1,11 +1,12 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import { SAMLAuthProvider, signInWithCredential, linkWithCredential } from 'firebase/auth';
-import { handleFirebaeError, showMessage } from './AlertUtils';
+import { SAMLAuthProvider, linkWithCredential, signInWithCredential, signOut } from 'firebase/auth';
+import { showMessage } from './AlertUtils';
 import { firebaseAuth } from './FirebaseApp';
 import { loginSaml } from '../redux/authSlice';
 import store from '../redux/store';
 
+let browserOpen = false;
 export default class SingleSignOn {
   constructor() {
     this.backendUrl = 'https://app.danceblue.org/saml-relay.html';
@@ -20,15 +21,22 @@ export default class SingleSignOn {
    * @returns {UserCredential} The signed in UserCredential or undefined if the operation fails or is cancelled
    */
   async authenticate(operation) {
+    if (browserOpen) {
+      return;
+    }
     try {
+      browserOpen = true;
       // Open a browser that goes to backendUrl and passes the desired operation, firebase config, and a link back to the app
       const result = await WebBrowser.openAuthSessionAsync(
         `${this.backendUrl}?linkingUri=${Linking.createURL(`/${operation}`)}`
-      ).catch((reason) => {
-        showMessage(reason, 'Error with web browser');
-        return {};
-      });
-      switch (result.type) {
+      )
+        .catch((reason) => {
+          showMessage(reason, 'Error with web browser');
+        })
+        .finally(() => {
+          browserOpen = false;
+        });
+      switch (result?.type) {
         case WebBrowser.WebBrowserResultType.CANCEL:
         case WebBrowser.WebBrowserResultType.DISMISS:
         case WebBrowser.WebBrowserResultType.LOCKED:
@@ -80,9 +88,16 @@ export default class SingleSignOn {
         .then((userCredential) => {
           store.dispatch(loginSaml(userCredential));
         })
-        .catch(handleFirebaeError);
+        .catch(async () => {
+          showMessage(
+            'The data from your anonomous account could not be transferred to your SSO account. Sign in was successful.',
+            'Problem transferring data'
+          );
+          await signOut(firebaseAuth);
+          store.dispatch(loginSaml(await signInWithCredential(firebaseAuth, credentials)));
+        });
     } else {
-      store.dispatch(loginSaml(signInWithCredential(credentials)));
+      store.dispatch(loginSaml(await signInWithCredential(firebaseAuth, credentials)));
     }
   }
 }
