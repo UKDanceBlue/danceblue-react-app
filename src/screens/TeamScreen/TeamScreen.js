@@ -12,7 +12,7 @@ const TeamScreen = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const isAnonymous = useSelector((state) => state.auth.isAnonymous);
   const linkblue = useSelector((state) => state.auth.linkblue);
-  const teamMemberNames = useSelector((state) => state.auth.team.members);
+  const userTeam = useSelector((state) => state.auth.team);
   const fundraisingTotal = useSelector((state) => state.auth.teamFundraisingTotal);
   const teamIndividualSpiritPoints = useSelector((state) => state.auth.teamIndividualSpiritPoints);
   const [standingData, setStandingData] = useState([]);
@@ -30,7 +30,9 @@ const TeamScreen = () => {
         tempStandingData.push({
           id: recordLinkblue,
           // Fallback in the unlikley case we don't have the team member's name
-          name: teamMemberNames[recordLinkblue] ? teamMemberNames[recordLinkblue] : recordLinkblue,
+          name: userTeam?.members[recordLinkblue]
+            ? userTeam.members[recordLinkblue]
+            : recordLinkblue,
           points: recordPoints,
           highlighted: recordLinkblue === linkblue,
         });
@@ -45,7 +47,7 @@ const TeamScreen = () => {
     return () => {
       shouldUpdateState = false;
     };
-  }, [linkblue, teamIndividualSpiritPoints, teamMemberNames]);
+  }, [linkblue, teamIndividualSpiritPoints, userTeam]);
 
   return (
     <View style={globalStyles.genericView}>
