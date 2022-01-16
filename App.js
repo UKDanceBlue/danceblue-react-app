@@ -11,7 +11,7 @@ import RootScreen from './src/navigation/RootScreen';
 import { showMessage } from './src/common/AlertUtils';
 
 import store from './src/redux/store';
-import { syncAuthDataWithUser } from './src/redux/authSlice';
+import { syncAuthStateWithUser } from './src/redux/authSlice';
 import { firebaseAuth } from './src/common/FirebaseApp';
 import { obtainUuid, registerPushNotifications } from './src/redux/notificationSlice';
 import { updateConfig } from './src/redux/appConfigSlice';
@@ -54,7 +54,7 @@ Notifications.setNotificationHandler({
 
 const firstTimeSync = onAuthStateChanged(firebaseAuth, (user) => {
   // This will run after auth is initialized and never again
-  store.dispatch(syncAuthDataWithUser(user));
+  store.dispatch(syncAuthStateWithUser(user));
   store.dispatch(obtainUuid());
   store.dispatch(updateConfig());
   firstTimeSync();
