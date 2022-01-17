@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, Image, ActivityIndicator, StyleSheet, View } from 'react-native';
-import moment from 'moment';
+import { format, isSameDay } from 'date-fns';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { firebaseStorage } from '../../common/FirebaseApp';
 import { handleFirebaeError } from '../../common/AlertUtils';
@@ -40,15 +40,11 @@ const EventRow = ({ imageLink, startDate, endDate, title }) => {
    * Called to generate a React Native component
    * @returns A JSX formatted component
    */
-  const startDateMoment = moment(startDate);
-  const endDateMoment = moment(endDate);
   let whenString = '';
-  if (startDateMoment.isSame(endDateMoment, 'day')) {
-    whenString = `${startDateMoment.format('M/D/YYYY h:mm a')} - ${endDateMoment.format('h:mm a')}`;
+  if (isSameDay(startDate, endDate)) {
+    whenString = `${format(startDate, 'M/d/yyyy h:mm a')} - ${format(endDate, 'h:mm a')}`;
   } else {
-    whenString = `${startDateMoment.format('M/D/YYYY h:mm a')} - ${endDateMoment.format(
-      'M/D/YYYY h:mm a'
-    )}`;
+    whenString = `${format(startDate, 'M/d/yyyy h:mm a')} - ${format(endDate, 'M/d/yyyy h:mm a')}`;
   }
   return (
     <View style={styles.body}>

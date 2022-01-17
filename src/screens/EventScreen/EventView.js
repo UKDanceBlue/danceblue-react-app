@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Text, ActivityIndicator, StyleSheet, TouchableHighlight, View, Image } from 'react-native';
+import { format, isSameDay } from 'date-fns';
 import openMap from 'react-native-open-maps';
 // import * as Calendar from 'expo-calendar';
-import moment from 'moment';
 import { doc, getDoc } from 'firebase/firestore';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { globalColors } from '../../theme';
@@ -30,8 +30,8 @@ const EventView = ({ route: { params } }) => {
   // const [isOnCalendar, setIsOnCalendar] = useState(false);
   // const [calendarID, setCalendarID] = useState(undefined);
   // const [eventCalendarID, setEventCalendarID] = useState(null);
-  const [startTime, setStartTime] = useState(moment());
-  const [endTime, setEndTime] = useState(moment());
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
   // const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
   const [imageFirebaseRef, setImageFirebaseRef] = useState('');
@@ -59,8 +59,8 @@ const EventView = ({ route: { params } }) => {
     getDoc(doc(firebaseFirestore, 'events', params.id)).then((document) => {
       if (shouldUpdateState) {
         // setTitle(document.data().title);
-        setStartTime(moment(document.data().startTime.toDate()));
-        setEndTime(moment(document.data().endTime.toDate()));
+        setStartTime(document.data().startTime.toDate());
+        setEndTime(document.data().endTime.toDate());
         setAddress(document.data().address);
         setDescription(document.data().description);
         setImageFirebaseRef(document.data().image);
@@ -156,10 +156,10 @@ const EventView = ({ route: { params } }) => {
   // };
 
   let whenString = '';
-  if (startTime.isSame(endTime, 'day')) {
-    whenString = `${startTime.format('M/D/YYYY h:mm a')} - ${endTime.format('h:mm a')}`;
+  if (isSameDay(startTime, endTime)) {
+    whenString = `${format(startTime, 'M/d/yyyy h:mm a')} - ${format(endTime, 'h:mm a')}`;
   } else {
-    whenString = `${startTime.format('M/D/YYYY h:mm a')} - ${endTime.format('M/D/YYYY h:mm a')}`;
+    whenString = `${format(startTime, 'M/d/yyyy h:mm a')} - ${format(endTime, 'M/d/yyyy h:mm a')}`;
   }
   return (
     <>
