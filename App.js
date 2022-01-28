@@ -1,6 +1,6 @@
 // Import third-party dependencies
 import React from 'react';
-import { StatusBar, LogBox, Linking } from 'react-native';
+import { StatusBar, Linking } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { useAssets } from 'expo-asset';
 import AppLoading from 'expo-app-loading';
@@ -20,11 +20,6 @@ import { updateConfig } from './src/redux/appConfigSlice';
 const homeBackgroundImg = require('./assets/home/db20_ribbon.jpg');
 const dbLogo = require('./assets/home/DB_Primary_Logo-01.png');
 const splashLoginBackgorund = require('./assets/home/Dancing-min.jpg');
-
-// Block the pop-up error box in dev-mode until firebase finds a way to remove the old AsyncStorage
-LogBox.ignoreLogs([
-  `AsyncStorage has been extracted from react-native core and will be removed in a future release`,
-]);
 
 // Promise.allSettled polyfill
 Promise.allSettled =
