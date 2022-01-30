@@ -1,40 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Text, Image, ActivityIndicator, StyleSheet, View } from 'react-native';
 import { format, isSameDay } from 'date-fns';
-import { ref, getDownloadURL } from 'firebase/storage';
-import { firebaseStorage } from '../../common/FirebaseApp';
-import { handleFirebaseError } from '../../common/AlertUtils';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useFirebaseStorageUrl } from '../../common/FirebaseHooks';
 
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
  * @param {Object} props Properties of the component: imageLink, startDate, endDate, title, firebase
  */
 const EventRow = ({ imageLink, startDate, endDate, title }) => {
-  const [imageRef, setImageRef] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-
-  /**
-   * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-   */
-  useEffect(() => {
-    let shouldUpdateState = true;
-    if (imageLink) {
-      getDownloadURL(ref(firebaseStorage, imageLink))
-        .then((url) => {
-          if (shouldUpdateState) {
-            setImageRef(url);
-            setIsLoading(false);
-          }
-        })
-        .catch(handleFirebaseError);
-    } else {
-      setImageRef('');
-      setIsLoading(false);
-    }
-    return () => {
-      shouldUpdateState = false;
-    };
-  }, [imageLink]);
+  const [imageRef, imageRefError] = useFirebaseStorageUrl(imageLink);
 
   /**
    * Called to generate a React Native component
@@ -53,8 +28,9 @@ const EventRow = ({ imageLink, startDate, endDate, title }) => {
         <Text style={styles.date}>{whenString}</Text>
       </View>
       <View style={styles.imageContainer}>
-        {isLoading && <ActivityIndicator color="#0033A0" size="large" />}
-        {!isLoading && <Image style={styles.image} source={{ uri: imageRef }} />}
+        {!imageRef && !imageRefError && <ActivityIndicator size="large" color="blue" />}
+        {imageRefError && <MaterialIcons name="image-not-supported" size={36} color="black" />}
+        {imageRef && <Image style={styles.image} source={{ uri: imageRef }} />}
       </View>
     </View>
   );

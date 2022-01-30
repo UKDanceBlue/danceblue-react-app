@@ -1,33 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
-import { ref, getDownloadURL } from 'firebase/storage';
 
-import { firebaseStorage } from '../FirebaseApp';
-import { handleFirebaseError } from '../AlertUtils';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useFirebaseStorageUrl } from '../FirebaseHooks';
 
 /**
  * A card showing a Sponsor's logo that link's to their website
  * @param {Object} props Properties of the component: imageLink, sponsorLink, firebase
  */
 const SponsorCard = ({ imageLink, sponsorLink }) => {
-  const [imageRef, setImageRef] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let shouldUpdateState = true;
-    getDownloadURL(ref(firebaseStorage, imageLink))
-      .then((url) => {
-        if (shouldUpdateState) {
-          setImageRef(url);
-          setIsLoading(false);
-        }
-      })
-      .catch(handleFirebaseError);
-    return () => {
-      shouldUpdateState = false;
-    };
-  }, [imageLink]);
+  const [imageRef, imageRefError] = useFirebaseStorageUrl(imageLink);
 
   return (
     <TouchableHighlight
@@ -35,8 +18,15 @@ const SponsorCard = ({ imageLink, sponsorLink }) => {
       underlayColor="#dddddd"
     >
       <View style={styles.border}>
-        {isLoading && <ActivityIndicator style={styles.image} size="large" color="blue" />}
-        {!isLoading && <Image source={{ uri: imageRef }} style={styles.image} />}
+        {!imageRef && !imageRefError && (
+          <ActivityIndicator style={styles.image} size="large" color="blue" />
+        )}
+        {imageRefError && (
+          <MaterialIcons name="image-not-supported" size={styles.image.width} color="black" />
+        )}
+        {imageRef && (
+          <Image source={{ uri: imageRef, width: styles.image.width }} style={styles.image} />
+        )}
       </View>
     </TouchableHighlight>
   );

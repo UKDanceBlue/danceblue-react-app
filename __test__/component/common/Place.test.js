@@ -1,10 +1,11 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { loadAsync } from 'expo-font';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import Place from '../../../src/common/components/Place';
 
 beforeAll(async () => loadAsync(FontAwesome5.font));
+beforeAll(async () => loadAsync(MaterialIcons.font));
 
 describe('Place component', () => {
   test('renders correctly normally', () => {

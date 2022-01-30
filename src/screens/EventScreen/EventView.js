@@ -4,10 +4,10 @@ import { format, isSameDay } from 'date-fns';
 import openMap from 'react-native-open-maps';
 // import * as Calendar from 'expo-calendar';
 import { doc, getDoc } from 'firebase/firestore';
-import { ref, getDownloadURL } from 'firebase/storage';
+import { MaterialIcons } from '@expo/vector-icons';
 import { globalColors } from '../../theme';
-import { handleFirebaseError } from '../../common/AlertUtils';
-import { firebaseFirestore, firebaseStorage } from '../../common/FirebaseApp';
+import { firebaseFirestore } from '../../common/FirebaseApp';
+import { useFirebaseStorageUrl } from '../../common/FirebaseHooks';
 
 // const danceBlueCalendarConfig = {
 //   title: 'DanceBlue',
@@ -35,7 +35,7 @@ const EventView = ({ route: { params } }) => {
   // const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
   const [imageFirebaseRef, setImageFirebaseRef] = useState('');
-  const [image, setImage] = useState(null);
+  const [imageRef, imageRefError] = useFirebaseStorageUrl(imageFirebaseRef);
   const [description, setDescription] = useState('');
 
   /**
@@ -70,22 +70,6 @@ const EventView = ({ route: { params } }) => {
       shouldUpdateState = false;
     };
   }, [params.id]);
-
-  useEffect(() => {
-    let shouldUpdateState = true;
-    if (imageFirebaseRef) {
-      getDownloadURL(ref(firebaseStorage, imageFirebaseRef))
-        .then((imageRef) => {
-          if (shouldUpdateState) {
-            setImage(<Image source={{ uri: imageRef }} style={styles.image} />);
-          }
-        })
-        .catch(handleFirebaseError);
-    }
-    return () => {
-      shouldUpdateState = false;
-    };
-  }, [imageFirebaseRef]);
 
   /**
    * Check if the event exists on the DanceBlue calendar
@@ -164,7 +148,9 @@ const EventView = ({ route: { params } }) => {
   return (
     <>
       <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-        {image || <ActivityIndicator style={styles.image} size="large" color="blue" />}
+        {!imageRef && !imageRefError && <ActivityIndicator size="large" color="blue" />}
+        {imageRefError && <MaterialIcons name="image-not-supported" size={36} color="black" />}
+        {imageRef && <Image source={{ uri: imageRef }} style={styles.image} />}
         <View style={styles.body}>
           {!!description && <Text style={styles.text}>{description}</Text>}
           {!!address && (

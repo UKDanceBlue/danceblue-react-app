@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native';
-import { ref, getDownloadURL } from 'firebase/storage';
-import { firebaseStorage } from '../FirebaseApp';
-import { handleFirebaseError } from '../AlertUtils';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useFirebaseStorageUrl } from '../FirebaseHooks';
 
 /**
  * A badge icon for use with profiles
@@ -10,29 +9,15 @@ import { handleFirebaseError } from '../AlertUtils';
  * @param {string} name Name of the badge
  */
 const Badge = ({ imageURL, name }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [imageRef, setImageRef] = useState('');
-
-  // Run on mount
-  useEffect(() => {
-    let shouldUpdateState = true;
-    getDownloadURL(ref(firebaseStorage, imageURL))
-      .then((url) => {
-        if (shouldUpdateState) {
-          setIsLoading(false);
-          setImageRef(url);
-        }
-      })
-      .catch(handleFirebaseError);
-    return () => {
-      shouldUpdateState = false;
-    };
-  }, [imageURL]);
+  const [imageRef, imageRefError] = useFirebaseStorageUrl(imageURL);
 
   return (
     <View style={styles.container}>
-      {isLoading && <ActivityIndicator style={styles.image} size="large" color="blue" />}
-      {!isLoading && (
+      {!imageRef && !imageRefError && <ActivityIndicator size="large" color="blue" />}
+      {imageRefError && (
+        <MaterialIcons name="image-not-supported" size={styles.icon.width} color="black" />
+      )}
+      {imageRef && (
         <>
           <Image style={styles.icon} source={{ uri: imageRef }} />
           <Text>{name}</Text>
