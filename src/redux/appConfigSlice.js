@@ -8,6 +8,7 @@ const initialState = {
   isConfigLoaded: false,
   scoreboard: null,
   countdown: null,
+  configuredTabs: [],
 };
 
 export const updateConfig = createAsyncThunk('appConfig/updateConfig', async () =>
@@ -21,6 +22,7 @@ export const updateConfig = createAsyncThunk('appConfig/updateConfig', async () 
           }
         : null,
       scoreboard: snapshotData.scoreboard,
+      configuredTabs: snapshotData.currentTabs,
     };
   })
 );
@@ -47,6 +49,7 @@ export const appConfigSlice = createSlice({
       .addCase(updateConfig.fulfilled, (state, action) => {
         state.countdown = action.payload.countdown;
         state.scoreboard = action.payload.scoreboard;
+        state.configuredTabs = action.payload.configuredTabs;
         state.isConfigLoaded = true;
       })
       .addCase(updateConfig.rejected, (state, action) => {
