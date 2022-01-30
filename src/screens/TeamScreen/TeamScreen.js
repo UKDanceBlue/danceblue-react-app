@@ -6,7 +6,7 @@ import Standings from '../../common/components/Standings';
 import { globalStyles, globalTextStyles } from '../../theme';
 
 /**
- * A screen shown to users with an assigned team that display's their teams fundriaising total, and spirit point numbers
+ * A screen shown to users with an assigned team that display's their teams fundraising total, and spirit point numbers
  */
 const TeamScreen = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -29,7 +29,7 @@ const TeamScreen = () => {
         // Add the information from each team to the temporary standingData object
         tempStandingData.push({
           id: recordLinkblue,
-          // Fallback in the unlikley case we don't have the team member's name
+          // Fallback in the unlikely case we don't have the team member's name
           name: userTeam?.members[recordLinkblue]
             ? userTeam.members[recordLinkblue]
             : recordLinkblue,

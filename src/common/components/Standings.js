@@ -5,10 +5,10 @@ import { globalColors, globalStyles, globalTextStyles } from '../../theme';
 
 /**
  * Standings implementation for the a generic leaderboard
- * @param {string} titleText Text to show at the top of the component (defalt: blank)
- * @param {function} standingData an array of the information to be displayed (defalt: blank)
- * @param {bool} expandable Can the standings be expanded/contracted (defalt: false)
- * @param {bool} startExpanded Are the standings expanded by default (defalt: false)
+ * @param {string} titleText Text to show at the top of the component (default: blank)
+ * @param {function} standingData an array of the information to be displayed (default: blank)
+ * @param {bool} expandable Can the standings be expanded/contracted (default: false)
+ * @param {bool} startExpanded Are the standings expanded by default (default: false)
  * @param {number} collapsedRows How many rows should be shown when collapsed (default: 3)
  */
 const Standings = ({ titleText, standingData, expandable, startExpanded, collapsedRows = 3 }) => {

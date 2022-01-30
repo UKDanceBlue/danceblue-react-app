@@ -119,7 +119,7 @@ export const loginAnon = createAsyncThunk('auth/loginAnon', async (arg, thunkApi
 export const loginSaml = createAsyncThunk(
   'auth/loginSaml',
   async (samlUserCredential, thunkApi) => {
-    // 1. Do some verificaton
+    // 1. Do some verification
     // Make sure firebase sent a profile option
     const additionalInfo = getAdditionalUserInfo(samlUserCredential);
 
@@ -213,7 +213,7 @@ export const authSlice = createSlice({
           switch (action?.payload?.error) {
             case 'UNEXPECTED_AUTH_PROVIDER':
               showMessage(
-                'DanceBlue Mobile recieved an unrecognized response from the login server. Did you log into a website other than UK?',
+                'DanceBlue Mobile received an unrecognized response from the login server. Did you log into a website other than UK?',
                 'Login Server Error',
                 () => {},
                 true,
@@ -222,7 +222,7 @@ export const authSlice = createSlice({
               break;
             case 'INVALID_SERVER_RESPONSE':
               showMessage(
-                'DanceBlue Mobile recieved an invalid response from the login server. Try again later.',
+                'DanceBlue Mobile received an invalid response from the login server. Try again later.',
                 'Login Server Error',
                 () => {},
                 true,

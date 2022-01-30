@@ -3,7 +3,7 @@ import { Text, Image, ActivityIndicator, StyleSheet, View } from 'react-native';
 import { format, isSameDay } from 'date-fns';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { firebaseStorage } from '../../common/FirebaseApp';
-import { handleFirebaeError } from '../../common/AlertUtils';
+import { handleFirebaseError } from '../../common/AlertUtils';
 
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
@@ -26,7 +26,7 @@ const EventRow = ({ imageLink, startDate, endDate, title }) => {
             setIsLoading(false);
           }
         })
-        .catch(handleFirebaeError);
+        .catch(handleFirebaseError);
     } else {
       setImageRef('');
       setIsLoading(false);

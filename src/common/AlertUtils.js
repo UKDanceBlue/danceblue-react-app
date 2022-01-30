@@ -106,7 +106,7 @@ export function showPrompt(
  * @param {string} log
  * @returns the error that was passed for chaining
  */
-export function handleFirebaeError(error, log = false) {
+export function handleFirebaseError(error, log = false) {
   showMessage(`Error Code: ${error.code}`);
   if (log) {
     console.error(error.message);

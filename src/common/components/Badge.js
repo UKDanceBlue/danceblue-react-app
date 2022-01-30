@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { firebaseStorage } from '../FirebaseApp';
-import { handleFirebaeError } from '../AlertUtils';
+import { handleFirebaseError } from '../AlertUtils';
 
 /**
  * A badge icon for use with profiles
@@ -23,7 +23,7 @@ const Badge = ({ imageURL, name }) => {
           setImageRef(url);
         }
       })
-      .catch(handleFirebaeError);
+      .catch(handleFirebaseError);
     return () => {
       shouldUpdateState = false;
     };

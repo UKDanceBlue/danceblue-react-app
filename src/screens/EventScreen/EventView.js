@@ -6,13 +6,13 @@ import openMap from 'react-native-open-maps';
 import { doc, getDoc } from 'firebase/firestore';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { globalColors } from '../../theme';
-import { handleFirebaeError } from '../../common/AlertUtils';
+import { handleFirebaseError } from '../../common/AlertUtils';
 import { firebaseFirestore, firebaseStorage } from '../../common/FirebaseApp';
 
 // const danceBlueCalendarConfig = {
 //   title: 'DanceBlue',
 //   color: globalColors.dbBlue,
-//   enitityType: Calendar.EntityTypes.EVENT,
+//   entityType: Calendar.EntityTypes.EVENT,
 //   source: {
 //     isLocalAccount: true,
 //     name: 'DanceBlue Mobile',
@@ -80,7 +80,7 @@ const EventView = ({ route: { params } }) => {
             setImage(<Image source={{ uri: imageRef }} style={styles.image} />);
           }
         })
-        .catch(handleFirebaeError);
+        .catch(handleFirebaseError);
     }
     return () => {
       shouldUpdateState = false;
@@ -89,7 +89,7 @@ const EventView = ({ route: { params } }) => {
 
   /**
    * Check if the event exists on the DanceBlue calendar
-   * If it exisits then it adds *{isOnCalendar: true}* and *eventCalendarID* to *this.state*
+   * If it exists then it adds *{isOnCalendar: true}* and *eventCalendarID* to *this.state*
    */
   // useEffect(() => {
   //   if (!isLoading) {

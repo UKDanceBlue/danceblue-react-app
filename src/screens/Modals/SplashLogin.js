@@ -14,7 +14,7 @@ import { globalStyles, globalTextStyles } from '../../theme';
 import store from '../../redux/store';
 import { loginAnon } from '../../redux/authSlice';
 
-const splashBackgorund = require('../../../assets/home/Dancing-min.jpg');
+const splashBackground = require('../../../assets/home/Dancing-min.jpg');
 
 /**
  * A simplified sign in page shown when the user first opens the app
@@ -23,7 +23,7 @@ const splashBackgorund = require('../../../assets/home/Dancing-min.jpg');
  */
 const SplashLoginScreen = () => (
   <View style={globalStyles.genericCenteredView}>
-    <ImageBackground source={splashBackgorund} style={localStyles.image}>
+    <ImageBackground source={splashBackground} style={localStyles.image}>
       <View style={localStyles.textContainerWithBackground}>
         <View style={globalStyles.genericHeaderContainer}>
           <Text h2 style={{ textAlign: 'center' }}>

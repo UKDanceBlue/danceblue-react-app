@@ -4,7 +4,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { ref, getDownloadURL } from 'firebase/storage';
 
 import { firebaseStorage } from '../FirebaseApp';
-import { handleFirebaeError } from '../AlertUtils';
+import { handleFirebaseError } from '../AlertUtils';
 
 /**
  * A card showing a Sponsor's logo that link's to their website
@@ -23,7 +23,7 @@ const SponsorCard = ({ imageLink, sponsorLink }) => {
           setIsLoading(false);
         }
       })
-      .catch(handleFirebaeError);
+      .catch(handleFirebaseError);
     return () => {
       shouldUpdateState = false;
     };

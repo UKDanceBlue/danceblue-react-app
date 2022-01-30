@@ -38,10 +38,10 @@ const ProfileScreen = () => {
                   ) /* End of logged in view */
               }
               {
-                /* Start of logged in anonomously view */ userData.isLoggedIn &&
+                /* Start of logged in anonymously view */ userData.isLoggedIn &&
                   userData.isAnonymous && (
                     <>
-                      <Text>You are logged in anonomously</Text>
+                      <Text>You are logged in anonymously</Text>
                       <Button
                         onPress={() => {
                           const sso = new SingleSignOn();
@@ -50,7 +50,7 @@ const ProfileScreen = () => {
                         title="Log in"
                       />
                     </>
-                  ) /* End of logged in anonomously view */
+                  ) /* End of logged in anonymously view */
               }
               {
                 /* Start of logged out view */ !userData.isLoggedIn && (

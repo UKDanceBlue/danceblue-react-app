@@ -136,7 +136,7 @@ export const notificationSlice = createSlice({
         if (action.error.message === 'Rejected') {
           switch (action?.payload?.error) {
             case 'DEVICE_IS_EMULATOR':
-              showMessage('Emulators will not recieve push notifications');
+              showMessage('Emulators will not receive push notifications');
               break;
             default:
               showMessage(

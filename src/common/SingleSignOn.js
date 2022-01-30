@@ -14,7 +14,7 @@ export default class SingleSignOn {
 
   /**
    * Authenticate a user using SSO by opening the native browser and navigating to the IDP
-   * This is acomplished through the use of a dummy page that signs the user in using methods
+   * This is accomplished through the use of a dummy page that signs the user in using methods
    * unavailable in React Native, and then passing the auth credential back to the app in
    * the query string of the expo-linking url
    * @param {String} operation The authentication operation to be performed **MUST BE HANDLED BY THE SERVER**
@@ -90,7 +90,7 @@ export default class SingleSignOn {
         })
         .catch(async () => {
           showMessage(
-            'The data from your anonomous account could not be transferred to your SSO account. Sign in was successful.',
+            'The data from your anonymous account could not be transferred to your SSO account. Sign in was successful.',
             'Problem transferring data'
           );
           await signOut(firebaseAuth);
