@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
 import SplashLogin from '../screens/Modals/SplashLogin';
 import MainStackRoot from './MainStackRoot';
 import GenericWebviewScreen from '../screens/GenericWebviewScreen';
@@ -64,8 +64,9 @@ const RootScreen = () => {
           {
             latestUserId: userId || null,
             audiences,
+            lastConnected: Timestamp.now(),
           },
-          { mergeFields: ['latestUserId', 'audiences'] }
+          { mergeFields: ['latestUserId', 'audiences', 'lastConnected'] }
         );
       }
     })();
