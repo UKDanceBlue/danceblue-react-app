@@ -26,6 +26,7 @@ const TabBar = () => (
           More: 'ellipsis-h',
           Scoreboard: 'list-ol',
           Team: 'users',
+          Donate: 'hand-holding-heart',
         };
 
         // You can return any component that you like here!
@@ -54,9 +55,11 @@ const TabBar = () => (
     <Tabs.Screen name="Scoreboard" component={ScoreboardScreen} />
     <Tabs.Screen name="Team" component={TeamScreen} />
     <Tabs.Screen
-      name="Store"
+      name="Donate"
       component={GenericWebviewScreen}
-      initialParams={{ uri: 'https://www.danceblue.org/dancebluetique/' }}
+      initialParams={{
+        uri: 'https://danceblue.networkforgood.com/causes/4789-danceblue-golden-matrix-fund-dance-teams?utm_source=website&utm_medium=unit_website',
+      }}
     />
   </Tabs.Navigator>
 );
