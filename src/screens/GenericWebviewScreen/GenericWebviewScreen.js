@@ -14,6 +14,7 @@ const GenericWebviewScreen = ({ route }) => {
   if (route.path) {
     return (
       <View style={globalStyles.genericView}>
+        {isWebpageLoading && <ActivityIndicator />}
         <WebView
           source={{ uri: `https://www.danceblue.org${route.path}` }}
           onLoadEnd={() => setIsWebpageLoading(false)}
@@ -25,6 +26,7 @@ const GenericWebviewScreen = ({ route }) => {
   if (route?.params?.uri) {
     return (
       <View style={globalStyles.genericView}>
+        {isWebpageLoading && <ActivityIndicator />}
         <WebView source={route.params} onLoadEnd={() => setIsWebpageLoading(false)} />
       </View>
     );
