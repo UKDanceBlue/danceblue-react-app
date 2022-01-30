@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView } from 'react-native';
+import { ActivityIndicator, SafeAreaView, ScrollView } from 'react-native';
 import { getDocs, collection } from 'firebase/firestore';
 import { useSelector } from 'react-redux';
 import Standings from '../../common/components/Standings';
 import { firebaseFirestore } from '../../common/FirebaseApp';
-import { globalStyles } from '../../theme';
+import { globalColors, globalStyles } from '../../theme';
 
 /**
  * Wrapper for a Standings component
@@ -40,6 +40,17 @@ const ScoreBoardScreen = () => {
   return (
     <ScrollView showsVerticalScrollIndicator>
       <SafeAreaView style={globalStyles.genericView}>
+        {standingData.length === 0 && (
+          <ActivityIndicator
+            size="large"
+            color={globalColors.lightBlue}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 20,
+            }}
+          />
+        )}
         <Standings titleText="Spirit Point Standings" standingData={standingData} startExpanded />
       </SafeAreaView>
     </ScrollView>
