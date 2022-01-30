@@ -3,7 +3,7 @@ import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from '
 import * as WebBrowser from 'expo-web-browser';
 
 import { MaterialIcons } from '@expo/vector-icons';
-import { useFirebaseStorageUrl } from '../FirebaseHooks';
+import { useFirebaseStorageUrl } from '../CustomHooks';
 
 /**
  * A card showing a Sponsor's logo that link's to their website

@@ -7,7 +7,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { MaterialIcons } from '@expo/vector-icons';
 import { globalColors } from '../../theme';
 import { firebaseFirestore } from '../../common/FirebaseApp';
-import { useFirebaseStorageUrl } from '../../common/FirebaseHooks';
+import { useFirebaseStorageUrl } from '../../common/CustomHooks';
 
 // const danceBlueCalendarConfig = {
 //   title: 'DanceBlue',

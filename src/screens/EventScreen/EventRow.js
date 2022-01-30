@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, Image, ActivityIndicator, StyleSheet, View } from 'react-native';
 import { format, isSameDay } from 'date-fns';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useFirebaseStorageUrl } from '../../common/FirebaseHooks';
+import { useFirebaseStorageUrl } from '../../common/CustomHooks';
 
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
