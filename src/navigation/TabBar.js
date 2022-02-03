@@ -76,6 +76,7 @@ const TabBar = () => {
                 Scoreboard: 'list-ol',
                 Team: 'users',
                 Donate: 'hand-holding-heart',
+                Marathon: 'people-arrows',
               };
 
               // You can return any component that you like here!
