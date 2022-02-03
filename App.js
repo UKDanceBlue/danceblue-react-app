@@ -21,7 +21,7 @@ import { updateConfig } from './src/redux/appConfigSlice';
 // All assets that should be preloaded:
 const homeBackgroundImg = require('./assets/home/db20_ribbon.jpg');
 const dbLogo = require('./assets/home/DB_Primary_Logo-01.png');
-const splashLoginBackgorund = require('./assets/home/Dancing-min.jpg');
+const splashLoginBackground = require('./assets/home/Dancing-min.jpg');
 
 // Promise.allSettled polyfill
 Promise.allSettled =
@@ -71,7 +71,7 @@ const pushRegistrationObserver = store.subscribe(() => {
  * Main app container
  */
 const App = () => {
-  const [assets, assetError] = useAssets([splashLoginBackgorund, homeBackgroundImg, dbLogo]);
+  const [assets, assetError] = useAssets([splashLoginBackground, homeBackgroundImg, dbLogo]);
 
   if (assetError) {
     showMessage(assetError, 'Error loading assets');
