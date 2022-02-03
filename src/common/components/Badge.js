@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useFirebaseStorageUrl } from '../FirebaseHooks';
+import { useFirebaseStorageUrl } from '../CustomHooks';
 
 /**
  * A badge icon for use with profiles
