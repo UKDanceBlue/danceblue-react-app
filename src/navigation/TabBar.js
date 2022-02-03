@@ -10,6 +10,7 @@ import HomeScreen from '../screens/HomeScreen';
 import EventScreen from '../screens/EventScreen';
 import GenericWebviewScreen from '../screens/GenericWebviewScreen';
 import TeamScreen from '../screens/TeamScreen';
+import HoursScreen from '../screens/HoursScreen';
 import HeaderIcons from './HeaderIcons';
 
 const Tabs = createBottomTabNavigator();
@@ -18,6 +19,7 @@ const possibleTabs = {
   Events: <Tabs.Screen key="Events" name="Events" component={EventScreen} />,
   Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
   Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,
+  MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
   Store: (
     <Tabs.Screen
       key="Store"
@@ -100,6 +102,7 @@ const TabBar = () => {
           })}
         >
           <Tabs.Screen name="Home" component={HomeScreen} />
+          <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />
           {currentTabs}
         </Tabs.Navigator>
       )}

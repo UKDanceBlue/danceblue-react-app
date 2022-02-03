@@ -10,6 +10,7 @@ import NotificationScreen from '../screens/NotificationScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import TabBar from './TabBar';
 import HeaderIcons from './HeaderIcons';
+import HourScreen from '../screens/HoursScreen/HourScreen';
 
 const MainStack = createStackNavigator();
 
@@ -39,6 +40,7 @@ const MainStackRoot = () => (
         ),
       })}
     />
+    <MainStack.Screen name="Hour Details" component={HourScreen} />
   </MainStack.Navigator>
 );
 
