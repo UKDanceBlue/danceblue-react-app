@@ -9,6 +9,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { Provider } from 'react-redux';
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
 import './src/common/AndroidTimerFix';
+import { ThemeProvider } from 'react-native-elements';
 import RootScreen from './src/navigation/RootScreen';
 import { showMessage } from './src/common/AlertUtils';
 
@@ -83,81 +84,83 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <StatusBar backgroundColor="blue" barStyle="dark-content" />
-      <NavigationContainer
-        linking={
-          // From https://docs.expo.dev/versions/latest/sdk/notifications/#handling-push-notifications-with-react-navigation
-          {
-            prefixes: ['danceblue://'],
-            config: {
-              screens: {
-                Main: {
-                  initialRouteName: 'Tab',
-                  screens: {
-                    Tab: {
-                      screens: {
-                        Home: 'redirect',
-                        Scoreboard: 'redirect/team-rankings',
-                        Team: 'redirect/my-team',
-                        Store: 'redirect/dancebluetique',
+      <ThemeProvider>
+        <StatusBar backgroundColor="blue" barStyle="dark-content" />
+        <NavigationContainer
+          linking={
+            // From https://docs.expo.dev/versions/latest/sdk/notifications/#handling-push-notifications-with-react-navigation
+            {
+              prefixes: ['danceblue://'],
+              config: {
+                screens: {
+                  Main: {
+                    initialRouteName: 'Tab',
+                    screens: {
+                      Tab: {
+                        screens: {
+                          Home: 'redirect',
+                          Scoreboard: 'redirect/team-rankings',
+                          Team: 'redirect/my-team',
+                          Store: 'redirect/dancebluetique',
+                        },
                       },
+                      Profile: 'redirect/app-profile',
+                      Notifications: 'redirect/app-notifications',
                     },
-                    Profile: 'redirect/app-profile',
-                    Notifications: 'redirect/app-notifications',
                   },
+                  DefaultRoute: '*',
                 },
-                DefaultRoute: '*',
               },
-            },
-            async getInitialURL() {
-              // First, you may want to do the default deep link handling
-              // Check if app was opened from a deep link
-              let url = await Linking.getInitialURL();
+              async getInitialURL() {
+                // First, you may want to do the default deep link handling
+                // Check if app was opened from a deep link
+                let url = await Linking.getInitialURL();
 
-              if (url != null) {
+                if (url != null) {
+                  return url;
+                }
+
+                // Handle URL from expo push notifications
+                const response = await Notifications.getLastNotificationResponseAsync();
+                url = response?.notification.request.content.data.url;
+
                 return url;
-              }
+              },
+              subscribe(listener) {
+                const onReceiveURL = ({ url }) => listener(url);
 
-              // Handle URL from expo push notifications
-              const response = await Notifications.getLastNotificationResponseAsync();
-              url = response?.notification.request.content.data.url;
+                // Listen to incoming links from deep linking
+                const deepLinkSubscription = Linking.addEventListener('url', onReceiveURL);
 
-              return url;
-            },
-            subscribe(listener) {
-              const onReceiveURL = ({ url }) => listener(url);
+                // Listen to expo push notifications
+                const expoSubscription = Notifications.addNotificationResponseReceivedListener(
+                  (response) => {
+                    const { url } = response.notification.request.content.data;
 
-              // Listen to incoming links from deep linking
-              const deepLinkSubscription = Linking.addEventListener('url', onReceiveURL);
+                    // Any custom logic to see whether the URL needs to be handled
+                    // ...
 
-              // Listen to expo push notifications
-              const expoSubscription = Notifications.addNotificationResponseReceivedListener(
-                (response) => {
-                  const { url } = response.notification.request.content.data;
+                    // Let React Navigation handle the URL
+                    listener(url);
+                  }
+                );
 
-                  // Any custom logic to see whether the URL needs to be handled
-                  // ...
-
-                  // Let React Navigation handle the URL
-                  listener(url);
-                }
-              );
-
-              return () => {
-                // Clean up the event listeners
-                if (deepLinkSubscription) {
-                  deepLinkSubscription.remove();
-                }
-                if (expoSubscription) {
-                  expoSubscription.remove();
-                }
-              };
-            },
+                return () => {
+                  // Clean up the event listeners
+                  if (deepLinkSubscription) {
+                    deepLinkSubscription.remove();
+                  }
+                  if (expoSubscription) {
+                    expoSubscription.remove();
+                  }
+                };
+              },
+            }
           }
-        }
-      >
-        <RootScreen />
-      </NavigationContainer>
+        >
+          <RootScreen />
+        </NavigationContainer>
+      </ThemeProvider>
     </Provider>
   );
 };

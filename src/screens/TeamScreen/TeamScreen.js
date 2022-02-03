@@ -1,6 +1,7 @@
 // Import third-party dependencies
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { SafeAreaView, ScrollView, View } from 'react-native';
+import { Text } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import Standings from '../../common/components/Standings';
 import { globalStyles, globalTextStyles } from '../../theme';

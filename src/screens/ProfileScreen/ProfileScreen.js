@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, View, ActivityIndicator, Button } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
+import { Text, Button } from 'react-native-elements';
 import * as Linking from 'expo-linking';
 import { useSelector } from 'react-redux';
 import SingleSignOn from '../../common/SingleSignOn';

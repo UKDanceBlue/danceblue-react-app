@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Text, ActivityIndicator, StyleSheet, TouchableHighlight, View, Image } from 'react-native';
+import { ActivityIndicator, StyleSheet, TouchableHighlight, View, Image } from 'react-native';
+import { Text } from 'react-native-elements';
 import { format, isSameDay } from 'date-fns';
 import openMap from 'react-native-open-maps';
 // import * as Calendar from 'expo-calendar';

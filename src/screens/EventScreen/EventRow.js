@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, Image, ActivityIndicator, StyleSheet, View } from 'react-native';
+import { Image, ActivityIndicator, StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-elements';
 import { format, isSameDay } from 'date-fns';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useFirebaseStorageUrl } from '../../common/CustomHooks';

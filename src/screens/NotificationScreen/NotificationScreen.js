@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
-import { RefreshControl, Text, View, ScrollView, Button } from 'react-native';
+import { RefreshControl, View, ScrollView } from 'react-native';
+import { Text, Button } from 'react-native-elements';
 import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
 import * as Device from 'expo-device';

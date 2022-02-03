@@ -1,7 +1,8 @@
 /* eslint-disable no-nested-ternary */
 // Import third-party dependencies
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Text } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { globalColors, globalStyles, globalTextStyles } from '../../theme';
 

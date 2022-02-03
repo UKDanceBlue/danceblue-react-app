@@ -3,7 +3,8 @@ import { useNavigation } from '@react-navigation/native';
 import { differenceInHours } from 'date-fns';
 import { BlurView } from 'expo-blur';
 import React, { useEffect, useMemo, useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Text } from 'react-native-elements';
 import { useCurrentDate } from '../../common/CustomHooks';
 import { globalColors, globalTextStyles } from '../../theme';
 

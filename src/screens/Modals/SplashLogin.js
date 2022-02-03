@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  View,
-  ImageBackground,
-  Dimensions,
-} from 'react-native';
+import { TouchableOpacity, StyleSheet, View, ImageBackground, Dimensions } from 'react-native';
+import { Text } from 'react-native-elements';
 
 import SingleSignOn from '../../common/SingleSignOn';
 import { globalStyles, globalTextStyles } from '../../theme';

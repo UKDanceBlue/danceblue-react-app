@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Text } from 'react-native-elements';
 import Place from './Place';
 import { globalColors, globalStyles, globalTextStyles } from '../../theme';
 
