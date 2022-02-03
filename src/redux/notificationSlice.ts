@@ -27,11 +27,7 @@ export const obtainUuid = createAsyncThunk('notification/obtainUuid', async () =
       return uuid;
     }
 
-    // Magic code to generate a uuid (not uid) for this device from SO - https://stackoverflow.com/a/2117523
-    uuid = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-      // eslint-disable-next-line no-bitwise
-      (c ^ (Random.getRandomBytes(1)[0] & (15 >> (c / 4)))).toString(16)
-    );
+    uuid = generateUuid();
     await SecureStore.setItemAsync(uuidStoreKey, uuid, {
       keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
     });
