@@ -26,7 +26,7 @@ export function useCurrentDate(refreshInterval) {
   const [state, setState] = useState(new Date());
 
   useEffect(() => {
-    // 1 second timer
+    // Set a *refreshInterval* second timer
     const timer = setInterval(() => {
       // Get time components
       setState(new Date());

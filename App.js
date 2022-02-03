@@ -7,6 +7,8 @@ import AppLoading from 'expo-app-loading';
 import { NavigationContainer } from '@react-navigation/native';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Provider } from 'react-redux';
+// https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
+import './src/common/AndroidTimerFix';
 import RootScreen from './src/navigation/RootScreen';
 import { showMessage } from './src/common/AlertUtils';
 
