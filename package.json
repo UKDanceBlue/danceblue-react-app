@@ -41,11 +41,13 @@
     "node": "^16.13.0",
     "react": "17.0.1",
     "react-native": "0.64.3",
+    "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "~2.1.0",
     "react-native-open-maps": "^0.4.0",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-super-grid": "^4.1.1",
+    "react-native-vector-icons": "^9.0.0",
     "react-native-webview": "11.15.0",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2"
