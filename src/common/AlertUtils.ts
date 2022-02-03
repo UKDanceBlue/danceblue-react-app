@@ -1,15 +1,22 @@
 /* eslint-disable no-console */
+import { FirebaseError } from 'firebase/app';
 import { Alert } from 'react-native';
 
 /**
  * Show a one button prompt
- * @param {string} message A message show in the alert body
+ * @param {*} message A message show in the alert body
  * @param {string} title The alert's title
  * @param {function} onAccept A function run when the user presses OK
- * @param {bool} log Should the alert by logged
+ * @param {boolean} log Should the alert by logged
  * @param {*} logInfo A string or object to be logged along with the title and message
  */
-export function showMessage(message, title = 'Error', onAccept = null, log = false, logInfo = '') {
+export function showMessage(
+  message: string | any,
+  title: string = 'Error',
+  onAccept: () => any = null,
+  log: boolean = false,
+  logInfo: any = ''
+) {
   Alert.alert(title.toString(), message.toString(), [
     { text: 'OK', onPress: onAccept || (() => {}) },
   ]);
@@ -46,24 +53,24 @@ export function showMessage(message, title = 'Error', onAccept = null, log = fal
 
 /**
  * Show a two button prompt that can execute one of two functions depending on the user's selection
- * @param {string} message
+ * @param {*} message
  * @param {string} title
  * @param {function} negativeAction
  * @param {function} positiveAction
  * @param {string} negativeText
  * @param {string} positiveText
- * @param {bool} log Should the alert by logged
+ * @param {boolean} log Should the alert by logged
  * @param {*} logInfo A string or object to be logged along with the title and message
  */
 export function showPrompt(
-  message,
-  title = 'Error',
-  negativeAction = () => {},
-  positiveAction = () => {},
-  negativeText = 'No',
-  positiveText = 'Yes',
-  log = false,
-  logInfo = ''
+  message: any,
+  title: string = 'Error',
+  negativeAction: () => any = () => {},
+  positiveAction: () => any = () => {},
+  negativeText: string = 'No',
+  positiveText: string = 'Yes',
+  log: boolean = false,
+  logInfo: any = ''
 ) {
   Alert.alert(title.toString(), message.toString(), [
     { text: negativeText, onPress: negativeAction, style: 'cancel' },
@@ -106,7 +113,7 @@ export function showPrompt(
  * @param {string} log
  * @returns the error that was passed for chaining
  */
-export function handleFirebaseError(error, log = false) {
+export function handleFirebaseError(error: FirebaseError, log = false) {
   showMessage(`Error Code: ${error.code}`);
   if (log) {
     console.error(error.message);
@@ -118,7 +125,10 @@ export function handleFirebaseError(error, log = false) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: { message: JSON.stringify(error, undefined, '  '), severity: 'ERROR' },
+        body: JSON.stringify({
+          message: JSON.stringify(error, undefined, '  '),
+          severity: 'ERROR',
+        }),
       }).then(null, () => console.debug('Failed to upload log to firebase'));
     } catch {
       console.debug('Failed to upload log to firebase');

@@ -2,7 +2,7 @@ import { getDownloadURL, ref } from 'firebase/storage';
 import { useDebugValue, useEffect, useState } from 'react';
 import { firebaseStorage } from './FirebaseApp';
 
-export function useFirebaseStorageUrl(googleUri) {
+export function useFirebaseStorageUrl(googleUri: string) {
   useDebugValue(`Storage for ${googleUri}`);
 
   const [state, setState] = useState([null, null]);
@@ -22,7 +22,7 @@ export function useFirebaseStorageUrl(googleUri) {
   return state;
 }
 
-export function useCurrentDate(refreshInterval) {
+export function useCurrentDate(refreshInterval: number) {
   const [state, setState] = useState(new Date());
 
   useEffect(() => {
