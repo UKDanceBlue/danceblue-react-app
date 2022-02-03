@@ -18,6 +18,7 @@ import { syncAuthStateWithUser } from './src/redux/authSlice';
 import { firebaseAuth } from './src/common/FirebaseApp';
 import { obtainUuid, registerPushNotifications } from './src/redux/notificationSlice';
 import { updateConfig } from './src/redux/appConfigSlice';
+import { rnElementsTheme } from './src/theme';
 
 // All assets that should be preloaded:
 const homeBackgroundImg = require('./assets/home/db20_ribbon.jpg');
@@ -84,7 +85,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <ThemeProvider>
+      <ThemeProvider theme={rnElementsTheme}>
         <StatusBar backgroundColor="blue" barStyle="dark-content" />
         <NavigationContainer
           linking={

@@ -4,12 +4,33 @@ export const globalColors = {
   white: '#F2F3F8',
   darkNavy: '#1F2236',
   grey: '#8697B0',
-  lightGrey: '#ffffc8',
+  lightGrey: '#D3D3D3',
   dbBlue: '#0033A0',
   lightBlue: '#8BA9FC',
   red: '#BA0725',
   green: '#55D128',
   dbSaffron: '#FFC72C',
+};
+
+export const rnElementsTheme = {
+  colors: {
+    primary: globalColors.dbBlue,
+    secondary: globalColors.lightBlue,
+    white: globalColors.white,
+    black: '#000',
+    grey0: '#393e42',
+    grey1: '#43484d',
+    grey2: globalColors.grey,
+    grey3: '#86939e',
+    grey4: globalColors.lightGrey,
+    grey5: '#e1e8ee',
+    greyOutline: globalColors.darkNavy,
+    searchBg: '#303337',
+    success: globalColors.green,
+    error: globalColors.error,
+    warning: '#ADFF2F',
+    divider: globalColors.darkNavy,
+  },
 };
 
 export const globalStyles = StyleSheet.create({
