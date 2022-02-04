@@ -112,7 +112,7 @@ const App = () => {
                   DefaultRoute: '*',
                 },
               },
-              async getInitialURL() {
+              async getInitialURL(): Promise<string> {
                 // First, you may want to do the default deep link handling
                 // Check if app was opened from a deep link
                 let url = await Linking.getInitialURL();
@@ -128,7 +128,7 @@ const App = () => {
                 return url;
               },
               subscribe(listener) {
-                const onReceiveURL = ({ url }) => listener(url);
+                const onReceiveURL = ({ url }: { url: string }) => listener(url);
 
                 // Listen to incoming links from deep linking
                 const deepLinkSubscription = Linking.addEventListener('url', onReceiveURL);
