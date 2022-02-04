@@ -7,8 +7,9 @@ import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import { useCurrentDate } from '../../common/CustomHooks';
 import { globalColors, globalTextStyles } from '../../theme';
+import { HourScreenOptionsType } from '../../types/HourScreenTypes';
 
-const hourNames = [
+const hourNames: string[] = [
   'One',
   'Two',
   'Three',
@@ -35,7 +36,7 @@ const hourNames = [
   'Twenty-four',
 ];
 
-const hourListKeys = [
+const hourListKeys: { key: number }[] = [
   { key: 0 },
   { key: 1 },
   { key: 2 },
@@ -62,7 +63,7 @@ const hourListKeys = [
   { key: 23 },
 ];
 
-const hourScreenOptionsList = [
+const hourScreenOptionsList: HourScreenOptionsType[] = [
   {
     hourInstructions: ['Start a game', 'Play a game', 'Finish the game'],
   },
