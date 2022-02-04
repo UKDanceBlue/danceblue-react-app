@@ -24,3 +24,5 @@ export type RootStackParamList = {
   SplashLogin: undefined;
   DefaultRoute: { uri: string } | undefined;
 };
+
+// TODO add type hints for all navigation props
