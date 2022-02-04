@@ -14,7 +14,11 @@ import {
   DocumentReference,
   DocumentSnapshot,
   getDoc,
+  getDocs,
+  query,
   setDoc,
+  updateDoc,
+  where,
 } from 'firebase/firestore';
 import { showMessage } from '../common/AlertUtils';
 import { firebaseAuth, firebaseFirestore } from '../common/FirebaseApp';
@@ -63,7 +67,7 @@ const initialState: AuthSliceType = {
 
 export const updateUserData = createAsyncThunk(
   'auth/updateUserData',
-  async (newUser: { userSnapshot: DocumentSnapshot; isAnonymous: boolean }, thunkApi) => {
+  async (newUser: { userSnapshot: DocumentSnapshot; isAnonymous: boolean }) => {
     const { userSnapshot, isAnonymous } = newUser;
 
     const userInfo: Partial<AuthSliceType> = {
@@ -93,14 +97,31 @@ export const updateUserData = createAsyncThunk(
       Object.assign(userInfo, firebaseUserData);
 
       // Map the non-serializable array of references to past notifications to an array of path strings
-      if (Array.isArray(userInfo.pastNotifications)) {
+      if (Array.isArray(userSnapshot.get('pastNotifications'))) {
         userInfo.pastNotifications = userSnapshot
           .get('pastNotifications')
           .map((reference: DocumentReference) => reference.path);
       }
 
+      let teamReference: DocumentReference;
+      let preloadedTeamSnapshot: DocumentSnapshot;
       // Get information about the user's team (if any)
       if (userSnapshot.get('team')) {
+        teamReference = userSnapshot.get('team');
+      } else if (userInfo.linkblue) {
+        const teamsCollectionRef = collection(firebaseFirestore, 'teams');
+        const teamQuery = query(
+          teamsCollectionRef,
+          where(`members.${userInfo.linkblue}`, '>=', '')
+        );
+        const matchingTeams = await getDocs(teamQuery);
+        if (matchingTeams.docs.length === 1) {
+          preloadedTeamSnapshot = matchingTeams.docs[0];
+          updateDoc(userSnapshot.ref, { team: preloadedTeamSnapshot.ref });
+        }
+      }
+
+      if (teamReference) {
         userInfo.teamId = userSnapshot.get('team').id;
 
         // Go ahead and set up some collection references
@@ -110,23 +131,32 @@ export const updateUserData = createAsyncThunk(
         );
 
         const teamPromiseResponses = await Promise.allSettled([
-          getDoc(userSnapshot.get('team')),
+          preloadedTeamSnapshot ? undefined : getDoc(userSnapshot.get('team')),
           getDoc(doc(teamConfidentialRef, 'individualSpiritPoints')),
           getDoc(doc(teamConfidentialRef, 'fundraising')),
         ]);
 
-        if (teamPromiseResponses[0].status === 'fulfilled')
-          userInfo.team = teamPromiseResponses[0].value.data() as FirestoreTeam;
-        if (teamPromiseResponses[1].status === 'fulfilled')
+        if (teamPromiseResponses[0].status === 'fulfilled') {
+          if (teamPromiseResponses[0].value === undefined) {
+            if (preloadedTeamSnapshot) {
+              userInfo.team = preloadedTeamSnapshot.data() as FirestoreTeam;
+            }
+          } else {
+            userInfo.team = teamPromiseResponses[0].value.data() as FirestoreTeam;
+          }
+        }
+        if (teamPromiseResponses[1].status === 'fulfilled') {
           userInfo.teamIndividualSpiritPoints =
             teamPromiseResponses[1].value.data() as FirestoreTeamIndividualSpiritPoints;
-        if (teamPromiseResponses[2].status === 'fulfilled')
+        }
+        if (teamPromiseResponses[2].status === 'fulfilled') {
           userInfo.teamFundraisingTotal =
             teamPromiseResponses[2].value.data() as FirestoreTeamFundraising;
+        }
       }
     }
 
-    return thunkApi.fulfillWithValue(userInfo);
+    return userInfo;
   }
 );
 
@@ -159,6 +189,9 @@ export const loginAnon = createAsyncThunk('auth/loginAnon', async (arg, thunkApi
   })
 );
 
+type LoginSamlThunkError = {
+  error: 'UNEXPECTED_AUTH_PROVIDER' | 'INVALID_SERVER_RESPONSE';
+};
 export const loginSaml = createAsyncThunk(
   'auth/loginSaml',
   async (samlUserCredential: UserCredential, thunkApi) => {
@@ -168,12 +201,12 @@ export const loginSaml = createAsyncThunk(
 
     // Make sure this is the provider we think it is
     if (!(additionalInfo?.providerId === 'saml.danceblue-firebase-linkblue-saml')) {
-      return thunkApi.rejectWithValue({ error: 'UNEXPECTED_AUTH_PROVIDER' });
+      return thunkApi.rejectWithValue({ error: 'UNEXPECTED_AUTH_PROVIDER' } as LoginSamlThunkError);
     }
 
     // Make sure we got a profile and email
     if (!additionalInfo?.profile || !samlUserCredential?.user?.email) {
-      return thunkApi.rejectWithValue({ error: 'INVALID_SERVER_RESPONSE' });
+      return thunkApi.rejectWithValue({ error: 'INVALID_SERVER_RESPONSE' } as LoginSamlThunkError);
     }
 
     // 2. Upload SAML info to firebase
@@ -227,18 +260,18 @@ export const authSlice = createSlice({
       // User data update
       .addCase(updateUserData.fulfilled, (state, action) => {
         state.isAuthLoaded = true;
-        state.uid = action.payload.payload.uid;
-        state.isAnonymous = action.payload.payload.isAnonymous;
-        state.isLoggedIn = action.payload.payload.isLoggedIn;
-        state.attributes = action.payload.payload.attributes;
-        state.teamId = action.payload.payload.teamId;
-        state.team = action.payload.payload.team;
-        state.teamIndividualSpiritPoints = action.payload.payload.teamIndividualSpiritPoints;
-        state.teamFundraisingTotal = action.payload.payload.teamFundraisingTotal;
-        state.firstName = action.payload.payload.firstName;
-        state.lastName = action.payload.payload.lastName;
-        state.email = action.payload.payload.email;
-        state.linkblue = action.payload.payload.linkblue;
+        state.uid = action.payload.uid;
+        state.isAnonymous = action.payload.isAnonymous;
+        state.isLoggedIn = action.payload.isLoggedIn;
+        state.attributes = action.payload.attributes;
+        state.teamId = action.payload.teamId;
+        state.team = action.payload.team;
+        state.teamIndividualSpiritPoints = action.payload.teamIndividualSpiritPoints;
+        state.teamFundraisingTotal = action.payload.teamFundraisingTotal;
+        state.firstName = action.payload.firstName;
+        state.lastName = action.payload.lastName;
+        state.email = action.payload.email;
+        state.linkblue = action.payload.linkblue;
       })
       .addCase(updateUserData.rejected, (state, action) => {
         showMessage(action.error.message, action.error.code, null, true, action.error.stack);
@@ -256,7 +289,7 @@ export const authSlice = createSlice({
       })
       .addCase(loginSaml.rejected, (state, action) => {
         if (action.error.message === 'Rejected') {
-          switch ((action?.payload as { error: string } | null | undefined)?.error) {
+          switch ((action?.payload as LoginSamlThunkError)?.error) {
             case 'UNEXPECTED_AUTH_PROVIDER':
               showMessage(
                 'DanceBlue Mobile received an unrecognized response from the login server. Did you log into a website other than UK?',

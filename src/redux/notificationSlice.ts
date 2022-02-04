@@ -8,10 +8,17 @@ import { showMessage } from '../common/AlertUtils';
 import { firebaseFirestore } from '../common/FirebaseApp';
 import { globalColors } from '../theme';
 import generateUuid from '../common/GenerateUuid';
+import { ExpoPushToken } from 'expo-notifications';
 
 const uuidStoreKey = __DEV__ ? 'danceblue.device-uuid.dev' : 'danceblue.device-uuid';
 
-const initialState = {
+type NotificationSliceType = {
+  uuid: string | null;
+  pushToken: string | null;
+  notificationPermissionsGranted: boolean | null;
+};
+
+const initialState: NotificationSliceType = {
   uuid: null,
   pushToken: null,
   notificationPermissionsGranted: null,
@@ -35,70 +42,73 @@ export const obtainUuid = createAsyncThunk('notification/obtainUuid', async () =
   })
 );
 
-export const registerPushNotifications = createAsyncThunk(
-  'notification/registerPushNotifications',
-  async (arg, thunkApi) => {
-    if (Device.isDevice) {
-      // Get the user's current preference
-      let settings = await Notifications.getPermissionsAsync();
+type RegisterPushNotificationsErrors = { error: 'DEVICE_IS_EMULATOR' };
 
-      // If the user hasn't set a preference yet, ask them.
-      if (
-        settings.status === 'undetermined' ||
-        settings.ios?.status === Notifications.IosAuthorizationStatus.NOT_DETERMINED
-      ) {
-        settings = await Notifications.requestPermissionsAsync({
-          android: {},
-          ios: {
-            allowAlert: true,
-            allowBadge: true,
-            allowSound: true,
-            allowDisplayInCarPlay: false,
-            allowCriticalAlerts: true,
-            provideAppNotificationSettings: false,
-            allowProvisional: false,
-            allowAnnouncements: false,
-          },
-        });
-      }
+export const registerPushNotifications = createAsyncThunk<
+  { token: ExpoPushToken | null; notificationPermissionsGranted: boolean },
+  void,
+  { state: { notification: NotificationSliceType } }
+>('notification/registerPushNotifications', async (arg, thunkApi) => {
+  if (Device.isDevice) {
+    // Get the user's current preference
+    let settings = await Notifications.getPermissionsAsync();
 
-      // The user allows notifications, return the push token
-      if (
-        settings.granted ||
-        settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL ||
-        settings.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED
-      ) {
-        if (Device.osName === 'Android') {
-          Notifications.setNotificationChannelAsync('default', {
-            name: 'default',
-            importance: Notifications.AndroidImportance.MAX,
-            vibrationPattern: [0, 250, 250, 250],
-            lightColor: globalColors.red,
-          });
-        }
-
-        return Notifications.getExpoPushTokenAsync().then(async (token) => {
-          const { uuid } = thunkApi.getState().notification;
-          if (uuid) {
-            // Store the push notification token in firebase
-            await setDoc(
-              doc(firebaseFirestore, 'devices', uuid),
-              {
-                expoPushToken: token.data || null,
-              },
-              { mergeFields: ['expoPushToken'] }
-            );
-          }
-          return { token, notificationPermissionsGranted: true };
-        });
-      } else {
-        return { token: null, notificationPermissionsGranted: false };
-      }
-    } else {
-      return thunkApi.rejectWithValue({ error: 'DEVICE_IS_EMULATOR' });
+    // If the user hasn't set a preference yet, ask them.
+    if (
+      settings.status === 'undetermined' ||
+      settings.ios?.status === Notifications.IosAuthorizationStatus.NOT_DETERMINED
+    ) {
+      settings = await Notifications.requestPermissionsAsync({
+        android: {},
+        ios: {
+          allowAlert: true,
+          allowBadge: true,
+          allowSound: true,
+          allowDisplayInCarPlay: false,
+          allowCriticalAlerts: true,
+          provideAppNotificationSettings: false,
+          allowProvisional: false,
+          allowAnnouncements: false,
+        },
+      });
     }
+
+    // The user allows notifications, return the push token
+    if (
+      settings.granted ||
+      settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL ||
+      settings.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED
+    ) {
+      if (Device.osName === 'Android') {
+        Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: globalColors.red,
+        });
+      }
+
+      return await Notifications.getExpoPushTokenAsync().then(async (token) => {
+        const { uuid } = thunkApi.getState().notification;
+        if (uuid) {
+          // Store the push notification token in firebase
+          await setDoc(
+            doc(firebaseFirestore, 'devices', uuid),
+            {
+              expoPushToken: token.data || null,
+            },
+            { mergeFields: ['expoPushToken'] }
+          );
+        }
+        return { token, notificationPermissionsGranted: true };
+      });
+    } else {
+      return { token: null, notificationPermissionsGranted: false };
+    }
+  } else {
+    return thunkApi.rejectWithValue({ error: 'DEVICE_IS_EMULATOR' });
   }
-);
+});
 
 export const refreshPastNotifications = createAsyncThunk(
   'notification/updateConfig',
@@ -130,7 +140,7 @@ export const notificationSlice = createSlice({
       })
       .addCase(registerPushNotifications.rejected, (state, action) => {
         if (action.error.message === 'Rejected') {
-          switch (action?.payload?.error) {
+          switch ((action?.payload as RegisterPushNotificationsErrors)?.error) {
             case 'DEVICE_IS_EMULATOR':
               showMessage('Emulators will not receive push notifications');
               break;
