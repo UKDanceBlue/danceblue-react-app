@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, SafeAreaView, ScrollView } from 'react-native';
 import { getDocs, collection } from 'firebase/firestore';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../common/CustomHooks';
 import Standings from '../../common/components/Standings';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { globalColors, globalStyles } from '../../theme';
@@ -10,7 +10,7 @@ import { globalColors, globalStyles } from '../../theme';
  * Wrapper for a Standings component
  */
 const ScoreBoardScreen = () => {
-  const userTeamId = useSelector((state) => state.auth.teamId);
+  const userTeamId = useAppSelector((state) => state.auth.teamId);
   const [standingData, setStandingData] = useState([]);
 
   useEffect(() => {

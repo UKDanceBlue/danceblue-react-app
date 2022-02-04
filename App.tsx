@@ -28,15 +28,15 @@ const splashLoginBackground = require('./assets/home/Dancing-min.jpg');
 // Promise.allSettled polyfill
 Promise.allSettled =
   Promise.allSettled ||
-  ((promises) =>
+  ((promises: any[]) =>
     Promise.all(
       promises.map((p) =>
         p
-          .then((value) => ({
+          .then((value: any) => ({
             status: 'fulfilled',
             value,
           }))
-          .catch((reason) => ({
+          .catch((reason: any) => ({
             status: 'rejected',
             reason,
           }))
@@ -123,7 +123,7 @@ const App = () => {
 
                 // Handle URL from expo push notifications
                 const response = await Notifications.getLastNotificationResponseAsync();
-                url = response?.notification.request.content.data.url;
+                url = response?.notification.request.content.data.url as string;
 
                 return url;
               },
@@ -136,7 +136,7 @@ const App = () => {
                 // Listen to expo push notifications
                 const expoSubscription = Notifications.addNotificationResponseReceivedListener(
                   (response) => {
-                    const { url } = response.notification.request.content.data;
+                    const url = response.notification.request.content.data.url as string;
 
                     // Any custom logic to see whether the URL needs to be handled
                     // ...

@@ -4,7 +4,7 @@ import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-elements';
 import { intervalToDuration } from 'date-fns';
 
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../common/CustomHooks';
 
 /**
  * A label for a unit of time
@@ -22,9 +22,9 @@ const TimeUnit = ({ value, unit }) => (
 );
 
 const CountdownView = () => {
-  const isConfigLoaded = useSelector((state) => state.appConfig.isConfigLoaded);
-  const countdownConfig = useSelector((state) => state.appConfig.countdown);
-  const title = useSelector((state) => state.appConfig.countdown.title);
+  const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
+  const countdownConfig = useAppSelector((state) => state.appConfig.countdown);
+  const title = useAppSelector((state) => state.appConfig.countdown.title);
   const [countdownDisplayDuration, setCountdownDisplayDuration] = useState({
     years: 0,
     months: 0,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../common/CustomHooks';
 import SponsorCarousel from './SponsorCarousel';
 import CountdownView from '../../common/components/CountdownView';
 import HeaderImage from './HeaderImage';
@@ -10,8 +10,8 @@ import HeaderImage from './HeaderImage';
  * @param {Object} props Properties of the component: navigation, firebase
  */
 const HomeScreen = () => {
-  const countdown = useSelector((state) => state.appConfig.countdown);
-  const isConfigLoaded = useSelector((state) => state.appConfig.isConfigLoaded);
+  const countdown = useAppSelector((state) => state.appConfig.countdown);
+  const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>

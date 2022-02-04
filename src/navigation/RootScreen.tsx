@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useSelector } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
 import SplashLogin from '../screens/Modals/SplashLogin';
@@ -9,16 +8,17 @@ import MainStackRoot from './MainStackRoot';
 import GenericWebviewScreen from '../screens/GenericWebviewScreen';
 import { globalColors } from '../theme';
 import { firebaseFirestore } from '../common/FirebaseApp';
+import { useAppSelector } from '../common/CustomHooks';
 
 const RootStack = createStackNavigator();
 
 const RootScreen = () => {
-  const isAuthLoaded = useSelector((state) => state.auth.isAuthLoaded);
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const userAttributes = useSelector((state) => state.auth.attributes);
-  const userTeamId = useSelector((state) => state.auth.teamId);
-  const userId = useSelector((state) => state.auth.uid);
-  const uuid = useSelector((state) => state.notification.uuid);
+  const isAuthLoaded = useAppSelector((state) => state.auth.isAuthLoaded);
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const userAttributes = useAppSelector((state) => state.auth.attributes);
+  const userTeamId = useAppSelector((state) => state.auth.teamId);
+  const userId = useAppSelector((state) => state.auth.uid);
+  const uuid = useAppSelector((state) => state.notification.uuid);
   const navigation = useNavigation();
 
   useEffect(() => {
