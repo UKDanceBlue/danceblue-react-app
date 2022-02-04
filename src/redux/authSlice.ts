@@ -1,11 +1,48 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getAdditionalUserInfo, signInAnonymously, signOut, updateProfile } from 'firebase/auth';
-import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
+import {
+  getAdditionalUserInfo,
+  signInAnonymously,
+  signOut,
+  updateProfile,
+  User,
+  UserCredential,
+} from 'firebase/auth';
+import {
+  collection,
+  doc,
+  DocumentReference,
+  DocumentSnapshot,
+  getDoc,
+  setDoc,
+} from 'firebase/firestore';
 import { showMessage } from '../common/AlertUtils';
 import { firebaseAuth, firebaseFirestore } from '../common/FirebaseApp';
+import {
+  FirestoreTeam,
+  FirestoreTeamFundraising,
+  FirestoreTeamIndividualSpiritPoints,
+  FirestoreUser,
+} from '../types/FirebaseTypes';
 
-const initialState = {
+type AuthSliceType = {
+  isAuthLoaded: boolean;
+  isLoggedIn: boolean;
+  isAnonymous: boolean;
+  uid: string | null;
+  attributes: { [key: string]: string };
+  pastNotifications: string[];
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  linkblue: string | null;
+  teamId: string | null;
+  team: FirestoreTeam | null;
+  teamIndividualSpiritPoints: FirestoreTeamIndividualSpiritPoints | null;
+  teamFundraisingTotal: FirestoreTeamFundraising | null;
+};
+
+const initialState: AuthSliceType = {
   isAuthLoaded: false,
   isLoggedIn: false,
   isAnonymous: false,
@@ -24,68 +61,74 @@ const initialState = {
 
 // !!!START OF ACTION DEFINITIONS!!!
 
-export const updateUserData = createAsyncThunk('auth/updateUserData', async (newUser, thunkApi) => {
-  const { userSnapshot, isAnonymous } = newUser;
+export const updateUserData = createAsyncThunk(
+  'auth/updateUserData',
+  async (newUser: { userSnapshot: DocumentSnapshot; isAnonymous: boolean }, thunkApi) => {
+    const { userSnapshot, isAnonymous } = newUser;
 
-  const userInfo = {
-    uid: null,
-    isLoggedIn: !!userSnapshot,
-    isAnonymous,
-    attributes: {},
-    pastNotifications: [],
-    firstName: null,
-    lastName: null,
-    email: null,
-    linkblue: null,
-    teamId: null,
-    team: null,
-    teamIndividualSpiritPoints: null,
-    teamFundraisingTotal: null,
-  };
+    const userInfo: Partial<AuthSliceType> = {
+      uid: null,
+      isLoggedIn: !!userSnapshot,
+      isAnonymous,
+      attributes: {},
+      pastNotifications: [],
+      firstName: null,
+      lastName: null,
+      email: null,
+      linkblue: null,
+      teamId: null,
+      team: null,
+      teamIndividualSpiritPoints: null,
+      teamFundraisingTotal: null,
+    };
 
-  const firebaseUserData = userSnapshot?.data();
-  // If the firebaseUserData is falsy, skip processing the data and just pass along the base userInfo object
-  if (firebaseUserData) {
-    // Don't add non-serializable references
-    delete firebaseUserData.team;
-    delete firebaseUserData.pastNotifications;
-    // !!! copy all fields in firebase to userInfo !!!
-    userInfo.uid = userSnapshot.id;
-    Object.assign(userInfo, firebaseUserData);
+    const firebaseUserData = userSnapshot?.data() as FirestoreUser;
+    // If the firebaseUserData is falsy, skip processing the data and just pass along the base userInfo object
+    if (firebaseUserData) {
+      // Don't add non-serializable reference to teams
+      delete firebaseUserData.team;
 
-    if (Array.isArray(userSnapshot.get('pastNotifications'))) {
-      userInfo.pastNotifications = userSnapshot
-        .get('pastNotifications')
-        .map((reference) => reference.path);
+      // !!! copy all fields in firebase to userInfo !!!
+      userInfo.uid = userSnapshot.id;
+      Object.assign(userInfo, firebaseUserData);
+
+      // Map the non-serializable array of references to past notifications to an array of path strings
+      if (Array.isArray(userInfo.pastNotifications)) {
+        userInfo.pastNotifications = userSnapshot
+          .get('pastNotifications')
+          .map((reference: DocumentReference) => reference.path);
+      }
+
+      // Get information about the user's team (if any)
+      if (userSnapshot.get('team')) {
+        userInfo.teamId = userSnapshot.get('team').id;
+
+        // Go ahead and set up some collection references
+        const teamConfidentialRef = collection(
+          firebaseFirestore,
+          `${userSnapshot.get('team').path}/confidential`
+        );
+
+        const teamPromiseResponses = await Promise.allSettled([
+          getDoc(userSnapshot.get('team')),
+          getDoc(doc(teamConfidentialRef, 'individualSpiritPoints')),
+          getDoc(doc(teamConfidentialRef, 'fundraising')),
+        ]);
+
+        if (teamPromiseResponses[0].status === 'fulfilled')
+          userInfo.team = teamPromiseResponses[0].value.data() as FirestoreTeam;
+        if (teamPromiseResponses[1].status === 'fulfilled')
+          userInfo.teamIndividualSpiritPoints =
+            teamPromiseResponses[1].value.data() as FirestoreTeamIndividualSpiritPoints;
+        if (teamPromiseResponses[2].status === 'fulfilled')
+          userInfo.teamFundraisingTotal =
+            teamPromiseResponses[2].value.data() as FirestoreTeamFundraising;
+      }
     }
 
-    // Get information about the user's team (if any)
-    if (userSnapshot.get('team')) {
-      userInfo.teamId = userSnapshot.get('team').id;
-
-      // Go ahead and set up some collection references
-      const teamConfidentialRef = collection(
-        firebaseFirestore,
-        `${userSnapshot.get('team').path}/confidential`
-      );
-
-      const teamPromiseResponses = await Promise.allSettled([
-        getDoc(userSnapshot.get('team')),
-        getDoc(doc(teamConfidentialRef, 'individualSpiritPoints')),
-        getDoc(doc(teamConfidentialRef, 'fundraising')),
-      ]);
-
-      if (teamPromiseResponses[0].status === 'fulfilled')
-        userInfo.team = teamPromiseResponses[0].value.data();
-      if (teamPromiseResponses[1].status === 'fulfilled')
-        userInfo.teamIndividualSpiritPoints = teamPromiseResponses[1].value.data();
-      if (teamPromiseResponses[2].status === 'fulfilled')
-        userInfo.teamFundraisingTotal = teamPromiseResponses[2].value.data();
-    }
+    return thunkApi.fulfillWithValue(userInfo);
   }
-
-  return thunkApi.fulfillWithValue(userInfo);
-});
+);
 
 export const logout = createAsyncThunk('auth/logout', async (arg, thunkApi) =>
   signOut(firebaseAuth).then(async () => {
@@ -96,7 +139,7 @@ export const logout = createAsyncThunk('auth/logout', async (arg, thunkApi) =>
 
 export const syncAuthStateWithUser = createAsyncThunk(
   'auth/syncAuthStateWithUser',
-  async (user, thunkApi) => {
+  async (user: User, thunkApi) => {
     let userSnapshot = null;
     if (user?.uid) {
       // Get the user's firebase doc
@@ -118,7 +161,7 @@ export const loginAnon = createAsyncThunk('auth/loginAnon', async (arg, thunkApi
 
 export const loginSaml = createAsyncThunk(
   'auth/loginSaml',
-  async (samlUserCredential, thunkApi) => {
+  async (samlUserCredential: UserCredential, thunkApi) => {
     // 1. Do some verification
     // Make sure firebase sent a profile option
     const additionalInfo = getAdditionalUserInfo(samlUserCredential);
@@ -148,14 +191,17 @@ export const loginSaml = createAsyncThunk(
       { merge: true }
     );
     updateProfile(samlUserCredential.user, {
-      displayName: additionalInfo.profile['display-name'] || null,
+      displayName:
+        typeof additionalInfo.profile['display-name'] === 'string'
+          ? additionalInfo.profile['display-name']
+          : null,
     });
 
     // 4. Update user data
     const userSnapshot = await getDoc(doc(firebaseFirestore, 'users', samlUserCredential.user.uid));
     thunkApi.dispatch(updateUserData({ isAnonymous: false, userSnapshot }));
 
-    return thunkApi.fulfillWithValue();
+    return;
   }
 );
 
@@ -181,18 +227,18 @@ export const authSlice = createSlice({
       // User data update
       .addCase(updateUserData.fulfilled, (state, action) => {
         state.isAuthLoaded = true;
-        state.uid = action.payload.uid;
-        state.isAnonymous = action.payload.isAnonymous;
-        state.isLoggedIn = action.payload.isLoggedIn;
-        state.attributes = action.payload.attributes;
-        state.teamId = action.payload.teamId;
-        state.team = action.payload.team;
-        state.teamIndividualSpiritPoints = action.payload.teamIndividualSpiritPoints;
-        state.teamFundraisingTotal = action.payload.teamFundraisingTotal;
-        state.firstName = action.payload.firstName;
-        state.lastName = action.payload.lastName;
-        state.email = action.payload.email;
-        state.linkblue = action.payload.linkblue;
+        state.uid = action.payload.payload.uid;
+        state.isAnonymous = action.payload.payload.isAnonymous;
+        state.isLoggedIn = action.payload.payload.isLoggedIn;
+        state.attributes = action.payload.payload.attributes;
+        state.teamId = action.payload.payload.teamId;
+        state.team = action.payload.payload.team;
+        state.teamIndividualSpiritPoints = action.payload.payload.teamIndividualSpiritPoints;
+        state.teamFundraisingTotal = action.payload.payload.teamFundraisingTotal;
+        state.firstName = action.payload.payload.firstName;
+        state.lastName = action.payload.payload.lastName;
+        state.email = action.payload.payload.email;
+        state.linkblue = action.payload.payload.linkblue;
       })
       .addCase(updateUserData.rejected, (state, action) => {
         showMessage(action.error.message, action.error.code, null, true, action.error.stack);
@@ -210,7 +256,7 @@ export const authSlice = createSlice({
       })
       .addCase(loginSaml.rejected, (state, action) => {
         if (action.error.message === 'Rejected') {
-          switch (action?.payload?.error) {
+          switch ((action?.payload as { error: string } | null | undefined)?.error) {
             case 'UNEXPECTED_AUTH_PROVIDER':
               showMessage(
                 'DanceBlue Mobile received an unrecognized response from the login server. Did you log into a website other than UK?',

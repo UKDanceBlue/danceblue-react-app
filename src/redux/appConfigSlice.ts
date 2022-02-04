@@ -3,17 +3,31 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { doc, getDoc } from 'firebase/firestore';
 import { showMessage } from '../common/AlertUtils';
 import { firebaseFirestore } from '../common/FirebaseApp';
+import { FirestoreMobileAppConfig } from '../types/FirebaseTypes';
 
-const initialState = {
+type AppConfigSliceType = {
+  isConfigLoaded: boolean;
+  countdown: { millis: number; title: string };
+  configuredTabs: string[];
+  scoreboard: {
+    pointType: 'spirit' | 'morale';
+    showIcons: boolean;
+    showTrophies: boolean;
+  };
+};
+
+const initialState: AppConfigSliceType = {
   isConfigLoaded: false,
   scoreboard: null,
   countdown: null,
   configuredTabs: [],
 };
 
-export const updateConfig = createAsyncThunk('appConfig/updateConfig', async () =>
-  getDoc(doc(firebaseFirestore, 'configs', 'mobile-app')).then((snapshot) => {
-    const snapshotData = snapshot.data();
+export const updateConfig = createAsyncThunk(
+  'appConfig/updateConfig',
+  async (): Promise<Partial<AppConfigSliceType>> => {
+    const snapshot = await getDoc(doc(firebaseFirestore, 'configs', 'mobile-app'));
+    const snapshotData = snapshot.data() as FirestoreMobileAppConfig;
     return {
       countdown: snapshotData.countdown
         ? {
@@ -24,7 +38,7 @@ export const updateConfig = createAsyncThunk('appConfig/updateConfig', async () 
       scoreboard: snapshotData.scoreboard,
       configuredTabs: snapshotData.currentTabs,
     };
-  })
+  }
 );
 
 // Redux Toolkit allows us to write "mutating" logic in reducers. It

@@ -2,12 +2,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
-import * as Random from 'expo-random';
 import * as Device from 'expo-device';
 import { doc, setDoc } from 'firebase/firestore';
 import { showMessage } from '../common/AlertUtils';
 import { firebaseFirestore } from '../common/FirebaseApp';
 import { globalColors } from '../theme';
+import generateUuid from '../common/GenerateUuid';
 
 const uuidStoreKey = __DEV__ ? 'danceblue.device-uuid.dev' : 'danceblue.device-uuid';
 
