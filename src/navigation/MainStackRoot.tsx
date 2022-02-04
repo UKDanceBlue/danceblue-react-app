@@ -11,8 +11,9 @@ import ProfileScreen from '../screens/ProfileScreen';
 import TabBar from './TabBar';
 import HeaderIcons from './HeaderIcons';
 import HourScreen from '../screens/HoursScreen/HourScreen';
+import { MainStackParamList } from '../types/NavigationTypes';
 
-const MainStack = createStackNavigator();
+const MainStack = createStackNavigator<MainStackParamList>();
 
 const MainStackRoot = () => (
   <MainStack.Navigator

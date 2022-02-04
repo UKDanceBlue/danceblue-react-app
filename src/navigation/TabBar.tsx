@@ -12,8 +12,9 @@ import GenericWebviewScreen from '../screens/GenericWebviewScreen';
 import TeamScreen from '../screens/TeamScreen';
 import HoursScreen from '../screens/HoursScreen';
 import HeaderIcons from './HeaderIcons';
+import { TabNavigatorParamList } from '../types/NavigationTypes';
 
-const Tabs = createBottomTabNavigator();
+const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
 
 const possibleTabs = {
   Events: <Tabs.Screen key="Events" name="Events" component={EventScreen} />,

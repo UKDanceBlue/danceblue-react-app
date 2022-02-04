@@ -9,8 +9,9 @@ import GenericWebviewScreen from '../screens/GenericWebviewScreen';
 import { globalColors } from '../theme';
 import { firebaseFirestore } from '../common/FirebaseApp';
 import { useAppSelector } from '../common/CustomHooks';
+import { RootStackParamList } from '../types/NavigationTypes';
 
-const RootStack = createStackNavigator();
+const RootStack = createStackNavigator<RootStackParamList>();
 
 const RootScreen = () => {
   const isAuthLoaded = useAppSelector((state) => state.auth.isAuthLoaded);
