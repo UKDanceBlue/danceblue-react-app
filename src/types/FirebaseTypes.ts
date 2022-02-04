@@ -1,6 +1,6 @@
 import { DocumentReference, Timestamp } from 'firebase/firestore';
 
-export type FirestoreUser = {
+export interface FirestoreUser {
   attributes?: { [key: string]: string };
   email: string | null;
   firstName: string | null;
@@ -8,54 +8,54 @@ export type FirestoreUser = {
   linkblue?: string | null;
   team?: DocumentReference | null;
   pastNotifications?: DocumentReference[] | null;
-};
+}
 
-export type FirestoreTeam = {
+export interface FirestoreTeam {
   members?: { [key: string]: string };
   name: string;
   spiritSpreadsheetId?: string;
   networkForGoodId?: string;
   totalSpiritPoints?: number;
-};
+}
 
-export type FirestoreTeamFundraising = {
+export interface FirestoreTeamFundraising {
   total?: number;
-};
+}
 
-export type FirestoreTeamIndividualSpiritPoints = {
+export interface FirestoreTeamIndividualSpiritPoints {
   [key: string]: number;
-};
+}
 
-export type FirestoreSponsor = {
+export interface FirestoreSponsor {
   link?: string;
   logo?: string;
   name?: string;
-};
+}
 
-export type FirestoreNotification = {
+export interface FirestoreNotification {
   body: string;
   data?: { [key: string]: any };
   sendTime: Timestamp;
   sound: string;
   title: string;
-};
+}
 
-export type FirestoreEvent = {
+export interface FirestoreEvent {
   title: string;
   description: string;
   image?: string;
   address?: string;
   startTime?: Timestamp;
   endTime?: Timestamp;
-};
+}
 
-export type FirestoreDevice = {
+export interface FirestoreDevice {
   audiences?: string[] | null;
   expoPushToken?: string | null;
   latestUserId?: string | null;
-};
+}
 
-export type FirestoreMobileAppConfig = {
+export interface FirestoreMobileAppConfig {
   countdown: { time: Timestamp; title: string };
   currentTabs: string[];
   scoreboard: {
@@ -63,4 +63,4 @@ export type FirestoreMobileAppConfig = {
     showIcons: boolean;
     showTrophies: boolean;
   };
-};
+}
