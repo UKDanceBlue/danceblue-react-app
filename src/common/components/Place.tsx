@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 // Import third-party dependencies
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -13,9 +13,19 @@ import { globalColors, globalStyles, globalTextStyles } from '../../theme';
  * @param {string} name The target's name
  * @param {number} points Earned points
  */
-const Place = ({ isHighlighted, rank, name, points = 0 }) => {
+const Place = ({
+  isHighlighted,
+  rank,
+  name,
+  points = 0,
+}: {
+  isHighlighted: boolean;
+  rank: number;
+  name: string;
+  points: number;
+}) => {
   // The 'top3Icon function adds an award icon to the top 3 targets
-  const top3Icon = (rankForIcon) => {
+  const top3Icon = (rankForIcon: number): ReactElement | null => {
     switch (rankForIcon) {
       case 1:
         return <FontAwesome5 name="award" size={30} color="gold" />;
