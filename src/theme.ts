@@ -27,7 +27,7 @@ export const rnElementsTheme = {
     greyOutline: globalColors.darkNavy,
     searchBg: '#303337',
     success: globalColors.green,
-    error: globalColors.error,
+    error: globalColors.red,
     warning: '#ADFF2F',
     divider: globalColors.darkNavy,
   },
