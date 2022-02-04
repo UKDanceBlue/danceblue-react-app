@@ -4,16 +4,20 @@ import { Text } from 'react-native-elements';
 import { collection, getDocs } from 'firebase/firestore';
 import SponsorCard from '../../common/components/ImageCard';
 import { firebaseFirestore } from '../../common/FirebaseApp';
+import { FirestoreSponsor } from '../../types/FirebaseTypes';
+interface SponsorType extends FirestoreSponsor {
+  id: string;
+}
 
 /**
  * A horizontally scrolling carousel of SponsorCards
  */
 const SponsorCarousel = () => {
-  const [sponsors, setSponsors] = useState([]);
+  const [sponsors, setSponsors] = useState<SponsorType[]>([]);
 
   useEffect(() => {
     async function getSnapshot() {
-      const dbSponsors = [];
+      const dbSponsors: SponsorType[] = [];
       const snapshot = await getDocs(collection(firebaseFirestore, 'sponsors'));
       snapshot.forEach((document) => {
         dbSponsors.push({ ...document.data(), id: document.id });
@@ -29,7 +33,7 @@ const SponsorCarousel = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView ScrollEventThrottle={16}>
+      <ScrollView scrollEventThrottle={16}>
         <View style={styles.sponsorView}>
           <View style={styles.sponsorTitleView}>
             <Text style={styles.sponsorTitle}> SPONSORS </Text>
