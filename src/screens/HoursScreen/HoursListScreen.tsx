@@ -91,7 +91,15 @@ const hourScreenOptionsList = [
   {},
 ];
 
-const HourRow = ({ hourNumber, marathonHour, currentMinute }) => {
+const HourRow = ({
+  hourNumber,
+  marathonHour,
+  currentMinute,
+}: {
+  hourNumber: number;
+  marathonHour: number;
+  currentMinute: number;
+}) => {
   const navigation = useNavigation();
   const hourName = hourNames[hourNumber];
   const hourScreenOptions = hourScreenOptionsList[hourNumber];
