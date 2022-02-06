@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ActivityIndicator } from 'react-native';
 import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
@@ -20,7 +19,6 @@ const RootScreen = () => {
   const userTeamId = useAppSelector((state) => state.auth.teamId);
   const userId = useAppSelector((state) => state.auth.uid);
   const uuid = useAppSelector((state) => state.notification.uuid);
-  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
@@ -73,22 +71,6 @@ const RootScreen = () => {
     })();
   }, [userAttributes, isAuthLoaded, userTeamId, userId, uuid]);
 
-  useEffect(() => {
-    if (isAuthLoaded) {
-      if (isLoggedIn) {
-        if (
-          navigation.getState() &&
-          navigation.getState().routes[navigation.getState().index].name === 'SplashLogin' &&
-          navigation.canGoBack()
-        ) {
-          navigation.goBack();
-        }
-      } else {
-        navigation.navigate('SplashLogin');
-      }
-    }
-  }, [navigation, isAuthLoaded, isLoggedIn]);
-
   return (
     <>
       {!isAuthLoaded && (
@@ -104,16 +86,20 @@ const RootScreen = () => {
       )}
       {isAuthLoaded && (
         <RootStack.Navigator>
-          <RootStack.Screen
-            name="Main"
-            component={MainStackRoot}
-            options={{ headerShown: false }}
-          />
-          <RootStack.Screen
-            name="SplashLogin"
-            component={SplashLogin}
-            options={{ headerShown: false, presentation: 'modal', gestureEnabled: false }}
-          />
+          {isLoggedIn && (
+            <RootStack.Screen
+              name="Main"
+              component={MainStackRoot}
+              options={{ headerShown: false }}
+            />
+          )}
+          {!isLoggedIn && (
+            <RootStack.Screen
+              name="SplashLogin"
+              component={SplashLogin}
+              options={{ headerShown: false, presentation: 'modal', gestureEnabled: false }}
+            />
+          )}
           <RootStack.Screen
             name="DefaultRoute"
             component={GenericWebviewScreen}
