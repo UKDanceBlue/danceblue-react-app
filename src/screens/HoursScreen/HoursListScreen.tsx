@@ -7,8 +7,10 @@ import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import { useCurrentDate } from '../../common/CustomHooks';
 import { globalColors, globalTextStyles } from '../../theme';
+import { HourScreenOptionsType } from '../../types/HourScreenTypes';
+import { TabScreenProps } from '../../types/NavigationTypes';
 
-const hourNames = [
+const hourNames: string[] = [
   'One',
   'Two',
   'Three',
@@ -35,7 +37,7 @@ const hourNames = [
   'Twenty-four',
 ];
 
-const hourListKeys = [
+const hourListKeys: { key: number }[] = [
   { key: 0 },
   { key: 1 },
   { key: 2 },
@@ -62,7 +64,7 @@ const hourListKeys = [
   { key: 23 },
 ];
 
-const hourScreenOptionsList = [
+const hourScreenOptionsList: HourScreenOptionsType[] = [
   {
     hourInstructions: ['Start a game', 'Play a game', 'Finish the game'],
   },
@@ -91,8 +93,16 @@ const hourScreenOptionsList = [
   {},
 ];
 
-const HourRow = ({ hourNumber, marathonHour, currentMinute }) => {
-  const navigation = useNavigation();
+const HourRow = ({
+  hourNumber,
+  marathonHour,
+  currentMinute,
+}: {
+  hourNumber: number;
+  marathonHour: number;
+  currentMinute: number;
+}) => {
+  const navigation = useNavigation<TabScreenProps<'HoursScreen'>['navigation']>();
   const hourName = hourNames[hourNumber];
   const hourScreenOptions = hourScreenOptionsList[hourNumber];
   const [displayedNamePart, setDisplayedNamePart] = useState('');
@@ -134,7 +144,7 @@ const HourRow = ({ hourNumber, marathonHour, currentMinute }) => {
   return (
     <TouchableOpacity
       onPress={() =>
-        navigation?.navigate('Hour Details', { hourName, hourNumber, ...hourScreenOptions })
+        navigation?.navigate('Hour Details', { hourName, hourNumber, hourScreenOptions })
       }
       disabled={!clickable}
     >

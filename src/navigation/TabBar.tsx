@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 // Import first-party dependencies
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../common/CustomHooks';
 import ScoreboardScreen from '../screens/ScoreBoardScreen';
 import HomeScreen from '../screens/HomeScreen';
 import EventScreen from '../screens/EventScreen';
@@ -12,8 +12,9 @@ import GenericWebviewScreen from '../screens/GenericWebviewScreen';
 import TeamScreen from '../screens/TeamScreen';
 import HoursScreen from '../screens/HoursScreen';
 import HeaderIcons from './HeaderIcons';
+import { TabNavigatorParamList } from '../types/NavigationTypes';
 
-const Tabs = createBottomTabNavigator();
+const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
 
 const possibleTabs = {
   Events: <Tabs.Screen key="Events" name="Events" component={EventScreen} />,
@@ -43,8 +44,8 @@ const possibleTabs = {
 };
 
 const TabBar = () => {
-  const isConfigLoaded = useSelector((state) => state.appConfig.isConfigLoaded);
-  const configuredTabs = useSelector((state) => state.appConfig.configuredTabs);
+  const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
+  const configuredTabs = useAppSelector((state) => state.appConfig.configuredTabs);
 
   const [currentTabs, setCurrentTabs] = useState([]);
 

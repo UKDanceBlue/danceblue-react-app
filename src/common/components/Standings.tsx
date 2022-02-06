@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-elements';
 import Place from './Place';
 import { globalColors, globalStyles, globalTextStyles } from '../../theme';
+import { StandingType } from '../../types/StandingType';
 
 /**
  * Standings implementation for the a generic leaderboard
@@ -12,11 +13,23 @@ import { globalColors, globalStyles, globalTextStyles } from '../../theme';
  * @param {bool} startExpanded Are the standings expanded by default (default: false)
  * @param {number} collapsedRows How many rows should be shown when collapsed (default: 3)
  */
-const Standings = ({ titleText, standingData, expandable, startExpanded, collapsedRows = 3 }) => {
-  const [rows, setRows] = useState([]);
-  const [expanded, setExpanded] = useState(!!startExpanded);
-  const [rowsToShow, setRowsToShow] = useState(collapsedRows);
-  const [isLoading, setIsLoading] = useState(true);
+const Standings = ({
+  titleText,
+  standingData,
+  expandable,
+  startExpanded,
+  collapsedRows = 3,
+}: {
+  titleText: string;
+  standingData: StandingType[];
+  expandable?: boolean;
+  startExpanded?: boolean;
+  collapsedRows?: number;
+}) => {
+  const [rows, setRows] = useState<ReactElement[]>([]);
+  const [expanded, setExpanded] = useState<boolean>(!!startExpanded);
+  const [rowsToShow, setRowsToShow] = useState<number>(collapsedRows);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(
     () => setRowsToShow(expanded ? standingData.length : collapsedRows),

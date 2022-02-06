@@ -9,6 +9,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { globalColors } from '../../theme';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { useFirebaseStorageUrl } from '../../common/CustomHooks';
+import { useRoute } from '@react-navigation/native';
+import { MainStackScreenProps } from '../../types/NavigationTypes';
 
 // const danceBlueCalendarConfig = {
 //   title: 'DanceBlue',
@@ -27,7 +29,7 @@ import { useFirebaseStorageUrl } from '../../common/CustomHooks';
  * A component for showing a particular calendar event
  * @see {@link https://docs.expo.dev/versions/latest/sdk/calendar/ Expo's Calendar API}
  */
-const EventView = ({ route: { params } }) => {
+const EventView = () => {
   // const [isOnCalendar, setIsOnCalendar] = useState(false);
   // const [calendarID, setCalendarID] = useState(undefined);
   // const [eventCalendarID, setEventCalendarID] = useState(null);
@@ -38,6 +40,7 @@ const EventView = ({ route: { params } }) => {
   const [imageFirebaseRef, setImageFirebaseRef] = useState('');
   const [imageRef, imageRefError] = useFirebaseStorageUrl(imageFirebaseRef);
   const [description, setDescription] = useState('');
+  const route = useRoute<MainStackScreenProps<'Event'>['route']>();
 
   /**
    * Check if the DanceBlue calendar exist's on the user's device
@@ -57,7 +60,7 @@ const EventView = ({ route: { params } }) => {
 
   useEffect(() => {
     let shouldUpdateState = true;
-    getDoc(doc(firebaseFirestore, 'events', params.id)).then((document) => {
+    getDoc(doc(firebaseFirestore, 'events', route.params.id)).then((document) => {
       if (shouldUpdateState) {
         // setTitle(document.data().title);
         setStartTime(document.data().startTime.toDate());
@@ -70,7 +73,7 @@ const EventView = ({ route: { params } }) => {
     return () => {
       shouldUpdateState = false;
     };
-  }, [params.id]);
+  }, [route.params.id]);
 
   /**
    * Check if the event exists on the DanceBlue calendar

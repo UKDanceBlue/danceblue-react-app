@@ -7,9 +7,19 @@ import { useFirebaseStorageUrl } from '../../common/CustomHooks';
 
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
- * @param {Object} props Properties of the component: imageLink, startDate, endDate, title, firebase
+ * @param props Properties of the component: imageLink, startDate, endDate, title, firebase
  */
-const EventRow = ({ imageLink, startDate, endDate, title }) => {
+const EventRow = ({
+  imageLink,
+  startDate,
+  endDate,
+  title,
+}: {
+  imageLink: string;
+  startDate: Date;
+  endDate: Date;
+  title: string;
+}) => {
   const [imageRef, imageRefError] = useFirebaseStorageUrl(imageLink);
 
   /**

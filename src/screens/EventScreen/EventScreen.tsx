@@ -3,8 +3,14 @@ import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from 're
 import { collection, getDocs, where, query } from 'firebase/firestore';
 import EventRow from './EventRow';
 import { firebaseFirestore } from '../../common/FirebaseApp';
+import { FirestoreEvent } from '../../types/FirebaseTypes';
+import { useNavigation } from '@react-navigation/native';
+import { TabScreenProps } from '../../types/NavigationTypes';
 
 const now = new Date();
+interface EventType extends FirestoreEvent {
+  id: string;
+}
 
 /**
  * Component for "Events" screen in main navigation
@@ -15,27 +21,36 @@ const now = new Date();
  *  2. Add inline comments
  *  3. Make it a function component if possible
  */
-const EventScreen = ({ navigation: { navigate } }) => {
-  const [events, setEvents] = useState([]);
-  const [today, setToday] = useState([]);
-  const [upcoming, setUpcoming] = useState([]);
+const EventScreen = () => {
+  const [events, setEvents] = useState<EventType[]>([]);
+  const [today, setToday] = useState<EventType[]>([]);
+  const [upcoming, setUpcoming] = useState<EventType[]>([]);
+  const navigation = useNavigation<TabScreenProps<'Events'>['navigation']>();
 
   useEffect(() => {
-    let shouldUpdateState = true;
-    const firestoreEvents = [];
+    let componentUnmounted = false;
+    const firestoreEvents: EventType[] = [];
     getDocs(query(collection(firebaseFirestore, 'events'), where('endTime', '>', now))).then(
       (snapshot) => {
         snapshot.forEach((document) =>
-          firestoreEvents.push({ id: document.id, ...document.data() })
+          firestoreEvents.push({
+            id: document.id,
+            title: document.get('title'),
+            description: document.get('description'),
+            image: document.get('image'),
+            address: document.get('address'),
+            startTime: document.get('startTime'),
+            endTime: document.get('endTime'),
+          })
         );
 
-        if (shouldUpdateState) {
+        if (!componentUnmounted) {
           setEvents(firestoreEvents);
         }
       }
     );
     return () => {
-      shouldUpdateState = false;
+      componentUnmounted = true;
     };
   }, []);
 
@@ -43,8 +58,8 @@ const EventScreen = ({ navigation: { navigate } }) => {
    * Splits *events* into *today* and *upcoming* based on the events' start day
    */
   useEffect(() => {
-    const todayFromEvents = [];
-    const upcomingFromEvents = [];
+    const todayFromEvents: EventType[] = [];
+    const upcomingFromEvents: EventType[] = [];
     events.forEach((event) => {
       const startTime = event.startTime.toDate();
       if (startTime <= now) todayFromEvents.push(event);
@@ -65,7 +80,7 @@ const EventScreen = ({ navigation: { navigate } }) => {
         {today.map((row) => (
           <TouchableOpacity
             style={styles.eventRow}
-            onPress={() => navigate('Event', { id: row.id, name: row.title })}
+            onPress={() => navigation.navigate('Event', { id: row.id, name: row.title })}
             key={row.id}
           >
             <EventRow
@@ -75,7 +90,6 @@ const EventScreen = ({ navigation: { navigate } }) => {
               title={row.title}
               startDate={row.startTime.toDate()}
               endDate={row.endTime.toDate()}
-              text={row.text}
               showIfToday
               imageLink={row.image}
             />
@@ -87,7 +101,7 @@ const EventScreen = ({ navigation: { navigate } }) => {
           upcoming.map((row) => (
             <TouchableOpacity
               style={styles.eventRow}
-              onPress={() => navigate('Event', { id: row.id, name: row.title })}
+              onPress={() => navigation.navigate('Event', { id: row.id, name: row.title })}
               key={row.id}
             >
               <EventRow
@@ -97,7 +111,6 @@ const EventScreen = ({ navigation: { navigate } }) => {
                 title={row.title}
                 startDate={row.startTime.toDate()}
                 endDate={row.endTime.toDate()}
-                text={row.text}
                 showIfToday
                 imageLink={row.image}
               />

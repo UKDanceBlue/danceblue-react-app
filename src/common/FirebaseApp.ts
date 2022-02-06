@@ -1,12 +1,12 @@
 import { initializeAuth } from 'firebase/auth';
-import { initializeApp } from 'firebase/app';
+import { FirebaseOptions, initializeApp } from 'firebase/app';
 import { getReactNativePersistence } from 'firebase/auth/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 // Initialize firebase, called when Firebase imports this file
-export const firebaseConfig = {
+export const firebaseConfig: FirebaseOptions = {
   apiKey: 'AIzaSyDIOW4mnUoM568wgxQP9MOtP6-vLZZruy8',
   authDomain: 'react-danceblue.firebaseapp.com',
   databaseURL: 'https://react-danceblue.firebaseio.com',

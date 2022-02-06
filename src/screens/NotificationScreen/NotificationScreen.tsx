@@ -6,7 +6,7 @@ import * as SecureStore from 'expo-secure-store';
 import * as Device from 'expo-device';
 import * as Linking from 'expo-linking';
 import { doc, getDoc } from 'firebase/firestore';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../common/CustomHooks';
 import { globalStyles, globalTextStyles } from '../../theme';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { showMessage } from '../../common/AlertUtils';
@@ -21,7 +21,7 @@ const notificationsCache = {};
  * Component for "Profile" screen in main navigation
  */
 const NotificationScreen = () => {
-  const notificationPermissionsGranted = useSelector(
+  const notificationPermissionsGranted = useAppSelector(
     (state) => state.notification.notificationPermissionsGranted
   );
   const [notifications, setNotifications] = useState([]);

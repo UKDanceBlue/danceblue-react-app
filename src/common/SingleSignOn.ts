@@ -1,6 +1,12 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import { SAMLAuthProvider, linkWithCredential, signInWithCredential, signOut } from 'firebase/auth';
+import {
+  SAMLAuthProvider,
+  linkWithCredential,
+  signInWithCredential,
+  signOut,
+  UserCredential,
+} from 'firebase/auth';
 import { showMessage } from './AlertUtils';
 import { firebaseAuth } from './FirebaseApp';
 import { loginSaml } from '../redux/authSlice';
@@ -8,6 +14,8 @@ import store from '../redux/store';
 
 let browserOpen = false;
 export default class SingleSignOn {
+  backendUrl: string;
+  redirectData: Linking.ParsedURL;
   constructor() {
     this.backendUrl = 'https://app.danceblue.org/saml-relay.html';
   }
@@ -20,7 +28,7 @@ export default class SingleSignOn {
    * @param {String} operation The authentication operation to be performed **MUST BE HANDLED BY THE SERVER**
    * @returns {UserCredential} The signed in UserCredential or undefined if the operation fails or is cancelled
    */
-  async authenticate(operation) {
+  async authenticate(operation: string): Promise<UserCredential> {
     if (browserOpen) {
       return;
     }
@@ -28,7 +36,8 @@ export default class SingleSignOn {
       browserOpen = true;
       // Open a browser that goes to backendUrl and passes the desired operation, firebase config, and a link back to the app
       const result = await WebBrowser.openAuthSessionAsync(
-        `${this.backendUrl}?linkingUri=${Linking.createURL(`/${operation}`)}`
+        `${this.backendUrl}?linkingUri=${Linking.createURL(`/${operation}`)}`,
+        undefined
       )
         .catch((reason) => {
           showMessage(reason, 'Error with web browser');
@@ -36,33 +45,32 @@ export default class SingleSignOn {
         .finally(() => {
           browserOpen = false;
         });
-      switch (result?.type) {
-        case WebBrowser.WebBrowserResultType.CANCEL:
-        case WebBrowser.WebBrowserResultType.DISMISS:
-        case WebBrowser.WebBrowserResultType.LOCKED:
-          showMessage('Sign in cancelled', 'Browser closed');
-          break;
-        case 'success':
-          if (result?.url) {
-            this.redirectData = Linking.parse(result.url);
-          }
-          break;
-        case null:
-        case undefined:
-          showMessage('Browser did not respond.\nSign in failed', 'No response', true);
-          return;
-        default:
-          showMessage(
-            `Browser responded with type ${result.type}`,
-            'Unexpected response',
-            undefined,
-            true,
-            result
-          );
-          break;
-      }
-      if (result.url) {
-        this.redirectData = Linking.parse(result.url);
+      if (typeof result === 'object') {
+        switch (result?.type) {
+          case WebBrowser.WebBrowserResultType.CANCEL:
+          case WebBrowser.WebBrowserResultType.DISMISS:
+          case WebBrowser.WebBrowserResultType.LOCKED:
+            showMessage('Sign in cancelled', 'Browser closed');
+            break;
+          case 'success':
+            if (result?.url) {
+              this.redirectData = Linking.parse(result.url);
+            }
+            break;
+          case null:
+          case undefined:
+            showMessage('Browser did not respond.\nSign in failed', 'No response', undefined, true);
+            return;
+          default:
+            showMessage(
+              `Browser responded with type ${result.type}`,
+              'Unexpected response',
+              undefined,
+              true,
+              result
+            );
+            break;
+        }
       }
     } catch (error) {
       showMessage(error, 'Error with web browser');
@@ -73,6 +81,7 @@ export default class SingleSignOn {
       showMessage(
         'Browser did not respond or sign in was cancelled.\nSign in failed',
         'No response',
+        undefined,
         true
       );
       return;

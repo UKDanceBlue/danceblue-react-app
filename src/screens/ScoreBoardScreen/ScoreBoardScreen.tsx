@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, SafeAreaView, ScrollView } from 'react-native';
 import { getDocs, collection } from 'firebase/firestore';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../common/CustomHooks';
 import Standings from '../../common/components/Standings';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { globalColors, globalStyles } from '../../theme';
+import { StandingType } from '../../types/StandingType';
 
 /**
  * Wrapper for a Standings component
  */
 const ScoreBoardScreen = () => {
-  const userTeamId = useSelector((state) => state.auth.teamId);
-  const [standingData, setStandingData] = useState([]);
+  const userTeamId = useAppSelector((state) => state.auth.teamId);
+  const [standingData, setStandingData] = useState<StandingType[]>([]);
 
   useEffect(() => {
     let shouldUpdateState = true;
     getDocs(collection(firebaseFirestore, 'teams')).then((querySnapshot) => {
-      const tempStandingData = [];
+      const tempStandingData: StandingType[] = [];
       querySnapshot.forEach((document) => {
         const teamData = document.data();
         if (teamData.spiritSpreadsheetId) {

@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useSelector } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
 import SplashLogin from '../screens/Modals/SplashLogin';
@@ -9,17 +7,18 @@ import MainStackRoot from './MainStackRoot';
 import GenericWebviewScreen from '../screens/GenericWebviewScreen';
 import { globalColors } from '../theme';
 import { firebaseFirestore } from '../common/FirebaseApp';
+import { useAppSelector } from '../common/CustomHooks';
+import { RootStackParamList } from '../types/NavigationTypes';
 
-const RootStack = createStackNavigator();
+const RootStack = createStackNavigator<RootStackParamList>();
 
 const RootScreen = () => {
-  const isAuthLoaded = useSelector((state) => state.auth.isAuthLoaded);
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const userAttributes = useSelector((state) => state.auth.attributes);
-  const userTeamId = useSelector((state) => state.auth.teamId);
-  const userId = useSelector((state) => state.auth.uid);
-  const uuid = useSelector((state) => state.notification.uuid);
-  const navigation = useNavigation();
+  const isAuthLoaded = useAppSelector((state) => state.auth.isAuthLoaded);
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const userAttributes = useAppSelector((state) => state.auth.attributes);
+  const userTeamId = useAppSelector((state) => state.auth.teamId);
+  const userId = useAppSelector((state) => state.auth.uid);
+  const uuid = useAppSelector((state) => state.notification.uuid);
 
   useEffect(() => {
     (async () => {
@@ -72,22 +71,6 @@ const RootScreen = () => {
     })();
   }, [userAttributes, isAuthLoaded, userTeamId, userId, uuid]);
 
-  useEffect(() => {
-    if (isAuthLoaded) {
-      if (isLoggedIn) {
-        if (
-          navigation.getState() &&
-          navigation.getState().routes[navigation.getState().index].name === 'SplashLogin' &&
-          navigation.canGoBack()
-        ) {
-          navigation.goBack();
-        }
-      } else {
-        navigation.navigate('SplashLogin');
-      }
-    }
-  }, [navigation, isAuthLoaded, isLoggedIn]);
-
   return (
     <>
       {!isAuthLoaded && (
@@ -103,16 +86,20 @@ const RootScreen = () => {
       )}
       {isAuthLoaded && (
         <RootStack.Navigator>
-          <RootStack.Screen
-            name="Main"
-            component={MainStackRoot}
-            options={{ headerShown: false }}
-          />
-          <RootStack.Screen
-            name="SplashLogin"
-            component={SplashLogin}
-            options={{ headerShown: false, presentation: 'modal', gestureEnabled: false }}
-          />
+          {isLoggedIn && (
+            <RootStack.Screen
+              name="Main"
+              component={MainStackRoot}
+              options={{ headerShown: false }}
+            />
+          )}
+          {!isLoggedIn && (
+            <RootStack.Screen
+              name="SplashLogin"
+              component={SplashLogin}
+              options={{ headerShown: false, presentation: 'modal', gestureEnabled: false }}
+            />
+          )}
           <RootStack.Screen
             name="DefaultRoute"
             component={GenericWebviewScreen}

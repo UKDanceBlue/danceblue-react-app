@@ -1,8 +1,10 @@
 import { getDownloadURL, ref } from 'firebase/storage';
 import { useDebugValue, useEffect, useState } from 'react';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../redux/store';
 import { firebaseStorage } from './FirebaseApp';
 
-export function useFirebaseStorageUrl(googleUri) {
+export function useFirebaseStorageUrl(googleUri: string) {
   useDebugValue(`Storage for ${googleUri}`);
 
   const [state, setState] = useState([null, null]);
@@ -22,7 +24,7 @@ export function useFirebaseStorageUrl(googleUri) {
   return state;
 }
 
-export function useCurrentDate(refreshInterval) {
+export function useCurrentDate(refreshInterval: number) {
   const [state, setState] = useState(new Date());
 
   useEffect(() => {
@@ -39,3 +41,10 @@ export function useCurrentDate(refreshInterval) {
 
   return state;
 }
+
+// Use throughout your app instead of plain `useDispatch` and `useSelector`
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+// HEY TAG!!!!!!!!
+// READ THIS THING: https://redux-toolkit.js.org/usage/usage-with-typescript

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { Text, Button } from 'react-native-elements';
 import * as Linking from 'expo-linking';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../common/CustomHooks';
 import SingleSignOn from '../../common/SingleSignOn';
 import { globalStyles, globalColors } from '../../theme';
 
@@ -13,7 +13,7 @@ import { logout } from '../../redux/authSlice';
  * Component for "Profile" screen in main navigation
  */
 const ProfileScreen = () => {
-  const userData = useSelector((state) => state.auth);
+  const userData = useAppSelector((state) => state.auth);
 
   return (
     <View style={globalStyles.genericView}>
