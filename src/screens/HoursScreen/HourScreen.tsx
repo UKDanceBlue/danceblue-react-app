@@ -4,7 +4,8 @@ import { Text } from 'react-native-elements';
 import { globalTextStyles } from '../../theme';
 
 export default ({ route: { params } }) => {
-  const { hourName, hourNumber, hourInstructions } = params;
+  const { hourName, hourNumber, hourScreenOptions } = params;
+  const { hourInstructions } = hourScreenOptions;
   const [hourInstructionsText, setHourInstructionsText] = useState('');
 
   useEffect(() => {

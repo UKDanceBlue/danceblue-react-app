@@ -8,6 +8,7 @@ import { Text } from 'react-native-elements';
 import { useCurrentDate } from '../../common/CustomHooks';
 import { globalColors, globalTextStyles } from '../../theme';
 import { HourScreenOptionsType } from '../../types/HourScreenTypes';
+import { TabScreenProps } from '../../types/NavigationTypes';
 
 const hourNames: string[] = [
   'One',
@@ -101,7 +102,7 @@ const HourRow = ({
   marathonHour: number;
   currentMinute: number;
 }) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<TabScreenProps<'HoursScreen'>['navigation']>();
   const hourName = hourNames[hourNumber];
   const hourScreenOptions = hourScreenOptionsList[hourNumber];
   const [displayedNamePart, setDisplayedNamePart] = useState('');
@@ -143,7 +144,7 @@ const HourRow = ({
   return (
     <TouchableOpacity
       onPress={() =>
-        navigation?.navigate('Hour Details', { hourName, hourNumber, ...hourScreenOptions })
+        navigation?.navigate('Hour Details', { hourName, hourNumber, hourScreenOptions })
       }
       disabled={!clickable}
     >

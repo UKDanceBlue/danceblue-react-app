@@ -4,6 +4,8 @@ import { collection, getDocs, where, query } from 'firebase/firestore';
 import EventRow from './EventRow';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { FirestoreEvent } from '../../types/FirebaseTypes';
+import { useNavigation } from '@react-navigation/native';
+import { TabScreenProps } from '../../types/NavigationTypes';
 
 const now = new Date();
 interface EventType extends FirestoreEvent {
@@ -19,10 +21,11 @@ interface EventType extends FirestoreEvent {
  *  2. Add inline comments
  *  3. Make it a function component if possible
  */
-const EventScreen = ({ navigation: { navigate } }) => {
+const EventScreen = () => {
   const [events, setEvents] = useState<EventType[]>([]);
   const [today, setToday] = useState<EventType[]>([]);
   const [upcoming, setUpcoming] = useState<EventType[]>([]);
+  const navigation = useNavigation<TabScreenProps<'Events'>['navigation']>();
 
   useEffect(() => {
     let componentUnmounted = false;
@@ -77,7 +80,7 @@ const EventScreen = ({ navigation: { navigate } }) => {
         {today.map((row) => (
           <TouchableOpacity
             style={styles.eventRow}
-            onPress={() => navigate('Event', { id: row.id, name: row.title })}
+            onPress={() => navigation.navigate('Event', { id: row.id, name: row.title })}
             key={row.id}
           >
             <EventRow
@@ -98,7 +101,7 @@ const EventScreen = ({ navigation: { navigate } }) => {
           upcoming.map((row) => (
             <TouchableOpacity
               style={styles.eventRow}
-              onPress={() => navigate('Event', { id: row.id, name: row.title })}
+              onPress={() => navigation.navigate('Event', { id: row.id, name: row.title })}
               key={row.id}
             >
               <EventRow
