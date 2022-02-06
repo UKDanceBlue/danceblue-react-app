@@ -16,15 +16,21 @@ const SponsorCarousel = () => {
   const [sponsors, setSponsors] = useState<SponsorType[]>([]);
 
   useEffect(() => {
+    let shouldUpdateState = true;
     async function getSnapshot() {
       const dbSponsors: SponsorType[] = [];
       const snapshot = await getDocs(collection(firebaseFirestore, 'sponsors'));
       snapshot.forEach((document) => {
         dbSponsors.push({ ...document.data(), id: document.id });
       });
-      setSponsors(dbSponsors);
+      if (shouldUpdateState) {
+        setSponsors(dbSponsors);
+      }
     }
     getSnapshot();
+    return () => {
+      shouldUpdateState = false;
+    };
   }, []);
 
   const cards = sponsors.map((sponsor) => (
