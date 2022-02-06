@@ -2,7 +2,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { differenceInHours } from 'date-fns';
 import { BlurView } from 'expo-blur';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import { useCurrentDate } from '../../common/CustomHooks';
@@ -66,7 +66,12 @@ const hourListKeys: { key: number }[] = [
 
 const hourScreenOptionsList: HourScreenOptionsType[] = [
   {
-    hourInstructions: ['Start a game', 'Play a game', 'Finish the game'],
+    hourInstructions: [
+      'Start a game',
+      'Play a game',
+      ['Breakdown', 'Breakdown A', 'Breakdown B'],
+      'Finish the game',
+    ],
   },
   {},
   {},
@@ -149,15 +154,13 @@ const HourRow = ({
       disabled={!clickable}
     >
       <View style={style.hourRow}>
-        <Text style={StyleSheet.compose(globalTextStyles.headerText, { fontSize: 20 })}>
-          {`${hourNumber + 1}.`}
-        </Text>
-        <Text style={StyleSheet.compose(globalTextStyles.headerText, { fontSize: 20 })}>
+        <Text h4>{`${hourNumber + 1}.`}</Text>
+        <Text h4>
           {displayedNamePart}
-          <BlurView intensity={0} style={{}} />
-          <Text style={StyleSheet.compose(globalTextStyles.headerText, { fontSize: 20 })}>
-            {hiddenNamePart}
-          </Text>
+          <View>
+            <Text h4>{hiddenNamePart}</Text>
+            <BlurView style={StyleSheet.absoluteFill} tint="light" intensity={30} />
+          </View>
         </Text>
         {clickable ? (
           <FontAwesome5 name="chevron-right" size={24} color="black" />
