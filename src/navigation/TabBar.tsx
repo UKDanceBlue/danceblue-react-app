@@ -1,5 +1,5 @@
 // Import third-party dependencies
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
 
@@ -104,7 +104,7 @@ const TabBar = () => {
           })}
         >
           <Tabs.Screen name="Home" component={HomeScreen} />
-          <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />
+          {/* <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />*/}
           {currentTabs}
         </Tabs.Navigator>
       )}
