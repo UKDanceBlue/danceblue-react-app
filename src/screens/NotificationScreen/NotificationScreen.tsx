@@ -60,12 +60,13 @@ const NotificationScreen = () => {
         const deviceRef = doc(firebaseFirestore, 'devices', uuid);
         let notificationReferences = [];
         // Get the list of notifications sent to this device from firebase
-        const deviceData = (
-          await getDoc(deviceRef).catch(() =>
-            showMessage('Cannot connect to server, push notifications unavailable')
-          )
-        ).data();
-        notificationReferences = deviceData.pastNotifications ? deviceData.pastNotifications : [];
+        const deviceSnapshot = await getDoc(deviceRef).catch(() =>
+          showMessage('Cannot connect to server, push notifications unavailable')
+        );
+        if (deviceSnapshot) {
+          const deviceData = deviceSnapshot.data();
+          notificationReferences = deviceData.pastNotifications ? deviceData.pastNotifications : [];
+        }
 
         // An array of all notifications to be shown
         const tempNotifications = [];
