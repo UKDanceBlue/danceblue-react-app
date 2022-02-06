@@ -122,6 +122,7 @@ export const updateUserData = createAsyncThunk(
       }
 
       if (teamReference) {
+        //TODO set attributes
         userInfo.teamId = userSnapshot.get('team').id;
 
         // Go ahead and set up some collection references
