@@ -1,5 +1,7 @@
+import { Text, View } from 'react-native';
+
 export default [
-  null,
+  <Text>This is dynamic content loaded from HourActivities.tsx</Text>,
   null,
   null,
   null,
