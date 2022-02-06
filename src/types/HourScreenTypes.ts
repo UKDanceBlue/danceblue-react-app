@@ -1,1 +1,1 @@
-export type HourScreenOptionsType = { hourInstructions?: string[] };
+export type HourScreenOptionsType = { hourInstructions?: string | (string | string[])[] };
