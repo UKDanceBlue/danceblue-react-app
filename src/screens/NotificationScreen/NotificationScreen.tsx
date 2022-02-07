@@ -78,8 +78,11 @@ const NotificationScreen = () => {
         // Wait for any new notifications to download and add them to tempNotifications as well
         const newNotifications = await Promise.all(newNotificationPromises);
         for (let i = 0; i < newNotifications.length; i++) {
-          notificationsCache[newNotifications[i].ref.path] = newNotifications[i].data();
-          tempNotifications.push(notificationsCache[notificationReferences[i]]);
+          const newNotificationData = newNotifications[i].data();
+          if (newNotificationData) {
+            notificationsCache[newNotifications[i].ref.path] = newNotificationData;
+            tempNotifications.push(notificationsCache[notificationReferences[i]]);
+          }
         }
 
         // Sort the list by time and update the state
