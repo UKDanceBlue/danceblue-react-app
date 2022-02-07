@@ -103,57 +103,64 @@ export const updateUserData = createAsyncThunk(
           .map((reference: DocumentReference) => reference.path);
       }
 
-      let teamReference: DocumentReference;
-      let preloadedTeamSnapshot: DocumentSnapshot;
-      // Get information about the user's team (if any)
-      if (userSnapshot.get('team')) {
-        teamReference = userSnapshot.get('team');
-      } else if (userInfo.linkblue) {
-        const teamsCollectionRef = collection(firebaseFirestore, 'teams');
-        const teamQuery = query(
-          teamsCollectionRef,
-          where(`members.${userInfo.linkblue}`, '>=', '')
-        );
-        const matchingTeams = await getDocs(teamQuery);
-        if (matchingTeams.docs.length === 1) {
-          preloadedTeamSnapshot = matchingTeams.docs[0];
-          updateDoc(userSnapshot.ref, { team: preloadedTeamSnapshot.ref });
-        }
-      }
-
-      if (teamReference) {
-        //TODO set attributes
-        userInfo.teamId = userSnapshot.get('team').id;
-
-        // Go ahead and set up some collection references
-        const teamConfidentialRef = collection(
-          firebaseFirestore,
-          `${userSnapshot.get('team').path}/confidential`
-        );
-
-        const teamPromiseResponses = await Promise.allSettled([
-          preloadedTeamSnapshot ? undefined : getDoc(userSnapshot.get('team')),
-          getDoc(doc(teamConfidentialRef, 'individualSpiritPoints')),
-          getDoc(doc(teamConfidentialRef, 'fundraising')),
-        ]);
-
-        if (teamPromiseResponses[0].status === 'fulfilled') {
-          if (teamPromiseResponses[0].value === undefined) {
-            if (preloadedTeamSnapshot) {
-              userInfo.team = preloadedTeamSnapshot.data() as FirestoreTeam;
-            }
-          } else {
-            userInfo.team = teamPromiseResponses[0].value.data() as FirestoreTeam;
+      if (!userInfo.attributes.role || userInfo.attributes.role === 'dancer') {
+        let teamReference: DocumentReference;
+        let preloadedTeamSnapshot: DocumentSnapshot;
+        // Get information about the user's team (if any)
+        if (userSnapshot.get('team')) {
+          teamReference = userSnapshot.get('team');
+        } else if (userInfo.linkblue) {
+          const teamsCollectionRef = collection(firebaseFirestore, 'teams');
+          const teamQuery = query(
+            teamsCollectionRef,
+            where(`members.${userInfo.linkblue}`, '>=', '')
+          );
+          const matchingTeams = await getDocs(teamQuery);
+          if (matchingTeams.docs.length === 1) {
+            preloadedTeamSnapshot = matchingTeams.docs[0];
+            updateDoc(userSnapshot.ref, { team: preloadedTeamSnapshot.ref });
           }
         }
-        if (teamPromiseResponses[1].status === 'fulfilled') {
-          userInfo.teamIndividualSpiritPoints =
-            teamPromiseResponses[1].value.data() as FirestoreTeamIndividualSpiritPoints;
+
+        if (teamReference) {
+          userInfo.teamId = userSnapshot.get('team').id;
+
+          // Go ahead and set up some collection references
+          const teamConfidentialRef = collection(
+            firebaseFirestore,
+            `${userSnapshot.get('team').path}/confidential`
+          );
+
+          const teamPromiseResponses = await Promise.allSettled([
+            preloadedTeamSnapshot ? undefined : getDoc(userSnapshot.get('team')),
+            getDoc(doc(teamConfidentialRef, 'individualSpiritPoints')),
+            getDoc(doc(teamConfidentialRef, 'fundraising')),
+          ]);
+
+          if (teamPromiseResponses[0].status === 'fulfilled') {
+            if (teamPromiseResponses[0].value === undefined) {
+              if (preloadedTeamSnapshot) {
+                userInfo.team = preloadedTeamSnapshot.data() as FirestoreTeam;
+              }
+            } else {
+              userInfo.team = teamPromiseResponses[0].value.data() as FirestoreTeam;
+            }
+          }
+          if (teamPromiseResponses[1].status === 'fulfilled') {
+            userInfo.teamIndividualSpiritPoints =
+              teamPromiseResponses[1].value.data() as FirestoreTeamIndividualSpiritPoints;
+          }
+          if (teamPromiseResponses[2].status === 'fulfilled') {
+            userInfo.teamFundraisingTotal =
+              teamPromiseResponses[2].value.data() as FirestoreTeamFundraising;
+          }
         }
-        if (teamPromiseResponses[2].status === 'fulfilled') {
-          userInfo.teamFundraisingTotal =
-            teamPromiseResponses[2].value.data() as FirestoreTeamFundraising;
-        }
+
+        // Update team attributes
+        userInfo.attributes.team = userInfo.teamId;
+        userInfo.attributes.role = 'dancer';
+
+        updateDoc(userSnapshot.ref, { attributes: userInfo.attributes });
       }
     }
 
