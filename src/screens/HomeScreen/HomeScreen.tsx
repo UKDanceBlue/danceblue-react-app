@@ -7,7 +7,6 @@ import HeaderImage from './HeaderImage';
 
 /**
  * Component for home screen in main navigation
- * @param {Object} props Properties of the component: navigation, firebase
  */
 const HomeScreen = () => {
   const countdown = useAppSelector((state) => state.appConfig.countdown);

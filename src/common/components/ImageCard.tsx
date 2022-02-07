@@ -7,7 +7,6 @@ import { useFirebaseStorageUrl } from '../CustomHooks';
 
 /**
  * A card showing a Sponsor's logo that link's to their website
- * @param {Object} props Properties of the component: imageLink, sponsorLink, firebase
  */
 const SponsorCard = ({ imageLink, sponsorLink }: { imageLink: string; sponsorLink: string }) => {
   const [imageRef, imageRefError] = useFirebaseStorageUrl(imageLink);

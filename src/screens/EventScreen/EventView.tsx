@@ -44,7 +44,6 @@ const EventView = () => {
 
   /**
    * Check if the DanceBlue calendar exist's on the user's device
-   * @returns true if the calendar exists, false if not
    */
   // const checkDBCalendar = async () => {
   //   let foundCalendar = false;
@@ -103,7 +102,6 @@ const EventView = () => {
 
   /**
    * Creates a new calendar on the user's device and adds *calendarID* to *this.state*
-   * @returns A Promise for the completion of which ever callback is executed.
    */
   // const createDBCalendar = () =>
   //   Calendar.createCalendarAsync(danceBlueCalendarConfig).then((localId) => setCalendarID(localId));
@@ -135,7 +133,6 @@ const EventView = () => {
   /**
    * Removes an event from the calendar
    * While the function is running *isAddingToCalendar* will return true
-   * @returns A Promise for the completion of which ever callback is executed.
    */
   // const removeFromCalendar = async () => {
   //   await Calendar.deleteEventAsync(eventCalendarID);

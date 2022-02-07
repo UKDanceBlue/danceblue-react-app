@@ -14,7 +14,6 @@ interface EventType extends FirestoreEvent {
 
 /**
  * Component for "Events" screen in main navigation
- * @param {Object} props Properties of the component: navigation, firebase
  *
  * TODO figure out how this works and then:
  *  1. Simplify it
@@ -71,7 +70,6 @@ const EventScreen = () => {
 
   /**
    * Called by React Native when rendering the screen
-   * @returns A JSX formatted Component
    */
   return (
     <ScrollView style={styles.body}>

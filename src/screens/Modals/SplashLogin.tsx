@@ -12,7 +12,6 @@ const splashBackground = require('../../../assets/home/Dancing-min.jpg');
 
 /**
  * A simplified sign in page shown when the user first opens the app
- * @param {Object} props Properties of the component: navigation, firebase
  * @class
  */
 const SplashLoginScreen = () => (

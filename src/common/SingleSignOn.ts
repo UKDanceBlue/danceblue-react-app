@@ -25,8 +25,6 @@ export default class SingleSignOn {
    * This is accomplished through the use of a dummy page that signs the user in using methods
    * unavailable in React Native, and then passing the auth credential back to the app in
    * the query string of the expo-linking url
-   * @param {String} operation The authentication operation to be performed **MUST BE HANDLED BY THE SERVER**
-   * @returns {UserCredential} The signed in UserCredential or undefined if the operation fails or is cancelled
    */
   async authenticate(operation: string): Promise<UserCredential> {
     if (browserOpen) {

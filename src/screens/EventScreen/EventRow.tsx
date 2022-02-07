@@ -7,7 +7,6 @@ import { useFirebaseStorageUrl } from '../../common/CustomHooks';
 
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
- * @param props Properties of the component: imageLink, startDate, endDate, title, firebase
  */
 const EventRow = ({
   imageLink,
@@ -24,7 +23,6 @@ const EventRow = ({
 
   /**
    * Called to generate a React Native component
-   * @returns A JSX formatted component
    */
   let whenString = '';
   if (isSameDay(startDate, endDate)) {

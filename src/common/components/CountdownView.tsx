@@ -7,9 +7,6 @@ import { useAppSelector } from '../../common/CustomHooks';
 
 /**
  * A label for a unit of time
- * @param {number} value The numeric value to be shown on the top of this component
- * @param {string} unit The unit (ENDING IN 's') of *value*
- * @returns A React Native component
  */
 const TimeUnit = ({
   value,

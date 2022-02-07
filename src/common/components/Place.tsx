@@ -8,10 +8,6 @@ import { globalColors, globalStyles, globalTextStyles } from '../../theme';
 
 /**
  * A row-based component showing a target name, their rank (if applicable), and their points
- * @param {bool} isHighlighted Is this row highlighted
- * @param {number} rank The rank to show (if any)
- * @param {string} name The target's name
- * @param {number} points Earned points
  */
 const Place = ({
   isHighlighted,

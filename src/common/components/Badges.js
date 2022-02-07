@@ -6,7 +6,6 @@ import Badge from './Badge';
 
 /**
  * A row of a user's {@link Badge}s loaded from Firebase
- * @param {Object} props Properties of the component: (imageURL, name)
  */
 const Badges = ({ badges }) => (
   <>
