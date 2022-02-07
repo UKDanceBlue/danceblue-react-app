@@ -109,6 +109,7 @@ export const updateUserData = createAsyncThunk(
         // Get information about the user's team (if any)
         if (userSnapshot.get('team')) {
           teamReference = userSnapshot.get('team');
+          userInfo.teamId = teamReference.id;
         } else if (userInfo.linkblue) {
           const teamsCollectionRef = collection(firebaseFirestore, 'teams');
           const teamQuery = query(
@@ -119,12 +120,11 @@ export const updateUserData = createAsyncThunk(
           if (matchingTeams.docs.length === 1) {
             preloadedTeamSnapshot = matchingTeams.docs[0];
             updateDoc(userSnapshot.ref, { team: preloadedTeamSnapshot.ref });
+            userInfo.teamId = preloadedTeamSnapshot.id;
           }
         }
 
         if (teamReference) {
-          userInfo.teamId = userSnapshot.get('team').id;
-
           // Go ahead and set up some collection references
           const teamConfidentialRef = collection(
             firebaseFirestore,
