@@ -265,6 +265,7 @@ export const authSlice = createSlice({
         state.isAnonymous = action.payload.isAnonymous;
         state.isLoggedIn = action.payload.isLoggedIn;
         state.attributes = action.payload.attributes;
+        state.pastNotifications = action.payload.pastNotifications;
         state.teamId = action.payload.teamId;
         state.team = action.payload.team;
         state.teamIndividualSpiritPoints = action.payload.teamIndividualSpiritPoints;

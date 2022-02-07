@@ -26,6 +26,7 @@ const NotificationScreen = () => {
   );
   const [notifications, setNotifications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const notificationReferences = useAppSelector((state) => state.auth.pastNotifications);
 
   useEffect(() => {
     let shouldUpdateState = true;
@@ -56,18 +57,6 @@ const NotificationScreen = () => {
 
       // We have already set a UUID and can use the retrieved value
       if (uuid) {
-        // Get a reference to this device's firebase document
-        const deviceRef = doc(firebaseFirestore, 'devices', uuid);
-        let notificationReferences = [];
-        // Get the list of notifications sent to this device from firebase
-        const deviceSnapshot = await getDoc(deviceRef).catch(() =>
-          showMessage('Cannot connect to server, push notifications unavailable')
-        );
-        if (deviceSnapshot) {
-          const deviceData = deviceSnapshot.data();
-          notificationReferences = deviceData.pastNotifications ? deviceData.pastNotifications : [];
-        }
-
         // An array of all notifications to be shown
         const tempNotifications = [];
 
@@ -76,21 +65,21 @@ const NotificationScreen = () => {
         const newNotificationPromises = [];
         // Get any new notifications and add any we already cached to tempNotifications
         for (let i = 0; i < notificationReferences.length; i++) {
-          if (!notificationsCache[notificationReferences[i].id]) {
+          if (!notificationsCache[notificationReferences[i]]) {
             newNotificationPromises.push(
-              getDoc(notificationReferences[i]).catch(() =>
+              getDoc(doc(firebaseFirestore, notificationReferences[i])).catch(() =>
                 showMessage('Failed to get past notification from server')
               )
             );
           } else {
-            tempNotifications.push(notificationsCache[notificationReferences[i].id]);
+            tempNotifications.push(notificationsCache[notificationReferences[i]]);
           }
         }
         // Wait for any new notifications to download and add them to tempNotifications as well
         const newNotifications = await Promise.all(newNotificationPromises);
         for (let i = 0; i < newNotifications.length; i++) {
-          notificationsCache[newNotifications[i].ref.id] = newNotifications[i].data();
-          tempNotifications.push(notificationsCache[notificationReferences[i].id]);
+          notificationsCache[newNotifications[i].ref.path] = newNotifications[i].data();
+          tempNotifications.push(notificationsCache[notificationReferences[i]]);
         }
 
         // Sort the list by time and update the state
