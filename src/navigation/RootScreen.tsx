@@ -46,7 +46,7 @@ const RootScreen = () => {
               const attributeData = audienceDocs[i].data();
               const attributeName = audienceDocs[i].ref.id;
               const userAttributeValue = userAttributes[attributeName];
-              if (attributeData[userAttributeValue].isAudience) {
+              if (attributeName === 'team' || attributeData[userAttributeValue].isAudience) {
                 audiences.push(userAttributeValue);
               }
             }
