@@ -1,22 +1,24 @@
 import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
-import { Text, Button } from 'react-native-elements';
+import { Text, Button, Image } from 'react-native-elements';
 import * as Linking from 'expo-linking';
 import { useAppSelector } from '../../common/CustomHooks';
 import SingleSignOn from '../../common/SingleSignOn';
-import { globalStyles, globalColors } from '../../theme';
+import { globalStyles, globalColors, globalTextStyles } from '../../theme';
 
 import store from '../../redux/store';
 import { logout } from '../../redux/authSlice';
+import { useAssets } from 'expo-asset';
 
 /**
  * Component for "Profile" screen in main navigation
  */
 const ProfileScreen = () => {
   const userData = useAppSelector((state) => state.auth);
+  const [assets, error] = useAssets(require('../../../assets/avatar.png'));
 
   return (
-    <View style={globalStyles.genericView}>
+    <View style={{ alignItems: 'center', ...globalStyles.genericView }}>
       <>
         {
           /* Start of still loading view */ !userData.isAuthLoaded && (
@@ -26,15 +28,20 @@ const ProfileScreen = () => {
         {
           /* Start of loaded view */ userData.isAuthLoaded && (
             <>
+              {assets && <Image source={assets[0]} style={{ height: 64, width: 64 }} />}
               {
                 /* Start of logged in view */ userData.isLoggedIn &&
                   !userData.isAnonymous && (
                     <>
-                      <Text>
+                      <Text style={globalStyles.genericText}>
                         You are logged in as {userData.firstName} {userData.lastName}
                       </Text>
-                      <Text>{userData.email}</Text>
-                      <Button onPress={() => store.dispatch(logout())} title="Log out" />
+                      <Text style={globalTextStyles.italicText}>{userData.email}</Text>
+                      <Button
+                        style={{ margin: 10, alignSelf: 'center' }}
+                        onPress={() => store.dispatch(logout())}
+                        title="Log out"
+                      />
                     </>
                   ) /* End of logged in view */
               }
@@ -44,6 +51,7 @@ const ProfileScreen = () => {
                     <>
                       <Text>You are logged in anonymously</Text>
                       <Button
+                        style={{ margin: 10, alignSelf: 'center' }}
                         onPress={() => {
                           const sso = new SingleSignOn();
                           sso.authenticate('saml-sign-in');
@@ -58,6 +66,7 @@ const ProfileScreen = () => {
                   <>
                     <Text>You are logged out, to log in:</Text>
                     <Button
+                      style={{ margin: 10, alignSelf: 'center' }}
                       onPress={() => {
                         const sso = new SingleSignOn();
                         sso.authenticate('saml-sign-in');
@@ -67,22 +76,31 @@ const ProfileScreen = () => {
                   </>
                 ) /* End of logged in view */
               }
-              <Button
-                onPress={() => {
-                  Linking.openURL(
-                    'mailto:app@danceblue.org?subject=DanceBlue%20App%20Issue%20Report&body=What%20happened%3A%0A%3Ctype%20here%3E%0A%0AWhat%20I%20was%20doing%3A%0A%3Ctype%20here%3E%0A%0AOther%20information%3A%0A%3Ctype%20here%3E'
-                  );
-                }}
-                title="Report an issue"
-              />
-              <Button
-                onPress={() => {
-                  Linking.openURL(
-                    'mailto:app@danceblue.org?subject=DanceBlue%20App%20Suggestion&body=%3Ctype%20here%3E'
-                  );
-                }}
-                title="Suggest a change"
-              />
+              <View style={{ position: 'absolute', bottom: 0 }}>
+                <Button
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin: 10,
+                    alignSelf: 'center',
+                  }}
+                  onPress={() => {
+                    Linking.openURL(
+                      'mailto:app@danceblue.org?subject=DanceBlue%20App%20Issue%20Report&body=What%20happened%3A%0A%3Ctype%20here%3E%0A%0AWhat%20I%20was%20doing%3A%0A%3Ctype%20here%3E%0A%0AOther%20information%3A%0A%3Ctype%20here%3E'
+                    );
+                  }}
+                  title="Report an issue"
+                />
+                <Button
+                  style={{ margin: 10, alignSelf: 'center' }}
+                  onPress={() => {
+                    Linking.openURL(
+                      'mailto:app@danceblue.org?subject=DanceBlue%20App%20Suggestion&body=%3Ctype%20here%3E'
+                    );
+                  }}
+                  title="Suggest a change"
+                />
+              </View>
             </>
           ) /* End of loaded view */
         }
