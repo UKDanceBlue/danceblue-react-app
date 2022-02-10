@@ -15,6 +15,7 @@ type AppConfigSliceType = {
     showTrophies: boolean;
   };
   demoMode?: boolean;
+  demoModeKey: string;
 };
 
 const initialState: AppConfigSliceType = {
@@ -23,6 +24,7 @@ const initialState: AppConfigSliceType = {
   countdown: null,
   configuredTabs: [],
   demoMode: false,
+  demoModeKey: Math.random().toString(), // Start the demo key as junk for safety's sake
 };
 
 export const updateConfig = createAsyncThunk(
@@ -39,6 +41,7 @@ export const updateConfig = createAsyncThunk(
         : null,
       scoreboard: snapshotData.scoreboard,
       configuredTabs: snapshotData.currentTabs,
+      demoModeKey: snapshotData.demoModeKey,
     };
   }
 );
@@ -69,6 +72,7 @@ export const appConfigSlice = createSlice({
         state.countdown = action.payload.countdown;
         state.scoreboard = action.payload.scoreboard;
         state.configuredTabs = action.payload.configuredTabs;
+        state.demoModeKey = action.payload.demoModeKey;
         state.isConfigLoaded = true;
       })
       .addCase(updateConfig.rejected, (state, action) => {

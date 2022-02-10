@@ -63,4 +63,5 @@ export interface FirestoreMobileAppConfig {
     showIcons: boolean;
     showTrophies: boolean;
   };
+  demoModeKey: string;
 }

@@ -1,13 +1,14 @@
-import React from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, ActivityIndicator, Alert, TextInput } from 'react-native';
 import { Text, Button, Image } from 'react-native-elements';
 import * as Linking from 'expo-linking';
-import { useAppSelector } from '../../common/CustomHooks';
+import { useAppDispatch, useAppSelector } from '../../common/CustomHooks';
 import SingleSignOn from '../../common/SingleSignOn';
 import { globalStyles, globalColors, globalTextStyles } from '../../theme';
 
 import store from '../../redux/store';
-import { logout } from '../../redux/authSlice';
+import { authSlice, logout } from '../../redux/authSlice';
+import { appConfigSlice } from '../../redux/appConfigSlice';
 import { useAssets } from 'expo-asset';
 
 /**
@@ -15,7 +16,10 @@ import { useAssets } from 'expo-asset';
  */
 const ProfileScreen = () => {
   const userData = useAppSelector((state) => state.auth);
+  const demoModeKey = useAppSelector((state) => state.appConfig.demoModeKey);
   const [assets, error] = useAssets(require('../../../assets/avatar.png'));
+  const [reportLongPressed, setReportLongPressed] = useState(false);
+  const [suggestLongPressed, setSuggestLongPressed] = useState(false);
 
   return (
     <View style={{ alignItems: 'center', ...globalStyles.genericView }}>
@@ -76,6 +80,21 @@ const ProfileScreen = () => {
                   </>
                 ) /* End of logged in view */
               }
+              {reportLongPressed && suggestLongPressed && (
+                <TextInput
+                  style={{ borderWidth: 2, minWidth: '30%' }}
+                  returnKeyType="go"
+                  secureTextEntry={true}
+                  onSubmitEditing={(event) => {
+                    if (event.nativeEvent.text === demoModeKey) {
+                      store.dispatch(appConfigSlice.actions.enterDemoMode());
+                      store.dispatch(authSlice.actions.enterDemoMode());
+                      setReportLongPressed(false);
+                      setSuggestLongPressed(false);
+                    }
+                  }}
+                />
+              )}
               <View style={{ position: 'absolute', bottom: 0 }}>
                 <Button
                   style={{
@@ -89,6 +108,9 @@ const ProfileScreen = () => {
                       'mailto:app@danceblue.org?subject=DanceBlue%20App%20Issue%20Report&body=What%20happened%3A%0A%3Ctype%20here%3E%0A%0AWhat%20I%20was%20doing%3A%0A%3Ctype%20here%3E%0A%0AOther%20information%3A%0A%3Ctype%20here%3E'
                     );
                   }}
+                  onLongPress={() => {
+                    setReportLongPressed(true);
+                  }}
                   title="Report an issue"
                 />
                 <Button
@@ -97,6 +119,9 @@ const ProfileScreen = () => {
                     Linking.openURL(
                       'mailto:app@danceblue.org?subject=DanceBlue%20App%20Suggestion&body=%3Ctype%20here%3E'
                     );
+                  }}
+                  onLongPress={() => {
+                    setSuggestLongPressed(reportLongPressed ? true : false);
                   }}
                   title="Suggest a change"
                 />

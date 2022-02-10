@@ -21,26 +21,6 @@ const possibleTabs = {
   Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
   Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,
   MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
-  Store: (
-    <Tabs.Screen
-      key="Store"
-      name="Store"
-      component={GenericWebviewScreen}
-      initialParams={{
-        uri: 'https://www.danceblue.org/dancebluetique/',
-      }}
-    />
-  ),
-  Donate: (
-    <Tabs.Screen
-      key="Donate"
-      name="Donate"
-      component={GenericWebviewScreen}
-      initialParams={{
-        uri: 'https://danceblue.networkforgood.com/causes/4789-danceblue-golden-matrix-fund-dance-teams?utm_source=website&utm_medium=unit_website',
-      }}
-    />
-  ),
 };
 
 const TabBar = () => {
@@ -106,8 +86,8 @@ const TabBar = () => {
         >
           <Tabs.Screen name="Home" component={HomeScreen} />
           {/* <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />*/}
-          {currentTabs}
-          {demoMode && Object.entries(possibleTabs)}
+          {!demoMode && currentTabs}
+          {demoMode && Object.values(possibleTabs)}
         </Tabs.Navigator>
       )}
     </>
