@@ -46,6 +46,7 @@ const possibleTabs = {
 const TabBar = () => {
   const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
   const configuredTabs = useAppSelector((state) => state.appConfig.configuredTabs);
+  const demoMode = useAppSelector((state) => state.appConfig.demoMode);
 
   const [currentTabs, setCurrentTabs] = useState([]);
 
@@ -106,6 +107,7 @@ const TabBar = () => {
           <Tabs.Screen name="Home" component={HomeScreen} />
           {/* <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />*/}
           {currentTabs}
+          {demoMode && Object.entries(possibleTabs)}
         </Tabs.Navigator>
       )}
     </>

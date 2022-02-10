@@ -14,6 +14,7 @@ type AppConfigSliceType = {
     showIcons: boolean;
     showTrophies: boolean;
   };
+  demoMode?: boolean;
 };
 
 const initialState: AppConfigSliceType = {
@@ -21,6 +22,7 @@ const initialState: AppConfigSliceType = {
   scoreboard: null,
   countdown: null,
   configuredTabs: [],
+  demoMode: false,
 };
 
 export const updateConfig = createAsyncThunk(
@@ -52,6 +54,9 @@ export const appConfigSlice = createSlice({
     // Reset config reducer
     resetConfig(state) {
       Object.assign(state, initialState);
+    },
+    enterDemoMode(state) {
+      Object.assign(state, { ...initialState, isConfigLoaded: true, demoMode: true });
     },
   },
   extraReducers: (builder) => {
