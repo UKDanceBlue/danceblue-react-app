@@ -59,7 +59,15 @@ export const appConfigSlice = createSlice({
       Object.assign(state, initialState);
     },
     enterDemoMode(state) {
-      Object.assign(state, { ...initialState, isConfigLoaded: true, demoMode: true });
+      Object.assign(state, {
+        ...initialState,
+        countdown: {
+          title: 'DanceBlue 2022',
+          millis: 1646514000000,
+        },
+        isConfigLoaded: true,
+        demoMode: true,
+      });
     },
   },
   extraReducers: (builder) => {
