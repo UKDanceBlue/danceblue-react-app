@@ -1,7 +1,6 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { NavigatorScreenParams, CompositeScreenProps } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { type } from 'os';
 import { HourScreenOptionsType } from './HourScreenTypes';
 
 // Navigator param types
