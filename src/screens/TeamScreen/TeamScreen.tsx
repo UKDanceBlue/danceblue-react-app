@@ -1,4 +1,4 @@
-// Import third-party dependencies
+/// <reference types="react" />
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
 import { Text } from 'react-native-elements';

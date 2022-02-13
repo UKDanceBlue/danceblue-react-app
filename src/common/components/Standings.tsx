@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React, { ReactElement, useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-elements';

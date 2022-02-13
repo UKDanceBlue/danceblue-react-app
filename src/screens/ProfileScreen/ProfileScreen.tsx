@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { Text, Button, Image } from 'react-native-elements';

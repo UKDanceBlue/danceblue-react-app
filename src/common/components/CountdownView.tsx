@@ -1,9 +1,10 @@
+/// <reference types="react" />
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-elements';
 import { intervalToDuration } from 'date-fns';
 
-import { useAppSelector } from "../CustomHooks";
+import { useAppSelector } from '../CustomHooks';
 
 /**
  * A label for a unit of time

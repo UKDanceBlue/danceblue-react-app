@@ -1,4 +1,4 @@
-// Import third-party dependencies
+/// <reference types="react" />
 import React from 'react';
 import { View, PixelRatio, TouchableOpacity } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';

@@ -1,3 +1,4 @@
+/// <reference types="react" />
 // Import third-party dependencies
 import React from 'react';
 import { StatusBar, Linking } from 'react-native';

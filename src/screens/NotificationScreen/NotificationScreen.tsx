@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { RefreshControl, View, ScrollView } from 'react-native';
 import { Text, Button } from 'react-native-elements';

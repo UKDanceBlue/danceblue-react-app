@@ -1,10 +1,9 @@
-// Import third-party dependencies
+/// <reference types="react" />
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 
-// Import first-party dependencies
 import { EventView } from '../screens/EventScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import ProfileScreen from '../screens/ProfileScreen';

@@ -1,3 +1,4 @@
+/// <reference types="react" />
 /* eslint-disable no-nested-ternary */
 // Import third-party dependencies
 import React, { ReactElement } from 'react';

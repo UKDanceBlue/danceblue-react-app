@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from 'react-native';
 import { collection, getDocs, where, query } from 'firebase/firestore';

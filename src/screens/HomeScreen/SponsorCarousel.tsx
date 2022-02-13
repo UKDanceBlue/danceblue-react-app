@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { Text } from 'react-native-elements';

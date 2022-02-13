@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, SafeAreaView, ScrollView } from 'react-native';
 import { getDocs, collection } from 'firebase/firestore';

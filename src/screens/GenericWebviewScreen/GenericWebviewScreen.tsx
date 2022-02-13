@@ -1,4 +1,4 @@
-// Import third-party dependencies
+/// <reference types="react" />
 import React, { useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { WebView } from 'react-native-webview';

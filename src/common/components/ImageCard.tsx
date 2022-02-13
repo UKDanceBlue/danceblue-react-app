@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React from 'react';
 import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';

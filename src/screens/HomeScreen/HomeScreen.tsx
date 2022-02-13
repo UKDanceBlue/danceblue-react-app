@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { useAppSelector } from '../../common/CustomHooks';

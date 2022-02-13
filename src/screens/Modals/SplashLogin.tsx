@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React from 'react';
 import { TouchableOpacity, StyleSheet, View, ImageBackground, Dimensions } from 'react-native';
 import { Text } from 'react-native-elements';
