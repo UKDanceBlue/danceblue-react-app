@@ -21,7 +21,7 @@ const ScoreBoardScreen = () => {
       const tempStandingData: StandingType[] = [];
       querySnapshot.forEach((document) => {
         const teamData = document.data();
-        if (teamData.spiritSpreadsheetId) {
+        if (teamData.spiritSpreadsheetId && teamData.spiritSpreadsheetId !== 'Test Team') {
           tempStandingData.push({
             id: document.id,
             name: teamData.name,

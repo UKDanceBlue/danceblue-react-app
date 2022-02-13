@@ -48,6 +48,7 @@ const Standings = ({
           name={sortedStandings[i].name}
           points={sortedStandings[i].points}
           isHighlighted={sortedStandings[i].highlighted}
+          lastRow={i === sortedStandings.length - 1 && i === rowsToShow - 1}
         />
       );
     }
@@ -58,7 +59,6 @@ const Standings = ({
   return (
     <View style={globalStyles.genericView}>
       <View style={localStyles.ListView}>
-        <Text style={globalTextStyles.headerText}>{titleText}</Text>
         {!isLoading && (
           <>
             {rows}
