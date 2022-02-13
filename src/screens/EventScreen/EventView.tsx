@@ -6,10 +6,10 @@ import openMap from 'react-native-open-maps';
 // import * as Calendar from 'expo-calendar';
 import { doc, getDoc } from 'firebase/firestore';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useRoute } from '@react-navigation/native';
 import { globalColors } from '../../theme';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { useFirebaseStorageUrl } from '../../common/CustomHooks';
-import { useRoute } from '@react-navigation/native';
 import { MainStackScreenProps } from '../../types/NavigationTypes';
 
 // const danceBlueCalendarConfig = {

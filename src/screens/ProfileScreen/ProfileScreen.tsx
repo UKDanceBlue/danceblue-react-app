@@ -2,13 +2,13 @@ import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { Text, Button, Image } from 'react-native-elements';
 import * as Linking from 'expo-linking';
+import { useAssets } from 'expo-asset';
 import { useAppSelector } from '../../common/CustomHooks';
 import SingleSignOn from '../../common/SingleSignOn';
 import { globalStyles, globalColors, globalTextStyles } from '../../theme';
 
 import store from '../../redux/store';
 import { logout } from '../../redux/authSlice';
-import { useAssets } from 'expo-asset';
 
 /**
  * Component for "Profile" screen in main navigation

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from 'react-native';
 import { collection, getDocs, where, query } from 'firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 import EventRow from './EventRow';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { FirestoreEvent } from '../../types/FirebaseTypes';
-import { useNavigation } from '@react-navigation/native';
 import { TabScreenProps } from '../../types/NavigationTypes';
 
 const now = new Date();

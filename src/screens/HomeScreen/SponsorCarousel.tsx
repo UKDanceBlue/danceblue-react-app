@@ -5,6 +5,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import SponsorCard from '../../common/components/ImageCard';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { FirestoreSponsor } from '../../types/FirebaseTypes';
+
 interface SponsorType extends FirestoreSponsor {
   id: string;
 }

@@ -104,7 +104,7 @@ const TabBar = () => {
           })}
         >
           <Tabs.Screen name="Home" component={HomeScreen} />
-          {/* <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />*/}
+          {/* <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} /> */}
           {currentTabs}
         </Tabs.Navigator>
       )}

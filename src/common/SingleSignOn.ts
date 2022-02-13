@@ -15,7 +15,9 @@ import store from '../redux/store';
 let browserOpen = false;
 export default class SingleSignOn {
   backendUrl: string;
+
   redirectData: Linking.ParsedURL;
+
   constructor() {
     this.backendUrl = 'https://app.danceblue.org/saml-relay.html';
   }

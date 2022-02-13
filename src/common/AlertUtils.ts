@@ -7,9 +7,9 @@ import { Alert } from 'react-native';
  */
 export function showMessage(
   message: string | any,
-  title: string = 'Error',
+  title = 'Error',
   onAccept: () => any = null,
-  log: boolean = false,
+  log = false,
   logInfo: any = ''
 ) {
   Alert.alert(title.toString(), message.toString(), [
@@ -51,12 +51,12 @@ export function showMessage(
  */
 export function showPrompt(
   message: any,
-  title: string = 'Error',
+  title = 'Error',
   negativeAction: () => any = () => {},
   positiveAction: () => any = () => {},
-  negativeText: string = 'No',
-  positiveText: string = 'Yes',
-  log: boolean = false,
+  negativeText = 'No',
+  positiveText = 'Yes',
+  log = false,
   logInfo: any = ''
 ) {
   Alert.alert(title.toString(), message.toString(), [

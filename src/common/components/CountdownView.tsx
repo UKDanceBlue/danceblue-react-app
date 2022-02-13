@@ -3,7 +3,7 @@ import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-elements';
 import { intervalToDuration } from 'date-fns';
 
-import { useAppSelector } from '../../common/CustomHooks';
+import { useAppSelector } from "../CustomHooks";
 
 /**
  * A label for a unit of time
@@ -65,7 +65,7 @@ const CountdownView = () => {
               // Check that this or any previous unit is nonzero
               +!!countdownDisplayDuration.years > 0 && (
                 <>
-                  <TimeUnit unit={'years'} value={countdownDisplayDuration.years} />
+                  <TimeUnit unit="years" value={countdownDisplayDuration.years} />
 
                   <Text
                     style={{
@@ -83,7 +83,7 @@ const CountdownView = () => {
               // Check that this or any previous unit is nonzero
               +!!countdownDisplayDuration.years + +!!countdownDisplayDuration.months > 0 && (
                 <>
-                  <TimeUnit unit={'months'} value={countdownDisplayDuration.months} />
+                  <TimeUnit unit="months" value={countdownDisplayDuration.months} />
 
                   <Text
                     style={{
@@ -104,7 +104,7 @@ const CountdownView = () => {
                 +!!countdownDisplayDuration.days >
                 0 && (
                 <>
-                  <TimeUnit unit={'days'} value={countdownDisplayDuration.days} />
+                  <TimeUnit unit="days" value={countdownDisplayDuration.days} />
 
                   <Text
                     style={{
@@ -126,7 +126,7 @@ const CountdownView = () => {
                 +!!countdownDisplayDuration.hours >
                 0 && (
                 <>
-                  <TimeUnit unit={'hours'} value={countdownDisplayDuration.hours} />
+                  <TimeUnit unit="hours" value={countdownDisplayDuration.hours} />
 
                   <Text
                     style={{
@@ -149,7 +149,7 @@ const CountdownView = () => {
                 +!!countdownDisplayDuration.minutes >
                 0 && (
                 <>
-                  <TimeUnit unit={'minutes'} value={countdownDisplayDuration.minutes} />
+                  <TimeUnit unit="minutes" value={countdownDisplayDuration.minutes} />
 
                   <Text
                     style={{
@@ -173,7 +173,7 @@ const CountdownView = () => {
                 +!!countdownDisplayDuration.seconds >
                 0 && (
                 <>
-                  <TimeUnit unit={'seconds'} value={countdownDisplayDuration.seconds} />
+                  <TimeUnit unit="seconds" value={countdownDisplayDuration.seconds} />
                 </>
               )
             }

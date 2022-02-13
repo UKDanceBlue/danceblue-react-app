@@ -242,7 +242,7 @@ export const loginSaml = createAsyncThunk(
     const userSnapshot = await getDoc(doc(firebaseFirestore, 'users', samlUserCredential.user.uid));
     thunkApi.dispatch(updateUserData({ isAnonymous: false, userSnapshot }));
 
-    return;
+    
   }
 );
 
