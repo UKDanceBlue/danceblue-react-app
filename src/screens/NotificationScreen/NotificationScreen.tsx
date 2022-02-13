@@ -1,22 +1,25 @@
 /// <reference types="react" />
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { RefreshControl, View, ScrollView } from 'react-native';
-import { Text, Button } from 'react-native-elements';
+import { Text, Button, ListItem } from 'react-native-elements';
 import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
 import * as Device from 'expo-device';
 import * as Linking from 'expo-linking';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, DocumentSnapshot, getDoc } from 'firebase/firestore';
 import { useAppSelector } from '../../common/CustomHooks';
 import { globalStyles, globalTextStyles } from '../../theme';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { showMessage } from '../../common/AlertUtils';
 import store from '../../redux/store';
 import { registerPushNotifications } from '../../redux/notificationSlice';
+import { FirestoreNotification } from '../../types/FirebaseTypes';
 
 const uuidStoreKey = __DEV__ ? 'danceblue.device-uuid.dev' : 'danceblue.device-uuid';
 
-const notificationsCache = {};
+const notificationsCache = {} as {
+  [key: string]: FirestoreNotification;
+};
 
 /**
  * Component for "Profile" screen in main navigation
@@ -25,7 +28,7 @@ const NotificationScreen = () => {
   const notificationPermissionsGranted = useAppSelector(
     (state) => state.notification.notificationPermissionsGranted
   );
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState<FirestoreNotification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const notificationReferences = useAppSelector((state) => state.auth.pastNotifications);
 
@@ -59,7 +62,7 @@ const NotificationScreen = () => {
       // We have already set a UUID and can use the retrieved value
       if (uuid) {
         // An array of all notifications to be shown
-        const tempNotifications = [];
+        const tempNotifications = [] as FirestoreNotification[];
 
         /* Ensure everything is in the cache */
         // An array of getDoc promises for any new notifications we need to get
@@ -77,12 +80,14 @@ const NotificationScreen = () => {
           }
         }
         // Wait for any new notifications to download and add them to tempNotifications as well
-        const newNotifications = await Promise.all(newNotificationPromises);
+        const newNotifications = (await Promise.all(newNotificationPromises)) as DocumentSnapshot[];
         for (let i = 0; i < newNotifications.length; i++) {
-          const newNotificationData = newNotifications[i].data();
-          if (newNotificationData) {
-            notificationsCache[newNotifications[i].ref.path] = newNotificationData;
-            tempNotifications.push(notificationsCache[notificationReferences[i]]);
+          if (newNotifications[i].ref) {
+            const newNotificationData = newNotifications[i].data() as FirestoreNotification;
+            if (newNotificationData) {
+              notificationsCache[newNotifications[i].ref.path] = newNotificationData;
+              tempNotifications.push(notificationsCache[notificationReferences[i]]);
+            }
           }
         }
 
@@ -106,22 +111,25 @@ const NotificationScreen = () => {
     const tempNotificationsListView = [];
     for (let i = 0; i < notifications.length; i++) {
       tempNotificationsListView.push(
-        <View style={globalStyles.genericRow} key={i}>
-          <View style={globalStyles.genericView}>
-            {/* Title */}
-            <Text style={globalTextStyles.boldText}>{notifications[i].title}</Text>
-            {/* Body */}
-            <Text style={globalStyles.genericText}>{notifications[i].body}</Text>
-            {/* Timestamp */}
-            <Text style={globalTextStyles.italicText}>
-              {Date.now() - notifications[i].sendTime.toMillis() < 43200000
-                ? notifications[i].sendTime
-                    .toDate()
-                    .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                : notifications[i].sendTime.toDate().toLocaleDateString()}
-            </Text>
+        <ListItem key={i} style={{ flexDirection: 'column' }}>
+          <View>
+            <ListItem.Title style={globalTextStyles.boldText}>
+              {notifications[i].title}
+            </ListItem.Title>
+            <ListItem.Subtitle>
+              <Text>
+                {Date.now() - notifications[i].sendTime.toMillis() < 43200000
+                  ? notifications[i].sendTime
+                      .toDate()
+                      .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                  : notifications[i].sendTime.toDate().toLocaleDateString()}
+              </Text>
+            </ListItem.Subtitle>
           </View>
-        </View>
+          <ListItem.Content style={globalStyles.genericText}>
+            <Text>{notifications[i].body}</Text>
+          </ListItem.Content>
+        </ListItem>
       );
     }
 
