@@ -1,10 +1,9 @@
-import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { differenceInHours } from 'date-fns';
 import { BlurView } from 'expo-blur';
 import { useEffect, useMemo, useState } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Text } from 'react-native-elements';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { ListItem, Text } from 'react-native-elements';
 import { useCurrentDate } from '../../common/CustomHooks';
 import { globalColors, globalTextStyles } from '../../theme';
 import { HourScreenOptionsType } from '../../types/HourScreenTypes';
@@ -147,14 +146,19 @@ const HourRow = ({
   }, [currentMinute, hourName, hourNumber, marathonHour]);
 
   return (
-    <TouchableOpacity
-      onPress={() =>
-        navigation?.navigate('Hour Details', { hourName, hourNumber, hourScreenOptions })
+    <ListItem
+      hasTVPreferredFocus={undefined}
+      tvParallaxProperties={undefined}
+      onPress={
+        clickable
+          ? () => navigation?.navigate('Hour Details', { hourName, hourNumber, hourScreenOptions })
+          : undefined
       }
       disabled={!clickable}
+      key={hourNumber}
     >
-      <View style={style.hourRow}>
-        <Text h4>{`${hourNumber + 1}.`}</Text>
+      <ListItem.Content style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+        <Text h4>{`${hourNumber + 1}. `}</Text>
         <Text h4>
           {displayedNamePart}
           <View>
@@ -162,17 +166,13 @@ const HourRow = ({
             <BlurView style={StyleSheet.absoluteFill} tint="light" intensity={30} />
           </View>
         </Text>
-        {clickable ? (
-          <FontAwesome5 name="chevron-right" size={24} color="black" />
-        ) : (
-          <Text>{'      '}</Text>
-        )}
-      </View>
-    </TouchableOpacity>
+      </ListItem.Content>
+      {clickable && <ListItem.Chevron tvParallaxProperties={undefined} />}
+    </ListItem>
   );
 };
 
-export default () => {
+const HoursListScreen = () => {
   // Using a literal date for testing purposes
   const currentDate = useMemo(() => new Date(2022, 3, 6, 11, 56, 0, 0), []); // useCurrentDate(60);
   const [marathonHour, setMarathonHour] = useState(-1);
@@ -231,3 +231,5 @@ const style = StyleSheet.create({
     height: 30,
   },
 });
+
+export default HoursListScreen;
