@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import React, { useState } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, TextInput, ImageSourcePropType } from 'react-native';
 import { Text, Button, Image } from 'react-native-elements';
 import * as Linking from 'expo-linking';
 import { useAssets } from 'expo-asset';
@@ -33,7 +33,12 @@ const ProfileScreen = () => {
         {
           /* Start of loaded view */ userData.isAuthLoaded && (
             <>
-              {assets && <Image source={assets[0]} style={{ height: 64, width: 64 }} />}
+              {assets && (
+                <Image
+                  source={assets[0] as ImageSourcePropType}
+                  style={{ height: 64, width: 64 }}
+                />
+              )}
               {
                 /* Start of logged in view */ userData.isLoggedIn &&
                   !userData.isAnonymous && (

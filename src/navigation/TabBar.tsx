@@ -21,14 +21,14 @@ const possibleTabs = {
   Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
   Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,
   MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
-};
+} as { [key: string]: JSX.Element };
 
 const TabBar = () => {
   const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
   const configuredTabs = useAppSelector((state) => state.appConfig.configuredTabs);
   const demoMode = useAppSelector((state) => state.appConfig.demoMode);
 
-  const [currentTabs, setCurrentTabs] = useState([]);
+  const [currentTabs, setCurrentTabs] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
     if (isConfigLoaded) {
@@ -59,7 +59,7 @@ const TabBar = () => {
                 Team: 'users',
                 Donate: 'hand-holding-heart',
                 Marathon: 'people-arrows',
-              };
+              } as { [key: string]: string };
 
               // You can return any component that you like here!
               return (
