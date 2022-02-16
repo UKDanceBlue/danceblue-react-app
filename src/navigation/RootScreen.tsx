@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ActivityIndicator } from 'react-native';

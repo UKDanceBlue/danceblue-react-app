@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, TouchableHighlight, View, Image } from 'react-native';
 import { Text } from 'react-native-elements';
@@ -6,10 +7,10 @@ import openMap from 'react-native-open-maps';
 // import * as Calendar from 'expo-calendar';
 import { doc, getDoc } from 'firebase/firestore';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useRoute } from '@react-navigation/native';
 import { globalColors } from '../../theme';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { useFirebaseStorageUrl } from '../../common/CustomHooks';
-import { useRoute } from '@react-navigation/native';
 import { MainStackScreenProps } from '../../types/NavigationTypes';
 
 // const danceBlueCalendarConfig = {
@@ -44,7 +45,6 @@ const EventView = () => {
 
   /**
    * Check if the DanceBlue calendar exist's on the user's device
-   * @returns true if the calendar exists, false if not
    */
   // const checkDBCalendar = async () => {
   //   let foundCalendar = false;
@@ -103,7 +103,6 @@ const EventView = () => {
 
   /**
    * Creates a new calendar on the user's device and adds *calendarID* to *this.state*
-   * @returns A Promise for the completion of which ever callback is executed.
    */
   // const createDBCalendar = () =>
   //   Calendar.createCalendarAsync(danceBlueCalendarConfig).then((localId) => setCalendarID(localId));
@@ -135,7 +134,6 @@ const EventView = () => {
   /**
    * Removes an event from the calendar
    * While the function is running *isAddingToCalendar* will return true
-   * @returns A Promise for the completion of which ever callback is executed.
    */
   // const removeFromCalendar = async () => {
   //   await Calendar.deleteEventAsync(eventCalendarID);

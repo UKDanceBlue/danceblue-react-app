@@ -6,8 +6,6 @@ import { useFirebaseStorageUrl } from '../CustomHooks.ts';
 
 /**
  * A badge icon for use with profiles
- * @param {string} imageURL Badge url to fetch from firebase storage
- * @param {string} name Name of the badge
  */
 const Badge = ({ imageURL, name }) => {
   const [imageRef, imageRefError] = useFirebaseStorageUrl(imageURL);

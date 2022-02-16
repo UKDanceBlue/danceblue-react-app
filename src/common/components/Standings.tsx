@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React, { ReactElement, useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-elements';
@@ -7,11 +8,6 @@ import { StandingType } from '../../types/StandingType';
 
 /**
  * Standings implementation for the a generic leaderboard
- * @param {string} titleText Text to show at the top of the component (default: blank)
- * @param {function} standingData an array of the information to be displayed (default: blank)
- * @param {bool} expandable Can the standings be expanded/contracted (default: false)
- * @param {bool} startExpanded Are the standings expanded by default (default: false)
- * @param {number} collapsedRows How many rows should be shown when collapsed (default: 3)
  */
 const Standings = ({
   titleText,
@@ -52,6 +48,7 @@ const Standings = ({
           name={sortedStandings[i].name}
           points={sortedStandings[i].points}
           isHighlighted={sortedStandings[i].highlighted}
+          lastRow={i === sortedStandings.length - 1 && i === rowsToShow - 1}
         />
       );
     }
@@ -62,7 +59,6 @@ const Standings = ({
   return (
     <View style={globalStyles.genericView}>
       <View style={localStyles.ListView}>
-        <Text style={globalTextStyles.headerText}>{titleText}</Text>
         {!isLoading && (
           <>
             {rows}

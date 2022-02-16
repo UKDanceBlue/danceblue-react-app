@@ -1,10 +1,11 @@
+/// <reference types="react" />
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from 'react-native';
 import { collection, getDocs, where, query } from 'firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 import EventRow from './EventRow';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { FirestoreEvent } from '../../types/FirebaseTypes';
-import { useNavigation } from '@react-navigation/native';
 import { TabScreenProps } from '../../types/NavigationTypes';
 
 const now = new Date();
@@ -14,7 +15,6 @@ interface EventType extends FirestoreEvent {
 
 /**
  * Component for "Events" screen in main navigation
- * @param {Object} props Properties of the component: navigation, firebase
  *
  * TODO figure out how this works and then:
  *  1. Simplify it
@@ -71,7 +71,6 @@ const EventScreen = () => {
 
   /**
    * Called by React Native when rendering the screen
-   * @returns A JSX formatted Component
    */
   return (
     <ScrollView style={styles.body}>

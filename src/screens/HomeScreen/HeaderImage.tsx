@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React from 'react';
 import { View, ImageBackground, Image, StyleSheet } from 'react-native';
 import { globalStyles } from '../../theme';

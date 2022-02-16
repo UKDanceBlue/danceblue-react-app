@@ -1,3 +1,4 @@
+/// <reference types="react" />
 // Import third-party dependencies
 import React from 'react';
 import { StatusBar, Linking } from 'react-native';
@@ -103,6 +104,8 @@ const App = () => {
                           Scoreboard: 'redirect/team-rankings',
                           Team: 'redirect/my-team',
                           Store: 'redirect/dancebluetique',
+                          Donate: 'redirect/donate',
+                          HoursScreen: 'redirect/marathon',
                         },
                       },
                       Profile: 'redirect/app-profile',

@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React from 'react';
 import { TouchableOpacity, StyleSheet, View, ImageBackground, Dimensions } from 'react-native';
 import { Text } from 'react-native-elements';
@@ -12,7 +13,6 @@ const splashBackground = require('../../../assets/home/Dancing-min.jpg');
 
 /**
  * A simplified sign in page shown when the user first opens the app
- * @param {Object} props Properties of the component: navigation, firebase
  * @class
  */
 const SplashLoginScreen = () => (

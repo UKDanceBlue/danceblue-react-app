@@ -4,17 +4,12 @@ import { Alert } from 'react-native';
 
 /**
  * Show a one button prompt
- * @param {*} message A message show in the alert body
- * @param {string} title The alert's title
- * @param {function} onAccept A function run when the user presses OK
- * @param {boolean} log Should the alert by logged
- * @param {*} logInfo A string or object to be logged along with the title and message
  */
 export function showMessage(
   message: string | any,
-  title: string = 'Error',
+  title = 'Error',
   onAccept: () => any = null,
-  log: boolean = false,
+  log = false,
   logInfo: any = ''
 ) {
   Alert.alert(title.toString(), message.toString(), [
@@ -53,23 +48,15 @@ export function showMessage(
 
 /**
  * Show a two button prompt that can execute one of two functions depending on the user's selection
- * @param {*} message
- * @param {string} title
- * @param {function} negativeAction
- * @param {function} positiveAction
- * @param {string} negativeText
- * @param {string} positiveText
- * @param {boolean} log Should the alert by logged
- * @param {*} logInfo A string or object to be logged along with the title and message
  */
 export function showPrompt(
   message: any,
-  title: string = 'Error',
+  title = 'Error',
   negativeAction: () => any = () => {},
   positiveAction: () => any = () => {},
-  negativeText: string = 'No',
-  positiveText: string = 'Yes',
-  log: boolean = false,
+  negativeText = 'No',
+  positiveText = 'Yes',
+  log = false,
   logInfo: any = ''
 ) {
   Alert.alert(title.toString(), message.toString(), [
@@ -109,9 +96,6 @@ export function showPrompt(
 
 /**
  * Use showMessage to show a Firebase error code to the user and log the associated error message to stderr
- * @param {object} error
- * @param {string} log
- * @returns the error that was passed for chaining
  */
 export function handleFirebaseError(error: FirebaseError, log = false) {
   showMessage(`Error Code: ${error.code}`);

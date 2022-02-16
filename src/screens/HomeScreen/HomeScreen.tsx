@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import React from 'react';
 import { Linking, SafeAreaView, ScrollView } from 'react-native';
 import { useAppSelector } from '../../common/CustomHooks';
@@ -8,7 +9,6 @@ import { Button } from 'react-native-elements';
 
 /**
  * Component for home screen in main navigation
- * @param {Object} props Properties of the component: navigation, firebase
  */
 const HomeScreen = () => {
   const countdown = useAppSelector((state) => state.appConfig.countdown);

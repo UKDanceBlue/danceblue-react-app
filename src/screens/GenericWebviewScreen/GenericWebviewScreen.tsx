@@ -1,4 +1,4 @@
-// Import third-party dependencies
+/// <reference types="react" />
 import React, { useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { WebView } from 'react-native-webview';
@@ -6,7 +6,6 @@ import { globalStyles } from '../../theme';
 
 /**
  * A simple screen wrapper for a webview
- * @param {Object} route The route used by the navigator to reach this screen, should include a defaultParam *uri* that will be displayed by the component
  */
 const GenericWebviewScreen = ({ route }) => {
   const [isWebpageLoading, setIsWebpageLoading] = useState(true);
