@@ -34,6 +34,7 @@
     "expo-blur": "~11.0.0",
     "expo-calendar": "~10.1.0",
     "expo-device": "~4.1.0",
+    "expo-file-system": "~13.1.4",
     "expo-font": "~10.0.4",
     "expo-linking": "~3.0.0",
     "expo-notifications": "~0.14.0",

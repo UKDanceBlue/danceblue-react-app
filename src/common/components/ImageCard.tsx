@@ -4,28 +4,42 @@ import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from '
 import * as WebBrowser from 'expo-web-browser';
 
 import { MaterialIcons } from '@expo/vector-icons';
-import { useFirebaseStorageUrl } from '../CustomHooks';
+import { useCachedFile } from '../CustomHooks';
 
 /**
  * A card showing a Sponsor's logo that link's to their website
  */
-const SponsorCard = ({ imageLink, sponsorLink }: { imageLink: string; sponsorLink: string }) => {
-  const [imageRef, imageRefError] = useFirebaseStorageUrl(imageLink);
+const SponsorCard = ({
+  imageLink,
+  sponsorLink,
+  name,
+}: {
+  imageLink: string | undefined;
+  sponsorLink: string | undefined;
+  name: string | undefined;
+}) => {
+  const [imageContent, imageRefError] = useCachedFile(`${name}-logo`, 172800, {
+    base64: true,
+    downloadUri: imageLink,
+  });
 
   return (
     <TouchableHighlight
-      onPress={() => WebBrowser.openBrowserAsync(sponsorLink)}
+      onPress={sponsorLink ? () => WebBrowser.openBrowserAsync(sponsorLink) : undefined}
       underlayColor="#dddddd"
     >
       <View style={styles.border}>
-        {!imageRef && !imageRefError && (
+        {!imageContent && !imageRefError && (
           <ActivityIndicator style={styles.image} size="large" color="blue" />
         )}
         {imageRefError && (
           <MaterialIcons name="image-not-supported" size={styles.image.width} color="black" />
         )}
-        {imageRef && (
-          <Image source={{ uri: imageRef, width: styles.image.width }} style={styles.image} />
+        {imageContent && (
+          <Image
+            source={{ uri: `data:image;base64,${imageContent}`, width: styles.image.width }}
+            style={styles.image}
+          />
         )}
       </View>
     </TouchableHighlight>

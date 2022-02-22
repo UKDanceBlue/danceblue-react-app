@@ -36,7 +36,12 @@ const SponsorCarousel = () => {
   }, []);
 
   const cards = sponsors.map((sponsor) => (
-    <SponsorCard imageLink={sponsor.logo} sponsorLink={sponsor.link} key={sponsor.id} />
+    <SponsorCard
+      name={sponsor.name}
+      imageLink={sponsor.logo}
+      sponsorLink={sponsor.link}
+      key={sponsor.id}
+    />
   ));
 
   return (
