@@ -25,29 +25,25 @@ export function useFirebaseStorageUrl(googleUri: string) {
   return state;
 }
 
+export type UseCachedFilesType = {
+  assetId: string;
+  freshnessTime: number;
+  googleUri?: string;
+  downloadUri?: string;
+  base64?: boolean;
+};
+
 export function useCachedFiles(
-  options: [
-    {
-      assetId: string;
-      freshnessTime: number;
-      googleUri?: string;
-      downloadUri?: string;
-      base64?: boolean;
-    }
-  ]
+  options: [UseCachedFilesType],
+  alwaysReturnArray?: boolean
 ): [string | null, Error | null];
 
 export function useCachedFiles(
-  options: {
-    assetId: string;
-    freshnessTime: number;
-    googleUri?: string;
-    downloadUri?: string;
-    base64?: boolean;
-  }[]
+  options: UseCachedFilesType[],
+  alwaysReturnArray?: boolean
 ): [string | null, Error | null][];
 
-export function useCachedFiles(options: any): any {
+export function useCachedFiles(options: any, alwaysReturnArray?: boolean): any {
   const [hookState, setHookState] = useState<
     [string | null, Error | null][] | [string | null, Error | null]
   >([null, null]);
@@ -144,7 +140,7 @@ export function useCachedFiles(options: any): any {
         }
 
         await Promise.all(fileContentPromises).then((fileContents) => {
-          if (fileContents.length === 1) {
+          if (fileContents.length === 1 && !alwaysReturnArray) {
             setHookState(fileContents[0]);
           } else {
             setHookState(fileContents);
