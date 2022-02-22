@@ -26,6 +26,18 @@ export function useFirebaseStorageUrl(googleUri: string) {
 }
 
 export function useCachedFiles(
+  options: [
+    {
+      assetId: string;
+      freshnessTime: number;
+      googleUri?: string;
+      downloadUri?: string;
+      base64?: boolean;
+    }
+  ]
+): [string | null, Error | null];
+
+export function useCachedFiles(
   options: {
     assetId: string;
     freshnessTime: number;
@@ -33,7 +45,9 @@ export function useCachedFiles(
     downloadUri?: string;
     base64?: boolean;
   }[]
-) {
+): [string | null, Error | null][];
+
+export function useCachedFiles(options: any): any {
   const [hookState, setHookState] = useState<
     [string | null, Error | null][] | [string | null, Error | null]
   >([null, null]);
