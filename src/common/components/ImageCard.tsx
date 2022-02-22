@@ -4,7 +4,7 @@ import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from '
 import * as WebBrowser from 'expo-web-browser';
 
 import { MaterialIcons } from '@expo/vector-icons';
-import { useCachedFile } from '../CustomHooks';
+import { useCachedFiles } from '../CustomHooks';
 
 /**
  * A card showing a Sponsor's logo that link's to their website
@@ -18,10 +18,14 @@ const SponsorCard = ({
   sponsorLink: string | undefined;
   name: string | undefined;
 }) => {
-  const [imageContent, imageRefError] = useCachedFile(`${name}-logo`, 172800, {
-    base64: true,
-    downloadUri: imageLink,
-  });
+  const [imageContent, imageRefError] = useCachedFiles([
+    {
+      assetId: `${name}-logo`,
+      freshnessTime: 172800,
+      base64: true,
+      downloadUri: imageLink,
+    },
+  ]);
 
   return (
     <TouchableHighlight
