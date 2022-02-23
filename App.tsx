@@ -87,7 +87,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={rnElementsTheme}>
-        <StatusBar backgroundColor="blue" barStyle="dark-content" />
+        <StatusBar backgroundColor="white" barStyle="dark-content" />
         <NavigationContainer
           linking={
             // From https://docs.expo.dev/versions/latest/sdk/notifications/#handling-push-notifications-with-react-navigation
