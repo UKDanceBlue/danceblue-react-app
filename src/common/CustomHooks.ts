@@ -59,8 +59,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
       }
     }
     setLocalUris(tempLocalUris);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [options.length]);
 
   useEffect(() => {
     (async () => {
@@ -145,6 +144,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
               })()
             );
           } else {
+            // Mark an empty space
             fileContentPromises.push((async () => [null, null])());
           }
         }
@@ -152,6 +152,8 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
         await Promise.all(fileContentPromises).then((fileContents) => {
           if (fileContents.length === 1 && !alwaysReturnArray) {
             setHookState(fileContents[0]);
+          } else if (fileContents.length === 0 && alwaysReturnArray) {
+            setHookState([]);
           } else {
             setHookState(fileContents);
           }
