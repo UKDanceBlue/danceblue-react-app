@@ -35,7 +35,7 @@ export type UseCachedFilesType = {
 
 export function useCachedFiles(
   options: [UseCachedFilesType],
-  alwaysReturnArray?: boolean
+  alwaysReturnArray?: false
 ): [string | null, Error | null];
 
 export function useCachedFiles(
@@ -43,18 +43,20 @@ export function useCachedFiles(
   alwaysReturnArray?: boolean
 ): [string | null, Error | null][];
 
-export function useCachedFiles(options: any, alwaysReturnArray?: boolean): any {
+export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?: boolean) {
   const [hookState, setHookState] = useState<
     [string | null, Error | null][] | [string | null, Error | null]
-  >([null, null]);
+  >(Array(options.length).fill([null, null]));
   const [localUris, setLocalUris] = useState<(string | null)[]>([]);
 
   useEffect(() => {
     const tempLocalUris = Array(options.length).fill('');
     for (let i = 0; i < options.length; i++) {
-      tempLocalUris[i] = `${FileSystem.cacheDirectory}DBFileCache/${encodeURIComponent(
-        options[i].assetId
-      )}`;
+      if (options[i]) {
+        tempLocalUris[i] = `${FileSystem.cacheDirectory}DBFileCache/${encodeURIComponent(
+          options[i].assetId
+        )}`;
+      }
     }
     setLocalUris(tempLocalUris);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,9 +66,11 @@ export function useCachedFiles(options: any, alwaysReturnArray?: boolean): any {
     (async () => {
       let allNeededVariablesSet = true;
       for (let i = 0; i < options.length; i++) {
-        if (!((options[i].downloadUri || options[i].googleUri) && localUris[i])) {
-          allNeededVariablesSet = false;
-          break;
+        if (options[i]) {
+          if (!((options[i].downloadUri || options[i].googleUri) && localUris[i])) {
+            allNeededVariablesSet = false;
+            break;
+          }
         }
       }
 
@@ -76,67 +80,73 @@ export function useCachedFiles(options: any, alwaysReturnArray?: boolean): any {
         const fileContentPromises: Promise<[string | null, Error | null]>[] = [];
 
         for (let i = 0; i < options.length; i++) {
-          fileContentPromises.push(
-            (async (): Promise<[string | null, Error | null]> => {
-              try {
-                // Get information about where the file should be
-                const localAssetInfo = await FileSystem.getInfoAsync(localUris[i] as string);
+          if (options[i]) {
+            fileContentPromises.push(
+              (async (): Promise<[string | null, Error | null]> => {
+                try {
+                  // Get information about where the file should be
+                  const localAssetInfo = await FileSystem.getInfoAsync(localUris[i] as string);
 
-                // Does the file exist? And if so is it within the threshold for freshness?
-                if (
-                  !localAssetInfo.exists ||
-                  new Date().getTime() / 1000 - localAssetInfo.modificationTime >
-                    options[i].freshnessTime
-                ) {
-                  // If not we are going to download the file before reading form it
+                  // Does the file exist? And if so is it within the threshold for freshness?
+                  if (
+                    !localAssetInfo.exists ||
+                    new Date().getTime() / 1000 - localAssetInfo.modificationTime >
+                      options[i].freshnessTime
+                  ) {
+                    // If not we are going to download the file before reading form it
 
-                  // Start by getting figuring out a download uri
-                  let { downloadUri } = options[i];
-                  if (options[i].googleUri) {
-                    downloadUri = await getDownloadURL(ref(firebaseStorage, options[i].googleUri));
-                  }
-                  // If there is still no download Uri then throw an error
-                  if (!downloadUri) {
-                    throw new Error('No download uri could be determined');
-                  }
+                    // Start by getting figuring out a download uri
+                    let { downloadUri } = options[i];
+                    if (options[i].googleUri) {
+                      downloadUri = await getDownloadURL(
+                        ref(firebaseStorage, options[i].googleUri)
+                      );
+                    }
+                    // If there is still no download Uri then throw an error
+                    if (!downloadUri) {
+                      throw new Error('No download uri could be determined');
+                    }
 
-                  // Check if the cache directory exists
-                  const { exists: cacheDirectoryExists } = await FileSystem.getInfoAsync(
-                    `${FileSystem.cacheDirectory}DBFileCache/`
-                  );
-
-                  // If not, make it
-                  if (!cacheDirectoryExists) {
-                    await FileSystem.makeDirectoryAsync(
-                      `${FileSystem.cacheDirectory}DBFileCache/`,
-                      {
-                        intermediates: true,
-                      }
+                    // Check if the cache directory exists
+                    const { exists: cacheDirectoryExists } = await FileSystem.getInfoAsync(
+                      `${FileSystem.cacheDirectory}DBFileCache/`
                     );
-                  }
 
-                  // Finally we download the file from downloadUri
-                  await FileSystem.downloadAsync(downloadUri, localUris[i] as string);
-                }
-                const localFileContent = await FileSystem.readAsStringAsync(
-                  localUris[i] as string,
-                  {
-                    encoding: options[i].base64
-                      ? FileSystem.EncodingType.Base64
-                      : FileSystem.EncodingType.UTF8,
+                    // If not, make it
+                    if (!cacheDirectoryExists) {
+                      await FileSystem.makeDirectoryAsync(
+                        `${FileSystem.cacheDirectory}DBFileCache/`,
+                        {
+                          intermediates: true,
+                        }
+                      );
+                    }
+
+                    // Finally we download the file from downloadUri
+                    await FileSystem.downloadAsync(downloadUri, localUris[i] as string);
                   }
-                );
-                if (localFileContent) {
-                  // Set localFileContent into the hook state, we are done
-                  return [localFileContent, null];
-                } else {
-                  throw new Error(`No Content in ${localUris[i]}`);
+                  const localFileContent = await FileSystem.readAsStringAsync(
+                    localUris[i] as string,
+                    {
+                      encoding: options[i].base64
+                        ? FileSystem.EncodingType.Base64
+                        : FileSystem.EncodingType.UTF8,
+                    }
+                  );
+                  if (localFileContent) {
+                    // Set localFileContent into the hook state, we are done
+                    return [localFileContent, null];
+                  } else {
+                    throw new Error(`No Content in ${localUris[i]}`);
+                  }
+                } catch (error) {
+                  return [null, error as Error];
                 }
-              } catch (error) {
-                return [null, error as Error];
-              }
-            })()
-          );
+              })()
+            );
+          } else {
+            fileContentPromises.push((async () => [null, null])());
+          }
         }
 
         await Promise.all(fileContentPromises).then((fileContents) => {
