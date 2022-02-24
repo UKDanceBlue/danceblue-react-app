@@ -1,5 +1,6 @@
 import { getDownloadURL, ref } from 'firebase/storage';
-import { useDebugValue, useEffect, useRef, useState } from 'react';
+import { DependencyList, useDebugValue, useEffect, useRef, useState } from 'react';
+import { isEqual } from 'lodash-es';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { firebaseStorage } from './FirebaseApp';
@@ -22,6 +23,22 @@ export function useFirebaseStorageUrl(googleUri: string) {
   }, [googleUri]);
 
   return state;
+}
+
+export function useDeepEffect(effectFunc: () => unknown, deps: DependencyList) {
+  const isFirst = useRef(true);
+  const prevDeps = useRef(deps);
+
+  useEffect(() => {
+    const isSame = prevDeps.current.every((obj, index) => isEqual(obj, deps[index]));
+
+    if (isFirst.current || !isSame) {
+      effectFunc();
+    }
+
+    isFirst.current = false;
+    prevDeps.current = deps;
+  }, [deps, effectFunc]);
 }
 
 export function useCurrentDate(refreshInterval: number) {
