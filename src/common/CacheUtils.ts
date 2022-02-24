@@ -1,5 +1,5 @@
 import { getDownloadURL, ref } from 'firebase/storage';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import * as FileSystem from 'expo-file-system';
 import { firebaseStorage } from './FirebaseApp';
 import { showMessage } from './AlertUtils';
