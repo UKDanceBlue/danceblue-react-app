@@ -4,9 +4,10 @@ import { Input } from 'react-native-elements';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 
 export default {
-  test: <Text key={0}>This is dynamic content loaded from HourActivities.tsx</Text>,
+  test: <Text>This is dynamic content loaded from HourActivities.tsx</Text>,
   'guessing-game': (
-    <View key={1}>
+    <View>
+      <Text>Enter your guess and press enter:</Text>
       <Input
         autoCompleteType="off"
         autoComplete="off"
