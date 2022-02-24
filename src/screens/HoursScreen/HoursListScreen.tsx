@@ -4,111 +4,26 @@ import { BlurView } from 'expo-blur';
 import { useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ListItem, Text } from 'react-native-elements';
-import { useCurrentDate } from '../../common/CustomHooks';
-import { globalColors, globalTextStyles } from '../../theme';
-import { HourScreenOptionsType } from '../../types/HourScreenTypes';
+import { useAppSelector, useCurrentDate } from '../../common/CustomHooks';
+import { globalColors } from '../../theme';
+import { FirestoreHour } from '../../types/FirebaseTypes';
 import { TabScreenProps } from '../../types/NavigationTypes';
 
-const hourNames: string[] = [
-  'One',
-  'Two',
-  'Three',
-  'Four',
-  'Five',
-  'Six',
-  'Seven',
-  'Eight',
-  'Nine',
-  'Ten',
-  'Eleven',
-  'Twelve',
-  'Thirteen',
-  'Fourteen',
-  'Fifteen',
-  'Sixteen',
-  'Seventeen',
-  'Eighteen',
-  'Nineteen',
-  'Twenty',
-  'Twenty-one',
-  'Twenty-two',
-  'Twenty-three',
-  'Twenty-four',
-];
-
-const hourListKeys: { key: number }[] = [
-  { key: 0 },
-  { key: 1 },
-  { key: 2 },
-  { key: 3 },
-  { key: 4 },
-  { key: 5 },
-  { key: 6 },
-  { key: 7 },
-  { key: 8 },
-  { key: 9 },
-  { key: 10 },
-  { key: 11 },
-  { key: 12 },
-  { key: 13 },
-  { key: 14 },
-  { key: 15 },
-  { key: 16 },
-  { key: 17 },
-  { key: 18 },
-  { key: 19 },
-  { key: 20 },
-  { key: 21 },
-  { key: 22 },
-  { key: 23 },
-];
-
-const hourScreenOptionsList: HourScreenOptionsType[] = [
-  {
-    hourInstructions: [
-      'Start a game',
-      'Play a game',
-      ['Breakdown', 'Breakdown A', 'Breakdown B'],
-      'Finish the game',
-    ],
-  },
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-];
+interface FirestoreHourWithKey extends FirestoreHour {
+  key: string;
+}
 
 const HourRow = ({
-  hourNumber,
+  firestoreHour,
   marathonHour,
   currentMinute,
 }: {
-  hourNumber: number;
+  firestoreHour: FirestoreHour;
   marathonHour: number;
   currentMinute: number;
 }) => {
+  const { name: hourName, hourNumber } = firestoreHour;
   const navigation = useNavigation<TabScreenProps<'HoursScreen'>['navigation']>();
-  const hourName = hourNames[hourNumber];
-  const hourScreenOptions = hourScreenOptionsList[hourNumber];
   const [displayedNamePart, setDisplayedNamePart] = useState('');
   const [hiddenNamePart, setHiddenNamePart] = useState('');
   const [clickable, setClickable] = useState(false);
@@ -150,9 +65,7 @@ const HourRow = ({
       hasTVPreferredFocus={undefined}
       tvParallaxProperties={undefined}
       onPress={
-        clickable
-          ? () => navigation?.navigate('Hour Details', { hourName, hourNumber, hourScreenOptions })
-          : undefined
+        clickable ? () => navigation?.navigate('Hour Details', { firestoreHour }) : undefined
       }
       disabled={!clickable}
       key={hourNumber}
@@ -173,9 +86,17 @@ const HourRow = ({
 };
 
 const HoursListScreen = () => {
+  const firestoreHours = useAppSelector((state) => state.appConfig.marathonHours);
+  const [firestoreHoursWithKeys, setFirestoreHoursWithKeys] = useState<FirestoreHourWithKey[]>([]);
   // Using a literal date for testing purposes
   const currentDate = useMemo(() => new Date(2022, 3, 6, 11, 56, 0, 0), []); // useCurrentDate(60);
   const [marathonHour, setMarathonHour] = useState(-1);
+
+  useEffect(() => {
+    setFirestoreHoursWithKeys(
+      firestoreHours.map((firestoreHour) => ({ key: firestoreHour.name, ...firestoreHour }))
+    );
+  }, [firestoreHours]);
 
   useEffect(() => {
     // First programmed hour is 8:00pm or 20:00
@@ -198,10 +119,10 @@ const HoursListScreen = () => {
       )}
       {marathonHour >= 0 && (
         <FlatList
-          data={hourListKeys}
+          data={firestoreHoursWithKeys}
           renderItem={(itemInfo) => (
             <HourRow
-              hourNumber={itemInfo.item.key}
+              firestoreHour={itemInfo.item}
               marathonHour={marathonHour}
               currentMinute={currentDate.getMinutes()}
             />

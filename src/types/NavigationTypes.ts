@@ -1,7 +1,7 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { NavigatorScreenParams, CompositeScreenProps } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { HourScreenOptionsType } from './HourScreenTypes';
+import { FirestoreHour } from './FirebaseTypes';
 
 // Navigator param types
 export type TabNavigatorParamList = {
@@ -24,9 +24,7 @@ export type MainStackParamList = {
     name: string;
   };
   'Hour Details': {
-    hourName: string;
-    hourNumber: number;
-    hourScreenOptions: HourScreenOptionsType;
+    firestoreHour: FirestoreHour;
   };
 };
 

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import * as FileSystem from 'expo-file-system';
 import { firebaseStorage } from './FirebaseApp';
 import { showMessage } from './AlertUtils';
+import { useDeepEffect } from './CustomHooks';
 
 export type UseCachedFilesType = {
   assetId: string;
@@ -81,7 +82,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
   >(Array(options.length).fill([null, null]));
   const [localUris, setLocalUris] = useState<(string | null)[]>([]);
 
-  useEffect(() => {
+  useDeepEffect(() => {
     const tempLocalUris = Array(options.length).fill('');
     for (let i = 0; i < options.length; i++) {
       if (options[i]) {
@@ -92,10 +93,9 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
     }
     setLocalUris(tempLocalUris);
     // Rule disabled because triggering update on options causes an infinite loop, options.length should be sufficient in most cases
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options.toString()]);
+  }, [options]);
 
-  useEffect(() => {
+  useDeepEffect(() => {
     (async () => {
       let allNeededVariablesSet = true;
       for (let i = 0; i < options.length; i++) {
@@ -134,7 +134,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
           .catch(showMessage);
       }
     })();
-  }, [alwaysReturnArray, localUris, options.toString()]);
+  }, [alwaysReturnArray, localUris, options]);
 
   return hookState;
 }

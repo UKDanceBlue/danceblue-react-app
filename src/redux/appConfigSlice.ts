@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { showMessage } from '../common/AlertUtils';
 import { firebaseFirestore } from '../common/FirebaseApp';
-import { FirestoreMobileAppConfig } from '../types/FirebaseTypes';
+import { FirestoreHour, FirestoreMobileAppConfig } from '../types/FirebaseTypes';
 
 type AppConfigSliceType = {
   isConfigLoaded: boolean;
@@ -16,6 +16,7 @@ type AppConfigSliceType = {
   };
   demoMode?: boolean;
   demoModeKey: string;
+  marathonHours: FirestoreHour[];
 };
 
 const initialState: AppConfigSliceType = {
@@ -25,13 +26,23 @@ const initialState: AppConfigSliceType = {
   configuredTabs: [],
   demoMode: false,
   demoModeKey: Math.random().toString(), // Start the demo key as junk for safety's sake
+  marathonHours: [],
 };
 
 export const updateConfig = createAsyncThunk(
   'appConfig/updateConfig',
   async (): Promise<Partial<AppConfigSliceType>> => {
+    // Get app config
     const snapshot = await getDoc(doc(firebaseFirestore, 'configs', 'mobile-app'));
     const snapshotData = snapshot.data() as FirestoreMobileAppConfig;
+
+    // !!!MARATHON CODE!!! Get marathon hours
+    const marathonHoursSnapshot = await getDocs(
+      collection(firebaseFirestore, 'marathon', '2022/hours')
+    );
+    const marathonHours: FirestoreHour[] = [];
+    marathonHoursSnapshot.forEach((docSnap) => marathonHours.push(docSnap.data() as FirestoreHour));
+
     return {
       countdown: snapshotData.countdown
         ? {
@@ -42,6 +53,7 @@ export const updateConfig = createAsyncThunk(
       scoreboard: snapshotData.scoreboard,
       configuredTabs: snapshotData.currentTabs,
       demoModeKey: snapshotData.demoModeKey,
+      marathonHours,
     };
   }
 );
@@ -81,6 +93,7 @@ export const appConfigSlice = createSlice({
         state.scoreboard = action.payload.scoreboard;
         state.configuredTabs = action.payload.configuredTabs;
         state.demoModeKey = action.payload.demoModeKey;
+        state.marathonHours = action.payload.marathonHours;
         state.isConfigLoaded = true;
       })
       .addCase(updateConfig.rejected, (state, action) => {

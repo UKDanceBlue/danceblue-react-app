@@ -4,7 +4,7 @@ import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from '
 import * as WebBrowser from 'expo-web-browser';
 
 import { MaterialIcons } from '@expo/vector-icons';
-import { useCachedFiles } from '../CustomHooks';
+import { useCachedFiles } from '../CacheUtils';
 
 /**
  * A card showing a Sponsor's logo that link's to their website
@@ -23,7 +23,7 @@ const SponsorCard = ({
       assetId: `${name}-logo`,
       freshnessTime: 172800,
       base64: true,
-      downloadUri: imageLink,
+      googleUri: imageLink,
     },
   ]);
 

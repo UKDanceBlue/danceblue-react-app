@@ -1,4 +1,5 @@
 import { DocumentReference, Timestamp } from 'firebase/firestore';
+import { HourInstructionsType, SpecialComponentType } from './HourScreenTypes';
 
 export interface FirestoreUser {
   attributes?: { [key: string]: string };
@@ -64,4 +65,15 @@ export interface FirestoreMobileAppConfig {
     showTrophies: boolean;
   };
   demoModeKey: string;
+}
+
+export interface FirestoreHour {
+  hourNumber: number;
+  name: string;
+  description: string;
+  contentOrder: ('text-instructions' | 'gs-image' | 'http-image' | 'special')[];
+  textInstructions?: HourInstructionsType; // text-instructions
+  imageGoogleUri?: string | string[]; // gs-image
+  imageUri?: string | string[]; // http-image
+  specialComponent?: SpecialComponentType | SpecialComponentType[]; // special
 }
