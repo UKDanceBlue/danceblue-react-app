@@ -70,7 +70,7 @@ export interface FirestoreMobileAppConfig {
 export interface FirestoreHour {
   hourNumber: number;
   name: string;
-  description: string;
+  description?: string;
   contentOrder: ('text-instructions' | 'gs-image' | 'http-image' | 'special')[];
   textInstructions?: HourInstructionsType; // text-instructions
   imageGoogleUri?: string | string[]; // gs-image

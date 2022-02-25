@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Image, ActivityIndicator, View, ScrollView } from 'react-native';
-import { Text } from 'react-native-elements';
+import { ActivityIndicator, View, ScrollView, useWindowDimensions } from 'react-native';
+import { Image, Text } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
+import Lightbox from 'react-native-lightbox-v2';
 import { useCachedFiles, UseCachedFilesType } from '../../common/CacheUtils';
 import { globalTextStyles } from '../../theme';
 import { FirestoreHour } from '../../types/FirebaseTypes';
@@ -81,6 +82,8 @@ const HourScreen = ({
   const [cacheOptions, setCacheOptions] = useState<UseCachedFilesType[]>([]);
   const cachedFiles = useCachedFiles(cacheOptions, true);
 
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+
   // Setup the image cache
   useEffect(() => {
     const tempCacheOptions: UseCachedFilesType[] = [];
@@ -145,15 +148,20 @@ const HourScreen = ({
               );
             } else if (cachedFiles[i][0]) {
               tempComponents.push(
-                <Image
-                  key={i}
-                  source={{ uri: `data:image;base64,${cachedFiles[i][0]}`, width: 200 }}
-                  style={{
-                    width: 200,
-                    height: 200,
-                    resizeMode: 'contain',
-                  }}
-                />
+                <Lightbox key={i} underlayColor="white">
+                  <Image
+                    source={{
+                      uri: `data:image;base64,${cachedFiles[i][0]}`,
+                      width: (screenWidth / 5) * 4,
+                    }}
+                    style={{
+                      width: screenWidth,
+                      height: screenHeight,
+                      resizeMode: 'contain',
+                      alignSelf: 'center',
+                    }}
+                  />
+                </Lightbox>
               );
             }
           } else {
@@ -189,7 +197,7 @@ const HourScreen = ({
         <Text style={globalTextStyles.headerText}>{`${firestoreHour.hourNumber + 1}. ${
           firestoreHour.name
         }`}</Text>
-        <Text>{firestoreHour.description}</Text>
+        {firestoreHour.description && <Text>{firestoreHour.description}</Text>}
         {components}
       </View>
     </ScrollView>
