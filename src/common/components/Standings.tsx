@@ -12,14 +12,15 @@ import { StandingType } from '../../types/StandingType';
 const Standings = ({
   titleText,
   standingData,
-  expandable,
-  startExpanded,
+  expandable = false,
+  startExpanded = false,
   collapsedRows = 3,
 }: {
   titleText: string;
   standingData: StandingType[];
   expandable?: boolean;
   startExpanded?: boolean;
+  showTrophies?: boolean;
   collapsedRows?: number;
 }) => {
   const [rows, setRows] = useState<ReactElement[]>([]);

@@ -7,38 +7,71 @@ import Standings from '../../common/components/Standings';
 import { firebaseFirestore } from '../../common/FirebaseApp';
 import { globalColors, globalStyles } from '../../theme';
 import { StandingType } from '../../types/StandingType';
+import { showMessage } from '../../common/AlertUtils';
+import { FirestoreMoraleTeam, FirestoreTeam } from '../../types/FirebaseTypes';
 
 /**
  * Wrapper for a Standings component
  */
 const ScoreBoardScreen = () => {
+  const { pointType } = { pointType: 'morale' }; // useAppSelector((state) => state.appConfig.scoreboard);
   const userTeamId = useAppSelector((state) => state.auth.teamId);
+  const userLinkblue = useAppSelector((state) => state.auth.linkblue);
   const [standingData, setStandingData] = useState<StandingType[]>([]);
 
   useEffect(() => {
     let shouldUpdateState = true;
-    getDocs(collection(firebaseFirestore, 'teams')).then((querySnapshot) => {
-      const tempStandingData: StandingType[] = [];
-      querySnapshot.forEach((document) => {
-        const teamData = document.data();
-        // Ensure we don't show the test team on the scoreboard
-        if (teamData.spiritSpreadsheetId && document.id !== 'jR29Y3wJ59evnRaWWKC4') {
-          tempStandingData.push({
-            id: document.id,
-            name: teamData.name,
-            points: teamData.totalSpiritPoints,
-            highlighted: userTeamId === document.id,
+
+    switch (pointType) {
+      case 'spirit':
+        getDocs(collection(firebaseFirestore, 'teams')).then((querySnapshot) => {
+          const tempStandingData: StandingType[] = [];
+          querySnapshot.forEach((document) => {
+            const teamData = document.data() as FirestoreTeam;
+            // Ensure we don't show the test team on the scoreboard
+            if (teamData.spiritSpreadsheetId && document.id !== 'jR29Y3wJ59evnRaWWKC4') {
+              tempStandingData.push({
+                id: document.id,
+                name: teamData.name,
+                points: teamData.totalSpiritPoints || 0,
+                highlighted: userTeamId === document.id,
+              });
+            }
           });
-        }
-      });
-      if (shouldUpdateState) {
-        setStandingData(tempStandingData);
-      }
-    });
+          if (shouldUpdateState) {
+            setStandingData(tempStandingData);
+          }
+        });
+        break;
+
+      case 'morale':
+        getDocs(collection(firebaseFirestore, 'marathon', '2022/morale-teams')).then(
+          (querySnapshot) => {
+            const tempStandingData: StandingType[] = [];
+            querySnapshot.forEach((document) => {
+              const teamData = document.data() as FirestoreMoraleTeam;
+              tempStandingData.push({
+                id: document.id,
+                name: teamData.leaders,
+                points: teamData.points,
+                highlighted: !!(userLinkblue && teamData.members[userLinkblue]),
+              });
+            });
+            if (shouldUpdateState) {
+              setStandingData(tempStandingData);
+            }
+          }
+        );
+        break;
+
+      default:
+        showMessage('Failed to load valid point type configuration');
+        break;
+    }
     return () => {
       shouldUpdateState = false;
     };
-  }, [userTeamId]);
+  }, [pointType, userLinkblue, userTeamId]);
 
   return (
     <ScrollView showsVerticalScrollIndicator>

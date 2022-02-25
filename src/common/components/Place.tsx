@@ -27,7 +27,7 @@ const Place = ({
   const top3Icon = (rankForIcon: number): ReactElement | null => {
     switch (rankForIcon) {
       case 1:
-        return <FontAwesome5 name="award" size={30} color="gold" />;
+        return <FontAwesome5 name="trophy" size={24} color="gold" />;
       case 2:
         return <FontAwesome5 name="award" size={30} color="silver" />;
       case 3:

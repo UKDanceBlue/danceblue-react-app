@@ -77,3 +77,10 @@ export interface FirestoreHour {
   imageUri?: string | string[]; // http-image
   specialComponent?: SpecialComponentType | SpecialComponentType[]; // special
 }
+
+export interface FirestoreMoraleTeam {
+  members: { [key: string]: string };
+  leaders: string;
+  teamNumber: number;
+  points: number;
+}
