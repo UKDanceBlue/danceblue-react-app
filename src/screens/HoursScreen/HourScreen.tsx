@@ -3,6 +3,7 @@ import { ActivityIndicator, View, ScrollView, useWindowDimensions } from 'react-
 import { Image, Text, useTheme } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
 import Lightbox from 'react-native-lightbox-v2';
+import WebView from 'react-native-webview';
 import { UseCachedFilesType, useCachedImages } from '../../common/CacheUtils';
 import { globalTextStyles } from '../../theme';
 import { FirestoreHour } from '../../types/FirebaseTypes';
@@ -130,6 +131,7 @@ const HourScreen = ({
   useEffect(() => {
     const tempComponents: JSX.Element[] = [];
     let specialComponentIndex = 0;
+    let webviewIndex = 0;
     for (let i = 0; i < firestoreHour.contentOrder.length; i++) {
       switch (firestoreHour.contentOrder[i]) {
         case 'text-instructions':
@@ -154,7 +156,6 @@ const HourScreen = ({
               tempComponents.push(
                 <MaterialIcons key={i} name="image-not-supported" color="black" />
               );
-              console.error(cachedImages[i][1]);
             } else if (cachedImages[i][0] !== null) {
               tempComponents.push(
                 <Lightbox key={i}>
@@ -191,6 +192,23 @@ const HourScreen = ({
           } else if (firestoreHour.specialComponent) {
             tempComponents.push(
               <View key={i}>{HourActivities[firestoreHour.specialComponent.id]}</View>
+            );
+          }
+          break;
+
+        case 'webview':
+          webviewIndex++;
+          if (Array.isArray(firestoreHour.webviewUri)) {
+            tempComponents.push(
+              <View key={i}>
+                <WebView source={{ uri: firestoreHour.webviewUri[webviewIndex] }} />
+              </View>
+            );
+          } else if (firestoreHour.webviewUri) {
+            tempComponents.push(
+              <View key={i}>
+                <WebView source={{ uri: firestoreHour.webviewUri }} />
+              </View>
             );
           }
           break;
