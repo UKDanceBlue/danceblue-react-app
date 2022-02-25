@@ -1,6 +1,7 @@
 import { getDownloadURL, ref } from 'firebase/storage';
-import { useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import * as FileSystem from 'expo-file-system';
+import { Image } from 'react-native';
 import { firebaseStorage } from './FirebaseApp';
 import { showMessage } from './AlertUtils';
 import { useDeepEffect } from './CustomHooks';
@@ -55,6 +56,7 @@ async function getFiles(
     const localFileContent = await FileSystem.readAsStringAsync(localUri, {
       encoding: cacheOption.base64 ? FileSystem.EncodingType.Base64 : FileSystem.EncodingType.UTF8,
     });
+
     if (localFileContent) {
       // Set localFileContent into the hook state, we are done
       return [localFileContent, null];
@@ -135,6 +137,84 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
       }
     })();
   }, [alwaysReturnArray, localUris, options]);
+
+  return hookState;
+}
+
+export type UseCachedImagesReturnType = {
+  imageBase64: string;
+  imageWidth: number;
+  imageHeight: number;
+  imageRatio: number;
+};
+
+export function useCachedImages(options: UseCachedFilesType[]) {
+  const [hookState, setHookState] = useState<[UseCachedImagesReturnType | null, Error | null][]>(
+    Array(options.length).fill([null, null])
+  );
+  const [imageSizes, setImageSizes] = useState<[number, number][]>(
+    Array(options.length).fill([null, null])
+  );
+  const cachedFiles = useCachedFiles(options, true);
+
+  useEffect(() => {
+    // Make an array of promises to try and get dimensions of each image
+    const imageSizePromises = cachedFiles.map(
+      (element) =>
+        new Promise((resolved, rejected) => {
+          Image.getSize(
+            `data:image/png;base64,${element}`,
+            (width, height) => resolved([width, height]),
+            rejected
+          );
+        })
+    );
+
+    let shouldUpdateState = true;
+    const dontUpdateState = () => {
+      shouldUpdateState = false;
+    };
+    Promise.allSettled(imageSizePromises).then((resolutions) => {
+      const tempImageSizes: SetStateAction<[number, number][]> = [];
+      resolutions.forEach((resolution, index) => {
+        if (resolution.status === 'fulfilled') {
+          if (Array.isArray(resolution.value)) {
+            tempImageSizes[index] = resolution.value as [number, number];
+          }
+        } else {
+          tempImageSizes[index] = [0, 0];
+        }
+      });
+      if (shouldUpdateState) {
+        setImageSizes(tempImageSizes);
+      }
+    });
+    return dontUpdateState;
+  }, [cachedFiles]);
+
+  useEffect(() => {
+    const tempHookState: [UseCachedImagesReturnType | null, Error | null][] = [];
+    for (let i = 0; i < cachedFiles.length; i++) {
+      if (cachedFiles[i][1]) {
+        tempHookState[i] = [null, cachedFiles[i][1]];
+      } else if (imageSizes[i]) {
+        const cachedImage = cachedFiles[i];
+        const [imageWidth, imageHeight] = imageSizes[i];
+        tempHookState[i] = [
+          {
+            imageBase64: `data:image/png;base64,${cachedImage[0]}`,
+            imageWidth,
+            imageHeight,
+            imageRatio: imageWidth / imageHeight,
+          },
+          null,
+        ];
+      } else {
+        tempHookState[i] = [null, null];
+      }
+    }
+    setHookState(tempHookState);
+  }, [cachedFiles, imageSizes]);
 
   return hookState;
 }
