@@ -1,6 +1,6 @@
 /// <reference types="react" />
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, SafeAreaView, ScrollView } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, RefreshControl, SafeAreaView, ScrollView } from 'react-native';
 import { getDocs, collection } from 'firebase/firestore';
 import { useAppSelector } from '../../common/CustomHooks';
 import Standings from '../../common/components/Standings';
@@ -18,8 +18,10 @@ const ScoreBoardScreen = () => {
   const userTeamId = useAppSelector((state) => state.auth.teamId);
   const userLinkblue = useAppSelector((state) => state.auth.linkblue);
   const [standingData, setStandingData] = useState<StandingType[]>([]);
+  const [refreshing, setRefreshing] = useState<boolean>(true);
 
-  useEffect(() => {
+  const refresh = useCallback(() => {
+    setRefreshing(true);
     let shouldUpdateState = true;
 
     switch (pointType) {
@@ -40,6 +42,7 @@ const ScoreBoardScreen = () => {
           });
           if (shouldUpdateState) {
             setStandingData(tempStandingData);
+            setRefreshing(false);
           }
         });
         break;
@@ -52,13 +55,14 @@ const ScoreBoardScreen = () => {
               const teamData = document.data() as FirestoreMoraleTeam;
               tempStandingData.push({
                 id: document.id,
-                name: teamData.leaders,
+                name: `Team #${teamData.teamNumber}:\n${teamData.leaders}`,
                 points: teamData.points,
                 highlighted: !!(userLinkblue && teamData.members[userLinkblue]),
               });
             });
             if (shouldUpdateState) {
               setStandingData(tempStandingData);
+              setRefreshing(false);
             }
           }
         );
@@ -70,23 +74,20 @@ const ScoreBoardScreen = () => {
     }
     return () => {
       shouldUpdateState = false;
+      setRefreshing(false);
     };
   }, [pointType, userLinkblue, userTeamId]);
 
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
   return (
-    <ScrollView showsVerticalScrollIndicator>
+    <ScrollView
+      showsVerticalScrollIndicator
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
+    >
       <SafeAreaView style={globalStyles.genericView}>
-        {standingData.length === 0 && (
-          <ActivityIndicator
-            size="large"
-            color={globalColors.lightBlue}
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 20,
-            }}
-          />
-        )}
         <Standings titleText="Spirit Point Standings" standingData={standingData} startExpanded />
       </SafeAreaView>
     </ScrollView>
