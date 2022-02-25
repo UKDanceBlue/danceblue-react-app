@@ -1,9 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { differenceInHours } from 'date-fns';
-import { BlurView } from 'expo-blur';
 import { useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { Image, ListItem, Text } from 'react-native-elements';
+import { Divider, Image, ListItem, Text } from 'react-native-elements';
 import Lightbox from 'react-native-lightbox-v2';
 import { useCachedFiles } from '../../common/CacheUtils';
 import { useAppSelector, useCurrentDate } from '../../common/CustomHooks';
@@ -11,6 +10,31 @@ import { globalColors } from '../../theme';
 import { FirestoreHour } from '../../types/FirebaseTypes';
 import { TabScreenProps } from '../../types/NavigationTypes';
 
+function revealRandomChars(input: string, charsToReveal: number): string {
+  let tempOutputString = '';
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === ' ') {
+      tempOutputString += ' ';
+    } else {
+      tempOutputString += '■';
+    }
+  }
+
+  // Get a seed number that is reliable between runs
+  let seedNumber = 0;
+  for (let i = 0; i < input.length; i++) {
+    seedNumber += input.charCodeAt(i);
+  }
+
+  for (let i = 0; i < charsToReveal; i++) {
+    const inputIndex = Math.floor(input.length * ((Math.sin(seedNumber * i) + 1) / 2));
+    tempOutputString =
+      tempOutputString.substring(0, inputIndex) +
+      input[inputIndex] +
+      tempOutputString.substring(inputIndex + 1);
+  }
+  return tempOutputString;
+}
 interface FirestoreHourWithKey extends FirestoreHour {
   key: number;
 }
@@ -26,17 +50,14 @@ const HourRow = ({
 }) => {
   const { name: hourName, hourNumber } = firestoreHour;
   const navigation = useNavigation<TabScreenProps<'HoursScreen'>['navigation']>();
-  const [displayedNamePart, setDisplayedNamePart] = useState('');
-  const [hiddenNamePart, setHiddenNamePart] = useState('');
+  const [displayedName, setDisplayedName] = useState('');
   const [clickable, setClickable] = useState(false);
 
   // TODO change this so ti looks like wordle and reveals random letters up to half of the name; whole name at the hour so reveal stays fresh
   // Maybe choose which to reveal based on hash of name? Need to be the same every time
   useEffect(() => {
     let tempDisplayedName = '';
-    let tempHiddenName = '';
 
-    let i = 0;
     if (marathonHour + 1 > hourNumber) {
       tempDisplayedName = hourName;
       setClickable(true);
@@ -49,19 +70,19 @@ const HourRow = ({
         if (hourPercent > 0.75) {
           const percentNameToShow = (hourPercent - 0.75) * 4;
           const charsToShow = Math.trunc(hourName.length * percentNameToShow);
-          // If we are in the last 15 minutes then show some amount of the name
-          for (; i < charsToShow && i < hourName.length - 1; i++) {
-            tempDisplayedName += hourName.charAt(i);
+          tempDisplayedName = revealRandomChars(hourName, charsToShow);
+        }
+      } else {
+        for (let i = 0; i < hourName.length; i++) {
+          if (hourName[i] === ' ') {
+            tempDisplayedName += ' ';
+          } else {
+            tempDisplayedName += '■';
           }
         }
       }
-
-      for (; i < hourName.length; i++) {
-        tempHiddenName += '?';
-      }
     }
-    setDisplayedNamePart(tempDisplayedName);
-    setHiddenNamePart(tempHiddenName);
+    setDisplayedName(tempDisplayedName);
   }, [currentMinute, hourName, hourNumber, marathonHour]);
 
   return (
@@ -75,13 +96,9 @@ const HourRow = ({
       key={hourNumber}
     >
       <ListItem.Content style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-        <Text h4>{`${hourNumber + 1}. `}</Text>
-        <Text h4>
-          {displayedNamePart}
-          <View>
-            <Text h4>{hiddenNamePart}</Text>
-            <BlurView style={StyleSheet.absoluteFill} tint="light" intensity={30} />
-          </View>
+        <Text h4 h4Style={{ fontSize: 19 }}>{`${hourNumber + 1}. `}</Text>
+        <Text h4 h4Style={{ fontSize: 19 }}>
+          {displayedName}
         </Text>
       </ListItem.Content>
       {clickable && <ListItem.Chevron tvParallaxProperties={undefined} />}
@@ -93,7 +110,7 @@ const HoursListScreen = () => {
   const firestoreHours = useAppSelector((state) => state.appConfig.marathonHours);
   const [firestoreHoursWithKeys, setFirestoreHoursWithKeys] = useState<FirestoreHourWithKey[]>([]);
   // Using a literal date for testing purposes
-  const currentDate = useMemo(() => new Date(2022, 3, 6, 11, 56, 0, 0), []); // useCurrentDate(60);
+  const currentDate = useMemo(() => new Date(2022, 3, 6, 11, 47, 0, 0), []); // useCurrentDate(60);
   const [marathonHour, setMarathonHour] = useState(-1);
   const { width: screenWidth } = useWindowDimensions();
   const [mapOfMemorial] = useCachedFiles([
@@ -136,14 +153,19 @@ const HoursListScreen = () => {
       {marathonHour >= 0 && (
         <>
           {mapOfMemorial && (
-            <Lightbox>
-              <Image
-                style={{ width: screenWidth, height: screenWidth * (1194 / 1598) }}
-                source={{ uri: `data:image/png;base64,${mapOfMemorial}` }}
-              />
-            </Lightbox>
+            <>
+              <Divider width={2} />
+              <Lightbox>
+                <Image
+                  style={{ width: screenWidth, height: screenWidth * (1194 / 1598) }}
+                  source={{ uri: `data:image/png;base64,${mapOfMemorial}` }}
+                />
+              </Lightbox>
+              <Divider width={2} />
+            </>
           )}
           <FlatList
+            contentContainerStyle={{ paddingBottom: 310 }}
             data={firestoreHoursWithKeys.sort((a, b) => a.key - b.key)}
             renderItem={(itemInfo) => (
               <HourRow
