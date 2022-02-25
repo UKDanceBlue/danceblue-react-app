@@ -2,8 +2,10 @@ import { useNavigation } from '@react-navigation/native';
 import { differenceInHours } from 'date-fns';
 import { BlurView } from 'expo-blur';
 import { useEffect, useMemo, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
-import { ListItem, Text } from 'react-native-elements';
+import { FlatList, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Image, ListItem, Text } from 'react-native-elements';
+import Lightbox from 'react-native-lightbox-v2';
+import { useCachedFiles } from '../../common/CacheUtils';
 import { useAppSelector, useCurrentDate } from '../../common/CustomHooks';
 import { globalColors } from '../../theme';
 import { FirestoreHour } from '../../types/FirebaseTypes';
@@ -93,6 +95,15 @@ const HoursListScreen = () => {
   // Using a literal date for testing purposes
   const currentDate = useMemo(() => new Date(2022, 3, 6, 11, 56, 0, 0), []); // useCurrentDate(60);
   const [marathonHour, setMarathonHour] = useState(-1);
+  const { width: screenWidth } = useWindowDimensions();
+  const [mapOfMemorial] = useCachedFiles([
+    {
+      assetId: 'DB22 Memorial Map',
+      googleUri: 'gs://react-danceblue.appspot.com/marathon/2022/maps/Overall Map.png',
+      freshnessTime: 86400,
+      base64: true,
+    },
+  ]);
 
   useEffect(() => {
     setFirestoreHoursWithKeys(
@@ -119,29 +130,39 @@ const HoursListScreen = () => {
       {marathonHour < 0 && (
         <Text>
           I don&apos;t know how you made it here, but you should not have been able to. Please
-          report this issue to the DanceBlueCommittee
+          report this issue to the DanceBlue Committee
         </Text>
       )}
       {marathonHour >= 0 && (
-        <FlatList
-          data={firestoreHoursWithKeys.sort((a, b) => a.key - b.key)}
-          renderItem={(itemInfo) => (
-            <HourRow
-              firestoreHour={itemInfo.item}
-              marathonHour={marathonHour}
-              currentMinute={currentDate.getMinutes()}
-            />
+        <>
+          {mapOfMemorial && (
+            <Lightbox>
+              <Image
+                style={{ width: screenWidth, height: screenWidth * (1194 / 1598) }}
+                source={{ uri: `data:image/png;base64,${mapOfMemorial}` }}
+              />
+            </Lightbox>
           )}
-          ItemSeparatorComponent={() => (
-            <View
-              style={{
-                height: 1,
-                width: '100%',
-                backgroundColor: '#000',
-              }}
-            />
-          )}
-        />
+          <FlatList
+            data={firestoreHoursWithKeys.sort((a, b) => a.key - b.key)}
+            renderItem={(itemInfo) => (
+              <HourRow
+                firestoreHour={itemInfo.item}
+                marathonHour={marathonHour}
+                currentMinute={currentDate.getMinutes()}
+              />
+            )}
+            ItemSeparatorComponent={() => (
+              <View
+                style={{
+                  height: 1,
+                  width: '100%',
+                  backgroundColor: '#000',
+                }}
+              />
+            )}
+          />
+        </>
       )}
     </View>
   );
