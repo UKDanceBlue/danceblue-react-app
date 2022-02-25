@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View, ScrollView, useWindowDimensions } from 'react-native';
-import { Image, Text } from 'react-native-elements';
+import { Image, Text, useTheme } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
 import Lightbox from 'react-native-lightbox-v2';
-import { useCachedFiles, UseCachedFilesType } from '../../common/CacheUtils';
+import { UseCachedFilesType, useCachedImages } from '../../common/CacheUtils';
 import { globalTextStyles } from '../../theme';
 import { FirestoreHour } from '../../types/FirebaseTypes';
 import { HourInstructionsType } from '../../types/HourScreenTypes';
@@ -80,9 +80,10 @@ const HourScreen = ({
   const { firestoreHour } = params;
   const [components, setComponents] = useState<JSX.Element[]>([]);
   const [cacheOptions, setCacheOptions] = useState<UseCachedFilesType[]>([]);
-  const cachedFiles = useCachedFiles(cacheOptions, true);
+  const cachedImages = useCachedImages(cacheOptions);
+  const { theme } = useTheme();
 
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const { width: screenWidth } = useWindowDimensions();
 
   // Setup the image cache
   useEffect(() => {
@@ -148,24 +149,26 @@ const HourScreen = ({
 
         case 'gs-image':
         case 'http-image':
-          if (cachedFiles[i]) {
-            if (cachedFiles[i][1]) {
+          if (cachedImages[i]) {
+            if (cachedImages[i][1]) {
               tempComponents.push(
                 <MaterialIcons key={i} name="image-not-supported" color="black" />
               );
-            } else if (cachedFiles[i][0]) {
+            } else if (cachedImages[i][0]) {
               tempComponents.push(
                 <Lightbox key={i} underlayColor="white">
                   <Image
                     source={{
-                      uri: `data:image;base64,${cachedFiles[i][0]}`,
-                      width: (screenWidth / 5) * 4,
+                      uri: cachedImages[i][0]?.imageBase64,
+                      width: cachedImages[i][0]?.imageWidth,
+                      height: cachedImages[i][0]?.imageHeight,
                     }}
                     style={{
                       width: screenWidth,
-                      height: screenHeight,
+                      height: screenWidth / cachedImages[i][0]?.imageRatio,
                       resizeMode: 'contain',
                       alignSelf: 'center',
+                      marginVertical: 10,
                     }}
                   />
                 </Lightbox>
@@ -196,10 +199,10 @@ const HourScreen = ({
       }
     }
     setComponents(tempComponents);
-  }, [cachedFiles, firestoreHour, screenHeight, screenWidth]);
+  }, [cachedImages, firestoreHour, screenWidth]);
 
   return (
-    <ScrollView>
+    <ScrollView style={{ backgroundColor: theme.colors?.grey3 }}>
       <View style={{ justifyContent: 'space-between' }}>
         <Text h3 style={{ margin: 10, ...globalTextStyles.headerText }}>{`${
           firestoreHour.hourNumber + 1
