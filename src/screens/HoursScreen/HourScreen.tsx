@@ -134,7 +134,14 @@ const HourScreen = ({
         case 'text-instructions':
           if (firestoreHour.textInstructions) {
             tempComponents.push(
-              <Text key={i}>{composeInstructions(firestoreHour.textInstructions)}</Text>
+              <>
+                <Text style={{ margin: 10 }} h4>
+                  Instructions:
+                </Text>
+                <Text style={{ margin: 10 }} key={i}>
+                  {composeInstructions(firestoreHour.textInstructions)}
+                </Text>
+              </>
             );
           }
           break;
@@ -189,15 +196,17 @@ const HourScreen = ({
       }
     }
     setComponents(tempComponents);
-  }, [cachedFiles, firestoreHour]);
+  }, [cachedFiles, firestoreHour, screenHeight, screenWidth]);
 
   return (
     <ScrollView>
-      <View>
-        <Text style={globalTextStyles.headerText}>{`${firestoreHour.hourNumber + 1}. ${
-          firestoreHour.name
-        }`}</Text>
-        {firestoreHour.description && <Text>{firestoreHour.description}</Text>}
+      <View style={{ justifyContent: 'space-between' }}>
+        <Text h3 style={{ margin: 10, ...globalTextStyles.headerText }}>{`${
+          firestoreHour.hourNumber + 1
+        }. ${firestoreHour.name}`}</Text>
+        {firestoreHour.description && (
+          <Text style={{ margin: 10 }}>{firestoreHour.description}</Text>
+        )}
         {components}
       </View>
     </ScrollView>
