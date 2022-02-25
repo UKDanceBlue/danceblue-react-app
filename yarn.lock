@@ -8789,12 +8789,10 @@ react-native-gesture-handler@~2.1.0:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
-react-native-lightbox-v2@^0.8.8:
-  version "0.8.8"
-  resolved "https://registry.yarnpkg.com/react-native-lightbox-v2/-/react-native-lightbox-v2-0.8.8.tgz#20dd9a0231fdbd0cde111bfcc6d3844f6d9f6f9e"
-  integrity sha512-Cgonl9A+b78yvVc9voU5763U3N5px7EAeSnM9u78pCg4z1lwPWqKzWkwZx/K0wTMDSfqav4Iizk6enMuUdgg/A==
-  dependencies:
-    prop-types "^15.7.2"
+react-native-lightbox-v2@0.8.9-beta.0:
+  version "0.8.9-beta.0"
+  resolved "https://registry.yarnpkg.com/react-native-lightbox-v2/-/react-native-lightbox-v2-0.8.9-beta.0.tgz#28917026ae339965c1e79f7ed03240c2c6131960"
+  integrity sha512-N2jeJ4bTYx2F20gFCuiIljsiyMjpCWirn3NBHPFQ4+/f4eVDSgrTBosCODmgnOvXSMuTea05TwZPM30cI/1wgQ==
 
 react-native-open-maps@^0.4.0:
   version "0.4.0"

@@ -1,5 +1,11 @@
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, View, ScrollView, useWindowDimensions } from 'react-native';
+import { createRef, useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  View,
+  ScrollView,
+  useWindowDimensions,
+  Image as baseImage,
+} from 'react-native';
 import { Image, Text, useTheme } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
 import Lightbox from 'react-native-lightbox-v2';
@@ -150,13 +156,14 @@ const HourScreen = ({
         case 'gs-image':
         case 'http-image':
           if (cachedImages[i]) {
-            if (cachedImages[i][1]) {
+            if (cachedImages[i][1] !== null) {
               tempComponents.push(
                 <MaterialIcons key={i} name="image-not-supported" color="black" />
               );
-            } else if (cachedImages[i][0]) {
+              console.error(cachedImages[i][1]);
+            } else if (cachedImages[i][0] !== null) {
               tempComponents.push(
-                <Lightbox key={i} underlayColor="white">
+                <Lightbox key={i}>
                   <Image
                     source={{
                       uri: cachedImages[i][0]?.imageBase64,
@@ -173,9 +180,9 @@ const HourScreen = ({
                   />
                 </Lightbox>
               );
+            } else {
+              tempComponents.push(<ActivityIndicator key={i} color="blue" />);
             }
-          } else {
-            tempComponents.push(<ActivityIndicator key={i} />);
           }
           break;
 
