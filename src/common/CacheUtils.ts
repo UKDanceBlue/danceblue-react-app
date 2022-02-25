@@ -162,8 +162,9 @@ export function useCachedImages(options: UseCachedFilesType[]) {
     const imageSizePromises = cachedFiles.map(
       (element) =>
         new Promise((resolved, rejected) => {
+          // For some reason there is a comma at then end of the base64 string?? So this just removes the last character
           Image.getSize(
-            `data:image/png;base64,${element}`,
+            `data:image/png;base64,${element}`.slice(0, -1),
             (width, height) => resolved([width, height]),
             rejected
           );
@@ -182,7 +183,7 @@ export function useCachedImages(options: UseCachedFilesType[]) {
             tempImageSizes[index] = resolution.value as [number, number];
           }
         } else {
-          tempImageSizes[index] = [0, 0];
+          tempImageSizes[index] = resolution.reason;
         }
       });
       if (shouldUpdateState) {
@@ -199,16 +200,21 @@ export function useCachedImages(options: UseCachedFilesType[]) {
         tempHookState[i] = [null, cachedFiles[i][1]];
       } else if (imageSizes[i]) {
         const cachedImage = cachedFiles[i];
-        const [imageWidth, imageHeight] = imageSizes[i];
-        tempHookState[i] = [
-          {
-            imageBase64: `data:image/png;base64,${cachedImage[0]}`,
-            imageWidth,
-            imageHeight,
-            imageRatio: imageWidth / imageHeight,
-          },
-          null,
-        ];
+        if (Array.isArray(imageSizes[i])) {
+          const [imageWidth, imageHeight] = imageSizes[i];
+          tempHookState[i] = [
+            {
+              imageBase64: `data:image/png;base64,${cachedImage[0]}`,
+              imageWidth,
+              imageHeight,
+              imageRatio: imageWidth / imageHeight,
+            },
+            null,
+          ];
+        } else {
+          // If imageSizes[i] is not an array then it must be the reason for the image sizing failing, pass it along
+          tempHookState[i] = [null, new Error(imageSizes[i].toString())];
+        }
       } else {
         tempHookState[i] = [null, null];
       }
