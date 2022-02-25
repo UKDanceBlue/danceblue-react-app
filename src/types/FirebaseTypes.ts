@@ -73,7 +73,7 @@ export interface FirestoreHour {
   description?: string;
   contentOrder: ('text-instructions' | 'gs-image' | 'http-image' | 'special')[];
   textInstructions?: HourInstructionsType; // text-instructions
-  imageGoogleUri?: string | string[]; // gs-image
+  firebaseImageUri?: string | string[]; // gs-image
   imageUri?: string | string[]; // http-image
   specialComponent?: SpecialComponentType | SpecialComponentType[]; // special
 }

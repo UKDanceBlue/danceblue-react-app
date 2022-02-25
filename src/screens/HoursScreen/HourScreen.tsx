@@ -109,9 +109,9 @@ const HourScreen = ({
             assetId: `Marathon Hour: ${firestoreHour.name} google storage file #${googleUriIndex}`,
             freshnessTime: 14400,
             base64: true,
-            googleUri: Array.isArray(firestoreHour.imageGoogleUri)
-              ? firestoreHour.imageGoogleUri[googleUriIndex]
-              : firestoreHour.imageGoogleUri,
+            googleUri: Array.isArray(firestoreHour.firebaseImageUri)
+              ? firestoreHour.firebaseImageUri[googleUriIndex]
+              : firestoreHour.firebaseImageUri,
           };
           tempCacheOptions[i] = cacheOption;
           googleUriIndex++;
