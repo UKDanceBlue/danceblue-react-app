@@ -10,7 +10,7 @@ import { FirestoreHour } from '../../types/FirebaseTypes';
 import { TabScreenProps } from '../../types/NavigationTypes';
 
 interface FirestoreHourWithKey extends FirestoreHour {
-  key: string;
+  key: number;
 }
 
 const HourRow = ({
@@ -28,6 +28,8 @@ const HourRow = ({
   const [hiddenNamePart, setHiddenNamePart] = useState('');
   const [clickable, setClickable] = useState(false);
 
+  // TODO change this so ti looks like wordle and reveals random letters up to half of the name; whole name at the hour so reveal stays fresh
+  // Maybe choose which to reveal based on hash of name? Need to be the same every time
   useEffect(() => {
     let tempDisplayedName = '';
     let tempHiddenName = '';
@@ -94,7 +96,10 @@ const HoursListScreen = () => {
 
   useEffect(() => {
     setFirestoreHoursWithKeys(
-      firestoreHours.map((firestoreHour) => ({ key: firestoreHour.name, ...firestoreHour }))
+      firestoreHours.map((firestoreHour) => ({
+        key: firestoreHour.hourNumber,
+        ...firestoreHour,
+      }))
     );
   }, [firestoreHours]);
 
@@ -119,7 +124,7 @@ const HoursListScreen = () => {
       )}
       {marathonHour >= 0 && (
         <FlatList
-          data={firestoreHoursWithKeys}
+          data={firestoreHoursWithKeys.sort((a, b) => a.key - b.key)}
           renderItem={(itemInfo) => (
             <HourRow
               firestoreHour={itemInfo.item}
