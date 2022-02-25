@@ -1,11 +1,5 @@
-import { createRef, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  View,
-  ScrollView,
-  useWindowDimensions,
-  Image as baseImage,
-} from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, View, ScrollView, useWindowDimensions } from 'react-native';
 import { Image, Text, useTheme } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
 import Lightbox from 'react-native-lightbox-v2';

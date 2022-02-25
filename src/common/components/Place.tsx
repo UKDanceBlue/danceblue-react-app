@@ -2,10 +2,10 @@
 /* eslint-disable no-nested-ternary */
 // Import third-party dependencies
 import React, { ReactElement } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { ListItem, Text } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { globalColors, globalStyles, globalTextStyles } from '../../theme';
+import { globalColors } from '../../theme';
 
 /**
  * A row-based component showing a target name, their rank (if applicable), and their points
