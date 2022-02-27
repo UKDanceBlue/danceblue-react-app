@@ -67,11 +67,10 @@ const HourRow = ({
       setClickable(false);
       if (marathonHour === hourNumber - 1) {
         const hourPercent = (currentMinute + 1) / 60;
-        if (hourPercent > 0.75) {
-          const percentNameToShow = (hourPercent - 0.75) * 4;
-          const charsToShow = Math.trunc(hourName.length * percentNameToShow);
-          tempDisplayedName = revealRandomChars(hourName, charsToShow);
-        }
+        const percentNameToShow = (hourPercent - 0.75) * 4;
+        const charsToShow =
+          percentNameToShow > 0 ? Math.trunc(hourName.length * percentNameToShow) : 0;
+        tempDisplayedName = revealRandomChars(hourName, charsToShow);
       } else {
         for (let i = 0; i < hourName.length; i++) {
           if (hourName[i] === ' ') {
@@ -110,8 +109,8 @@ const HoursListScreen = () => {
   const firestoreHours = useAppSelector((state) => state.appConfig.marathonHours);
   const [firestoreHoursWithKeys, setFirestoreHoursWithKeys] = useState<FirestoreHourWithKey[]>([]);
   // Using a literal date for testing purposes
-  const currentDate = useCurrentDate(60);
-  // const currentDate = useMemo(() => new Date(2022, 3, 6, 11, 47, 0, 0), []); // Testing
+  const currentDate = useCurrentDate();
+  // const currentDate = useMemo(() => new Date(2022, 2, 5, 20, 0, 0, 0), []); // Testing
   const [marathonHour, setMarathonHour] = useState(-1);
   const { width: screenWidth } = useWindowDimensions();
   const [mapOfMemorial] = useCachedFiles([
@@ -136,10 +135,8 @@ const HoursListScreen = () => {
     // First programmed hour is 8:00pm or 20:00
     // Marathon is March 5th and 6th, I am hardcoding this, hope that causes no issues
     // This will set the hour to a negative number if the marathon has yet to start and should be between 0 and 23 for the duration of the marathon
-    let tempMarathonHour = 23 - differenceInHours(new Date(2022, 3, 6, 20, 0, 0, 0), currentDate);
-    if (currentDate.getMinutes() === 0) {
-      tempMarathonHour++;
-    }
+    const tempMarathonHour =
+      23 - Math.abs(differenceInHours(new Date(2022, 2, 6, 20, 0, 0, 0), currentDate));
     setMarathonHour(tempMarathonHour);
   }, [currentDate]);
 
