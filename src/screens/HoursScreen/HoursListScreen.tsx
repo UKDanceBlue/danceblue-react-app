@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Divider, Image, ListItem, Text } from 'react-native-elements';
 import Lightbox from 'react-native-lightbox-v2';
+import CountdownView from '../../common/components/CountdownView';
 import { useCachedFiles } from '../../common/CacheUtils';
 import { useAppSelector, useCurrentDate } from '../../common/CustomHooks';
 import { globalColors } from '../../theme';
@@ -108,7 +109,8 @@ const HourRow = ({
 const HoursListScreen = () => {
   const firestoreHours = useAppSelector((state) => state.appConfig.marathonHours);
   const [firestoreHoursWithKeys, setFirestoreHoursWithKeys] = useState<FirestoreHourWithKey[]>([]);
-  // Using a literal date for testing purposes
+  const countdown = useAppSelector((state) => state.appConfig.countdown);
+  const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
   const currentDate = useCurrentDate();
   // const currentDate = useMemo(() => new Date(2022, 2, 5, 20, 0, 0, 0), []); // Testing
   const [marathonHour, setMarathonHour] = useState(-1);
@@ -141,12 +143,14 @@ const HoursListScreen = () => {
   }, [currentDate]);
 
   return (
-    <View>
-      {marathonHour < 0 && (
-        <Text>
-          I don&apos;t know how you made it here, but you should not have been able to. Please
-          report this issue to the DanceBlue Committee
-        </Text>
+    <View style={{ flex: 1 }}>
+      {marathonHour < 0 && isConfigLoaded && countdown && (
+        <>
+          <View style={{ flexGrow: 1, flexShrink: 0 }}>
+            <CountdownView />
+          </View>
+          <View style={{ flexGrow: 2, height: 0 }} />
+        </>
       )}
       {marathonHour >= 0 && (
         <>
