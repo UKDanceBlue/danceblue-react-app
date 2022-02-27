@@ -67,7 +67,7 @@ const initialState: AuthSliceType = {
 
 export const updateUserData = createAsyncThunk(
   'auth/updateUserData',
-  async (newUser: { userSnapshot: DocumentSnapshot; isAnonymous: boolean }) => {
+  async (newUser: { userSnapshot?: DocumentSnapshot; isAnonymous: boolean }) => {
     const { userSnapshot, isAnonymous } = newUser;
 
     const userInfo: Partial<AuthSliceType> = {
@@ -88,7 +88,7 @@ export const updateUserData = createAsyncThunk(
 
     const firebaseUserData = userSnapshot?.data() as FirestoreUser;
     // If the firebaseUserData is falsy, skip processing the data and just pass along the base userInfo object
-    if (firebaseUserData) {
+    if (firebaseUserData && userSnapshot && userInfo?.attributes) {
       // Don't add non-serializable reference to teams
       delete firebaseUserData.team;
 
@@ -118,7 +118,7 @@ export const updateUserData = createAsyncThunk(
           );
           const matchingTeams = await getDocs(teamQuery);
           if (matchingTeams.docs.length === 1) {
-            preloadedTeamSnapshot = matchingTeams.docs[0];
+            [preloadedTeamSnapshot] = matchingTeams.docs;
             updateDoc(userSnapshot.ref, { team: preloadedTeamSnapshot.ref });
             userInfo.teamId = preloadedTeamSnapshot.id;
           }
@@ -157,8 +157,10 @@ export const updateUserData = createAsyncThunk(
         }
 
         // Update team attributes
-        userInfo.attributes.team = userInfo.teamId;
-        userInfo.attributes.role = 'dancer';
+        if (userInfo.teamId) {
+          userInfo.attributes.team = userInfo.teamId;
+          userInfo.attributes.role = 'dancer';
+        }
 
         updateDoc(userSnapshot.ref, { attributes: userInfo.attributes });
       }
@@ -177,14 +179,16 @@ export const logout = createAsyncThunk('auth/logout', async (arg, thunkApi) =>
 
 export const syncAuthStateWithUser = createAsyncThunk(
   'auth/syncAuthStateWithUser',
-  async (user: User, thunkApi) => {
+  async (user: User | null, thunkApi) => {
     let userSnapshot = null;
     if (user?.uid) {
       // Get the user's firebase doc
       userSnapshot = await getDoc(doc(firebaseFirestore, 'users', user.uid));
     }
     // Dispatch the updateUserData action
-    thunkApi.dispatch(updateUserData({ isAnonymous: !!user?.isAnonymous, userSnapshot }));
+    thunkApi.dispatch(
+      updateUserData({ isAnonymous: !!user?.isAnonymous, userSnapshot: userSnapshot || undefined })
+    );
   }
 );
 
@@ -241,8 +245,6 @@ export const loginSaml = createAsyncThunk(
     // 4. Update user data
     const userSnapshot = await getDoc(doc(firebaseFirestore, 'users', samlUserCredential.user.uid));
     thunkApi.dispatch(updateUserData({ isAnonymous: false, userSnapshot }));
-
-    
   }
 );
 
