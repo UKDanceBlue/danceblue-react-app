@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { differenceInHours } from 'date-fns';
 import { useEffect, useMemo, useState } from 'react';
-import { FlatList, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { FlatList, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Divider, Image, ListItem, Text } from 'react-native-elements';
 import Lightbox from 'react-native-lightbox-v2';
 import CountdownView from '../../common/components/CountdownView';
@@ -111,8 +111,8 @@ const HoursListScreen = () => {
   const [firestoreHoursWithKeys, setFirestoreHoursWithKeys] = useState<FirestoreHourWithKey[]>([]);
   const countdown = useAppSelector((state) => state.appConfig.countdown);
   const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
-  const currentDate = useCurrentDate();
-  // const currentDate = useMemo(() => new Date(2022, 2, 5, 20, 0, 0, 0), []); // Testing
+  // const currentDate = useCurrentDate();
+  const currentDate = useMemo(() => new Date(2022, 2, 6, 20, 1, 0, 0), []); // Testing
   const [marathonHour, setMarathonHour] = useState(-1);
   const { width: screenWidth } = useWindowDimensions();
   const [mapOfMemorial] = useCachedFiles([
@@ -167,7 +167,7 @@ const HoursListScreen = () => {
             </>
           )}
           <FlatList
-            contentContainerStyle={{ paddingBottom: 310 }}
+            contentContainerStyle={{ paddingBottom: Platform.OS === 'android' ? 310 : undefined }}
             data={firestoreHoursWithKeys.sort((a, b) => a.key - b.key)}
             renderItem={(itemInfo) => (
               <HourRow

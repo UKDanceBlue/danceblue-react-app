@@ -132,21 +132,38 @@ const HourScreen = ({
     const tempComponents: JSX.Element[] = [];
     let specialComponentIndex = 0;
     let webviewIndex = 0;
+    let textBlockIndex = 0;
     for (let i = 0; i < firestoreHour.contentOrder.length; i++) {
       switch (firestoreHour.contentOrder[i]) {
         case 'text-instructions':
           if (firestoreHour.textInstructions) {
             tempComponents.push(
               <>
-                <Text style={{ margin: 10 }} h4>
+                <Text style={{ margin: 10 }} key={`${i}a`}>
                   Instructions:
                 </Text>
-                <Text style={{ margin: 10 }} key={i}>
+                <Text style={{ margin: 10 }} key={`${i}b`}>
                   {composeInstructions(firestoreHour.textInstructions)}
                 </Text>
               </>
             );
           }
+          break;
+        case 'text-block':
+          if (Array.isArray(firestoreHour.textBlock)) {
+            tempComponents.push(
+              <Text style={{ margin: 10 }} key={i}>
+                {firestoreHour.textBlock[textBlockIndex]}
+              </Text>
+            );
+          } else {
+            tempComponents.push(
+              <Text style={{ margin: 10 }} key={i}>
+                {firestoreHour.textBlock}
+              </Text>
+            );
+          }
+          textBlockIndex++;
           break;
 
         case 'gs-image':
