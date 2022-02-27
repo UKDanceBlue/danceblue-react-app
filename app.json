@@ -9,7 +9,7 @@
       "icon": "./assets/icon.png"
     },
     "platforms": ["ios", "android"],
-    "version": "1.2.1",
+    "version": "1.3.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -24,7 +24,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.danceblue.app",
-      "buildNumber": "1.2.1",
+      "buildNumber": "1.3.0",
       "config": { "usesNonExemptEncryption": false },
       "infoPlist": {
         "NSRemindersUsageDescription": "Users may add DanceBlue events to their calendar."
@@ -32,7 +32,7 @@
     },
     "android": {
       "package": "org.danceblue.app",
-      "versionCode": 18,
+      "versionCode": 19,
       "permissions": ["WRITE_CALENDAR", "READ_CALENDAR"],
       "googleServicesFile": "./google-services.json"
     },
