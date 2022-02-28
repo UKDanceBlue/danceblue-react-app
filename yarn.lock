@@ -2285,6 +2285,13 @@
   resolved "https://registry.npmjs.org/@oclif/screen/-/screen-3.0.2.tgz"
   integrity sha512-S/SF/XYJeevwIgHFmVDAFRUvM3m+OjhvCAYMk78ZJQCYCQ5wS7j+LTt1ZEv2jpEEGg2tx/F6TYYWxddNAYHrFQ==
 
+"@openspacelabs/react-native-zoomable-view@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@openspacelabs/react-native-zoomable-view/-/react-native-zoomable-view-2.0.0.tgz#7e7926d6e0ed3abd2ff5d383889e839bfe3fead5"
+  integrity sha512-Crkjn4gEJtBTEaLLVah4QiUZj4VEN80hoaFLYlW5o+pH837cVuKVyR71rTIZ4+DYqNtSQ6xNudKpNJoroNsYgA==
+  dependencies:
+    prop-types "^15.7.2"
+
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@protobufjs/aspromise/-/aspromise-1.1.2.tgz"
@@ -8788,11 +8795,6 @@ react-native-gesture-handler@~2.1.0:
     invariant "^2.2.4"
     lodash "^4.17.21"
     prop-types "^15.7.2"
-
-react-native-lightbox-v2@0.8.9-beta.0:
-  version "0.8.9-beta.0"
-  resolved "https://registry.yarnpkg.com/react-native-lightbox-v2/-/react-native-lightbox-v2-0.8.9-beta.0.tgz#28917026ae339965c1e79f7ed03240c2c6131960"
-  integrity sha512-N2jeJ4bTYx2F20gFCuiIljsiyMjpCWirn3NBHPFQ4+/f4eVDSgrTBosCODmgnOvXSMuTea05TwZPM30cI/1wgQ==
 
 react-native-open-maps@^0.4.0:
   version "0.4.0"

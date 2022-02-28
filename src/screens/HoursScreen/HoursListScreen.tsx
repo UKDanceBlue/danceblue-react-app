@@ -3,7 +3,6 @@ import { differenceInHours } from 'date-fns';
 import { useEffect, useMemo, useState } from 'react';
 import { FlatList, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Divider, Image, ListItem, Text } from 'react-native-elements';
-import Lightbox from 'react-native-lightbox-v2';
 import CountdownView from '../../common/components/CountdownView';
 import { useCachedFiles } from '../../common/CacheUtils';
 import { useAppSelector, useCurrentDate } from '../../common/CustomHooks';

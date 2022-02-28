@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.0",
+    "@openspacelabs/react-native-zoomable-view": "^2.0.0",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",
@@ -51,7 +52,6 @@
     "react-native": "0.64.3",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "~2.1.0",
-    "react-native-lightbox-v2": "0.8.9-beta.0",
     "react-native-open-maps": "^0.4.0",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
