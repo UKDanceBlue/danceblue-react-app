@@ -1,7 +1,8 @@
 /// <reference types="react" />
 // Import third-party dependencies
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar, Linking } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 import * as Notifications from 'expo-notifications';
 import { useAssets } from 'expo-asset';
 import AppLoading from 'expo-app-loading';
@@ -15,10 +16,10 @@ import RootScreen from './src/navigation/RootScreen';
 import { showMessage } from './src/common/AlertUtils';
 
 import store from './src/redux/store';
-import { syncAuthStateWithUser } from './src/redux/authSlice';
+import { logout, syncAuthStateWithUser } from './src/redux/authSlice';
 import { firebaseAuth } from './src/common/FirebaseApp';
 import { obtainUuid, registerPushNotifications } from './src/redux/notificationSlice';
-import { updateConfig } from './src/redux/appConfigSlice';
+import { appConfigSlice, updateConfig } from './src/redux/appConfigSlice';
 import { rnElementsTheme } from './src/theme';
 
 // All assets that should be preloaded:
@@ -53,8 +54,12 @@ Notifications.setNotificationHandler({
 });
 
 const firstTimeSync = onAuthStateChanged(firebaseAuth, (user) => {
-  // This will run after auth is initialized and never again
-  store.dispatch(syncAuthStateWithUser(user));
+  if (user) {
+    // This will run after auth is initialized and never again
+    store.dispatch(syncAuthStateWithUser(user));
+  } else {
+    store.dispatch(logout());
+  }
   store.dispatch(obtainUuid());
   store.dispatch(updateConfig());
   firstTimeSync();
@@ -75,6 +80,23 @@ const pushRegistrationObserver = store.subscribe(() => {
  */
 const App = () => {
   const [assets, assetError] = useAssets([splashLoginBackground, homeBackgroundImg, dbLogo]);
+
+  useEffect(
+    () =>
+      NetInfo.addEventListener((state) => {
+        if (!state.isInternetReachable) {
+          if (!store.getState().appConfig.offline) {
+            showMessage(
+              'You seem to be offline, some functionality may be unavailable or out of date'
+            );
+            store.dispatch(appConfigSlice.actions.goOffline());
+          }
+        } else if (store.getState().appConfig.offline) {
+          store.dispatch(appConfigSlice.actions.goOnline());
+        }
+      }),
+    []
+  );
 
   if (assetError) {
     showMessage(assetError, 'Error loading assets');

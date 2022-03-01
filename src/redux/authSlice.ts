@@ -200,6 +200,7 @@ export const loginAnon = createAsyncThunk('auth/loginAnon', async (arg, thunkApi
 type LoginSamlThunkError = {
   error: 'UNEXPECTED_AUTH_PROVIDER' | 'INVALID_SERVER_RESPONSE';
 };
+
 export const loginSaml = createAsyncThunk(
   'auth/loginSaml',
   async (samlUserCredential: UserCredential, thunkApi) => {
@@ -241,8 +242,6 @@ export const loginSaml = createAsyncThunk(
     // 4. Update user data
     const userSnapshot = await getDoc(doc(firebaseFirestore, 'users', samlUserCredential.user.uid));
     thunkApi.dispatch(updateUserData({ isAnonymous: false, userSnapshot }));
-
-    
   }
 );
 
@@ -302,6 +301,12 @@ export const authSlice = createSlice({
         },
       };
       Object.assign(state, newState);
+    },
+    loginOffline(state) {
+      Object.assign(state, initialState);
+      state.isLoggedIn = true;
+      state.isAnonymous = true;
+      state.isAuthLoaded = true;
     },
   },
   extraReducers: (builder) => {

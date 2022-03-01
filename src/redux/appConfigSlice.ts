@@ -2,8 +2,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { showMessage } from '../common/AlertUtils';
-import { firebaseFirestore } from '../common/FirebaseApp';
+import { firebaseAuth, firebaseFirestore } from '../common/FirebaseApp';
 import { FirestoreHour, FirestoreMobileAppConfig } from '../types/FirebaseTypes';
+import { authSlice, logout, syncAuthStateWithUser } from './authSlice';
+import store from './store';
 
 type AppConfigSliceType = {
   isConfigLoaded: boolean;
@@ -17,6 +19,7 @@ type AppConfigSliceType = {
   demoMode?: boolean;
   demoModeKey: string;
   marathonHours: FirestoreHour[];
+  offline: boolean;
 };
 
 const initialState: AppConfigSliceType = {
@@ -27,6 +30,7 @@ const initialState: AppConfigSliceType = {
   demoMode: false,
   demoModeKey: Math.random().toString(), // Start the demo key as junk for safety's sake
   marathonHours: [],
+  offline: false,
 };
 
 export const updateConfig = createAsyncThunk(
@@ -80,6 +84,18 @@ export const appConfigSlice = createSlice({
         isConfigLoaded: true,
         demoMode: true,
       });
+    },
+    goOffline(state) {
+      state.offline = true;
+      store.dispatch(authSlice.actions.loginOffline());
+    },
+    goOnline(state) {
+      if (firebaseAuth.currentUser) {
+        store.dispatch(syncAuthStateWithUser(firebaseAuth.currentUser));
+      } else {
+        store.dispatch(logout());
+      }
+      state.offline = false;
     },
   },
   extraReducers: (builder) => {
