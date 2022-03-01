@@ -106,7 +106,6 @@ async function getImageFromPhotosOrCamera(
       showMessage(e, 'Failed to upload your image', undefined, true);
     }
   };
-
   const takePicture = async (
     takePictureCallback: (uri: string, hour: string) => Promise<boolean>
   ) => {
@@ -139,7 +138,12 @@ async function getImageFromPhotosOrCamera(
       showMessage('unknown error', 'Failed to upload your image', undefined, true);
     }
   };
-  if (Platform.OS === 'ios') {
+
+  if (store.getState().appConfig.offline) {
+    showMessage(
+      'You seem to be offline, connect to the internet or talk to your morale group leader'
+    );
+  } else if (Platform.OS === 'ios') {
     ActionSheetIOS.showActionSheetWithOptions(
       {
         options: ['Cancel', 'Choose from Photos', 'Take a Photo'],

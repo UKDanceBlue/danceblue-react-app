@@ -18,6 +18,7 @@ import { appConfigSlice } from '../../redux/appConfigSlice';
 const ProfileScreen = () => {
   const userData = useAppSelector((state) => state.auth);
   const demoModeKey = useAppSelector((state) => state.appConfig.demoModeKey);
+  const isOffline = useAppSelector((state) => state.appConfig.offline);
   const [assets, error] = useAssets(require('../../../assets/avatar.png'));
   const [reportLongPressed, setReportLongPressed] = useState(false);
   const [suggestLongPressed, setSuggestLongPressed] = useState(false);
@@ -59,7 +60,7 @@ const ProfileScreen = () => {
                 /* Start of logged in anonymously view */ userData.isLoggedIn &&
                   userData.isAnonymous && (
                     <>
-                      <Text>You are logged in anonymously</Text>
+                      <Text>You are logged in {isOffline ? 'offline' : 'anonymously'}</Text>
                       <Button
                         style={{ margin: 10, alignSelf: 'center' }}
                         onPress={() => {
@@ -90,7 +91,7 @@ const ProfileScreen = () => {
                 <TextInput
                   style={{ borderWidth: 2, minWidth: '30%' }}
                   returnKeyType="go"
-                  secureTextEntry={true}
+                  secureTextEntry
                   onSubmitEditing={(event) => {
                     if (event.nativeEvent.text === demoModeKey) {
                       store.dispatch(appConfigSlice.actions.enterDemoMode());
@@ -127,7 +128,7 @@ const ProfileScreen = () => {
                     );
                   }}
                   onLongPress={() => {
-                    setSuggestLongPressed(reportLongPressed ? true : false);
+                    setSuggestLongPressed(!!reportLongPressed);
                   }}
                   title="Suggest a change"
                 />

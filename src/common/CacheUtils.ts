@@ -5,6 +5,7 @@ import { Image } from 'react-native';
 import { firebaseStorage } from './FirebaseApp';
 import { showMessage } from './AlertUtils';
 import { useDeepEffect } from './CustomHooks';
+import store from '../redux/store';
 
 export type UseCachedFilesType = {
   assetId: string;
@@ -14,7 +15,7 @@ export type UseCachedFilesType = {
   base64?: boolean;
 };
 
-async function getFiles(
+async function getFile(
   localUri: string,
   cacheOption: UseCachedFilesType
 ): Promise<[string | null, Error | null]> {
@@ -27,31 +28,35 @@ async function getFiles(
       !localAssetInfo.exists ||
       new Date().getTime() / 1000 - localAssetInfo.modificationTime > cacheOption.freshnessTime
     ) {
-      // If not we are going to download the file before reading form it
-      // Start by getting figuring out a download uri
-      let { downloadUri } = cacheOption;
-      if (cacheOption.googleUri) {
-        downloadUri = await getDownloadURL(ref(firebaseStorage, cacheOption.googleUri));
-      }
-      // If there is still no download Uri then throw an error
-      if (!downloadUri) {
-        throw new Error('No download uri could be determined');
-      }
+      if (store.getState().appConfig.offline) {
+        return [null, null];
+      } else {
+        // If the file doesn't exist but we can download it we are going to do so
+        // Start by getting figuring out a download uri
+        let { downloadUri } = cacheOption;
+        if (cacheOption.googleUri) {
+          downloadUri = await getDownloadURL(ref(firebaseStorage, cacheOption.googleUri));
+        }
+        // If there is still no download Uri then throw an error
+        if (!downloadUri) {
+          throw new Error('No download uri could be determined');
+        }
 
-      // Check if the cache directory exists
-      const { exists: cacheDirectoryExists } = await FileSystem.getInfoAsync(
-        `${FileSystem.cacheDirectory}DBFileCache/`
-      );
+        // Check if the cache directory exists
+        const { exists: cacheDirectoryExists } = await FileSystem.getInfoAsync(
+          `${FileSystem.cacheDirectory}DBFileCache/`
+        );
 
-      // If not, make it
-      if (!cacheDirectoryExists) {
-        await FileSystem.makeDirectoryAsync(`${FileSystem.cacheDirectory}DBFileCache/`, {
-          intermediates: true,
-        });
+        // If not, make it
+        if (!cacheDirectoryExists) {
+          await FileSystem.makeDirectoryAsync(`${FileSystem.cacheDirectory}DBFileCache/`, {
+            intermediates: true,
+          });
+        }
+
+        // Finally we download the file from downloadUri
+        await FileSystem.downloadAsync(downloadUri, localUri);
       }
-
-      // Finally we download the file from downloadUri
-      await FileSystem.downloadAsync(downloadUri, localUri);
     }
     const localFileContent = await FileSystem.readAsStringAsync(localUri, {
       encoding: cacheOption.base64 ? FileSystem.EncodingType.Base64 : FileSystem.EncodingType.UTF8,
@@ -116,7 +121,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
 
         for (let i = 0; i < options.length; i++) {
           if (options[i]) {
-            fileContentPromises.push(getFiles(localUris[i] as string, options[i]));
+            fileContentPromises.push(getFile(localUris[i] as string, options[i]));
           } else {
             // Mark an empty space
             fileContentPromises.push((async () => [null, null])());

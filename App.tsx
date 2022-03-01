@@ -85,7 +85,6 @@ const App = () => {
   useEffect(
     () =>
       NetInfo.addEventListener((state) => {
-        console.log(state.isConnected);
         if (!state.isConnected && !isOfflineInternal.current) {
           isOfflineInternal.current = true;
           showMessage(

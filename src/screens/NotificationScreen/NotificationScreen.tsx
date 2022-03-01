@@ -55,44 +55,52 @@ const NotificationScreen = () => {
     // Start loading
     setIsLoading(true);
     try {
-      const uuid = await SecureStore.getItemAsync(uuidStoreKey, {
-        keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
-      });
+      if (store.getState().appConfig.offline) {
+        showMessage('You seem to be offline, connect to the internet to load notifications');
+      } else {
+        const uuid = await SecureStore.getItemAsync(uuidStoreKey, {
+          keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
+        });
 
-      // We have already set a UUID and can use the retrieved value
-      if (uuid) {
-        // An array of all notifications to be shown
-        const tempNotifications = [] as FirestoreNotification[];
+        // We have already set a UUID and can use the retrieved value
+        if (uuid) {
+          // An array of all notifications to be shown
+          const tempNotifications = [] as FirestoreNotification[];
 
-        /* Ensure everything is in the cache */
-        // An array of getDoc promises for any new notifications we need to get
-        const newNotificationPromises = [];
-        // Get any new notifications and add any we already cached to tempNotifications
-        for (let i = 0; i < notificationReferences.length; i++) {
-          if (!notificationsCache[notificationReferences[i]]) {
-            newNotificationPromises.push(
-              getDoc(doc(firebaseFirestore, notificationReferences[i])).catch(() =>
-                showMessage('Failed to get past notification from server')
-              )
-            );
-          } else {
-            tempNotifications.push(notificationsCache[notificationReferences[i]]);
-          }
-        }
-        // Wait for any new notifications to download and add them to tempNotifications as well
-        const newNotifications = (await Promise.all(newNotificationPromises)) as DocumentSnapshot[];
-        for (let i = 0; i < newNotifications.length; i++) {
-          if (newNotifications[i].ref) {
-            const newNotificationData = newNotifications[i].data() as FirestoreNotification;
-            if (newNotificationData) {
-              notificationsCache[newNotifications[i].ref.path] = newNotificationData;
+          /* Ensure everything is in the cache */
+          // An array of getDoc promises for any new notifications we need to get
+          const newNotificationPromises = [];
+          // Get any new notifications and add any we already cached to tempNotifications
+          for (let i = 0; i < notificationReferences.length; i++) {
+            if (!notificationsCache[notificationReferences[i]]) {
+              newNotificationPromises.push(
+                getDoc(doc(firebaseFirestore, notificationReferences[i])).catch(() =>
+                  showMessage('Failed to get past notification from server')
+                )
+              );
+            } else {
               tempNotifications.push(notificationsCache[notificationReferences[i]]);
             }
           }
-        }
+          // Wait for any new notifications to download and add them to tempNotifications as well
+          const newNotifications = (await Promise.all(
+            newNotificationPromises
+          )) as DocumentSnapshot[];
+          for (let i = 0; i < newNotifications.length; i++) {
+            if (newNotifications[i].ref) {
+              const newNotificationData = newNotifications[i].data() as FirestoreNotification;
+              if (newNotificationData) {
+                notificationsCache[newNotifications[i].ref.path] = newNotificationData;
+                tempNotifications.push(notificationsCache[notificationReferences[i]]);
+              }
+            }
+          }
 
-        // Sort the list by time and update the state
-        setNotifications(tempNotifications.sort((a, b) => b.sendTime.seconds - a.sendTime.seconds));
+          // Sort the list by time and update the state
+          setNotifications(
+            tempNotifications.sort((a, b) => b.sendTime.seconds - a.sendTime.seconds)
+          );
+        }
       }
     } catch (error) {
       showMessage(error, 'Error retrieving notifications');
