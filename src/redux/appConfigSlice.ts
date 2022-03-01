@@ -76,7 +76,6 @@ export const appConfigSlice = createSlice({
     },
     enterDemoMode(state) {
       Object.assign(state, {
-        ...initialState,
         countdown: {
           title: 'DanceBlue 2022',
           millis: 1646514000000,

@@ -41,7 +41,7 @@ export function useDeepEffect(effectFunc: () => unknown, deps: DependencyList) {
   }, [deps, effectFunc]);
 }
 
-export function useCurrentDate(refreshInterval: number) {
+export function useCurrentDate(refreshInterval?: number) {
   const [state, setState] = useState(new Date());
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export function useCurrentDate(refreshInterval: number) {
     const timer = setInterval(() => {
       // Get time components
       setState(new Date());
-    }, refreshInterval * 1000);
+    }, (refreshInterval || 60) * 10);
 
     return () => {
       clearInterval(timer);

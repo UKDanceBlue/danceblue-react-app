@@ -52,6 +52,8 @@
         "types": "always",
         "lib": "never"
       }
-    ]
+    ],
+
+    "@typescript-eslint/no-var-requires": "off"
   }
 }

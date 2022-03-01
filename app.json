@@ -17,6 +17,15 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to allow you to submit images for various DanceBlue activities.",
+          "cameraPermission": "The app accesses your camera to allow you to submit images for various DanceBlue activities."
+        }
+      ]
+    ],
     "updates": {
       "enabled": false
     },
@@ -33,7 +42,7 @@
     "android": {
       "package": "org.danceblue.app",
       "versionCode": 19,
-      "permissions": ["WRITE_CALENDAR", "READ_CALENDAR"],
+      "permissions": ["WRITE_CALENDAR", "READ_CALENDAR", "CAMERA", ""],
       "googleServicesFile": "./google-services.json"
     },
     "description": "University of Kentucky DanceBlue Mobile Application"

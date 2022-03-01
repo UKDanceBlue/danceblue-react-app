@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, View, ScrollView, useWindowDimensions } from 'react-native';
 import { Image, Text, useTheme } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
-import Lightbox from 'react-native-lightbox-v2';
 import WebView from 'react-native-webview';
+import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
 import { UseCachedFilesType, useCachedImages } from '../../common/CacheUtils';
 import { globalTextStyles } from '../../theme';
 import { FirestoreHour } from '../../types/FirebaseTypes';
@@ -132,21 +132,38 @@ const HourScreen = ({
     const tempComponents: JSX.Element[] = [];
     let specialComponentIndex = 0;
     let webviewIndex = 0;
+    let textBlockIndex = 0;
     for (let i = 0; i < firestoreHour.contentOrder.length; i++) {
       switch (firestoreHour.contentOrder[i]) {
         case 'text-instructions':
           if (firestoreHour.textInstructions) {
             tempComponents.push(
               <>
-                <Text style={{ margin: 10 }} h4>
+                <Text style={{ margin: 10 }} key={`${i}a`}>
                   Instructions:
                 </Text>
-                <Text style={{ margin: 10 }} key={i}>
+                <Text style={{ margin: 10 }} key={`${i}b`}>
                   {composeInstructions(firestoreHour.textInstructions)}
                 </Text>
               </>
             );
           }
+          break;
+        case 'text-block':
+          if (Array.isArray(firestoreHour.textBlock)) {
+            tempComponents.push(
+              <Text style={{ margin: 10 }} key={i}>
+                {firestoreHour.textBlock[textBlockIndex]}
+              </Text>
+            );
+          } else {
+            tempComponents.push(
+              <Text style={{ margin: 10 }} key={i}>
+                {firestoreHour.textBlock}
+              </Text>
+            );
+          }
+          textBlockIndex++;
           break;
 
         case 'gs-image':
@@ -158,7 +175,17 @@ const HourScreen = ({
               );
             } else if (cachedImages[i][0] !== null) {
               tempComponents.push(
-                <Lightbox key={i}>
+                <ReactNativeZoomableView
+                  maxZoom={3}
+                  minZoom={1}
+                  zoomStep={0.5}
+                  initialZoom={1}
+                  bindToBorders
+                  style={{
+                    padding: 10,
+                  }}
+                  movementSensibility={5}
+                >
                   <Image
                     source={{
                       uri: cachedImages[i][0]?.imageBase64,
@@ -166,23 +193,24 @@ const HourScreen = ({
                       height: cachedImages[i][0]?.imageHeight,
                     }}
                     style={{
-                      width: screenWidth,
+                      width: screenWidth - 20,
                       height: screenWidth / cachedImages[i][0]?.imageRatio,
                       resizeMode: 'contain',
                       alignSelf: 'center',
-                      marginVertical: 10,
+                      margin: 10,
                     }}
                   />
-                </Lightbox>
+                </ReactNativeZoomableView>
               );
             } else {
               tempComponents.push(<ActivityIndicator key={i} color="blue" />);
             }
+          } else {
+            tempComponents.push(<ActivityIndicator key={i} color="blue" style={{ padding: 10 }} />);
           }
           break;
 
         case 'special':
-          specialComponentIndex++;
           if (Array.isArray(firestoreHour.specialComponent)) {
             tempComponents.push(
               <View key={i}>
@@ -194,6 +222,7 @@ const HourScreen = ({
               <View key={i}>{HourActivities[firestoreHour.specialComponent.id]}</View>
             );
           }
+          specialComponentIndex++;
           break;
 
         case 'webview':

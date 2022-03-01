@@ -49,7 +49,7 @@ const CountdownView = () => {
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [countdownConfig.millis]);
 
   return (
     <View style={styles.container}>
