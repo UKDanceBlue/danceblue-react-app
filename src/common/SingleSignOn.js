@@ -1,12 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import {
-  SAMLAuthProvider,
-  linkWithCredential,
-  signInWithCredential,
-  signOut,
-  UserCredential,
-} from 'firebase/auth';
+import { SAMLAuthProvider, linkWithCredential, signInWithCredential, signOut } from 'firebase/auth';
 import { showMessage } from './AlertUtils';
 import { firebaseAuth } from './FirebaseApp';
 import { loginSaml } from '../redux/authSlice';
@@ -14,9 +8,9 @@ import store from '../redux/store';
 
 let browserOpen = false;
 export default class SingleSignOn {
-  backendUrl: string;
+  backendUrl;
 
-  redirectData: Linking.ParsedURL;
+  redirectData;
 
   constructor() {
     this.backendUrl = 'https://app.danceblue.org/saml-relay.html';
@@ -28,7 +22,7 @@ export default class SingleSignOn {
    * unavailable in React Native, and then passing the auth credential back to the app in
    * the query string of the expo-linking url
    */
-  async authenticate(operation: string): Promise<UserCredential> {
+  async authenticate(operation) {
     if (browserOpen) {
       return;
     }
