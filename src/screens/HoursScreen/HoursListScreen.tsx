@@ -156,12 +156,10 @@ const HoursListScreen = () => {
           {mapOfMemorial && (
             <>
               <Divider width={2} />
-              <Lightbox>
-                <Image
-                  style={{ width: screenWidth, height: screenWidth * (1194 / 1598) }}
-                  source={{ uri: `data:image/png;base64,${mapOfMemorial}` }}
-                />
-              </Lightbox>
+              <Image
+                style={{ width: screenWidth, height: screenWidth * (1194 / 1598) }}
+                source={{ uri: `data:image/png;base64,${mapOfMemorial}` }}
+              />
               <Divider width={2} />
             </>
           )}
