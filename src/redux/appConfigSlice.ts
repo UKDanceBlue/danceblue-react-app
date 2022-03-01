@@ -2,17 +2,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { showMessage } from '../common/AlertUtils';
-import { firebaseAuth, firebaseFirestore } from '../common/FirebaseApp';
+import { firebaseFirestore } from '../common/FirebaseApp';
 import { FirestoreHour, FirestoreMobileAppConfig } from '../types/FirebaseTypes';
-import { authSlice, logout, syncAuthStateWithUser } from './authSlice';
-import store from './store';
 
 type AppConfigSliceType = {
   isConfigLoaded: boolean;
   countdown: { millis: number; title: string };
   configuredTabs: string[];
   scoreboard: {
-    pointType: 'spirit' | 'morale';
+    pointType: 'spirit' | 'morale' | undefined;
     showIcons: boolean;
     showTrophies: boolean;
   };
@@ -24,8 +22,12 @@ type AppConfigSliceType = {
 
 const initialState: AppConfigSliceType = {
   isConfigLoaded: false,
-  scoreboard: null,
-  countdown: null,
+  scoreboard: {
+    pointType: undefined,
+    showIcons: false,
+    showTrophies: false,
+  },
+  countdown: { millis: 0, title: '' },
   configuredTabs: [],
   demoMode: false,
   demoModeKey: Math.random().toString(), // Start the demo key as junk for safety's sake
@@ -53,7 +55,7 @@ export const updateConfig = createAsyncThunk(
             title: snapshotData.countdown.title,
             millis: snapshotData.countdown.time.seconds * 1000,
           }
-        : null,
+        : undefined,
       scoreboard: snapshotData.scoreboard,
       configuredTabs: snapshotData.currentTabs,
       demoModeKey: snapshotData.demoModeKey,
@@ -86,14 +88,8 @@ export const appConfigSlice = createSlice({
     },
     goOffline(state) {
       state.offline = true;
-      store.dispatch(authSlice.actions.loginOffline());
     },
     goOnline(state) {
-      if (firebaseAuth.currentUser) {
-        store.dispatch(syncAuthStateWithUser(firebaseAuth.currentUser));
-      } else {
-        store.dispatch(logout());
-      }
       state.offline = false;
     },
   },
@@ -104,16 +100,16 @@ export const appConfigSlice = createSlice({
         Object.assign(state, initialState);
       })
       .addCase(updateConfig.fulfilled, (state, action) => {
-        state.countdown = action.payload.countdown;
-        state.scoreboard = action.payload.scoreboard;
-        state.configuredTabs = action.payload.configuredTabs;
-        state.demoModeKey = action.payload.demoModeKey;
-        state.marathonHours = action.payload.marathonHours;
+        state.countdown = action.payload.countdown || initialState.countdown;
+        state.scoreboard = action.payload.scoreboard || initialState.scoreboard;
+        state.configuredTabs = action.payload.configuredTabs || initialState.configuredTabs;
+        state.demoModeKey = action.payload.demoModeKey || initialState.demoModeKey;
+        state.marathonHours = action.payload.marathonHours || initialState.marathonHours;
         state.isConfigLoaded = true;
       })
       .addCase(updateConfig.rejected, (state, action) => {
         state.isConfigLoaded = true;
-        showMessage(action.error.message, action.error.code, null, true, action.error.stack);
+        showMessage(action.error.message, action.error.code, undefined, true, action.error.stack);
       });
   },
 });

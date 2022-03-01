@@ -1,6 +1,6 @@
 /// <reference types="react" />
 // Import third-party dependencies
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { StatusBar, Linking } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import * as Notifications from 'expo-notifications';
@@ -16,7 +16,7 @@ import RootScreen from './src/navigation/RootScreen';
 import { showMessage } from './src/common/AlertUtils';
 
 import store from './src/redux/store';
-import { logout, syncAuthStateWithUser } from './src/redux/authSlice';
+import { authSlice, logout, syncAuthStateWithUser } from './src/redux/authSlice';
 import { firebaseAuth } from './src/common/FirebaseApp';
 import { obtainUuid, registerPushNotifications } from './src/redux/notificationSlice';
 import { appConfigSlice, updateConfig } from './src/redux/appConfigSlice';
@@ -81,18 +81,24 @@ const pushRegistrationObserver = store.subscribe(() => {
 const App = () => {
   const [assets, assetError] = useAssets([splashLoginBackground, homeBackgroundImg, dbLogo]);
 
+  const isOfflineInternal = useRef(false);
   useEffect(
     () =>
       NetInfo.addEventListener((state) => {
-        if (!state.isInternetReachable) {
-          if (!store.getState().appConfig.offline) {
-            showMessage(
-              'You seem to be offline, some functionality may be unavailable or out of date'
-            );
-            store.dispatch(appConfigSlice.actions.goOffline());
-          }
-        } else if (store.getState().appConfig.offline) {
+        console.log(state.isConnected);
+        if (!state.isConnected && !isOfflineInternal.current) {
+          isOfflineInternal.current = true;
+          showMessage(
+            'You seem to be offline, some functionality may be unavailable or out of date'
+          );
+          store.dispatch(appConfigSlice.actions.goOffline());
+          store.dispatch(authSlice.actions.loginOffline());
+        } else if (isOfflineInternal.current) {
           store.dispatch(appConfigSlice.actions.goOnline());
+          if (firebaseAuth.currentUser) {
+            store.dispatch(syncAuthStateWithUser(firebaseAuth.currentUser));
+          }
+          isOfflineInternal.current = false;
         }
       }),
     []
