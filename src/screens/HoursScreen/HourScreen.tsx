@@ -211,7 +211,6 @@ const HourScreen = ({
           break;
 
         case 'special':
-          specialComponentIndex++;
           if (Array.isArray(firestoreHour.specialComponent)) {
             tempComponents.push(
               <View key={i}>
@@ -223,6 +222,7 @@ const HourScreen = ({
               <View key={i}>{HourActivities[firestoreHour.specialComponent.id]}</View>
             );
           }
+          specialComponentIndex++;
           break;
 
         case 'webview':
