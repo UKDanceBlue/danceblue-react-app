@@ -84,7 +84,7 @@ const HourScreen = ({
   const cachedImages = useCachedImages(cacheOptions);
   const { theme } = useTheme();
 
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   // Setup the image cache
   useEffect(() => {
@@ -214,12 +214,12 @@ const HourScreen = ({
           if (Array.isArray(firestoreHour.specialComponent)) {
             tempComponents.push(
               <View key={i}>
-                {HourActivities[firestoreHour.specialComponent[specialComponentIndex].id]}
+                {HourActivities[firestoreHour.specialComponent[specialComponentIndex].id]()}
               </View>
             );
           } else if (firestoreHour.specialComponent) {
             tempComponents.push(
-              <View key={i}>{HourActivities[firestoreHour.specialComponent.id]}</View>
+              <View key={i}>{HourActivities[firestoreHour.specialComponent.id]()}</View>
             );
           }
           specialComponentIndex++;
@@ -230,13 +230,21 @@ const HourScreen = ({
           if (Array.isArray(firestoreHour.webviewUri)) {
             tempComponents.push(
               <View key={i}>
-                <WebView source={{ uri: firestoreHour.webviewUri[webviewIndex] }} />
+                <WebView
+                  renderLoading={() => <ActivityIndicator style={{ padding: 10 }} />}
+                  source={{ uri: firestoreHour.webviewUri[webviewIndex] }}
+                  style={{ width: screenWidth, height: screenHeight * 0.8 }}
+                />
               </View>
             );
           } else if (firestoreHour.webviewUri) {
             tempComponents.push(
               <View key={i}>
-                <WebView source={{ uri: firestoreHour.webviewUri }} />
+                <WebView
+                  renderLoading={() => <ActivityIndicator style={{ padding: 10 }} />}
+                  source={{ uri: firestoreHour.webviewUri }}
+                  style={{ width: screenWidth, height: screenHeight * 0.8 }}
+                />
               </View>
             );
           }
@@ -247,7 +255,7 @@ const HourScreen = ({
       }
     }
     setComponents(tempComponents);
-  }, [cachedImages, firestoreHour, screenWidth]);
+  }, [cachedImages, firestoreHour, screenHeight, screenWidth]);
 
   return (
     <ScrollView style={{ backgroundColor: theme.colors?.grey3 }}>
