@@ -4,6 +4,7 @@ import { View, ActivityIndicator, TextInput, ImageSourcePropType } from 'react-n
 import { Text, Button, Image } from 'react-native-elements';
 import * as Linking from 'expo-linking';
 import { useAssets } from 'expo-asset';
+import { nativeApplicationVersion } from 'expo-application';
 import { useAppSelector } from '../../common/CustomHooks';
 import SingleSignOn from '../../common/SingleSignOn';
 import { globalStyles, globalColors, globalTextStyles } from '../../theme';
@@ -90,7 +91,7 @@ const ProfileScreen = () => {
                 <TextInput
                   style={{ borderWidth: 2, minWidth: '30%' }}
                   returnKeyType="go"
-                  secureTextEntry={true}
+                  secureTextEntry
                   onSubmitEditing={(event) => {
                     if (event.nativeEvent.text === demoModeKey) {
                       store.dispatch(appConfigSlice.actions.enterDemoMode());
@@ -127,10 +128,13 @@ const ProfileScreen = () => {
                     );
                   }}
                   onLongPress={() => {
-                    setSuggestLongPressed(reportLongPressed ? true : false);
+                    setSuggestLongPressed(!!reportLongPressed);
                   }}
                   title="Suggest a change"
                 />
+                <Text
+                  style={{ textAlign: 'center' }}
+                >{`Version: ${nativeApplicationVersion}`}</Text>
               </View>
             </>
           ) /* End of loaded view */
