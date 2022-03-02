@@ -9,6 +9,8 @@ import { useAppSelector, useCurrentDate } from '../../common/CustomHooks';
 import { globalColors } from '../../theme';
 import { FirestoreHour } from '../../types/FirebaseTypes';
 import { TabScreenProps } from '../../types/NavigationTypes';
+import store from '../../redux/store';
+import { appConfigSlice, updateConfig } from '../../redux/appConfigSlice';
 
 function revealRandomChars(input: string, charsToReveal: number): string {
   let tempOutputString = '';
@@ -164,7 +166,6 @@ const HoursListScreen = () => {
             </>
           )}
           <FlatList
-            contentContainerStyle={{ paddingBottom: Platform.OS === 'android' ? 310 : undefined }}
             data={firestoreHoursWithKeys.sort((a, b) => a.key - b.key)}
             renderItem={(itemInfo) => (
               <HourRow
@@ -182,6 +183,11 @@ const HoursListScreen = () => {
                 }}
               />
             )}
+            refreshing={!isConfigLoaded}
+            onRefresh={() => {
+              store.dispatch(appConfigSlice.actions.resetConfig());
+              store.dispatch(updateConfig());
+            }}
           />
         </>
       )}
