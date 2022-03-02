@@ -29,6 +29,13 @@ export default class SingleSignOn {
    * the query string of the expo-linking url
    */
   async authenticate(operation: string): Promise<UserCredential> {
+    if (!store.getState().appConfig.ssoEnabled) {
+      showMessage(
+        'This is not a bug, the DanceBlue Committee has disabled SSO. This may or may not be temporary',
+        'Single Sign On has been disabled'
+      );
+      return null;
+    }
     if (browserOpen) {
       return;
     }

@@ -17,6 +17,7 @@ type AppConfigSliceType = {
   demoMode?: boolean;
   demoModeKey: string;
   marathonHours: FirestoreHour[];
+  ssoEnabled: boolean;
 };
 
 const initialState: AppConfigSliceType = {
@@ -27,6 +28,7 @@ const initialState: AppConfigSliceType = {
   demoMode: false,
   demoModeKey: Math.random().toString(), // Start the demo key as junk for safety's sake
   marathonHours: [],
+  ssoEnabled: false,
 };
 
 export const updateConfig = createAsyncThunk(
@@ -54,6 +56,7 @@ export const updateConfig = createAsyncThunk(
       configuredTabs: snapshotData.currentTabs,
       demoModeKey: snapshotData.demoModeKey,
       marathonHours,
+      ssoEnabled: snapshotData.ssoEnabled,
     };
   }
 );
@@ -88,12 +91,13 @@ export const appConfigSlice = createSlice({
         Object.assign(state, initialState);
       })
       .addCase(updateConfig.fulfilled, (state, action) => {
-        state.countdown = action.payload.countdown;
-        state.scoreboard = action.payload.scoreboard;
-        state.configuredTabs = action.payload.configuredTabs;
-        state.demoModeKey = action.payload.demoModeKey;
-        state.marathonHours = action.payload.marathonHours;
+        state.countdown = action.payload.countdown || initialState.countdown;
+        state.scoreboard = action.payload.scoreboard || initialState.scoreboard;
+        state.configuredTabs = action.payload.configuredTabs || initialState.configuredTabs;
+        state.demoModeKey = action.payload.demoModeKey || initialState.demoModeKey;
+        state.marathonHours = action.payload.marathonHours || initialState.marathonHours;
         state.isConfigLoaded = true;
+        state.ssoEnabled = action.payload.ssoEnabled || initialState.ssoEnabled;
       })
       .addCase(updateConfig.rejected, (state, action) => {
         state.isConfigLoaded = true;
