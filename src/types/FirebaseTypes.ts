@@ -65,6 +65,7 @@ export interface FirestoreMobileAppConfig {
     showTrophies: boolean;
   };
   demoModeKey: string;
+  ssoEnabled: boolean;
 }
 
 export interface FirestoreHour {

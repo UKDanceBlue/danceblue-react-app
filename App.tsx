@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { StatusBar, Linking } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import * as Notifications from 'expo-notifications';
+import * as Application from 'expo-application';
 import { useAssets } from 'expo-asset';
 import AppLoading from 'expo-app-loading';
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,12 +13,13 @@ import { Provider } from 'react-redux';
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
 import './src/common/AndroidTimerFix';
 import { ThemeProvider } from 'react-native-elements';
+import { doc, getDoc } from 'firebase/firestore';
 import RootScreen from './src/navigation/RootScreen';
 import { showMessage } from './src/common/AlertUtils';
 
 import store from './src/redux/store';
 import { authSlice, logout, syncAuthStateWithUser } from './src/redux/authSlice';
-import { firebaseAuth } from './src/common/FirebaseApp';
+import { firebaseAuth, firebaseFirestore } from './src/common/FirebaseApp';
 import { obtainUuid, registerPushNotifications } from './src/redux/notificationSlice';
 import { appConfigSlice, updateConfig } from './src/redux/appConfigSlice';
 import { rnElementsTheme } from './src/theme';
@@ -62,6 +64,54 @@ const firstTimeSync = onAuthStateChanged(firebaseAuth, (user) => {
   }
   store.dispatch(obtainUuid());
   store.dispatch(updateConfig());
+
+  getDoc(doc(firebaseFirestore, '__VERSION/required'))
+    .then((majorVerSnap) => {
+      // Parse app version
+      const versionTokens = Application.nativeApplicationVersion?.split('.', 2);
+      let appMajor = Number.parseInt(versionTokens?.[0] || '0', 10);
+      if (Number.isNaN(appMajor)) {
+        appMajor = 0;
+      }
+      let appMinor = Number.parseInt(versionTokens?.[1] || '0', 10);
+      if (Number.isNaN(appMinor)) {
+        appMinor = 0;
+      }
+
+      // Parse required version
+      const reqMajor = majorVerSnap.get('major');
+      const reqMinor = majorVerSnap.get('minor');
+      if (typeof reqMajor !== 'number' || typeof reqMinor !== 'number') {
+        return;
+      }
+      if (!((appMajor === reqMajor && appMinor >= reqMinor) || appMajor > reqMajor)) {
+        // App needs an update
+        const showUpdateMessage = () => {
+          showMessage(
+            'Your version of the DanceBlue mobile app is out of date and must be updated before you can use it.',
+            'Old version',
+            showUpdateMessage
+          );
+        };
+        showUpdateMessage();
+      } else {
+        getDoc(doc(firebaseFirestore, '__VERSION/current'))
+          .then((latestVerSnap) => {
+            // Parse latest version
+            const currMajor = latestVerSnap.get('major');
+            const currMinor = latestVerSnap.get('minor');
+            if (typeof currMajor !== 'number' || typeof currMinor !== 'number') {
+              return;
+            }
+            if (!((appMajor === currMajor && appMinor >= currMinor) || appMajor > currMajor)) {
+              showMessage('A new version of the DanceBlue app is available.', 'Update available');
+            }
+          })
+          .catch();
+      }
+    })
+    .catch();
+
   firstTimeSync();
 });
 
