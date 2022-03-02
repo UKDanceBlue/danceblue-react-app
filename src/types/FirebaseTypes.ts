@@ -79,6 +79,7 @@ export interface FirestoreHour {
     | 'webview'
     | 'special'
     | 'text-block'
+    | 'photo-upload'
   )[];
   textInstructions?: HourInstructionsType; // text-instructions
   firebaseImageUri?: string | string[]; // gs-image

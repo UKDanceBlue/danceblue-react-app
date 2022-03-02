@@ -8,7 +8,7 @@ import { UseCachedFilesType, useCachedImages } from '../../common/CacheUtils';
 import { globalTextStyles } from '../../theme';
 import { FirestoreHour } from '../../types/FirebaseTypes';
 import { HourInstructionsType } from '../../types/HourScreenTypes';
-import HourActivities from './HourActivities';
+import HourActivities, { PhotoUpload } from './HourActivities';
 
 function composeInstructions(hourInstructions: HourInstructionsType) {
   let tempHourInstructionsText = '';
@@ -214,15 +214,19 @@ const HourScreen = ({
           if (Array.isArray(firestoreHour.specialComponent)) {
             tempComponents.push(
               <View key={i}>
-                {HourActivities[firestoreHour.specialComponent[specialComponentIndex].id]()}
+                {HourActivities[firestoreHour.specialComponent[specialComponentIndex].id]}
               </View>
             );
           } else if (firestoreHour.specialComponent) {
             tempComponents.push(
-              <View key={i}>{HourActivities[firestoreHour.specialComponent.id]()}</View>
+              <View key={i}>{HourActivities[firestoreHour.specialComponent.id]}</View>
             );
           }
           specialComponentIndex++;
+          break;
+
+        case 'photo-upload':
+          tempComponents.push(<PhotoUpload />);
           break;
 
         case 'webview':

@@ -1,13 +1,15 @@
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
-import React from 'react';
+import React, { useState } from 'react';
+import { Picker } from '@react-native-picker/picker';
 import { ActionSheetIOS, Platform, Text, TextInput, View } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { showMessage } from '../../common/AlertUtils';
 import { firebaseAuth, firebaseFirestore, firebaseStorage } from '../../common/FirebaseApp';
 import store from '../../redux/store';
 import generateUuid from '../../common/GenerateUuid';
+import { globalColors } from '../../theme';
 
 const input = React.createRef<TextInput>();
 
@@ -108,7 +110,7 @@ async function getImageFromPhotosOrCamera(
         }
       }
     } catch (e) {
-      showMessage(e, 'Failed to upload your image', undefined, true);
+      showMessage(e as object, 'Failed to upload your image', undefined, true);
     }
   };
   const takePicture = async (
@@ -170,14 +172,64 @@ async function getImageFromPhotosOrCamera(
   }
 }
 
-export default {
+// Life is a Highway
+export const PhotoUpload = () => {
+  const [uploading, setUploading] = useState(false);
+  const [selectedStation, setSelectedStation] = useState('Colorado');
+
+  return (
+    <View
+      key="activity - 3"
+      style={{
+        borderRadius: 5,
+        backgroundColor: globalColors.lightGrey,
+        margin: 15,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}
+    >
+      <Picker
+        selectedValue={selectedStation}
+        onValueChange={(itemValue) => setSelectedStation(itemValue)}
+        enabled={!uploading}
+        style={{ flex: 3 }}
+        key="activity - 3a"
+      >
+        <Picker.Item label="Colorado" value="Colorado" />
+        <Picker.Item label="New York" value="New York" />
+        <Picker.Item label="LA" value="LA" />
+        <Picker.Item label="Nashville" value="Nashville" />
+        <Picker.Item label="Chicago" value="Chicago" />
+        <Picker.Item label="Las Vegas" value="Las Vegas" />
+        <Picker.Item label="Up North" value="Up North" />
+        <Picker.Item label="Beach" value="Beach" />
+        <Picker.Item label="Route 66" value="Route 66" />
+        <Picker.Item label="Destination DB" value="Destination DB" />
+      </Picker>
+      <Button
+        buttonStyle={{ margin: 5, flex: 1 }}
+        title="Upload an image"
+        disabled={uploading}
+        onPress={() => {
+          setUploading(true);
+          getImageFromPhotosOrCamera(uploadImageAsync, selectedStation).then(() =>
+            setUploading(false)
+          );
+        }}
+      />
+    </View>
+  );
+};
+
+// A map of all the possible activities
+const activities = {
   test: (
-    <Text>
+    <Text key="activity - 0">
       This is some dynamic content loaded from HourActivities.tsx used for internal testing purposes
     </Text>
   ),
   'guessing-game': (
-    <View>
+    <View key="activity - 1">
       <Text style={{ margin: 10 }}>Enter your guess and press enter:</Text>
       <Input
         ref={input}
@@ -225,19 +277,63 @@ export default {
       />
     </View>
   ),
-  'photo-booth-carnival': (
+  'photo-booth': (
     <Button
-      key="activity- 3"
+      key="activity - 2"
       style={{ width: '100%', height: 20 }}
-      title="Upload an image"
-      onPress={() => getImageFromPhotosOrCamera(uploadImageAsync, 'carnival-hour')}
+      title="Submit a Picture"
+      onPress={() => getImageFromPhotosOrCamera(uploadImageAsync, 'photo-booth')}
     />
   ),
-  'photo-booth-highway': (
-    <Button
-      key="activity- 4"
-      title="Upload an image"
-      onPress={() => getImageFromPhotosOrCamera(uploadImageAsync, 'highway-hour')}
-    />
+  'dad-joke': (
+    <View key="activity - 1">
+      <Text style={{ margin: 10 }}>Enter your guess and press enter:</Text>
+      <Input
+        ref={input}
+        disabled={!firebaseAuth.currentUser || firebaseAuth.currentUser.isAnonymous}
+        defaultValue={
+          !firebaseAuth.currentUser || firebaseAuth.currentUser.isAnonymous
+            ? 'LinkBlue login required'
+            : undefined
+        }
+        style={{ borderColor: 'blue', borderWidth: 1, borderRadius: 5 }}
+        autoCompleteType="off"
+        autoComplete="off"
+        onSubmitEditing={async (event) => {
+          const submittedText = event.nativeEvent.text;
+          const parsedText = parseInt(submittedText, 10);
+
+          if (
+            parsedText &&
+            typeof parsedText === 'number' &&
+            !Number.isNaN(parsedText) &&
+            parsedText > 0
+          ) {
+            await setDoc(
+              doc(
+                collection(firebaseFirestore, 'marathon/2022/guessing-game'),
+                firebaseAuth.currentUser?.uid
+              ),
+              {
+                guess: parsedText,
+                email: firebaseAuth.currentUser?.email,
+              }
+            ).then(() => {
+              if (input.current) {
+                input.current.clear();
+              }
+            });
+          } else {
+            showMessage('Make sure to enter a positive number', 'Invalid Guess', () => {
+              if (input.current) {
+                input.current.clear();
+              }
+            });
+          }
+        }}
+      />
+    </View>
   ),
 } as { [key: string]: JSX.Element };
+
+export default activities;
