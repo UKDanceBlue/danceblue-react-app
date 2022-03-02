@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View, ScrollView, useWindowDimensions } from 'react-native';
-import { Image, Text, useTheme } from 'react-native-elements';
+import { Button, Image, Text, useTheme } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
-import WebView from 'react-native-webview';
+import * as Clipboard from 'expo-clipboard';
 import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
+import { openBrowserAsync } from 'expo-web-browser';
 import { UseCachedFilesType, useCachedImages } from '../../common/CacheUtils';
 import { globalTextStyles } from '../../theme';
 import { FirestoreHour } from '../../types/FirebaseTypes';
 import { HourInstructionsType } from '../../types/HourScreenTypes';
 import HourActivities, { PhotoUpload } from './HourActivities';
+import { showPrompt } from '../../common/AlertUtils';
 
 function composeInstructions(hourInstructions: HourInstructionsType) {
   let tempHourInstructionsText = '';
@@ -131,7 +133,7 @@ const HourScreen = ({
   useEffect(() => {
     const tempComponents: JSX.Element[] = [];
     let specialComponentIndex = 0;
-    let webviewIndex = 0;
+    let buttonIndex = 0;
     let textBlockIndex = 0;
     for (let i = 0; i < firestoreHour.contentOrder.length; i++) {
       switch (firestoreHour.contentOrder[i]) {
@@ -229,29 +231,42 @@ const HourScreen = ({
           tempComponents.push(<PhotoUpload />);
           break;
 
-        case 'webview':
-          webviewIndex++;
-          if (Array.isArray(firestoreHour.webviewUri)) {
+        case 'button':
+          if (Array.isArray(firestoreHour.buttonConfig)) {
+            const buttonText = firestoreHour.buttonConfig[buttonIndex].text;
+            const buttonUrl = firestoreHour.buttonConfig[buttonIndex].url;
             tempComponents.push(
               <View key={i}>
-                <WebView
-                  renderLoading={() => <ActivityIndicator style={{ padding: 10 }} />}
-                  source={{ uri: firestoreHour.webviewUri[webviewIndex] }}
-                  style={{ width: screenWidth, height: screenHeight * 0.8 }}
+                <Button
+                  buttonStyle={{ marginHorizontal: 15, marginVertical: 5 }}
+                  title={buttonText}
+                  onPress={() => {
+                    openBrowserAsync(buttonUrl);
+                  }}
+                  onLongPress={() => {
+                    showPrompt('Would you like to copy the link?', 'Copy link', undefined, () => {
+                      Clipboard.setString(buttonUrl);
+                    });
+                  }}
                 />
               </View>
             );
-          } else if (firestoreHour.webviewUri) {
+          } else if (firestoreHour.buttonConfig) {
+            const buttonText = firestoreHour.buttonConfig.text;
+            const buttonUrl = firestoreHour.buttonConfig.url;
             tempComponents.push(
               <View key={i}>
-                <WebView
-                  renderLoading={() => <ActivityIndicator style={{ padding: 10 }} />}
-                  source={{ uri: firestoreHour.webviewUri }}
-                  style={{ width: screenWidth, height: screenHeight * 0.8 }}
+                <Button
+                  buttonStyle={{ marginHorizontal: 15, marginVertical: 5 }}
+                  title={buttonText}
+                  onPress={() => {
+                    openBrowserAsync(buttonUrl);
+                  }}
                 />
               </View>
             );
           }
+          buttonIndex++;
           break;
 
         default:

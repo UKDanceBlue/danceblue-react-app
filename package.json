@@ -39,6 +39,7 @@
     "expo-blur": "~11.0.0",
     "expo-calendar": "~10.1.0",
     "expo-camera": "~12.1.2",
+    "expo-clipboard": "~2.1.0",
     "expo-device": "~4.1.0",
     "expo-file-system": "~13.1.4",
     "expo-font": "~10.0.4",

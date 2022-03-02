@@ -76,7 +76,7 @@ export interface FirestoreHour {
     | 'text-instructions'
     | 'gs-image'
     | 'http-image'
-    | 'webview'
+    | 'button'
     | 'special'
     | 'text-block'
     | 'photo-upload'
@@ -84,7 +84,7 @@ export interface FirestoreHour {
   textInstructions?: HourInstructionsType; // text-instructions
   firebaseImageUri?: string | string[]; // gs-image
   imageUri?: string | string[]; // http-image
-  webviewUri?: string | string[]; // webview
+  buttonConfig?: { text: string; url: string } | { text: string; url: string }[]; // button
   specialComponent?: SpecialComponentType | SpecialComponentType[]; // special
   textBlock?: string | string[];
 }
