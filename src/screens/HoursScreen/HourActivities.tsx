@@ -50,9 +50,14 @@ async function uploadImageAsync(uri: string, hour: string) {
     addDoc(collection(firebaseFirestore, 'marathon/2022/photo-booth'), {
       photoUri: result.ref.fullPath,
       hour,
+      name: `${store.getState().auth.firstName?.toString()} ${store
+        .getState()
+        .auth.lastName?.toString()}`,
       linkblue: store.getState().auth.linkblue || null,
       email: store.getState().auth.email || null,
+      moraleTeamID: store.getState().auth.moraleTeamId || null,
       deviceId: store.getState().notification.uuid || null,
+      pushToken: store.getState().notification.pushToken || null,
     }).then(() => {
       showMessage('Photo uploaded', 'Success');
     });

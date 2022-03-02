@@ -16,7 +16,7 @@ import { FirestoreMoraleTeam, FirestoreTeam } from '../../types/FirebaseTypes';
 const ScoreBoardScreen = () => {
   const { pointType } = { pointType: 'morale' }; // useAppSelector((state) => state.appConfig.scoreboard);
   const userTeamId = useAppSelector((state) => state.auth.teamId);
-  const userLinkblue = useAppSelector((state) => state.auth.linkblue);
+  const moraleTeamId = useAppSelector((state) => state.auth.moraleTeamId);
   const [standingData, setStandingData] = useState<StandingType[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(true);
 
@@ -57,7 +57,7 @@ const ScoreBoardScreen = () => {
                 id: document.id,
                 name: `Team #${teamData.teamNumber}:\n${teamData.leaders}`,
                 points: teamData.points,
-                highlighted: !!(userLinkblue && teamData.members[userLinkblue]),
+                highlighted: moraleTeamId === teamData.teamNumber,
               });
             });
             if (shouldUpdateState) {
@@ -76,7 +76,7 @@ const ScoreBoardScreen = () => {
       shouldUpdateState = false;
       setRefreshing(false);
     };
-  }, [pointType, userLinkblue, userTeamId]);
+  }, [pointType, moraleTeamId, userTeamId]);
 
   useEffect(() => {
     refresh();

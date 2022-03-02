@@ -44,6 +44,7 @@ type AuthSliceType = {
   team: FirestoreTeam | null;
   teamIndividualSpiritPoints: FirestoreTeamIndividualSpiritPoints | null;
   teamFundraisingTotal: FirestoreTeamFundraising | null;
+  moraleTeamId: number | null;
 };
 
 const initialState: AuthSliceType = {
@@ -61,6 +62,7 @@ const initialState: AuthSliceType = {
   team: null,
   teamIndividualSpiritPoints: null,
   teamFundraisingTotal: null,
+  moraleTeamId: null,
 };
 
 // !!!START OF ACTION DEFINITIONS!!!
@@ -84,6 +86,7 @@ export const updateUserData = createAsyncThunk(
       team: null,
       teamIndividualSpiritPoints: null,
       teamFundraisingTotal: null,
+      moraleTeamId: null,
     };
 
     const firebaseUserData = userSnapshot?.data() as FirestoreUser;
@@ -104,6 +107,25 @@ export const updateUserData = createAsyncThunk(
       }
 
       if (!userInfo.attributes.role || userInfo.attributes.role === 'dancer') {
+        if (userInfo.linkblue) {
+          // TEMP MORALE CODE
+          const moraleTeamsCollectionRef = collection(
+            firebaseFirestore,
+            'marathon',
+            '2022/morale-teams'
+          );
+          const moraleTeamQuery = query(
+            moraleTeamsCollectionRef,
+            where(`members.${userInfo.linkblue}`, '>=', '')
+          );
+          const querySnapshot = await getDocs(moraleTeamQuery);
+          const moraleTeam = querySnapshot.docs?.[0];
+          if (moraleTeam?.data()?.members?.[userInfo.linkblue]) {
+            userInfo.moraleTeamId = moraleTeam.data().teamNumber;
+          }
+          // END TEMP MORALE CODE
+        }
+
         let teamReference: DocumentReference;
         let preloadedTeamSnapshot: DocumentSnapshot;
         // Get information about the user's team (if any)
@@ -331,6 +353,7 @@ export const authSlice = createSlice({
         state.lastName = action.payload.lastName;
         state.email = action.payload.email;
         state.linkblue = action.payload.linkblue;
+        state.moraleTeamId = action.payload.moraleTeamId;
       })
       .addCase(updateUserData.rejected, (state, action) => {
         showMessage(action.error.message, action.error.code, null, true, action.error.stack);
