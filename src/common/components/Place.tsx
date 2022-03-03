@@ -28,7 +28,9 @@ const Place = ({
   dadJokeTempMagic?: boolean;
   dadJokeTempMagicCallback?: (arg0: boolean) => unknown;
 }) => {
-  const [dadJokeTempMagicIsChecked, setDadJokeTempMagicIsChecked] = useState(false);
+  const [dadJokeTempMagicIsChecked, setDadJokeTempMagicIsChecked] = useState(
+    dadJokeTempMagic && isHighlighted
+  );
 
   // The 'top3Icon function adds an award icon to the top 3 targets
   const top3Icon = (rankForIcon: number): ReactElement | null => {
@@ -61,7 +63,7 @@ const Place = ({
         </View>
         <ListItem.Title
           style={{
-            color: isHighlighted ? globalColors.lightBlue : undefined,
+            color: !dadJokeTempMagic && isHighlighted ? globalColors.lightBlue : undefined,
             alignSelf: 'center',
             width: '60%',
             textAlign: 'left',
@@ -73,7 +75,7 @@ const Place = ({
         </ListItem.Title>
         <ListItem.Subtitle
           style={{
-            color: isHighlighted ? globalColors.lightBlue : undefined,
+            color: !dadJokeTempMagic && isHighlighted ? globalColors.lightBlue : undefined,
           }}
           right
         >

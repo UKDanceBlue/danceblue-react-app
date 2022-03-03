@@ -249,7 +249,7 @@ export const DadJokeLeaderboard = () => {
           id,
           name: joke.jokeText,
           points: joke.votes.length,
-          highlighted: false,
+          highlighted: joke.votes.indexOf(firebaseAuth.currentUser?.uid || '') > -1, // Use highlighted to mark if it should be start checked
         }));
         setDadJokes(tempDadJokes);
       }
