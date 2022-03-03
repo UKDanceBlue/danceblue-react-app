@@ -9,7 +9,7 @@ import { UseCachedFilesType, useCachedImages } from '../../common/CacheUtils';
 import { globalTextStyles } from '../../theme';
 import { FirestoreHour } from '../../types/FirebaseTypes';
 import { HourInstructionsType } from '../../types/HourScreenTypes';
-import HourActivities, { PhotoUpload } from './HourActivities';
+import HourActivities, { DadJokeLeaderboard, PhotoUpload } from './HourActivities';
 import { showPrompt } from '../../common/AlertUtils';
 
 function composeInstructions(hourInstructions: HourInstructionsType) {
@@ -228,7 +228,11 @@ const HourScreen = ({
           break;
 
         case 'photo-upload':
-          tempComponents.push(<PhotoUpload />);
+          tempComponents.push(<PhotoUpload key={i} />);
+          break;
+
+        case 'dad-joke-leaderboard':
+          tempComponents.push(<DadJokeLeaderboard key={i} />);
           break;
 
         case 'button':

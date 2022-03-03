@@ -1,11 +1,12 @@
 /// <reference types="react" />
 /* eslint-disable no-nested-ternary */
 // Import third-party dependencies
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { View } from 'react-native';
 import { ListItem, Text } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { globalColors } from '../../theme';
+import { firebaseAuth } from '../FirebaseApp';
 
 /**
  * A row-based component showing a target name, their rank (if applicable), and their points
@@ -16,13 +17,19 @@ const Place = ({
   name,
   points = 0,
   lastRow,
+  dadJokeTempMagic = false,
+  dadJokeTempMagicCallback = () => {},
 }: {
   isHighlighted: boolean;
   rank: number;
   name: string;
   points: number;
   lastRow: boolean;
+  dadJokeTempMagic?: boolean;
+  dadJokeTempMagicCallback?: (arg0: boolean) => unknown;
 }) => {
+  const [dadJokeTempMagicIsChecked, setDadJokeTempMagicIsChecked] = useState(false);
+
   // The 'top3Icon function adds an award icon to the top 3 targets
   const top3Icon = (rankForIcon: number): ReactElement | null => {
     switch (rankForIcon) {
@@ -71,8 +78,20 @@ const Place = ({
           right
         >
           {points}
-          {points === 1 ? ' point' : ' points'}
+          {points === 1 ? ' point  ' : ' points  '}
         </ListItem.Subtitle>
+        {dadJokeTempMagic && firebaseAuth.currentUser?.uid && (
+          <ListItem.CheckBox
+            checked={dadJokeTempMagicIsChecked}
+            onPress={() => {
+              dadJokeTempMagicCallback(!dadJokeTempMagicIsChecked);
+              setDadJokeTempMagicIsChecked(!dadJokeTempMagicIsChecked);
+            }}
+            checkedIcon={<FontAwesome5 name="chevron-down" size={24} color="blue" />}
+            uncheckedIcon={<FontAwesome5 name="chevron-up" size={24} color="black" />}
+            right
+          />
+        )}
       </ListItem.Content>
     </ListItem>
   );

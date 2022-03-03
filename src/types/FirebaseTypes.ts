@@ -80,6 +80,7 @@ export interface FirestoreHour {
     | 'special'
     | 'text-block'
     | 'photo-upload'
+    | 'dad-joke-leaderboard'
   )[];
   textInstructions?: HourInstructionsType; // text-instructions
   firebaseImageUri?: string | string[]; // gs-image

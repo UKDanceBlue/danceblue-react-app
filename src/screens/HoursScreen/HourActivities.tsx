@@ -1,7 +1,16 @@
-import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import {
+  addDoc,
+  arrayRemove,
+  arrayUnion,
+  collection,
+  doc,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { ActionSheetIOS, Platform, Text, TextInput, View } from 'react-native';
 import { Button, Input } from 'react-native-elements';
@@ -10,8 +19,11 @@ import { firebaseAuth, firebaseFirestore, firebaseStorage } from '../../common/F
 import store from '../../redux/store';
 import generateUuid from '../../common/GenerateUuid';
 import { globalColors } from '../../theme';
+import Standings from '../../common/components/Standings';
+import { StandingType } from '../../types/StandingType';
 
-const input = React.createRef<TextInput>();
+const guessInput = React.createRef<TextInput>();
+const dadInput = React.createRef<TextInput>();
 
 // From https://github.com/expo/examples/blob/master/with-firebase-storage-upload/App.js
 async function uploadImageAsync(uri: string, hour: string) {
@@ -179,7 +191,6 @@ export const PhotoUpload = () => {
 
   return (
     <View
-      key="activity - 3"
       style={{
         borderRadius: 5,
         backgroundColor: globalColors.lightGrey,
@@ -193,7 +204,6 @@ export const PhotoUpload = () => {
         onValueChange={(itemValue) => setSelectedStation(itemValue)}
         enabled={!uploading}
         style={{ flex: 3 }}
-        key="activity - 3a"
       >
         <Picker.Item label="Colorado" value="Colorado" />
         <Picker.Item label="New York" value="New York" />
@@ -221,22 +231,104 @@ export const PhotoUpload = () => {
   );
 };
 
+// Dad Joke
+export const DadJokeLeaderboard = () => {
+  const dadJokesDoc = doc(firebaseFirestore, 'marathon/2022/dad-jokes/dad-jokes');
+  const [dadJokes, setDadJokes] = useState<StandingType[]>([]);
+
+  useEffect(() =>
+    onSnapshot(dadJokesDoc, (dadJokeSnapshot) => {
+      const dadJokeSnapshotData = dadJokeSnapshot.data() as {
+        [key: string]: { jokeText: string; votes: string[] };
+      };
+      if (dadJokeSnapshotData) {
+        const dadJokeSnapshotArray = Object.entries(dadJokeSnapshotData);
+        const tempDadJokes = dadJokeSnapshotArray.map(([id, joke]) => ({
+          id,
+          name: joke.jokeText,
+          points: joke.votes.length,
+          highlighted: false,
+        }));
+        setDadJokes(tempDadJokes);
+      }
+    })
+  );
+
+  return (
+    <View
+      style={{
+        borderRadius: 5,
+        margin: 15,
+        justifyContent: 'space-around',
+      }}
+    >
+      <Standings
+        titleText=""
+        standingData={dadJokes}
+        expandable
+        collapsedRows={5}
+        dadJokeTempMagic
+        dadJokeTempMagicCallback={(checked, id) => {
+          if (firebaseAuth.currentUser?.uid) {
+            if (checked) {
+              updateDoc(dadJokesDoc, `${id}.votes`, arrayUnion(firebaseAuth.currentUser.uid));
+            } else {
+              updateDoc(dadJokesDoc, `${id}.votes`, arrayRemove(firebaseAuth.currentUser.uid));
+            }
+          }
+        }}
+      />
+      <Input
+        ref={dadInput}
+        disabled={
+          !firebaseAuth.currentUser ||
+          !firebaseAuth.currentUser.uid ||
+          firebaseAuth.currentUser.isAnonymous
+        }
+        defaultValue={
+          !firebaseAuth.currentUser || firebaseAuth.currentUser.isAnonymous
+            ? ' LinkBlue login required'
+            : ' Enter your dad joke and press enter'
+        }
+        style={{ borderColor: 'blue', borderWidth: 1, borderRadius: 5, marginTop: 10 }}
+        autoCompleteType="off"
+        autoComplete="off"
+        onSubmitEditing={async (event) => {
+          const submittedText = event.nativeEvent.text;
+
+          if (firebaseAuth.currentUser?.uid) {
+            await updateDoc(
+              doc(firebaseFirestore, 'marathon/2022/dad-jokes/dad-jokes'),
+              firebaseAuth.currentUser.uid,
+              { jokeText: submittedText, votes: [] }
+            ).then(() => {
+              if (dadInput.current) {
+                dadInput.current.clear();
+              }
+            });
+          }
+        }}
+      />
+    </View>
+  );
+};
+
 // A map of all the possible activities
 const activities = {
   test: (
-    <Text key="activity - 0">
+    <Text>
       This is some dynamic content loaded from HourActivities.tsx used for internal testing purposes
     </Text>
   ),
   'guessing-game': (
-    <View key="activity - 1">
+    <View>
       <Text style={{ margin: 10 }}>Enter your guess and press enter:</Text>
       <Input
-        ref={input}
+        ref={guessInput}
         disabled={!firebaseAuth.currentUser || firebaseAuth.currentUser.isAnonymous}
         defaultValue={
           !firebaseAuth.currentUser || firebaseAuth.currentUser.isAnonymous
-            ? 'LinkBlue login required'
+            ? ' LinkBlue login required'
             : undefined
         }
         style={{ borderColor: 'blue', borderWidth: 1, borderRadius: 5 }}
@@ -262,14 +354,14 @@ const activities = {
                 email: firebaseAuth.currentUser?.email,
               }
             ).then(() => {
-              if (input.current) {
-                input.current.clear();
+              if (guessInput.current) {
+                guessInput.current.clear();
               }
             });
           } else {
             showMessage('Make sure to enter a positive number', 'Invalid Guess', () => {
-              if (input.current) {
-                input.current.clear();
+              if (guessInput.current) {
+                guessInput.current.clear();
               }
             });
           }
@@ -279,60 +371,10 @@ const activities = {
   ),
   'photo-booth': (
     <Button
-      key="activity - 2"
-      style={{ width: '100%', height: 20 }}
-      title="Submit a Picture"
+      buttonStyle={{ width: '90%', margin: 5, alignSelf: 'center' }}
+      title="Submit a Picture to the Photo Booth"
       onPress={() => getImageFromPhotosOrCamera(uploadImageAsync, 'photo-booth')}
     />
-  ),
-  'dad-joke': (
-    <View key="activity - 1">
-      <Text style={{ margin: 10 }}>Enter your guess and press enter:</Text>
-      <Input
-        ref={input}
-        disabled={!firebaseAuth.currentUser || firebaseAuth.currentUser.isAnonymous}
-        defaultValue={
-          !firebaseAuth.currentUser || firebaseAuth.currentUser.isAnonymous
-            ? 'LinkBlue login required'
-            : undefined
-        }
-        style={{ borderColor: 'blue', borderWidth: 1, borderRadius: 5 }}
-        autoCompleteType="off"
-        autoComplete="off"
-        onSubmitEditing={async (event) => {
-          const submittedText = event.nativeEvent.text;
-          const parsedText = parseInt(submittedText, 10);
-
-          if (
-            parsedText &&
-            typeof parsedText === 'number' &&
-            !Number.isNaN(parsedText) &&
-            parsedText > 0
-          ) {
-            await setDoc(
-              doc(
-                collection(firebaseFirestore, 'marathon/2022/guessing-game'),
-                firebaseAuth.currentUser?.uid
-              ),
-              {
-                guess: parsedText,
-                email: firebaseAuth.currentUser?.email,
-              }
-            ).then(() => {
-              if (input.current) {
-                input.current.clear();
-              }
-            });
-          } else {
-            showMessage('Make sure to enter a positive number', 'Invalid Guess', () => {
-              if (input.current) {
-                input.current.clear();
-              }
-            });
-          }
-        }}
-      />
-    </View>
   ),
 } as { [key: string]: JSX.Element };
 

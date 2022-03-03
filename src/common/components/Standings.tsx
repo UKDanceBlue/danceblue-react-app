@@ -15,6 +15,9 @@ const Standings = ({
   expandable = false,
   startExpanded = false,
   collapsedRows = 3,
+  lastRow,
+  dadJokeTempMagic = false,
+  dadJokeTempMagicCallback = () => {},
 }: {
   titleText: string;
   standingData: StandingType[];
@@ -22,6 +25,8 @@ const Standings = ({
   startExpanded?: boolean;
   showTrophies?: boolean;
   collapsedRows?: number;
+  dadJokeTempMagic?: boolean;
+  dadJokeTempMagicCallback?: (arg0: boolean, arg1: string) => unknown;
 }) => {
   const [rows, setRows] = useState<ReactElement[]>([]);
   const [expanded, setExpanded] = useState<boolean>(!!startExpanded);
@@ -50,6 +55,10 @@ const Standings = ({
           points={sortedStandings[i].points}
           isHighlighted={sortedStandings[i].highlighted}
           lastRow={i === sortedStandings.length - 1 && i === rowsToShow - 1}
+          dadJokeTempMagic={dadJokeTempMagic}
+          dadJokeTempMagicCallback={(arg0: boolean) =>
+            dadJokeTempMagicCallback(arg0, sortedStandings[i].id)
+          }
         />
       );
     }
