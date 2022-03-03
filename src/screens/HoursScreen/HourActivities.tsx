@@ -13,12 +13,12 @@ import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { ActionSheetIOS, Platform, Text, TextInput, View } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { Button, Divider, Input } from 'react-native-elements';
 import { showMessage } from '../../common/AlertUtils';
 import { firebaseAuth, firebaseFirestore, firebaseStorage } from '../../common/FirebaseApp';
 import store from '../../redux/store';
 import generateUuid from '../../common/GenerateUuid';
-import { globalColors } from '../../theme';
+import { globalColors, globalTextStyles } from '../../theme';
 import Standings from '../../common/components/Standings';
 import { StandingType } from '../../types/StandingType';
 
@@ -323,17 +323,11 @@ const activities = {
     </Text>
   ),
   'guessing-game': (
-    <View>
+    <View key="guessing-game">
       <Text style={{ margin: 10 }}>Enter your guess and press enter:</Text>
       <Input
         ref={guessInput}
-        disabled={!firebaseAuth.currentUser || firebaseAuth.currentUser.isAnonymous}
-        defaultValue={
-          !firebaseAuth.currentUser || firebaseAuth.currentUser.isAnonymous
-            ? ' LinkBlue login required'
-            : undefined
-        }
-        style={{ borderColor: 'blue', borderWidth: 1, borderRadius: 5 }}
+        style={{ borderColor: 'blue', borderWidth: 1, borderRadius: 5, marginTop: 10 }}
         autoCompleteType="off"
         autoComplete="off"
         onSubmitEditing={async (event) => {
@@ -369,11 +363,23 @@ const activities = {
           }
         }}
       />
+      <Text
+        style={{
+          ...globalTextStyles.italicText,
+          marginHorizontal: 10,
+          textAlign: 'center',
+          fontSize: 10,
+        }}
+      >
+        IF YOU ARE NOT LOGGED IN YOUR GUESS WILL NOT BE COUNTED
+      </Text>
+      <Divider width={3} color={globalColors.lightGrey} style={{ borderRadius: 3 }} />
     </View>
   ),
   'photo-booth': (
     <Button
-      buttonStyle={{ width: '90%', margin: 5, alignSelf: 'center' }}
+      key="photo-booth"
+      buttonStyle={{ width: '90%', marginVertical: 25, marginHorizontal: 5, alignSelf: 'center' }}
       title="Submit a Picture to the Photo Booth"
       onPress={() => getImageFromPhotosOrCamera(uploadImageAsync, 'photo-booth')}
     />

@@ -44,7 +44,17 @@ const Standings = ({
       ...standing,
       points: standing.points || 0,
     }));
-    sortedStandings.sort((a, b) => b.points - a.points);
+    sortedStandings.sort((a, b) => {
+      if (b.points === a.points) {
+        if (a.name > b.name) {
+          return 1;
+        } else {
+          return 0;
+        }
+      } else {
+        return b.points - a.points;
+      }
+    });
     const tempRows = [];
     for (let i = 0; i < sortedStandings.length && i < rowsToShow; i++) {
       tempRows.push(
