@@ -112,8 +112,7 @@ const HoursListScreen = () => {
   const [firestoreHoursWithKeys, setFirestoreHoursWithKeys] = useState<FirestoreHourWithKey[]>([]);
   const countdown = useAppSelector((state) => state.appConfig.countdown);
   const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
-  // const currentDate = useCurrentDate();
-  const currentDate = useMemo(() => new Date(2022, 2, 6, 20, 1, 0, 0), []); // Testing
+  const currentDate = useCurrentDate();
   const [marathonHour, setMarathonHour] = useState(-1);
   const { width: screenWidth } = useWindowDimensions();
   const [mapOfMemorial] = useCachedFiles([

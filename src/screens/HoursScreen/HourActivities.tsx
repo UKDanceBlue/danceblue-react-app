@@ -197,6 +197,8 @@ export const PhotoUpload = () => {
         margin: 15,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignContent: 'center',
+        alignItems: 'center',
       }}
     >
       <Picker
