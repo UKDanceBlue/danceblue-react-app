@@ -134,12 +134,12 @@ const HoursListScreen = () => {
   }, [firestoreHours]);
 
   useEffect(() => {
+    console.log(24 - differenceInHours(new Date(2022, 2, 6, 20, 0, 0, 0), currentDate));
     // First programmed hour is 8:00pm or 20:00
     // Marathon is March 5th and 6th, I am hardcoding this, hope that causes no issues
     // This will set the hour to a negative number if the marathon has yet to start and should be between 0 and 23 for the duration of the marathon
-    const tempMarathonHour =
-      23 - Math.abs(differenceInHours(new Date(2022, 2, 6, 20, 0, 0, 0), currentDate));
-    setMarathonHour(tempMarathonHour);
+    const tempMarathonHour = 23 - differenceInHours(new Date(2022, 2, 6, 20, 0, 0, 0), currentDate);
+    setMarathonHour(tempMarathonHour > 23 ? 23 : tempMarathonHour);
   }, [currentDate]);
 
   return (
