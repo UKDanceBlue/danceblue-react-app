@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import { SAMLAuthProvider, linkWithCredential, signInWithCredential, signOut } from 'firebase/auth';
+import { linkWithCredential, signInWithCredential, signOut, OAuthProvider } from 'firebase/auth';
 import { showMessage } from './AlertUtils';
 import { firebaseAuth } from './FirebaseApp';
 import { loginSaml } from '../redux/authSlice';
@@ -88,13 +88,19 @@ export default class SingleSignOn {
       return;
     }
 
-    const credentials = SAMLAuthProvider.credentialFromJSON(
-      JSON.parse(this.redirectData.queryParams.credential)
-    );
+    const oAuthResult = JSON.parse(this.redirectData.queryParams.credential);
+    // IdP data available in result.additionalUserInfo.profile.
+
+    // Get the OAuth access token and ID Token
+    const credential = OAuthProvider.credentialFromResult(oAuthResult);
+    const { accessToken } = credential;
+    const { idToken } = credential;
+
+    // AUTH FLOW IS OK UP TO HERE, AFTER THIS IT NEEDS TO BE UPDATED FROM OLD SAML BASED CODE
 
     // This is only used here because we are about to sign in again // TODO: replace with https://firebase.google.com/docs/auth/web/anonymous-auth#convert-an-anonymous-account-to-a-permanent-account
     if (firebaseAuth.currentUser && firebaseAuth.currentUser.isAnonymous) {
-      linkWithCredential(firebaseAuth.currentUser, credentials)
+      linkWithCredential(firebaseAuth.currentUser, credential)
         .then((userCredential) => {
           store.dispatch(loginSaml(userCredential));
         })
@@ -104,10 +110,10 @@ export default class SingleSignOn {
             'Problem transferring data'
           );
           await signOut(firebaseAuth);
-          store.dispatch(loginSaml(await signInWithCredential(firebaseAuth, credentials)));
+          store.dispatch(loginSaml(await signInWithCredential(firebaseAuth, credential)));
         });
     } else {
-      store.dispatch(loginSaml(await signInWithCredential(firebaseAuth, credentials)));
+      store.dispatch(loginSaml(await signInWithCredential(firebaseAuth, credential)));
     }
   }
 }
