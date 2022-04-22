@@ -1,5 +1,3 @@
-/* eslint-disable prefer-template */
-/* eslint-disable no-underscore-dangle */
 // From https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-452568889
 
 import { Platform, InteractionManager } from 'react-native';

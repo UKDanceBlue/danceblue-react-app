@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';

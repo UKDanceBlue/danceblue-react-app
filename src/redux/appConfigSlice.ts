@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { showMessage } from '../common/AlertUtils';

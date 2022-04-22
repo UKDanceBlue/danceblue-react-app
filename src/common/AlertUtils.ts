@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { FirebaseError } from 'firebase/app';
 import { Alert, Platform } from 'react-native';
 
