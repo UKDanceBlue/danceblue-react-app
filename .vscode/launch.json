@@ -5,11 +5,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach to packager",
-      "cwd": "${workspaceFolder}",
+      "name": "Debug in Exponent",
+      "request": "launch",
       "type": "reactnative",
-      "request": "attach",
-      "port": 19000
+      "cwd": "${workspaceFolder}",
+      "platform": "exponent",
+      "expoHostType": "tunnel"
     }
   ]
 }

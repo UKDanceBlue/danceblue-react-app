@@ -8,7 +8,10 @@
     "notification": {
       "icon": "./assets/icon.png"
     },
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "1.4.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,12 +32,16 @@
     "updates": {
       "enabled": false
     },
-    "assetBundlePatterns": ["assets/**"],
+    "assetBundlePatterns": [
+      "assets/**"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.danceblue.app",
       "buildNumber": "1.4.3",
-      "config": { "usesNonExemptEncryption": false },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "infoPlist": {
         "NSRemindersUsageDescription": "Users may add DanceBlue events to their calendar."
       }
@@ -42,9 +49,15 @@
     "android": {
       "package": "org.danceblue.app",
       "versionCode": 23,
-      "permissions": ["WRITE_CALENDAR", "READ_CALENDAR", "CAMERA", ""],
+      "permissions": [
+        "WRITE_CALENDAR",
+        "READ_CALENDAR",
+        "CAMERA",
+        ""
+      ],
       "googleServicesFile": "./google-services.json"
     },
-    "description": "University of Kentucky DanceBlue Mobile Application"
+    "description": "University of Kentucky DanceBlue Mobile Application",
+    "sdkVersion": "44.0.0"
   }
 }
