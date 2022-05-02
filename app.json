@@ -34,7 +34,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "org.danceblue.app",
       "buildNumber": "1.4.3",
-      "config": { "usesNonExemptEncryption": false },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "infoPlist": {
         "NSRemindersUsageDescription": "Users may add DanceBlue events to their calendar."
       },
@@ -59,6 +61,7 @@
         }
       ]
     },
-    "description": "University of Kentucky DanceBlue Mobile Application"
+    "description": "University of Kentucky DanceBlue Mobile Application",
+    "sdkVersion": "44.0.0"
   }
 }
