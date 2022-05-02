@@ -48,3 +48,9 @@ export type TabScreenProps<T extends keyof TabNavigatorParamList> = CompositeScr
   BottomTabScreenProps<TabNavigatorParamList, T>,
   MainStackScreenProps<keyof MainStackParamList>
 >;
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}

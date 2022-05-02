@@ -37,13 +37,27 @@
       "config": { "usesNonExemptEncryption": false },
       "infoPlist": {
         "NSRemindersUsageDescription": "Users may add DanceBlue events to their calendar."
-      }
+      },
+      "associatedDomains": ["https://www.danceblue.org"]
     },
     "android": {
       "package": "org.danceblue.app",
       "versionCode": 23,
       "permissions": ["WRITE_CALENDAR", "READ_CALENDAR", "CAMERA", ""],
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.danceblue.org",
+              "pathPrefix": "/redirect"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "description": "University of Kentucky DanceBlue Mobile Application"
   }

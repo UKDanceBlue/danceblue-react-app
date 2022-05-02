@@ -1,13 +1,14 @@
 /// <reference types="react" />
 // Import third-party dependencies
 import React, { useEffect, useRef } from 'react';
-import { StatusBar, Linking } from 'react-native';
+import { StatusBar } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
+import * as Linking from 'expo-linking';
 import * as Notifications from 'expo-notifications';
 import * as Application from 'expo-application';
 import { useAssets } from 'expo-asset';
 import AppLoading from 'expo-app-loading';
-import { NavigationContainer } from '@react-navigation/native';
+import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Provider } from 'react-redux';
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
@@ -119,12 +120,96 @@ let hasPushRegistrationObserverFired = false;
 const pushRegistrationObserver = store.subscribe(() => {
   // This will run on every redux state update until a uuid is set when it will try to register for push notifications
   if (!hasPushRegistrationObserverFired && store.getState().notification.uuid) {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'DanceBlue',
+        body: 'You have a new message!',
+        data: {
+          url: 'exp://192.168.1.101:19000/--/',
+        },
+      },
+      trigger: {
+        seconds: 1,
+      },
+    });
     hasPushRegistrationObserverFired = true;
     store.dispatch(registerPushNotifications());
     pushRegistrationObserver();
   }
 });
 
+const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
+  prefixes: [Linking.createURL('/'), 'https://www.danceblue.org/redirect/'],
+  config: {
+    initialRouteName: 'Main',
+    screens: {
+      Main: {
+        initialRouteName: 'Tab',
+        screens: {
+          Tab: {
+            initialRouteName: 'Home',
+            screens: {
+              Home: { path: '' },
+              Scoreboard: 'team-rankings',
+              Team: 'my-team',
+              Store: 'dancebluetique',
+              Donate: 'donate',
+              HoursScreen: 'marathon',
+            },
+          },
+          Profile: { path: 'app-profile' },
+          Notifications: { path: 'app-notifications' },
+          Event: { path: 'event/:id' },
+        },
+      },
+    },
+  },
+  async getInitialURL(): Promise<string> {
+    // First, you may want to do the default deep link handling
+    // Check if app was opened from a deep link
+    let url = await Linking.getInitialURL();
+
+    if (url != null) {
+      console.log(1);
+      console.log(url);
+      return url;
+    }
+
+    // Handle URL from expo push notifications
+    const response = await Notifications.getLastNotificationResponseAsync();
+    url = response?.notification.request.content.data.url as string;
+
+    console.log(2);
+    console.log(url);
+
+    return url;
+  },
+  subscribe(listener) {
+    const onReceiveURL = ({ url }: { url: string }) => listener(url);
+
+    // Listen to incoming links from deep linking
+    Linking.addEventListener('url', onReceiveURL);
+
+    // Listen to expo push notifications
+    const expoSubscription = Notifications.addNotificationResponseReceivedListener((response) => {
+      const url = response.notification.request.content.data.url as string;
+
+      // Let React Navigation handle the URL
+
+      console.log(url);
+      listener(url);
+    });
+
+    return () => {
+      // Clean up the event listeners
+      Linking.removeEventListener('url', onReceiveURL);
+
+      if (expoSubscription) {
+        expoSubscription.remove();
+      }
+    };
+  },
+};
 /**
  * Main app container
  */
@@ -165,80 +250,7 @@ const App = () => {
     <Provider store={store}>
       <ThemeProvider theme={rnElementsTheme}>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
-        <NavigationContainer
-          linking={
-            // From https://docs.expo.dev/versions/latest/sdk/notifications/#handling-push-notifications-with-react-navigation
-            {
-              prefixes: ['danceblue://'],
-              config: {
-                screens: {
-                  Main: {
-                    initialRouteName: 'Tab',
-                    screens: {
-                      Tab: {
-                        screens: {
-                          Home: 'redirect',
-                          Scoreboard: 'redirect/team-rankings',
-                          Team: 'redirect/my-team',
-                          Store: 'redirect/dancebluetique',
-                          Donate: 'redirect/donate',
-                          HoursScreen: 'redirect/marathon',
-                        },
-                      },
-                      Profile: 'redirect/app-profile',
-                      Notifications: 'redirect/app-notifications',
-                    },
-                  },
-                  DefaultRoute: '*',
-                },
-              },
-              async getInitialURL(): Promise<string> {
-                // First, you may want to do the default deep link handling
-                // Check if app was opened from a deep link
-                let url = await Linking.getInitialURL();
-
-                if (url != null) {
-                  return url;
-                }
-
-                // Handle URL from expo push notifications
-                const response = await Notifications.getLastNotificationResponseAsync();
-                url = response?.notification.request.content.data.url as string;
-
-                return url;
-              },
-              subscribe(listener) {
-                const onReceiveURL = ({ url }: { url: string }) => listener(url);
-
-                // Listen to incoming links from deep linking
-                const deepLinkSubscription = Linking.addEventListener('url', onReceiveURL);
-
-                // Listen to expo push notifications
-                const expoSubscription = Notifications.addNotificationResponseReceivedListener(
-                  (response) => {
-                    const url = response.notification.request.content.data.url as string;
-
-                    // Any custom logic to see whether the URL needs to be handled
-                    // ...
-
-                    // Let React Navigation handle the URL
-                    listener(url);
-                  }
-                );
-
-                return () => {
-                  // Clean up the event listeners
-                  if (deepLinkSubscription) {
-                    deepLinkSubscription.remove();
-                  }
-                  if (expoSubscription) {
-                    expoSubscription.remove();
-                  }
-                };
-              },
-            }
-          }
-        >
+        <NavigationContainer linking={navLinking}>
           <RootScreen />
         </NavigationContainer>
       </ThemeProvider>
