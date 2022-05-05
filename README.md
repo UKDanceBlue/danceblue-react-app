@@ -86,11 +86,10 @@ yarn install expo-cli@latest -g
 ### Getting up and running
 
 1. Run `yarn --frozen-lockfile` to install the same dependency tree I use or `yarn install` to generate a new dependency tree
-2. (optional) run `yarn gen-doc` and open doc/index.html to see an overview of the project
-3. Install expo go on your phone or on an emulator
-4. Run `yarn start` to start Expo's testing environment
-5. Scan the QR code shown in the browser window that shows up
-6. You should now be able to work on the code and live reload the app on expo go as you work
+2. Install expo go on your phone or on an emulator
+3. Run `yarn start` to start Expo's testing environment
+4. Scan the QR code Expo generates
+5. You should now be able to work on the code and hot reload the app on expo go as you work
 
 ### Building
 
@@ -139,8 +138,8 @@ Project Link: [https://github.com/UKDanceBlue/danceblue-react-app](https://githu
 
 ## Acknowledgments
 
-- [Tag Howard](https://github.com/tajetaje)
-- [Kenton Carrier](https://github.com/kncarrier28)
-- [The whole DanceBlue committee](http://www.danceblue.org/meet-the-team)
+- [Tag Howard](https://github.com/tajetaje) - Current App Coordinator
+- [Kenton Carrier](https://github.com/kncarrier28) - Original development
+- [Everyone on the DanceBlue committee](http://www.danceblue.org/meet-the-team)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
