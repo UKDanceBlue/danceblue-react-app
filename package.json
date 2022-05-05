@@ -4,6 +4,8 @@
     "start": "expo start",
     "test": "jest",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "format-check": "prettier --check 'src/**/*.{ts,tsx,js,jsx}'",
+    "format-write": "prettier --write 'src/**/*.{ts,tsx,js,jsx}'",
     "test-with-coverage": "jest --collect-coverage --collect-coverage-from=\"src/**/*.{js,jsx,ts,tsx}\"",
     "eas-ios": "eas build --platform=ios --auto-submit",
     "eas-android": "eas build --platform=android --auto-submit"

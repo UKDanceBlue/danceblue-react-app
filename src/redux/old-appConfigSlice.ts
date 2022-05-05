@@ -1,16 +1,16 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
-import { showMessage } from '../common/AlertUtils';
-import { firebaseFirestore } from '../common/FirebaseApp';
-import { FirestoreHour, FirestoreMobileAppConfig } from '../types/FirebaseTypes';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { showMessage } from "../common/AlertUtils";
+import { firebaseFirestore } from "../common/FirebaseApp";
+import { FirestoreHour, FirestoreMobileAppConfig } from "../types/FirebaseTypes";
 
 type AppConfigSliceType = {
   isConfigLoaded: boolean;
   countdown: { millis: number; title: string };
   configuredTabs: string[];
   scoreboard: {
-    pointType: 'spirit' | 'morale' | undefined;
+    pointType: "spirit" | "morale" | undefined;
     showIcons: boolean;
     showTrophies: boolean;
   };
@@ -28,7 +28,7 @@ const initialState: AppConfigSliceType = {
     showIcons: false,
     showTrophies: false,
   },
-  countdown: { millis: 0, title: '' },
+  countdown: { millis: 0, title: "" },
   configuredTabs: [],
   demoMode: false,
   demoModeKey: Math.random().toString(), // Start the demo key as junk for safety's sake
@@ -38,15 +38,15 @@ const initialState: AppConfigSliceType = {
 };
 
 export const updateConfig = createAsyncThunk(
-  'appConfig/updateConfig',
+  "appConfig/updateConfig",
   async (): Promise<Partial<AppConfigSliceType>> => {
     // Get app config
-    const snapshot = await getDoc(doc(firebaseFirestore, 'configs', 'mobile-app'));
+    const snapshot = await getDoc(doc(firebaseFirestore, "configs", "mobile-app"));
     const snapshotData = snapshot.data() as FirestoreMobileAppConfig;
 
     // !!!MARATHON CODE!!! Get marathon hours
     const marathonHoursSnapshot = await getDocs(
-      collection(firebaseFirestore, 'marathon', '2022/hours')
+      collection(firebaseFirestore, "marathon", "2022/hours")
     );
     const marathonHours: FirestoreHour[] = [];
     marathonHoursSnapshot.forEach((docSnap) => marathonHours.push(docSnap.data() as FirestoreHour));
@@ -72,7 +72,7 @@ export const updateConfig = createAsyncThunk(
 // which detects changes to a "draft state" and produces a brand new
 // immutable state based off those changes
 export const appConfigSlice = createSlice({
-  name: 'appConfig',
+  name: "appConfig",
   initialState,
   reducers: {
     // Reset config reducer
@@ -82,7 +82,7 @@ export const appConfigSlice = createSlice({
     enterDemoMode(state) {
       Object.assign(state, {
         countdown: {
-          title: 'DanceBlue 2022',
+          title: "DanceBlue 2022",
           millis: 1646514000000,
         },
         isConfigLoaded: true,

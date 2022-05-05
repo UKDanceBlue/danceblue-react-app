@@ -7,20 +7,20 @@ import {
   onSnapshot,
   setDoc,
   updateDoc,
-} from 'firebase/firestore';
-import { ref, uploadBytes } from 'firebase/storage';
-import * as ImagePicker from 'expo-image-picker';
-import React, { useEffect, useState } from 'react';
-import { Picker } from '@react-native-picker/picker';
-import { ActionSheetIOS, Platform, Text, TextInput, View } from 'react-native';
-import { Button, Divider, Input } from 'react-native-elements';
-import { showMessage } from '../../common/AlertUtils';
-import { firebaseAuth, firebaseFirestore, firebaseStorage } from '../../common/FirebaseApp';
-import store from '../../redux/store';
-import generateUuid from '../../common/GenerateUuid';
-import { globalColors, globalTextStyles } from '../../theme';
-import Standings from '../../common/components/Standings';
-import { StandingType } from '../../types/StandingType';
+} from "firebase/firestore";
+import { ref, uploadBytes } from "firebase/storage";
+import * as ImagePicker from "expo-image-picker";
+import { useEffect, useState } from "react";
+import { Picker } from "@react-native-picker/picker";
+import { ActionSheetIOS, Platform, Text, TextInput, View } from "react-native";
+import { Button, Divider, Input } from "react-native-elements";
+import { showMessage } from "../../common/AlertUtils";
+import { firebaseAuth, firebaseFirestore, firebaseStorage } from "../../common/FirebaseApp";
+import store from "../../redux/store";
+import generateUuid from "../../common/GenerateUuid";
+import { globalColors, globalTextStyles } from "../../theme";
+import Standings from "../../common/components/Standings";
+import { StandingType } from "../../types/StandingType";
 
 const guessInput = React.createRef<TextInput>();
 const dadInput = React.createRef<TextInput>();
@@ -36,11 +36,11 @@ async function uploadImageAsync(uri: string, hour: string) {
       resolve(xhr.response);
     };
     xhr.onerror = (e) => {
-      showMessage(e, 'Failed to upload your image', undefined, true);
-      reject(new TypeError('Network request failed'));
+      showMessage(e, "Failed to upload your image", undefined, true);
+      reject(new TypeError("Network request failed"));
     };
-    xhr.responseType = 'blob';
-    xhr.open('GET', uri, true);
+    xhr.responseType = "blob";
+    xhr.open("GET", uri, true);
     xhr.send(null);
   }).then(
     (b) => b,
@@ -61,7 +61,7 @@ async function uploadImageAsync(uri: string, hour: string) {
   blob.close();
 
   if (success) {
-    addDoc(collection(firebaseFirestore, 'marathon/2022/photo-booth'), {
+    addDoc(collection(firebaseFirestore, "marathon/2022/photo-booth"), {
       photoUri: result.ref.fullPath,
       hour,
       name: `${store.getState().auth.firstName?.toString()} ${store
@@ -73,7 +73,7 @@ async function uploadImageAsync(uri: string, hour: string) {
       deviceId: store.getState().notification.uuid || null,
       pushToken: store.getState().notification.pushToken || null,
     }).then(() => {
-      showMessage('Photo uploaded', 'Success');
+      showMessage("Photo uploaded", "Success");
     });
   }
 
@@ -94,15 +94,15 @@ async function getImageFromPhotosOrCamera(
         mediaLibraryPermissions = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (!mediaLibraryPermissions.granted) {
           showMessage(
-            'Go to settings and change your permission to use the camera roll',
-            'Photo permissions are off'
+            "Go to settings and change your permission to use the camera roll",
+            "Photo permissions are off"
           );
           return;
         }
       } else {
         showMessage(
-          'Go to settings and change your permission to use the camera roll',
-          'Photo permissions are off'
+          "Go to settings and change your permission to use the camera roll",
+          "Photo permissions are off"
         );
         return;
       }
@@ -115,14 +115,14 @@ async function getImageFromPhotosOrCamera(
 
     try {
       if (!pickerResult.cancelled) {
-        const success = await cameraRollCallback((pickerResult as ImagePicker.ImageInfo).uri, hour);
+        const success = await cameraRollCallback(pickerResult.uri, hour);
         if (!success) {
-          showMessage('unknown error', 'Failed to upload your image', undefined, true);
+          showMessage("unknown error", "Failed to upload your image", undefined, true);
           return;
         }
       }
     } catch (e) {
-      showMessage(e as object, 'Failed to upload your image', undefined, true);
+      showMessage(e as object, "Failed to upload your image", undefined, true);
     }
   };
   const takePicture = async (
@@ -134,15 +134,15 @@ async function getImageFromPhotosOrCamera(
         cameraPermissions = await ImagePicker.requestCameraPermissionsAsync();
         if (!cameraPermissions.granted) {
           showMessage(
-            'Go to settings and change your permission to use the device camera',
-            'Camera permissions are off'
+            "Go to settings and change your permission to use the device camera",
+            "Camera permissions are off"
           );
           return;
         }
       } else {
         showMessage(
-          'Go to settings and change your permission to use the device camera',
-          'Camera permissions are off'
+          "Go to settings and change your permission to use the device camera",
+          "Camera permissions are off"
         );
         return;
       }
@@ -154,18 +154,18 @@ async function getImageFromPhotosOrCamera(
     });
 
     if (!(await takePictureCallback((pickerResult as ImagePicker.ImageInfo).uri, hour))) {
-      showMessage('unknown error', 'Failed to upload your image', undefined, true);
+      showMessage("unknown error", "Failed to upload your image", undefined, true);
     }
   };
 
   if (store.getState().appConfig.offline) {
     showMessage(
-      'You seem to be offline, connect to the internet or talk to your morale group leader'
+      "You seem to be offline, connect to the internet or talk to your morale group leader"
     );
-  } else if (Platform.OS === 'ios') {
+  } else if (Platform.OS === "ios") {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Cancel', 'Choose from Photos', 'Take a Photo'],
+        options: ["Cancel", "Choose from Photos", "Take a Photo"],
         cancelButtonIndex: 0,
       },
       (buttonIndex) => {
@@ -176,18 +176,18 @@ async function getImageFromPhotosOrCamera(
         }
       }
     );
-  } else if (Platform.OS === 'android') {
+  } else if (Platform.OS === "android") {
     // TODO make this better
     getFromCameraRoll(callback);
   } else {
-    throw new Error('Unknown Platform');
+    throw new Error("Unknown Platform");
   }
 }
 
 // Life is a Highway
 export const PhotoUpload = () => {
   const [uploading, setUploading] = useState(false);
-  const [selectedStation, setSelectedStation] = useState('Colorado');
+  const [selectedStation, setSelectedStation] = useState("Colorado");
 
   return (
     <View
@@ -195,10 +195,10 @@ export const PhotoUpload = () => {
         borderRadius: 5,
         backgroundColor: globalColors.lightGrey,
         margin: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignContent: 'center',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignContent: "center",
+        alignItems: "center",
       }}
     >
       <Picker
@@ -235,7 +235,7 @@ export const PhotoUpload = () => {
 
 // Dad Joke
 export const DadJokeLeaderboard = () => {
-  const dadJokesDoc = doc(firebaseFirestore, 'marathon/2022/dad-jokes/dad-jokes');
+  const dadJokesDoc = doc(firebaseFirestore, "marathon/2022/dad-jokes/dad-jokes");
   const [dadJokes, setDadJokes] = useState<StandingType[]>([]);
 
   useEffect(() =>
@@ -249,7 +249,7 @@ export const DadJokeLeaderboard = () => {
           id,
           name: joke.jokeText,
           points: joke.votes.length,
-          highlighted: joke.votes.indexOf(firebaseAuth.currentUser?.uid || '') > -1, // Use highlighted to mark if it should be start checked
+          highlighted: joke.votes.indexOf(firebaseAuth.currentUser?.uid || "") > -1, // Use highlighted to mark if it should be start checked
         }));
         setDadJokes(tempDadJokes);
       }
@@ -261,7 +261,7 @@ export const DadJokeLeaderboard = () => {
       style={{
         borderRadius: 5,
         margin: 15,
-        justifyContent: 'space-around',
+        justifyContent: "space-around",
       }}
     >
       <Standings
@@ -289,10 +289,10 @@ export const DadJokeLeaderboard = () => {
         }
         defaultValue={
           !firebaseAuth.currentUser || firebaseAuth.currentUser.isAnonymous
-            ? ' LinkBlue login required'
-            : ' Enter your dad joke and press enter'
+            ? " LinkBlue login required"
+            : " Enter your dad joke and press enter"
         }
-        style={{ borderColor: 'blue', borderWidth: 1, borderRadius: 5, marginTop: 10 }}
+        style={{ borderColor: "blue", borderWidth: 1, borderRadius: 5, marginTop: 10 }}
         autoCompleteType="off"
         autoComplete="off"
         onSubmitEditing={async (event) => {
@@ -300,7 +300,7 @@ export const DadJokeLeaderboard = () => {
 
           if (firebaseAuth.currentUser?.uid) {
             await updateDoc(
-              doc(firebaseFirestore, 'marathon/2022/dad-jokes/dad-jokes'),
+              doc(firebaseFirestore, "marathon/2022/dad-jokes/dad-jokes"),
               firebaseAuth.currentUser.uid,
               { jokeText: submittedText, votes: [] }
             ).then(() => {
@@ -322,12 +322,12 @@ const activities = {
       This is some dynamic content loaded from HourActivities.tsx used for internal testing purposes
     </Text>
   ),
-  'guessing-game': (
+  "guessing-game": (
     <View key="guessing-game">
       <Text style={{ margin: 10 }}>Enter your guess and press enter:</Text>
       <Input
         ref={guessInput}
-        style={{ borderColor: 'blue', borderWidth: 1, borderRadius: 5, marginTop: 10 }}
+        style={{ borderColor: "blue", borderWidth: 1, borderRadius: 5, marginTop: 10 }}
         autoCompleteType="off"
         autoComplete="off"
         onSubmitEditing={async (event) => {
@@ -336,13 +336,13 @@ const activities = {
 
           if (
             parsedText &&
-            typeof parsedText === 'number' &&
+            typeof parsedText === "number" &&
             !Number.isNaN(parsedText) &&
             parsedText > 0
           ) {
             await setDoc(
               doc(
-                collection(firebaseFirestore, 'marathon/2022/guessing-game'),
+                collection(firebaseFirestore, "marathon/2022/guessing-game"),
                 firebaseAuth.currentUser?.uid
               ),
               {
@@ -355,7 +355,7 @@ const activities = {
               }
             });
           } else {
-            showMessage('Make sure to enter a positive number', 'Invalid Guess', () => {
+            showMessage("Make sure to enter a positive number", "Invalid Guess", () => {
               if (guessInput.current) {
                 guessInput.current.clear();
               }
@@ -367,7 +367,7 @@ const activities = {
         style={{
           ...globalTextStyles.italicText,
           marginHorizontal: 10,
-          textAlign: 'center',
+          textAlign: "center",
           fontSize: 10,
         }}
       >
@@ -376,12 +376,12 @@ const activities = {
       <Divider width={3} color={globalColors.lightGrey} style={{ borderRadius: 3 }} />
     </View>
   ),
-  'photo-booth': (
+  "photo-booth": (
     <Button
       key="photo-booth"
-      buttonStyle={{ width: '90%', marginVertical: 25, marginHorizontal: 5, alignSelf: 'center' }}
+      buttonStyle={{ width: "90%", marginVertical: 25, marginHorizontal: 5, alignSelf: "center" }}
       title="Submit a Picture to the Photo Booth"
-      onPress={() => getImageFromPhotosOrCamera(uploadImageAsync, 'photo-booth')}
+      onPress={() => getImageFromPhotosOrCamera(uploadImageAsync, "photo-booth")}
     />
   ),
 } as { [key: string]: JSX.Element };

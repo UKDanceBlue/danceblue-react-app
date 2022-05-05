@@ -1,15 +1,14 @@
-/// <reference types="react" />
-import React, { useCallback, useEffect, useState } from 'react';
-import { RefreshControl, SafeAreaView, ScrollView } from 'react-native';
-import { getDocs, collection } from 'firebase/firestore';
-import { useAppSelector } from '../../common/CustomHooks';
-import Standings from '../../common/components/Standings';
-import { firebaseFirestore } from '../../common/FirebaseApp';
-import { globalColors, globalStyles } from '../../theme';
-import { StandingType } from '../../types/StandingType';
-import { showMessage } from '../../common/AlertUtils';
-import { FirestoreMoraleTeam, FirestoreTeam } from '../../types/FirebaseTypes';
-import store from '../../redux/store';
+import { useCallback, useEffect, useState } from "react";
+import { RefreshControl, SafeAreaView, ScrollView } from "react-native";
+import { getDocs, collection } from "firebase/firestore";
+import { useAppSelector } from "../../common/CustomHooks";
+import Standings from "../../common/components/Standings";
+import { firebaseFirestore } from "../../common/FirebaseApp";
+import { globalColors, globalStyles } from "../../theme";
+import { StandingType } from "../../types/StandingType";
+import { showMessage } from "../../common/AlertUtils";
+import { FirestoreMoraleTeam, FirestoreTeam } from "../../types/FirebaseTypes";
+import store from "../../redux/store";
 
 /**
  * Wrapper for a Standings component
@@ -25,16 +24,16 @@ const ScoreBoardScreen = () => {
     setRefreshing(true);
     let shouldUpdateState = true;
     if (store.getState().appConfig.offline) {
-      showMessage('You seem to be offline, connect to the internet to update the scoreboard');
+      showMessage("You seem to be offline, connect to the internet to update the scoreboard");
     } else {
       switch (pointType) {
-        case 'spirit':
-          getDocs(collection(firebaseFirestore, 'teams')).then((querySnapshot) => {
+        case "spirit":
+          getDocs(collection(firebaseFirestore, "teams")).then((querySnapshot) => {
             const tempStandingData: StandingType[] = [];
             querySnapshot.forEach((document) => {
               const teamData = document.data() as FirestoreTeam;
               // Ensure we don't show the test team on the scoreboard
-              if (teamData.spiritSpreadsheetId && document.id !== 'jR29Y3wJ59evnRaWWKC4') {
+              if (teamData.spiritSpreadsheetId && document.id !== "jR29Y3wJ59evnRaWWKC4") {
                 tempStandingData.push({
                   id: document.id,
                   name: teamData.name,
@@ -50,8 +49,8 @@ const ScoreBoardScreen = () => {
           });
           break;
 
-        case 'morale':
-          getDocs(collection(firebaseFirestore, 'marathon', '2022/morale-teams')).then(
+        case "morale":
+          getDocs(collection(firebaseFirestore, "marathon", "2022/morale-teams")).then(
             (querySnapshot) => {
               const tempStandingData: StandingType[] = [];
               querySnapshot.forEach((document) => {
@@ -79,7 +78,7 @@ const ScoreBoardScreen = () => {
           break;
 
         default:
-          showMessage('Failed to load valid point type configuration');
+          showMessage("Failed to load valid point type configuration");
           break;
       }
     }

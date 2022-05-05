@@ -1,10 +1,8 @@
-/// <reference types="react" />
-import React from 'react';
-import { Image, ActivityIndicator, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-elements';
-import { format, isSameDay } from 'date-fns';
-import { MaterialIcons } from '@expo/vector-icons';
-import { useFirebaseStorageUrl } from '../../common/CustomHooks';
+import { Image, ActivityIndicator, StyleSheet, View } from "react-native";
+import { Text } from "react-native-elements";
+import { format, isSameDay } from "date-fns";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useFirebaseStorageUrl } from "../../common/CustomHooks";
 
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
@@ -25,11 +23,11 @@ const EventRow = ({
   /**
    * Called to generate a React Native component
    */
-  let whenString = '';
+  let whenString = "";
   if (isSameDay(startDate, endDate)) {
-    whenString = `${format(startDate, 'M/d/yyyy h:mm a')} - ${format(endDate, 'h:mm a')}`;
+    whenString = `${format(startDate, "M/d/yyyy h:mm a")} - ${format(endDate, "h:mm a")}`;
   } else {
-    whenString = `${format(startDate, 'M/d/yyyy h:mm a')} - ${format(endDate, 'M/d/yyyy h:mm a')}`;
+    whenString = `${format(startDate, "M/d/yyyy h:mm a")} - ${format(endDate, "M/d/yyyy h:mm a")}`;
   }
   return (
     <View style={styles.body}>
@@ -48,26 +46,26 @@ const EventRow = ({
 
 const styles = StyleSheet.create({
   body: {
-    flexDirection: 'row',
-    padding: 5,
+    borderColor: "#3248a8",
     borderRadius: 10,
-    flex: 1,
     borderWidth: 2,
-    borderColor: '#3248a8',
+    flexDirection: "row",
+    flex: 1,
+    padding: 5,
   },
   date: {
-    fontSize: 17,
     flex: 1,
     flexGrow: 0,
     flexShrink: 1,
+    fontSize: 17,
   },
   image: {
     flex: 1,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   imageContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   textContainer: {
     flex: 4,
@@ -75,11 +73,11 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   title: {
-    fontSize: 18,
-    fontWeight: 'bold',
     flex: 1,
     flexGrow: 0,
     flexShrink: 1,
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 

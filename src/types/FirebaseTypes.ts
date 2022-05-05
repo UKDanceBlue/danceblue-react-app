@@ -1,5 +1,5 @@
-import { DocumentReference, Timestamp } from 'firebase/firestore';
-import { HourInstructionsType, SpecialComponentType } from './HourScreenTypes';
+import { DocumentReference, Timestamp } from "firebase/firestore";
+import { HourInstructionsType, SpecialComponentType } from "./HourScreenTypes";
 
 export interface FirestoreUser {
   attributes?: { [key: string]: string };
@@ -60,7 +60,7 @@ export interface FirestoreMobileAppConfig {
   countdown: { time: Timestamp; title: string };
   currentTabs: string[];
   scoreboard: {
-    pointType: 'spirit' | 'morale';
+    pointType: "spirit" | "morale";
     showIcons: boolean;
     showTrophies: boolean;
   };
@@ -73,14 +73,14 @@ export interface FirestoreHour {
   name: string;
   description?: string;
   contentOrder: (
-    | 'text-instructions'
-    | 'gs-image'
-    | 'http-image'
-    | 'button'
-    | 'special'
-    | 'text-block'
-    | 'photo-upload'
-    | 'dad-joke-leaderboard'
+    | "text-instructions"
+    | "gs-image"
+    | "http-image"
+    | "button"
+    | "special"
+    | "text-block"
+    | "photo-upload"
+    | "dad-joke-leaderboard"
   )[];
   textInstructions?: HourInstructionsType; // text-instructions
   firebaseImageUri?: string | string[]; // gs-image

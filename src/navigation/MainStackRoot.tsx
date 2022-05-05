@@ -1,16 +1,14 @@
-/// <reference types="react" />
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { BlurView } from 'expo-blur';
+import { StyleSheet } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { BlurView } from "expo-blur";
 
-import { EventView } from '../screens/EventScreen';
-import NotificationScreen from '../screens/NotificationScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import TabBar from './TabBar';
-import HeaderIcons from './HeaderIcons';
-import HourScreen from '../screens/HoursScreen/HourScreen';
-import { MainStackParamList } from '../types/NavigationTypes';
+import { EventView } from "../screens/EventScreen";
+import NotificationScreen from "../screens/NotificationScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import TabBar from "./TabBar";
+import HeaderIcons from "./HeaderIcons";
+import HourScreen from "../screens/HoursScreen/HourScreen";
+import { MainStackParamList } from "../types/NavigationTypes";
 
 const MainStack = createStackNavigator<MainStackParamList>();
 
@@ -18,7 +16,7 @@ const MainStackRoot = () => (
   <MainStack.Navigator
     screenOptions={({ navigation }) => ({
       headerRight: ({ tintColor }) => <HeaderIcons navigation={navigation} color={tintColor} />,
-      headerBackTitle: 'Back',
+      headerBackTitle: "Back",
     })}
   >
     <MainStack.Screen name="Tab" options={{ headerShown: false }} component={TabBar} />
@@ -34,7 +32,7 @@ const MainStackRoot = () => (
       options={({ route }) => ({
         title: route.params.name,
         headerTransparent: true,
-        headerMode: 'screen',
+        headerMode: "screen",
         headerBackground: () => (
           <BlurView tint="light" intensity={100} style={StyleSheet.absoluteFill} />
         ),

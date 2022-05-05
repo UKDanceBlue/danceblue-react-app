@@ -1,11 +1,11 @@
-import { getDownloadURL, ref } from 'firebase/storage';
-import { SetStateAction, useEffect, useState } from 'react';
-import * as FileSystem from 'expo-file-system';
-import { Image } from 'react-native';
-import { firebaseStorage } from './FirebaseApp';
-import { showMessage } from './AlertUtils';
-import { useDeepEffect } from './CustomHooks';
-import store from '../redux/store';
+import { getDownloadURL, ref } from "firebase/storage";
+import { SetStateAction, useEffect, useState } from "react";
+import * as FileSystem from "expo-file-system";
+import { Image } from "react-native";
+import { firebaseStorage } from "./FirebaseApp";
+import { showMessage } from "./AlertUtils";
+import { useDeepEffect } from "./CustomHooks";
+import store from "../redux/store";
 
 export type UseCachedFilesType = {
   assetId: string;
@@ -39,7 +39,7 @@ async function getFile(
         }
         // If there is still no download Uri then throw an error
         if (!downloadUri) {
-          throw new Error('No download uri could be determined');
+          throw new Error("No download uri could be determined");
         }
 
         // Check if the cache directory exists
@@ -90,7 +90,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
   const [localUris, setLocalUris] = useState<(string | null)[]>([]);
 
   useDeepEffect(() => {
-    const tempLocalUris = Array(options.length).fill('');
+    const tempLocalUris = Array(options.length).fill("");
     for (let i = 0; i < options.length; i++) {
       if (options[i]) {
         tempLocalUris[i] = `${FileSystem.cacheDirectory}DBFileCache/${encodeURIComponent(
@@ -183,7 +183,7 @@ export function useCachedImages(options: UseCachedFilesType[]) {
     Promise.allSettled(imageSizePromises).then((resolutions) => {
       const tempImageSizes: SetStateAction<[number, number][]> = [];
       resolutions.forEach((resolution, index) => {
-        if (resolution.status === 'fulfilled') {
+        if (resolution.status === "fulfilled") {
           if (Array.isArray(resolution.value)) {
             tempImageSizes[index] = resolution.value as [number, number];
           }

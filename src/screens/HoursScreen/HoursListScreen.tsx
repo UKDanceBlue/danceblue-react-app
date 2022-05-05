@@ -1,24 +1,24 @@
-import { useNavigation } from '@react-navigation/native';
-import { differenceInHours } from 'date-fns';
-import { useEffect, useMemo, useState } from 'react';
-import { FlatList, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { Divider, Image, ListItem, Text } from 'react-native-elements';
-import CountdownView from '../../common/components/CountdownView';
-import { useCachedFiles } from '../../common/CacheUtils';
-import { useAppSelector, useCurrentDate } from '../../common/CustomHooks';
-import { globalColors } from '../../theme';
-import { FirestoreHour } from '../../types/FirebaseTypes';
-import { TabScreenProps } from '../../types/NavigationTypes';
-import store from '../../redux/store';
-import { appConfigSlice, updateConfig } from '../../redux/appConfigSlice';
+import { useNavigation } from "@react-navigation/native";
+import { differenceInHours } from "date-fns";
+import { useEffect, useMemo, useState } from "react";
+import { FlatList, Platform, StyleSheet, useWindowDimensions, View } from "react-native";
+import { Divider, Image, ListItem, Text } from "react-native-elements";
+import CountdownView from "../../common/components/CountdownView";
+import { useCachedFiles } from "../../common/CacheUtils";
+import { useAppSelector, useCurrentDate } from "../../common/CustomHooks";
+import { globalColors } from "../../theme";
+import { FirestoreHour } from "../../types/FirebaseTypes";
+import { TabScreenProps } from "../../types/NavigationTypes";
+import store from "../../redux/store";
+import { appConfigSlice, updateConfig } from "../../redux/appConfigSlice";
 
 function revealRandomChars(input: string, charsToReveal: number): string {
-  let tempOutputString = '';
+  let tempOutputString = "";
   for (let i = 0; i < input.length; i++) {
-    if (input[i] === ' ') {
-      tempOutputString += ' ';
+    if (input[i] === " ") {
+      tempOutputString += " ";
     } else {
-      tempOutputString += '■';
+      tempOutputString += "■";
     }
   }
 
@@ -51,14 +51,14 @@ const HourRow = ({
   currentMinute: number;
 }) => {
   const { name: hourName, hourNumber } = firestoreHour;
-  const navigation = useNavigation<TabScreenProps<'HoursScreen'>['navigation']>();
-  const [displayedName, setDisplayedName] = useState('');
+  const navigation = useNavigation<TabScreenProps<"HoursScreen">["navigation"]>();
+  const [displayedName, setDisplayedName] = useState("");
   const [clickable, setClickable] = useState(false);
 
   // TODO change this so ti looks like wordle and reveals random letters up to half of the name; whole name at the hour so reveal stays fresh
   // Maybe choose which to reveal based on hash of name? Need to be the same every time
   useEffect(() => {
-    let tempDisplayedName = '';
+    let tempDisplayedName = "";
 
     if (marathonHour + 1 > hourNumber) {
       tempDisplayedName = hourName;
@@ -75,10 +75,10 @@ const HourRow = ({
         tempDisplayedName = revealRandomChars(hourName, charsToShow);
       } else {
         for (let i = 0; i < hourName.length; i++) {
-          if (hourName[i] === ' ') {
-            tempDisplayedName += ' ';
+          if (hourName[i] === " ") {
+            tempDisplayedName += " ";
           } else {
-            tempDisplayedName += '■';
+            tempDisplayedName += "■";
           }
         }
       }
@@ -91,12 +91,12 @@ const HourRow = ({
       hasTVPreferredFocus={undefined}
       tvParallaxProperties={undefined}
       onPress={
-        clickable ? () => navigation?.navigate('Hour Details', { firestoreHour }) : undefined
+        clickable ? () => navigation?.navigate("Hour Details", { firestoreHour }) : undefined
       }
       disabled={!clickable}
       key={hourNumber}
     >
-      <ListItem.Content style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+      <ListItem.Content style={{ flexDirection: "row", justifyContent: "flex-start" }}>
         <Text h4 h4Style={{ fontSize: 19 }}>{`${hourNumber + 1}. `}</Text>
         <Text h4 h4Style={{ fontSize: 19 }}>
           {displayedName}
@@ -117,8 +117,8 @@ const HoursListScreen = () => {
   const { width: screenWidth } = useWindowDimensions();
   const [mapOfMemorial] = useCachedFiles([
     {
-      assetId: 'DB22 Memorial Map',
-      googleUri: 'gs://react-danceblue.appspot.com/marathon/2022/maps/Overall Map.png',
+      assetId: "DB22 Memorial Map",
+      googleUri: "gs://react-danceblue.appspot.com/marathon/2022/maps/Overall Map.png",
       freshnessTime: 86400,
       base64: true,
     },
@@ -176,8 +176,8 @@ const HoursListScreen = () => {
               <View
                 style={{
                   height: 1,
-                  width: '100%',
-                  backgroundColor: '#000',
+                  width: "100%",
+                  backgroundColor: "#000",
                 }}
               />
             )}
@@ -195,12 +195,12 @@ const HoursListScreen = () => {
 
 const style = StyleSheet.create({
   hourRow: {
-    alignItems: 'center',
+    alignItems: "center",
     backgroundColor: globalColors.white,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
     flex: 1,
     height: 30,
+    justifyContent: "space-between",
   },
 });
 

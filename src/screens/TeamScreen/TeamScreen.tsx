@@ -1,11 +1,10 @@
-/// <reference types="react" />
-import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ScrollView, View } from 'react-native';
-import { Text } from 'react-native-elements';
-import { useAppSelector } from '../../common/CustomHooks';
-import Standings from '../../common/components/Standings';
-import { globalStyles, globalTextStyles } from '../../theme';
-import { StandingType } from '../../types/StandingType';
+import { useState, useEffect } from "react";
+import { SafeAreaView, ScrollView, View } from "react-native";
+import { Text } from "react-native-elements";
+import { useAppSelector } from "../../common/CustomHooks";
+import Standings from "../../common/components/Standings";
+import { globalStyles, globalTextStyles } from "../../theme";
+import { StandingType } from "../../types/StandingType";
 
 /**
  * A screen shown to users with an assigned team that display's their teams fundraising total, and spirit point numbers
@@ -70,7 +69,7 @@ const TeamScreen = () => {
                 {
                   /* Format as decimal */ fundraisingTotal.total
                     .toFixed(2)
-                    .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                    .replace(/\d(?=(\d{3})+\.)/g, "$&,")
                 }
               </Text>
             )}

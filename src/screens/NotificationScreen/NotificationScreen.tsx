@@ -1,21 +1,20 @@
-/// <reference types="react" />
-import React, { useEffect, useMemo, useCallback, useState } from 'react';
-import { RefreshControl, View, ScrollView } from 'react-native';
-import { Text, Button, ListItem } from 'react-native-elements';
-import * as Notifications from 'expo-notifications';
-import * as SecureStore from 'expo-secure-store';
-import * as Device from 'expo-device';
-import * as Linking from 'expo-linking';
-import { doc, DocumentSnapshot, getDoc } from 'firebase/firestore';
-import { useAppSelector } from '../../common/CustomHooks';
-import { globalStyles, globalTextStyles } from '../../theme';
-import { firebaseFirestore } from '../../common/FirebaseApp';
-import { showMessage } from '../../common/AlertUtils';
-import store from '../../redux/store';
-import { registerPushNotifications } from '../../redux/notificationSlice';
-import { FirestoreNotification } from '../../types/FirebaseTypes';
+import { useEffect, useMemo, useCallback, useState } from "react";
+import { RefreshControl, View, ScrollView } from "react-native";
+import { Text, Button, ListItem } from "react-native-elements";
+import * as Notifications from "expo-notifications";
+import * as SecureStore from "expo-secure-store";
+import * as Device from "expo-device";
+import * as Linking from "expo-linking";
+import { doc, DocumentSnapshot, getDoc } from "firebase/firestore";
+import { useAppSelector } from "../../common/CustomHooks";
+import { globalStyles, globalTextStyles } from "../../theme";
+import { firebaseFirestore } from "../../common/FirebaseApp";
+import { showMessage } from "../../common/AlertUtils";
+import store from "../../redux/store";
+import { registerPushNotifications } from "../../redux/notificationSlice";
+import { FirestoreNotification } from "../../types/FirebaseTypes";
 
-const uuidStoreKey = __DEV__ ? 'danceblue.device-uuid.dev' : 'danceblue.device-uuid';
+const uuidStoreKey = __DEV__ ? "danceblue.device-uuid.dev" : "danceblue.device-uuid";
 
 const notificationsCache = {} as {
   [key: string]: FirestoreNotification;
@@ -56,7 +55,7 @@ const NotificationScreen = () => {
     setIsLoading(true);
     try {
       if (store.getState().appConfig.offline) {
-        showMessage('You seem to be offline, connect to the internet to load notifications');
+        showMessage("You seem to be offline, connect to the internet to load notifications");
       } else {
         const uuid = await SecureStore.getItemAsync(uuidStoreKey, {
           keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
@@ -75,7 +74,7 @@ const NotificationScreen = () => {
             if (!notificationsCache[notificationReferences[i]]) {
               newNotificationPromises.push(
                 getDoc(doc(firebaseFirestore, notificationReferences[i])).catch(() =>
-                  showMessage('Failed to get past notification from server')
+                  showMessage("Failed to get past notification from server")
                 )
               );
             } else {
@@ -103,7 +102,7 @@ const NotificationScreen = () => {
         }
       }
     } catch (error) {
-      showMessage(error, 'Error retrieving notifications');
+      showMessage(error, "Error retrieving notifications");
     } finally {
       // Done loading
       setIsLoading(false);
@@ -119,7 +118,7 @@ const NotificationScreen = () => {
     const tempNotificationsListView = [];
     for (let i = 0; i < notifications.length; i++) {
       tempNotificationsListView.push(
-        <ListItem key={i} style={{ flexDirection: 'column' }}>
+        <ListItem key={i} style={{ flexDirection: "column" }}>
           <View>
             <ListItem.Title style={globalTextStyles.boldText}>
               {notifications[i].title}
@@ -129,7 +128,7 @@ const NotificationScreen = () => {
                 {Date.now() - notifications[i].sendTime.toMillis() < 43200000
                   ? notifications[i].sendTime
                       .toDate()
-                      .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                      .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                   : notifications[i].sendTime.toDate().toLocaleDateString()}
               </Text>
             </ListItem.Subtitle>
@@ -170,7 +169,7 @@ const NotificationScreen = () => {
           <Text>
             You have not enabled notifications for this device, enable them in the settings app
           </Text>
-          {Device.manufacturer === 'Apple' && (
+          {Device.manufacturer === "Apple" && (
             <Button onPress={() => Linking.openSettings()} title="Open Settings" />
           )}
         </View>

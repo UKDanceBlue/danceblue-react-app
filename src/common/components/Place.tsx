@@ -1,11 +1,10 @@
-/// <reference types="react" />
 // Import third-party dependencies
-import React, { ReactElement, useState } from 'react';
-import { View } from 'react-native';
-import { ListItem, Text } from 'react-native-elements';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { globalColors } from '../../theme';
-import { firebaseAuth } from '../FirebaseApp';
+import { ReactElement, useState } from "react";
+import { View } from "react-native";
+import { ListItem, Text } from "react-native-elements";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { globalColors } from "../../theme";
+import { firebaseAuth } from "../FirebaseApp";
 
 /**
  * A row-based component showing a target name, their rank (if applicable), and their points
@@ -49,11 +48,11 @@ const Place = ({
     <ListItem
       key={rank}
       bottomDivider={!lastRow}
-      style={{ width: '100%', backgroundColor: globalColors.white }}
-      containerStyle={{ backgroundColor: 'white' }}
+      style={{ width: "100%", backgroundColor: globalColors.white }}
+      containerStyle={{ backgroundColor: "white" }}
     >
-      <ListItem.Content style={{ flexDirection: 'row' }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', width: '20%' }}>
+      <ListItem.Content style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", justifyContent: "flex-start", width: "20%" }}>
           <Text style={{ fontSize: 20, marginLeft: 10, marginRight: 10 }}>
             {/* Renders the rank/place of the target */}
             {rank}
@@ -63,10 +62,10 @@ const Place = ({
         <ListItem.Title
           style={{
             color: !dadJokeTempMagic && isHighlighted ? globalColors.lightBlue : undefined,
-            alignSelf: 'center',
-            width: '60%',
-            textAlign: 'left',
-            fontWeight: 'bold',
+            alignSelf: "center",
+            width: "60%",
+            textAlign: "left",
+            fontWeight: "bold",
           }}
           h5
         >
@@ -79,7 +78,7 @@ const Place = ({
           right
         >
           {points}
-          {points === 1 ? ' point  ' : ' points  '}
+          {points === 1 ? " point  " : " points  "}
         </ListItem.Subtitle>
         {dadJokeTempMagic && firebaseAuth.currentUser?.uid && (
           <ListItem.CheckBox

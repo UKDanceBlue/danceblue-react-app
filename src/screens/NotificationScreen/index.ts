@@ -1,3 +1,3 @@
-import NotificationScreen from './NotificationScreen';
+import NotificationScreen from "./NotificationScreen";
 
 export default NotificationScreen;

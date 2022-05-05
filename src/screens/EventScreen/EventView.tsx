@@ -1,17 +1,16 @@
-/// <reference types="react" />
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, TouchableHighlight, View, Image } from 'react-native';
-import { Text } from 'react-native-elements';
-import { format, isSameDay } from 'date-fns';
-import openMap from 'react-native-open-maps';
+import { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet, TouchableHighlight, View, Image } from "react-native";
+import { Text } from "react-native-elements";
+import { format, isSameDay } from "date-fns";
+import openMap from "react-native-open-maps";
 // import * as Calendar from 'expo-calendar';
-import { doc, getDoc } from 'firebase/firestore';
-import { MaterialIcons } from '@expo/vector-icons';
-import { useRoute } from '@react-navigation/native';
-import { globalColors } from '../../theme';
-import { firebaseFirestore } from '../../common/FirebaseApp';
-import { useFirebaseStorageUrl } from '../../common/CustomHooks';
-import { MainStackScreenProps } from '../../types/NavigationTypes';
+import { doc, getDoc } from "firebase/firestore";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
+import { globalColors } from "../../theme";
+import { firebaseFirestore } from "../../common/FirebaseApp";
+import { useFirebaseStorageUrl } from "../../common/CustomHooks";
+import { MainStackScreenProps } from "../../types/NavigationTypes";
 
 // const danceBlueCalendarConfig = {
 //   title: 'DanceBlue',
@@ -37,11 +36,11 @@ const EventView = () => {
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
   // const [title, setTitle] = useState('');
-  const [address, setAddress] = useState('');
-  const [imageFirebaseRef, setImageFirebaseRef] = useState('');
+  const [address, setAddress] = useState("");
+  const [imageFirebaseRef, setImageFirebaseRef] = useState("");
   const [imageRef, imageRefError] = useFirebaseStorageUrl(imageFirebaseRef);
-  const [description, setDescription] = useState('');
-  const route = useRoute<MainStackScreenProps<'Event'>['route']>();
+  const [description, setDescription] = useState("");
+  const route = useRoute<MainStackScreenProps<"Event">["route"]>();
 
   /**
    * Check if the DanceBlue calendar exist's on the user's device
@@ -60,7 +59,7 @@ const EventView = () => {
 
   useEffect(() => {
     let shouldUpdateState = true;
-    getDoc(doc(firebaseFirestore, 'events', route.params.id)).then((document) => {
+    getDoc(doc(firebaseFirestore, "events", route.params.id)).then((document) => {
       if (shouldUpdateState) {
         // setTitle(document.data().title);
         setStartTime(document.data().startTime.toDate());
@@ -141,15 +140,15 @@ const EventView = () => {
   //   setEventCalendarID(null);
   // };
 
-  let whenString = '';
+  let whenString = "";
   if (isSameDay(startTime, endTime)) {
-    whenString = `${format(startTime, 'M/d/yyyy h:mm a')} - ${format(endTime, 'h:mm a')}`;
+    whenString = `${format(startTime, "M/d/yyyy h:mm a")} - ${format(endTime, "h:mm a")}`;
   } else {
-    whenString = `${format(startTime, 'M/d/yyyy h:mm a')} - ${format(endTime, 'M/d/yyyy h:mm a')}`;
+    whenString = `${format(startTime, "M/d/yyyy h:mm a")} - ${format(endTime, "M/d/yyyy h:mm a")}`;
   }
   return (
     <>
-      <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+      <View style={{ flex: 1, justifyContent: "flex-start" }}>
         {!imageRef && !imageRefError && <ActivityIndicator size="large" color="blue" />}
         {imageRefError && <MaterialIcons name="image-not-supported" size={36} color="black" />}
         {imageRef && <Image source={{ uri: imageRef }} style={styles.image} />}
@@ -191,35 +190,35 @@ const EventView = () => {
 };
 
 const styles = StyleSheet.create({
-  image: {
-    height: 250,
-    width: '100%',
-  },
-  button: {
-    backgroundColor: globalColors.dbBlue,
-    borderRadius: 5,
-    padding: 10,
-    width: '45%',
-    alignItems: 'center',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    paddingTop: 10,
-  },
-  buttonText: {
-    color: 'white',
-  },
-  text: {
-    fontSize: 17,
-  },
-  boldText: {
-    fontWeight: 'bold',
-    fontSize: 17,
-  },
   body: {
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 15,
+  },
+  boldText: {
+    fontSize: 17,
+    fontWeight: "bold",
+  },
+  button: {
+    alignItems: "center",
+    backgroundColor: globalColors.dbBlue,
+    borderRadius: 5,
+    padding: 10,
+    width: "45%",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    paddingTop: 10,
+  },
+  buttonText: {
+    color: "white",
+  },
+  image: {
+    height: 250,
+    width: "100%",
+  },
+  text: {
+    fontSize: 17,
   },
 });
 

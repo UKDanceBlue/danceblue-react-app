@@ -1,10 +1,8 @@
-/// <reference types="react" />
-import React from 'react';
-import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from 'react-native';
-import * as WebBrowser from 'expo-web-browser';
+import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from "react-native";
+import * as WebBrowser from "expo-web-browser";
 
-import { MaterialIcons } from '@expo/vector-icons';
-import { useCachedFiles } from '../CacheUtils';
+import { MaterialIcons } from "@expo/vector-icons";
+import { useCachedFiles } from "../CacheUtils";
 
 /**
  * A card showing a Sponsor's logo that link's to their website
@@ -57,8 +55,8 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
+    resizeMode: "contain",
     width: 200,
-    resizeMode: 'contain',
   },
 });
 

@@ -1,2 +1,2 @@
-import TimeUnit from './TimeUnit';
+import TimeUnit from "./TimeUnit";
 export default TimeUnit;

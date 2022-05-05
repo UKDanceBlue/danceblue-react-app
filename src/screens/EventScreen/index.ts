@@ -6,5 +6,5 @@ import EventView from "./EventView";
 import EventRow from "./EventRow";
 import EventScreen from "./EventScreen";
 
-export {EventRow, EventView}
-export default EventScreen
+export { EventRow, EventView };
+export default EventScreen;

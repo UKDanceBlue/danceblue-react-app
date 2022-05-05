@@ -1,7 +1,7 @@
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { NavigatorScreenParams, CompositeScreenProps } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { FirestoreHour } from './FirebaseTypes';
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { NavigatorScreenParams, CompositeScreenProps } from "@react-navigation/native";
+import { StackScreenProps } from "@react-navigation/stack";
+import { FirestoreHour } from "./FirebaseTypes";
 
 // Navigator param types
 export type TabNavigatorParamList = {
@@ -23,7 +23,7 @@ export type MainStackParamList = {
     id: string;
     name: string;
   };
-  'Hour Details': {
+  "Hour Details": {
     firestoreHour: FirestoreHour;
   };
 };
@@ -51,6 +51,6 @@ export type TabScreenProps<T extends keyof TabNavigatorParamList> = CompositeScr
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    type RootParamList = RootStackParamList
   }
 }

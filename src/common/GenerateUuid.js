@@ -1,4 +1,4 @@
-import * as Random from 'expo-random';
+import * as Random from "expo-random";
 
 // Magic code to simplistically generate a uuid (not uid) for this device from SO - https://stackoverflow.com/a/2117523
 export default function generateUuid() {

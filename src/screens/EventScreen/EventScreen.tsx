@@ -1,12 +1,11 @@
-/// <reference types="react" />
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from 'react-native';
-import { collection, getDocs, where, query } from 'firebase/firestore';
-import { useNavigation } from '@react-navigation/native';
-import EventRow from './EventRow';
-import { firebaseFirestore } from '../../common/FirebaseApp';
-import { FirestoreEvent } from '../../types/FirebaseTypes';
-import { TabScreenProps } from '../../types/NavigationTypes';
+import { useEffect, useState } from "react";
+import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from "react-native";
+import { collection, getDocs, where, query } from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
+import EventRow from "./EventRow";
+import { firebaseFirestore } from "../../common/FirebaseApp";
+import { FirestoreEvent } from "../../types/FirebaseTypes";
+import { TabScreenProps } from "../../types/NavigationTypes";
 
 const now = new Date();
 interface EventType extends FirestoreEvent {
@@ -25,22 +24,22 @@ const EventScreen = () => {
   const [events, setEvents] = useState<EventType[]>([]);
   const [today, setToday] = useState<EventType[]>([]);
   const [upcoming, setUpcoming] = useState<EventType[]>([]);
-  const navigation = useNavigation<TabScreenProps<'Events'>['navigation']>();
+  const navigation = useNavigation<TabScreenProps<"Events">["navigation"]>();
 
   useEffect(() => {
     let componentUnmounted = false;
     const firestoreEvents: EventType[] = [];
-    getDocs(query(collection(firebaseFirestore, 'events'), where('endTime', '>', now))).then(
+    getDocs(query(collection(firebaseFirestore, "events"), where("endTime", ">", now))).then(
       (snapshot) => {
         snapshot.forEach((document) =>
           firestoreEvents.push({
             id: document.id,
-            title: document.get('title'),
-            description: document.get('description'),
-            image: document.get('image'),
-            address: document.get('address'),
-            startTime: document.get('startTime'),
-            endTime: document.get('endTime'),
+            title: document.get("title"),
+            description: document.get("description"),
+            image: document.get("image"),
+            address: document.get("address"),
+            startTime: document.get("startTime"),
+            endTime: document.get("endTime"),
           })
         );
 
@@ -79,7 +78,7 @@ const EventScreen = () => {
         {today.map((row) => (
           <TouchableOpacity
             style={styles.eventRow}
-            onPress={() => navigation.navigate('Event', { id: row.id, name: row.title })}
+            onPress={() => navigation.navigate("Event", { id: row.id, name: row.title })}
             key={row.id}
           >
             <EventRow
@@ -100,7 +99,7 @@ const EventScreen = () => {
           upcoming.map((row) => (
             <TouchableOpacity
               style={styles.eventRow}
-              onPress={() => navigation.navigate('Event', { id: row.id, name: row.title })}
+              onPress={() => navigation.navigate("Event", { id: row.id, name: row.title })}
               key={row.id}
             >
               <EventRow
@@ -123,22 +122,22 @@ const EventScreen = () => {
 };
 
 EventScreen.navigationOptions = {
-  title: 'Events',
+  title: "Events",
 };
 
 const styles = StyleSheet.create({
-  eventRow: {
-    marginTop: 5,
-    marginBottom: 5,
-  },
   body: {
-    padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     flex: 1,
+    padding: 10,
+  },
+  eventRow: {
+    marginBottom: 5,
+    marginTop: 5,
   },
   heading: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

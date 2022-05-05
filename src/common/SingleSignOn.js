@@ -1,10 +1,10 @@
-import * as WebBrowser from 'expo-web-browser';
-import * as Linking from 'expo-linking';
-import { linkWithCredential, signInWithCredential, signOut, OAuthProvider } from 'firebase/auth';
-import { showMessage } from './AlertUtils';
-import { firebaseAuth } from './FirebaseApp';
-import { loginSaml } from '../redux/authSlice';
-import store from '../redux/store';
+import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
+import { linkWithCredential, signInWithCredential, signOut, OAuthProvider } from "firebase/auth";
+import { showMessage } from "./AlertUtils";
+import { firebaseAuth } from "./FirebaseApp";
+import { loginSaml } from "../redux/authSlice";
+import store from "../redux/store";
 
 let browserOpen = false;
 export default class SingleSignOn {
@@ -13,7 +13,7 @@ export default class SingleSignOn {
   redirectData;
 
   constructor() {
-    this.backendUrl = 'https://app.danceblue.org/saml-relay.html';
+    this.backendUrl = "https://app.danceblue.org/saml-relay.html";
   }
 
   /**
@@ -25,8 +25,8 @@ export default class SingleSignOn {
   async authenticate(operation) {
     if (!store.getState().appConfig.ssoEnabled) {
       showMessage(
-        'This is not a bug, the DanceBlue Committee has disabled SSO. This may or may not be temporary',
-        'Single Sign On has been disabled'
+        "This is not a bug, the DanceBlue Committee has disabled SSO. This may or may not be temporary",
+        "Single Sign On has been disabled"
       );
       return null;
     }
@@ -41,31 +41,31 @@ export default class SingleSignOn {
         undefined
       )
         .catch((reason) => {
-          showMessage(reason, 'Error with web browser');
+          showMessage(reason, "Error with web browser");
         })
         .finally(() => {
           browserOpen = false;
         });
-      if (typeof result === 'object') {
+      if (typeof result === "object") {
         switch (result?.type) {
           case WebBrowser.WebBrowserResultType.CANCEL:
           case WebBrowser.WebBrowserResultType.DISMISS:
           case WebBrowser.WebBrowserResultType.LOCKED:
-            showMessage('Sign in cancelled', 'Browser closed');
+            showMessage("Sign in cancelled", "Browser closed");
             break;
-          case 'success':
+          case "success":
             if (result?.url) {
               this.redirectData = Linking.parse(result.url);
             }
             break;
           case null:
           case undefined:
-            showMessage('Browser did not respond.\nSign in failed', 'No response', undefined, true);
+            showMessage("Browser did not respond.\nSign in failed", "No response", undefined, true);
             return;
           default:
             showMessage(
               `Browser responded with type ${result.type}`,
-              'Unexpected response',
+              "Unexpected response",
               undefined,
               true,
               result
@@ -74,14 +74,14 @@ export default class SingleSignOn {
         }
       }
     } catch (error) {
-      showMessage(error, 'Error with web browser');
+      showMessage(error, "Error with web browser");
       return;
     }
 
     if (!this.redirectData) {
       showMessage(
-        'Browser did not respond or sign in was cancelled.\nSign in failed',
-        'No response',
+        "Browser did not respond or sign in was cancelled.\nSign in failed",
+        "No response",
         undefined,
         true
       );
@@ -106,8 +106,8 @@ export default class SingleSignOn {
         })
         .catch(async () => {
           showMessage(
-            'The data from your anonymous account could not be transferred to your SSO account. Sign in was successful.',
-            'Problem transferring data'
+            "The data from your anonymous account could not be transferred to your SSO account. Sign in was successful.",
+            "Problem transferring data"
           );
           await signOut(firebaseAuth);
           store.dispatch(loginSaml(await signInWithCredential(firebaseAuth, credential)));
