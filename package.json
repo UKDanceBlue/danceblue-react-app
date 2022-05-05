@@ -7,15 +7,6 @@
     "eas-ios": "eas build --platform=ios --auto-submit",
     "eas-android": "eas build --platform=android --auto-submit"
   },
-  "jest": {
-    "preset": "jest-expo",
-    "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|react-native-elements/*))"
-    ],
-    "moduleNameMapper": {
-      "@firebase/(.*)/react-native": "<rootDir>/node_modules/@firebase/$1/dist/rn"
-    }
-  },
   "dependencies": {
     "@expo/vector-icons": "^12.0.0",
     "@openspacelabs/react-native-zoomable-view": "^2.0.0",
@@ -65,16 +56,19 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
-    "@types/react": "~17.0.21",
+    "@types/jest": "^27.5.0",
     "@types/lodash-es": "^4.17.6",
+    "@types/react": "~17.0.21",
     "@types/react-redux": "^7.1.22",
+    "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^27.3.1",
     "eas-cli": "^0.46.0",
     "jest": "^26.6.3",
-    "jest-expo": "^44.0.0",
+    "jest-expo": "^44.0.1",
     "prettier": "^2.4.1",
     "react-test-renderer": "^17.0.1",
-    "redux-devtools": "^3.7.0"
+    "redux-devtools": "^3.7.0",
+    "ts-jest": "^26.0.0"
   },
   "resolutions": {
     "react-devtools-core": "~4.14.0"
