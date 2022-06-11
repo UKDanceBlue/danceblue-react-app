@@ -174,11 +174,6 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
-  countdownText: {
-    color: "white",
-    fontSize: 40,
-    fontWeight: "bold",
-  },
   countdownTimer: {
     flexDirection: "row",
     justifyContent: "center",

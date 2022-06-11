@@ -4,6 +4,7 @@ import { getReactNativePersistence } from "firebase/auth/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getRemoteConfig } from "firebase/remote-config";
 
 // Initialize firebase, called when Firebase imports this file
 export const firebaseConfig: FirebaseOptions = {
@@ -23,5 +24,6 @@ export const firebaseAuth = initializeAuth(firebaseApp, {
 });
 export const firebaseFirestore = getFirestore(firebaseApp);
 export const firebaseStorage = getStorage(firebaseApp);
+export const firebaseRemoteConfig = getRemoteConfig(firebaseApp);
 
 export default firebaseApp;
