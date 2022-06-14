@@ -1,4 +1,4 @@
-import { FirestoreHour } from '../types/FirebaseTypes';
+import { FirestoreHour } from "../types/FirebaseTypes";
 
 type MarathonSliceType = {
   marathonHours: FirestoreHour[];

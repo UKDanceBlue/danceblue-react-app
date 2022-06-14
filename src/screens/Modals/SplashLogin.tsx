@@ -1,15 +1,13 @@
-/// <reference types="react" />
-import React from 'react';
-import { TouchableOpacity, StyleSheet, View, ImageBackground, Dimensions } from 'react-native';
-import { Text } from 'react-native-elements';
+import { TouchableOpacity, StyleSheet, View, ImageBackground, Dimensions } from "react-native";
+import { Text } from "react-native-elements";
 
-import SingleSignOn from '../../common/SingleSignOn';
-import { globalStyles, globalTextStyles } from '../../theme';
+import SingleSignOn from "../../common/SingleSignOn";
+import { globalStyles, globalTextStyles } from "../../theme";
 
-import store from '../../redux/store';
-import { loginAnon } from '../../redux/authSlice';
+import store from "../../redux/store";
+import { loginAnon } from "../../redux/authSlice";
 
-const splashBackground = require('../../../assets/home/Dancing-min.jpg');
+const splashBackground = require("../../../assets/home/Dancing-min.jpg");
 
 /**
  * A simplified sign in page shown when the user first opens the app
@@ -20,7 +18,7 @@ const SplashLoginScreen = () => (
     <ImageBackground source={splashBackground} style={localStyles.image}>
       <View style={localStyles.textContainerWithBackground}>
         <View style={globalStyles.genericHeaderContainer}>
-          <Text h2 style={{ textAlign: 'center' }}>
+          <Text h2 style={{ textAlign: "center" }}>
             Welcome to UK DanceBlue!
           </Text>
           <Text style={globalTextStyles.headerText}>
@@ -39,7 +37,7 @@ const SplashLoginScreen = () => (
           <TouchableOpacity
             onPress={() => {
               const sso = new SingleSignOn();
-              sso.authenticate('saml-sign-in');
+              sso.authenticate("saml-sign-in");
             }}
             style={globalStyles.genericButton}
           >
@@ -64,11 +62,11 @@ const SplashLoginScreen = () => (
 
 const localStyles = {
   image: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
   },
   textContainerWithBackground: StyleSheet.compose(globalStyles.genericView, {
-    backgroundColor: '#FFFFFF99',
+    backgroundColor: "#FFFFFF99",
   }),
 };
 

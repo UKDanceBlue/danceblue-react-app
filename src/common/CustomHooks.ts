@@ -1,9 +1,9 @@
-import { getDownloadURL, ref } from 'firebase/storage';
-import { DependencyList, useDebugValue, useEffect, useRef, useState } from 'react';
-import { isEqual } from 'lodash-es';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
-import { firebaseStorage } from './FirebaseApp';
+import { getDownloadURL, ref } from "firebase/storage";
+import { DependencyList, useDebugValue, useEffect, useRef, useState } from "react";
+import { isEqual } from "lodash-es";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
+import { firebaseStorage } from "./FirebaseApp";
 
 export function useFirebaseStorageUrl(googleUri: string) {
   useDebugValue(`Storage for ${googleUri}`);

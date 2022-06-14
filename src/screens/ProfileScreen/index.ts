@@ -1,3 +1,3 @@
-import ProfileScreen from './ProfileScreen';
+import ProfileScreen from "./ProfileScreen";
 
 export default ProfileScreen;

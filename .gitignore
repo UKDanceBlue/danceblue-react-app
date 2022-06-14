@@ -385,3 +385,6 @@ $RECYCLE.BIN/
 
 # jsdoc output
 doc/
+
+# jest cache
+.jest/cache

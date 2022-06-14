@@ -1,10 +1,9 @@
-/// <reference types="react" />
-import React, { ReactElement, useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Text } from 'react-native-elements';
-import Place from './Place';
-import { globalColors, globalStyles, globalTextStyles } from '../../theme';
-import { StandingType } from '../../types/StandingType';
+import { ReactElement, useEffect, useState } from "react";
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Text } from "react-native-elements";
+import Place from "./Place";
+import { globalColors, globalStyles, globalTextStyles } from "../../theme";
+import { StandingType } from "../../types/StandingType";
 
 /**
  * Standings implementation for the a generic leaderboard
@@ -100,8 +99,8 @@ const Standings = ({
           size="large"
           color={globalColors.lightBlue}
           style={{
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: "center",
+            justifyContent: "center",
             padding: 20,
           }}
         />
@@ -112,13 +111,13 @@ const Standings = ({
 
 const localStyles = StyleSheet.create({
   ListView: {
+    alignItems: "flex-start",
+    backgroundColor: "white",
+    flex: 1,
+    justifyContent: "flex-start",
+    paddingBottom: 5,
     paddingLeft: 5,
     paddingTop: 5,
-    paddingBottom: 5,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    backgroundColor: 'white',
-    flex: 1,
   },
 });
 

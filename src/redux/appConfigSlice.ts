@@ -1,4 +1,4 @@
-import { UserLoginType } from './userDataSlice';
+import { UserLoginType } from "./userDataSlice";
 
 type AppConfigSliceType = {
   enabledScreens: string[];

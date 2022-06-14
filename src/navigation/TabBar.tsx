@@ -1,18 +1,18 @@
 // Import third-party dependencies
-import { useEffect, useState } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { useEffect, useState } from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 // Import first-party dependencies
-import { useAppSelector } from '../common/CustomHooks';
-import ScoreboardScreen from '../screens/ScoreBoardScreen';
-import HomeScreen from '../screens/HomeScreen';
-import EventScreen from '../screens/EventScreen';
-import GenericWebviewScreen from '../screens/GenericWebviewScreen';
-import TeamScreen from '../screens/TeamScreen';
-import HoursScreen from '../screens/HoursScreen';
-import HeaderIcons from './HeaderIcons';
-import { TabNavigatorParamList } from '../types/NavigationTypes';
+import { useAppSelector } from "../common/CustomHooks";
+import ScoreboardScreen from "../screens/ScoreBoardScreen";
+import HomeScreen from "../screens/HomeScreen";
+import EventScreen from "../screens/EventScreen";
+import GenericWebviewScreen from "../screens/GenericWebviewScreen";
+import TeamScreen from "../screens/TeamScreen";
+import HoursScreen from "../screens/HoursScreen";
+import HeaderIcons from "./HeaderIcons";
+import { TabNavigatorParamList } from "../types/NavigationTypes";
 
 const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
 
@@ -51,14 +51,14 @@ const TabBar = () => {
               const iconMap = {
                 // https://icons.expo.fyi/
                 // Key: Screen   Value: Icon ID
-                Home: 'home',
-                Events: 'calendar',
-                Store: 'store',
-                More: 'ellipsis-h',
-                Scoreboard: 'list-ol',
-                Team: 'users',
-                Donate: 'hand-holding-heart',
-                Marathon: 'people-arrows',
+                Home: "home",
+                Events: "calendar",
+                Store: "store",
+                More: "ellipsis-h",
+                Scoreboard: "list-ol",
+                Team: "users",
+                Donate: "hand-holding-heart",
+                Marathon: "people-arrows",
               } as { [key: string]: string };
 
               // You can return any component that you like here!
@@ -67,18 +67,18 @@ const TabBar = () => {
                   name={iconMap[route.name]}
                   size={size}
                   color={color}
-                  style={{ textAlignVertical: 'center' }}
+                  style={{ textAlignVertical: "center" }}
                 />
               );
             },
             headerRight: ({ tintColor }) => (
               <HeaderIcons navigation={navigation} color={tintColor} />
             ),
-            tabBarActiveTintColor: 'white',
-            tabBarActiveBackgroundColor: '#3248a8',
+            tabBarActiveTintColor: "white",
+            tabBarActiveBackgroundColor: "#3248a8",
             tabBarStyle: [
               {
-                display: 'flex',
+                display: "flex",
               },
               null,
             ],

@@ -1,5 +1,4 @@
-/* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getAdditionalUserInfo,
   signInAnonymously,
@@ -7,7 +6,7 @@ import {
   updateProfile,
   User,
   UserCredential,
-} from 'firebase/auth';
+} from "firebase/auth";
 import {
   collection,
   doc,
@@ -19,15 +18,15 @@ import {
   setDoc,
   updateDoc,
   where,
-} from 'firebase/firestore';
-import { showMessage } from '../common/AlertUtils';
-import { firebaseAuth, firebaseFirestore } from '../common/FirebaseApp';
+} from "firebase/firestore";
+import { showMessage } from "../common/AlertUtils";
+import { firebaseAuth, firebaseFirestore } from "../common/FirebaseApp";
 import {
   FirestoreTeam,
   FirestoreTeamFundraising,
   FirestoreTeamIndividualSpiritPoints,
   FirestoreUser,
-} from '../types/FirebaseTypes';
+} from "../types/FirebaseTypes";
 
 type AuthSliceType = {
   isAuthLoaded: boolean;
@@ -68,7 +67,7 @@ const initialState: AuthSliceType = {
 // !!!START OF ACTION DEFINITIONS!!!
 
 export const updateUserData = createAsyncThunk(
-  'auth/updateUserData',
+  "auth/updateUserData",
   async (newUser: { userSnapshot?: DocumentSnapshot; isAnonymous: boolean }) => {
     const { userSnapshot, isAnonymous } = newUser;
 
@@ -100,23 +99,23 @@ export const updateUserData = createAsyncThunk(
       Object.assign(userInfo, firebaseUserData);
 
       // Map the non-serializable array of references to past notifications to an array of path strings
-      if (Array.isArray(userSnapshot.get('pastNotifications'))) {
+      if (Array.isArray(userSnapshot.get("pastNotifications"))) {
         userInfo.pastNotifications = userSnapshot
-          .get('pastNotifications')
+          .get("pastNotifications")
           .map((reference: DocumentReference) => reference.path);
       }
 
-      if (!userInfo.attributes.role || userInfo.attributes.role === 'dancer') {
+      if (!userInfo.attributes.role || userInfo.attributes.role === "dancer") {
         if (userInfo.linkblue) {
           // TEMP MORALE CODE
           const moraleTeamsCollectionRef = collection(
             firebaseFirestore,
-            'marathon',
-            '2022/morale-teams'
+            "marathon",
+            "2022/morale-teams"
           );
           const moraleTeamQuery = query(
             moraleTeamsCollectionRef,
-            where(`members.${userInfo.linkblue}`, '>=', '')
+            where(`members.${userInfo.linkblue}`, ">=", "")
           );
           const querySnapshot = await getDocs(moraleTeamQuery);
           const moraleTeam = querySnapshot.docs?.[0];
@@ -129,14 +128,14 @@ export const updateUserData = createAsyncThunk(
         let teamReference: DocumentReference;
         let preloadedTeamSnapshot: DocumentSnapshot;
         // Get information about the user's team (if any)
-        if (userSnapshot.get('team')) {
-          teamReference = userSnapshot.get('team');
+        if (userSnapshot.get("team")) {
+          teamReference = userSnapshot.get("team");
           userInfo.teamId = teamReference.id;
         } else if (userInfo.linkblue) {
-          const teamsCollectionRef = collection(firebaseFirestore, 'teams');
+          const teamsCollectionRef = collection(firebaseFirestore, "teams");
           const teamQuery = query(
             teamsCollectionRef,
-            where(`members.${userInfo.linkblue}`, '>=', '')
+            where(`members.${userInfo.linkblue}`, ">=", "")
           );
           const matchingTeams = await getDocs(teamQuery);
           if (matchingTeams.docs.length === 1) {
@@ -150,16 +149,16 @@ export const updateUserData = createAsyncThunk(
           // Go ahead and set up some collection references
           const teamConfidentialRef = collection(
             firebaseFirestore,
-            `${userSnapshot.get('team').path}/confidential`
+            `${userSnapshot.get("team").path}/confidential`
           );
 
           const teamPromiseResponses = await Promise.allSettled([
-            preloadedTeamSnapshot ? undefined : getDoc(userSnapshot.get('team')),
-            getDoc(doc(teamConfidentialRef, 'individualSpiritPoints')),
-            getDoc(doc(teamConfidentialRef, 'fundraising')),
+            preloadedTeamSnapshot ? undefined : getDoc(userSnapshot.get("team")),
+            getDoc(doc(teamConfidentialRef, "individualSpiritPoints")),
+            getDoc(doc(teamConfidentialRef, "fundraising")),
           ]);
 
-          if (teamPromiseResponses[0].status === 'fulfilled') {
+          if (teamPromiseResponses[0].status === "fulfilled") {
             if (teamPromiseResponses[0].value === undefined) {
               if (preloadedTeamSnapshot) {
                 userInfo.team = preloadedTeamSnapshot.data() as FirestoreTeam;
@@ -168,11 +167,11 @@ export const updateUserData = createAsyncThunk(
               userInfo.team = teamPromiseResponses[0].value.data() as FirestoreTeam;
             }
           }
-          if (teamPromiseResponses[1].status === 'fulfilled') {
+          if (teamPromiseResponses[1].status === "fulfilled") {
             userInfo.teamIndividualSpiritPoints =
               teamPromiseResponses[1].value.data() as FirestoreTeamIndividualSpiritPoints;
           }
-          if (teamPromiseResponses[2].status === 'fulfilled') {
+          if (teamPromiseResponses[2].status === "fulfilled") {
             userInfo.teamFundraisingTotal =
               teamPromiseResponses[2].value.data() as FirestoreTeamFundraising;
           }
@@ -181,7 +180,7 @@ export const updateUserData = createAsyncThunk(
         // Update team attributes
         if (userInfo.teamId) {
           userInfo.attributes.team = userInfo.teamId;
-          userInfo.attributes.role = 'dancer';
+          userInfo.attributes.role = "dancer";
         }
 
         updateDoc(userSnapshot.ref, { attributes: userInfo.attributes });
@@ -192,7 +191,7 @@ export const updateUserData = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk('auth/logout', async (arg, thunkApi) =>
+export const logout = createAsyncThunk("auth/logout", async (arg, thunkApi) =>
   signOut(firebaseAuth).then(async () => {
     // Dispatch the updateUserData action
     thunkApi.dispatch(updateUserData({ isAnonymous: false, userSnapshot: null }));
@@ -200,12 +199,12 @@ export const logout = createAsyncThunk('auth/logout', async (arg, thunkApi) =>
 );
 
 export const syncAuthStateWithUser = createAsyncThunk(
-  'auth/syncAuthStateWithUser',
+  "auth/syncAuthStateWithUser",
   async (user: User | null, thunkApi) => {
     let userSnapshot = null;
     if (user?.uid) {
       // Get the user's firebase doc
-      userSnapshot = await getDoc(doc(firebaseFirestore, 'users', user.uid));
+      userSnapshot = await getDoc(doc(firebaseFirestore, "users", user.uid));
     }
     // Dispatch the updateUserData action
     thunkApi.dispatch(
@@ -214,59 +213,59 @@ export const syncAuthStateWithUser = createAsyncThunk(
   }
 );
 
-export const loginAnon = createAsyncThunk('auth/loginAnon', async (arg, thunkApi) =>
+export const loginAnon = createAsyncThunk("auth/loginAnon", async (arg, thunkApi) =>
   signInAnonymously(firebaseAuth).then(async (anonUser) => {
     // Get the user's firebase doc
-    const userSnapshot = await getDoc(doc(firebaseFirestore, 'users', anonUser.user.uid));
+    const userSnapshot = await getDoc(doc(firebaseFirestore, "users", anonUser.user.uid));
     // Dispatch the updateUserData action
     thunkApi.dispatch(updateUserData({ isAnonymous: true, userSnapshot }));
   })
 );
 
 type LoginSamlThunkError = {
-  error: 'UNEXPECTED_AUTH_PROVIDER' | 'INVALID_SERVER_RESPONSE';
+  error: "UNEXPECTED_AUTH_PROVIDER" | "INVALID_SERVER_RESPONSE";
 };
 
 export const loginSaml = createAsyncThunk(
-  'auth/loginSaml',
+  "auth/loginSaml",
   async (samlUserCredential: UserCredential, thunkApi) => {
     // 1. Do some verification
     // Make sure firebase sent a profile option
     const additionalInfo = getAdditionalUserInfo(samlUserCredential);
 
     // Make sure this is the provider we think it is
-    if (!(additionalInfo?.providerId === 'saml.danceblue-firebase-linkblue-saml')) {
-      return thunkApi.rejectWithValue({ error: 'UNEXPECTED_AUTH_PROVIDER' } as LoginSamlThunkError);
+    if (!(additionalInfo?.providerId === "saml.danceblue-firebase-linkblue-saml")) {
+      return thunkApi.rejectWithValue({ error: "UNEXPECTED_AUTH_PROVIDER" } as LoginSamlThunkError);
     }
 
     // Make sure we got a profile and email
     if (!additionalInfo?.profile || !samlUserCredential?.user?.email) {
-      return thunkApi.rejectWithValue({ error: 'INVALID_SERVER_RESPONSE' } as LoginSamlThunkError);
+      return thunkApi.rejectWithValue({ error: "INVALID_SERVER_RESPONSE" } as LoginSamlThunkError);
     }
 
     // 2. Upload SAML info to firebase
     await setDoc(
-      doc(firebaseFirestore, 'users', samlUserCredential.user.uid),
+      doc(firebaseFirestore, "users", samlUserCredential.user.uid),
       {
-        firstName: additionalInfo.profile['first-name'] || null,
-        lastName: additionalInfo.profile['last-name'] || null,
+        firstName: additionalInfo.profile["first-name"] || null,
+        lastName: additionalInfo.profile["last-name"] || null,
         email: additionalInfo.profile.email,
         linkblue: samlUserCredential.user.email.substring(
           0,
-          samlUserCredential.user.email.indexOf('@')
+          samlUserCredential.user.email.indexOf("@")
         ),
       },
       { merge: true }
     );
     updateProfile(samlUserCredential.user, {
       displayName:
-        typeof additionalInfo.profile['display-name'] === 'string'
-          ? additionalInfo.profile['display-name']
+        typeof additionalInfo.profile["display-name"] === "string"
+          ? additionalInfo.profile["display-name"]
           : null,
     });
 
     // 4. Update user data
-    const userSnapshot = await getDoc(doc(firebaseFirestore, 'users', samlUserCredential.user.uid));
+    const userSnapshot = await getDoc(doc(firebaseFirestore, "users", samlUserCredential.user.uid));
     thunkApi.dispatch(updateUserData({ isAnonymous: false, userSnapshot }));
   }
 );
@@ -278,7 +277,7 @@ export const loginSaml = createAsyncThunk(
 // which detects changes to a "draft state" and produces a brand new
 // immutable state based off those changes
 export const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     enterDemoMode(state) {
@@ -286,33 +285,33 @@ export const authSlice = createSlice({
         isAuthLoaded: true,
         isLoggedIn: true,
         isAnonymous: false,
-        uid: 'Xrwr8wgGA6azJL56PhGJPsvD95g2',
+        uid: "Xrwr8wgGA6azJL56PhGJPsvD95g2",
         attributes: {
-          team: 'jR29Y3wJ59evnRaWWKC4',
-          role: 'dancer',
+          team: "jR29Y3wJ59evnRaWWKC4",
+          role: "dancer",
         },
         pastNotifications: [
-          'past-notifications/kKdj538wXFc5o9BgW1Yh',
-          'past-notifications/U5mF3dyUD96kf95qRh3f',
-          'past-notifications/CvQe7SzDbpQnGPiEo8RI',
+          "past-notifications/kKdj538wXFc5o9BgW1Yh",
+          "past-notifications/U5mF3dyUD96kf95qRh3f",
+          "past-notifications/CvQe7SzDbpQnGPiEo8RI",
         ],
-        firstName: 'Johnny',
-        lastName: 'Appleseed',
-        email: 'japl636@uky.edu',
-        linkblue: 'japl636',
-        teamId: 'jR29Y3wJ59evnRaWWKC4',
+        firstName: "Johnny",
+        lastName: "Appleseed",
+        email: "japl636@uky.edu",
+        linkblue: "japl636",
+        teamId: "jR29Y3wJ59evnRaWWKC4",
         team: {
           totalSpiritPoints: 341,
-          name: 'Testing Team',
-          networkForGoodId: '0',
-          spiritSpreadsheetId: 'Test Team',
+          name: "Testing Team",
+          networkForGoodId: "0",
+          spiritSpreadsheetId: "Test Team",
           members: {
-            jsmi333: 'John Smith',
-            acba249: 'Ashley Bates',
-            japl636: 'Johnny Appleseed',
-            jtho264: 'Tag Howard',
-            smca276: 'Sophia Carlton',
-            ames223: 'Abby Ison',
+            jsmi333: "John Smith",
+            acba249: "Ashley Bates",
+            japl636: "Johnny Appleseed",
+            jtho264: "Tag Howard",
+            smca276: "Sophia Carlton",
+            ames223: "Abby Ison",
           },
         },
         teamIndividualSpiritPoints: {
@@ -377,21 +376,21 @@ export const authSlice = createSlice({
         Object.assign(state, initialState);
       })
       .addCase(loginSaml.rejected, (state, action) => {
-        if (action.error.message === 'Rejected') {
+        if (action.error.message === "Rejected") {
           switch ((action?.payload as LoginSamlThunkError)?.error) {
-            case 'UNEXPECTED_AUTH_PROVIDER':
+            case "UNEXPECTED_AUTH_PROVIDER":
               showMessage(
-                'DanceBlue Mobile received an unrecognized response from the login server. Did you log into a website other than UK?',
-                'Login Server Error',
+                "DanceBlue Mobile received an unrecognized response from the login server. Did you log into a website other than UK?",
+                "Login Server Error",
                 () => {},
                 true,
                 action
               );
               break;
-            case 'INVALID_SERVER_RESPONSE':
+            case "INVALID_SERVER_RESPONSE":
               showMessage(
-                'DanceBlue Mobile received an invalid response from the login server. Try again later.',
-                'Login Server Error',
+                "DanceBlue Mobile received an invalid response from the login server. Try again later.",
+                "Login Server Error",
                 () => {},
                 true,
                 action
@@ -399,8 +398,8 @@ export const authSlice = createSlice({
               break;
             default:
               showMessage(
-                'DanceBlue Mobile ran into an unexpected issue with the login server. This is a bug, please report it to the DanceBlue committee.',
-                'Login Server Error',
+                "DanceBlue Mobile ran into an unexpected issue with the login server. This is a bug, please report it to the DanceBlue committee.",
+                "Login Server Error",
                 () => {},
                 true,
                 action

@@ -1,10 +1,8 @@
-/// <reference types="react" />
-import React from 'react';
-import { Linking, SafeAreaView, ScrollView } from 'react-native';
-import { Button } from 'react-native-elements';
-import { useAppSelector } from '../../common/CustomHooks';
-import SponsorCarousel from './SponsorCarousel';
-import HeaderImage from './HeaderImage';
+import { Linking, SafeAreaView, ScrollView } from "react-native";
+import { Button } from "react-native-elements";
+import { useAppSelector } from "../../common/CustomHooks";
+import SponsorCarousel from "./SponsorCarousel";
+import HeaderImage from "./HeaderImage";
 
 /**
  * Component for home screen in main navigation
@@ -13,15 +11,15 @@ const HomeScreen = () => (
   <SafeAreaView style={{ flex: 1 }}>
     <HeaderImage />
     <Button
-      style={{ margin: 10, alignSelf: 'center' }}
+      style={{ margin: 10, alignSelf: "center" }}
       onPress={() => {
         if (
           Linking.canOpenURL(
-            'https://danceblue.networkforgood.com/causes/4789-danceblue-golden-matrix-fund-dance-teams?utm_source=website&utm_medium=unit_website'
+            "https://danceblue.networkforgood.com/causes/4789-danceblue-golden-matrix-fund-dance-teams?utm_source=website&utm_medium=unit_website"
           )
         ) {
           Linking.openURL(
-            'https://danceblue.networkforgood.com/causes/4789-danceblue-golden-matrix-fund-dance-teams?utm_source=website&utm_medium=unit_website'
+            "https://danceblue.networkforgood.com/causes/4789-danceblue-golden-matrix-fund-dance-teams?utm_source=website&utm_medium=unit_website"
           );
         }
       }}
@@ -32,7 +30,7 @@ const HomeScreen = () => (
 );
 
 HomeScreen.navigationOptions = {
-  title: 'Home',
+  title: "Home",
 };
 
 export default HomeScreen;

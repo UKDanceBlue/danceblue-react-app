@@ -1,13 +1,12 @@
-/* eslint-disable no-console */
-import { FirebaseError } from 'firebase/app';
-import { Alert, Platform } from 'react-native';
+import { FirebaseError } from "firebase/app";
+import { Alert, Platform } from "react-native";
 
 function logToFirebase(title: string, message: unknown, logInfo: unknown) {
   try {
-    fetch('https://us-central1-react-danceblue.cloudfunctions.net/writeLog', {
-      method: 'POST',
+    fetch("https://us-central1-react-danceblue.cloudfunctions.net/writeLog", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(
         {
@@ -15,16 +14,16 @@ function logToFirebase(title: string, message: unknown, logInfo: unknown) {
           message,
           logInfo,
           deviceInfo: {
-            os: Platform.OS === 'ios' && Platform.isPad ? 'iPadOS' : Platform.OS,
+            os: Platform.OS === "ios" && Platform.isPad ? "iPadOS" : Platform.OS,
             ...Platform.constants,
           },
         },
         undefined,
-        '  '
+        "  "
       ),
-    }).then(null, () => console.debug('Failed to upload log to firebase'));
+    }).then(null, () => console.debug("Failed to upload log to firebase"));
   } catch (error) {
-    console.debug('Failed to upload log to firebase');
+    console.debug("Failed to upload log to firebase");
   }
 }
 
@@ -33,26 +32,26 @@ function logToFirebase(title: string, message: unknown, logInfo: unknown) {
  */
 export function showMessage(
   message: string | object,
-  title = 'Error',
+  title = "Error",
   onAccept: () => unknown = () => {},
   log = false,
-  logInfo: unknown = ''
+  logInfo: unknown = ""
 ) {
   Alert.alert(title.toString(), message.toString(), [
-    { text: 'OK', onPress: onAccept || (() => {}) },
+    { text: "OK", onPress: onAccept || (() => {}) },
   ]);
 
   if (log) {
     console.log(
       `${title}:\n${message}\nLog info:\n${
-        typeof logInfo === 'object' ? JSON.stringify(logInfo, undefined, '  ') : logInfo
+        typeof logInfo === "object" ? JSON.stringify(logInfo, undefined, "  ") : logInfo
       }`
     );
     if (!__DEV__) {
       try {
         logToFirebase(title, message, logInfo);
       } catch (error) {
-        console.debug('Failed to upload log to firebase');
+        console.debug("Failed to upload log to firebase");
       }
     }
   }
@@ -63,23 +62,23 @@ export function showMessage(
  */
 export function showPrompt(
   message: string | object,
-  title = 'Error',
+  title = "Error",
   negativeAction: () => unknown = () => {},
   positiveAction: () => unknown = () => {},
-  negativeText = 'No',
-  positiveText = 'Yes',
+  negativeText = "No",
+  positiveText = "Yes",
   log = false,
-  logInfo: unknown = ''
+  logInfo: unknown = ""
 ) {
   Alert.alert(title.toString(), message.toString(), [
-    { text: negativeText, onPress: negativeAction, style: 'cancel' },
+    { text: negativeText, onPress: negativeAction, style: "cancel" },
     { text: positiveText, onPress: positiveAction },
   ]);
 
   if (log) {
     console.log(
       `${title}:\n${message}\nLog info:\n${
-        typeof logInfo === 'object' ? JSON.stringify(logInfo, undefined, '  ') : logInfo
+        typeof logInfo === "object" ? JSON.stringify(logInfo, undefined, "  ") : logInfo
       }`
     );
     if (!__DEV__) {
@@ -98,22 +97,22 @@ export function handleFirebaseError(error: FirebaseError, log = false) {
   }
   if (!__DEV__) {
     try {
-      fetch('https://us-central1-react-danceblue.cloudfunctions.net/writeLog', {
-        method: 'POST',
+      fetch("https://us-central1-react-danceblue.cloudfunctions.net/writeLog", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: JSON.stringify(error, undefined, '  '),
-          severity: 'ERROR',
+          message: JSON.stringify(error, undefined, "  "),
+          severity: "ERROR",
           deviceInfo: {
-            os: Platform.OS === 'ios' && Platform.isPad ? 'iPadOS' : Platform.OS,
+            os: Platform.OS === "ios" && Platform.isPad ? "iPadOS" : Platform.OS,
             ...Platform.constants,
           },
         }),
-      }).then(null, () => console.debug('Failed to upload log to firebase'));
+      }).then(null, () => console.debug("Failed to upload log to firebase"));
     } catch {
-      console.debug('Failed to upload log to firebase');
+      console.debug("Failed to upload log to firebase");
     }
   }
   return error;

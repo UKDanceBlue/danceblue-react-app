@@ -1,33 +1,15 @@
-/// <reference types="react" />
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
-import { Text } from 'react-native-elements';
-import { intervalToDuration } from 'date-fns';
+import { useEffect, useState } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { Text } from "react-native-elements";
+import { intervalToDuration } from "date-fns";
 
-import { useAppSelector } from '../CustomHooks';
-
-/**
- * A label for a unit of time
- */
-const TimeUnit = ({
-  value,
-  unit,
-}: {
-  value: number;
-  unit: 'seconds' | 'minutes' | 'hours' | 'days' | 'months' | 'years';
-}) => (
-  <View style={{ alignItems: 'center', paddingLeft: 7, paddingRight: 7 }}>
-    <Text style={styles.countdownText}>{value}</Text>
-    <Text style={{ fontSize: 20, color: 'white' }}>
-      {value < 2 ? unit.substring(0, unit.length - 1) : unit}
-    </Text>
-  </View>
-);
+import { useAppSelector } from "../CustomHooks";
+import TimeUnit from "./TimeUnit";
 
 const CountdownView = () => {
-  const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
-  const countdownConfig = useAppSelector((state) => state.appConfig.countdown);
-  const title = useAppSelector((state) => state.appConfig.countdown.title);
+  const isConfigLoaded = false; //useAppSelector((state) => state.appConfig.isConfigLoaded);
+  const countdownConfig = { millis: 1 }; //useAppSelector((state) => state.appConfig.countdown);
+  const title = ""; // useAppSelector((state) => state.appConfig.countdown.title);
   const [countdownDisplayDuration, setCountdownDisplayDuration] = useState<Duration>({
     years: 0,
     months: 0,
@@ -70,9 +52,9 @@ const CountdownView = () => {
 
                   <Text
                     style={{
-                      fontWeight: 'bold',
+                      fontWeight: "bold",
                       fontSize: 40,
-                      color: 'white',
+                      color: "white",
                     }}
                   >
                     :
@@ -88,9 +70,9 @@ const CountdownView = () => {
 
                   <Text
                     style={{
-                      fontWeight: 'bold',
+                      fontWeight: "bold",
                       fontSize: 40,
-                      color: 'white',
+                      color: "white",
                     }}
                   >
                     :
@@ -109,9 +91,9 @@ const CountdownView = () => {
 
                   <Text
                     style={{
-                      fontWeight: 'bold',
+                      fontWeight: "bold",
                       fontSize: 40,
-                      color: 'white',
+                      color: "white",
                     }}
                   >
                     :
@@ -131,9 +113,9 @@ const CountdownView = () => {
 
                   <Text
                     style={{
-                      fontWeight: 'bold',
+                      fontWeight: "bold",
                       fontSize: 40,
-                      color: 'white',
+                      color: "white",
                     }}
                   >
                     :
@@ -154,9 +136,9 @@ const CountdownView = () => {
 
                   <Text
                     style={{
-                      fontWeight: 'bold',
+                      fontWeight: "bold",
                       fontSize: 40,
-                      color: 'white',
+                      color: "white",
                     }}
                   >
                     :
@@ -185,27 +167,27 @@ const CountdownView = () => {
   );
 };
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#0033A0E0',
+    alignItems: "center",
+    backgroundColor: "#0033A0E0",
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  countdownTitleView: {
-    width: '95%',
-    borderBottomColor: 'white',
-    borderBottomWidth: 2,
-    alignItems: 'center',
+    justifyContent: "center",
   },
   countdownText: {
+    color: "white",
     fontSize: 40,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
   },
   countdownTimer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  countdownTitleView: {
+    alignItems: "center",
+    borderBottomColor: "white",
+    borderBottomWidth: 2,
+    width: "95%",
   },
 });
 

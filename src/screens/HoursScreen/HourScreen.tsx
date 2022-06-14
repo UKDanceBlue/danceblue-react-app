@@ -1,28 +1,28 @@
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, View, ScrollView, useWindowDimensions } from 'react-native';
-import { Button, Image, Text, useTheme } from 'react-native-elements';
-import { MaterialIcons } from '@expo/vector-icons';
-import * as Clipboard from 'expo-clipboard';
-import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
-import { openBrowserAsync } from 'expo-web-browser';
-import { UseCachedFilesType, useCachedImages } from '../../common/CacheUtils';
-import { globalTextStyles } from '../../theme';
-import { FirestoreHour } from '../../types/FirebaseTypes';
-import { HourInstructionsType } from '../../types/HourScreenTypes';
-import HourActivities, { DadJokeLeaderboard, PhotoUpload } from './HourActivities';
-import { showPrompt } from '../../common/AlertUtils';
+import { useEffect, useState } from "react";
+import { ActivityIndicator, View, ScrollView, useWindowDimensions } from "react-native";
+import { Button, Image, Text, useTheme } from "react-native-elements";
+import { MaterialIcons } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
+import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
+import { openBrowserAsync } from "expo-web-browser";
+import { UseCachedFilesType, useCachedImages } from "../../common/CacheUtils";
+import { globalTextStyles } from "../../theme";
+import { FirestoreHour } from "../../types/FirebaseTypes";
+import { HourInstructionsType } from "../../types/HourScreenTypes";
+import HourActivities, { DadJokeLeaderboard, PhotoUpload } from "./HourActivities";
+import { showPrompt } from "../../common/AlertUtils";
 
 function composeInstructions(hourInstructions: HourInstructionsType) {
-  let tempHourInstructionsText = '';
+  let tempHourInstructionsText = "";
   // If it's a flat string, just return that
-  if (typeof hourInstructions === 'string') {
+  if (typeof hourInstructions === "string") {
     return hourInstructions;
   }
   // If it's an array iterate over it and assemble a list of instructions
   if (Array.isArray(hourInstructions)) {
     for (let i = 0; i < hourInstructions.length; i++) {
       // Is this an instruction that we want to be a level lower
-      if (typeof hourInstructions[i] === 'object') {
+      if (typeof hourInstructions[i] === "object") {
         // Add a top level instruction as the first array element
         tempHourInstructionsText += `${i + 1}. ${hourInstructions[i][0]}
 `;
@@ -47,32 +47,32 @@ function composeInstructions(hourInstructions: HourInstructionsType) {
 }
 
 const alphabet = [
-  'a',
-  'b',
-  'c',
-  'd',
-  'e',
-  'f',
-  'g',
-  'h',
-  'i',
-  'j',
-  'k',
-  'l',
-  'm',
-  'n',
-  'o',
-  'p',
-  'q',
-  'r',
-  's',
-  't',
-  'u',
-  'v',
-  'w',
-  'x',
-  'y',
-  'z',
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
 ];
 
 const HourScreen = ({
@@ -95,7 +95,7 @@ const HourScreen = ({
     let httpUriIndex = 0;
     for (let i = 0; i < firestoreHour.contentOrder.length; i++) {
       switch (firestoreHour.contentOrder[i]) {
-        case 'http-image': {
+        case "http-image": {
           const cacheOption: UseCachedFilesType = {
             assetId: `Marathon Hour: ${firestoreHour.name} http file #${httpUriIndex}`,
             freshnessTime: 14400,
@@ -108,7 +108,7 @@ const HourScreen = ({
           httpUriIndex++;
           break;
         }
-        case 'gs-image': {
+        case "gs-image": {
           const cacheOption: UseCachedFilesType = {
             assetId: `Marathon Hour: ${firestoreHour.name} google storage file #${googleUriIndex}`,
             freshnessTime: 14400,
@@ -137,7 +137,7 @@ const HourScreen = ({
     let textBlockIndex = 0;
     for (let i = 0; i < firestoreHour.contentOrder.length; i++) {
       switch (firestoreHour.contentOrder[i]) {
-        case 'text-instructions':
+        case "text-instructions":
           if (firestoreHour.textInstructions) {
             tempComponents.push(
               <>
@@ -151,7 +151,7 @@ const HourScreen = ({
             );
           }
           break;
-        case 'text-block':
+        case "text-block":
           if (Array.isArray(firestoreHour.textBlock)) {
             tempComponents.push(
               <Text style={{ margin: 10 }} key={i}>
@@ -168,8 +168,8 @@ const HourScreen = ({
           textBlockIndex++;
           break;
 
-        case 'gs-image':
-        case 'http-image':
+        case "gs-image":
+        case "http-image":
           if (cachedImages[i]) {
             if (cachedImages[i][1] !== null) {
               tempComponents.push(
@@ -197,8 +197,8 @@ const HourScreen = ({
                     style={{
                       width: screenWidth - 20,
                       height: screenWidth / cachedImages[i][0]?.imageRatio,
-                      resizeMode: 'contain',
-                      alignSelf: 'center',
+                      resizeMode: "contain",
+                      alignSelf: "center",
                       margin: 10,
                     }}
                   />
@@ -212,7 +212,7 @@ const HourScreen = ({
           }
           break;
 
-        case 'special':
+        case "special":
           if (Array.isArray(firestoreHour.specialComponent)) {
             tempComponents.push(
               <View key={i}>
@@ -227,15 +227,15 @@ const HourScreen = ({
           specialComponentIndex++;
           break;
 
-        case 'photo-upload':
+        case "photo-upload":
           tempComponents.push(<PhotoUpload key={i} />);
           break;
 
-        case 'dad-joke-leaderboard':
+        case "dad-joke-leaderboard":
           tempComponents.push(<DadJokeLeaderboard key={i} />);
           break;
 
-        case 'button':
+        case "button":
           if (Array.isArray(firestoreHour.buttonConfig)) {
             const buttonText = firestoreHour.buttonConfig[buttonIndex].text;
             const buttonUrl = firestoreHour.buttonConfig[buttonIndex].url;
@@ -248,7 +248,7 @@ const HourScreen = ({
                     openBrowserAsync(buttonUrl);
                   }}
                   onLongPress={() => {
-                    showPrompt('Would you like to copy the link?', 'Copy link', undefined, () => {
+                    showPrompt("Would you like to copy the link?", "Copy link", undefined, () => {
                       Clipboard.setString(buttonUrl);
                     });
                   }}
@@ -282,7 +282,7 @@ const HourScreen = ({
 
   return (
     <ScrollView style={{ backgroundColor: theme.colors?.grey3 }}>
-      <View style={{ justifyContent: 'space-between' }}>
+      <View style={{ justifyContent: "space-between" }}>
         <Text h3 style={{ margin: 10, ...globalTextStyles.headerText }}>{`${
           firestoreHour.hourNumber + 1
         }. ${firestoreHour.name}`}</Text>

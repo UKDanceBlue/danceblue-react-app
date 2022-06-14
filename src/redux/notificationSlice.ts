@@ -1,16 +1,15 @@
-/* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import * as Notifications from 'expo-notifications';
-import * as SecureStore from 'expo-secure-store';
-import * as Device from 'expo-device';
-import { doc, setDoc } from 'firebase/firestore';
-import { ExpoPushToken } from 'expo-notifications';
-import { showMessage } from '../common/AlertUtils';
-import { firebaseFirestore } from '../common/FirebaseApp';
-import { globalColors } from '../theme';
-import generateUuid from '../common/GenerateUuid';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import * as Notifications from "expo-notifications";
+import * as SecureStore from "expo-secure-store";
+import * as Device from "expo-device";
+import { doc, setDoc } from "firebase/firestore";
+import { ExpoPushToken } from "expo-notifications";
+import { showMessage } from "../common/AlertUtils";
+import { firebaseFirestore } from "../common/FirebaseApp";
+import { globalColors } from "../theme";
+import generateUuid from "../common/GenerateUuid";
 
-const uuidStoreKey = __DEV__ ? 'danceblue.device-uuid.dev' : 'danceblue.device-uuid';
+const uuidStoreKey = __DEV__ ? "danceblue.device-uuid.dev" : "danceblue.device-uuid";
 
 type NotificationSliceType = {
   uuid: string | null;
@@ -24,7 +23,7 @@ const initialState: NotificationSliceType = {
   notificationPermissionsGranted: null,
 };
 
-export const obtainUuid = createAsyncThunk('notification/obtainUuid', async () =>
+export const obtainUuid = createAsyncThunk("notification/obtainUuid", async () =>
   // Get UUID from async storage
   SecureStore.getItemAsync(uuidStoreKey, {
     keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
@@ -42,20 +41,20 @@ export const obtainUuid = createAsyncThunk('notification/obtainUuid', async () =
   })
 );
 
-type RegisterPushNotificationsErrors = { error: 'DEVICE_IS_EMULATOR' };
+type RegisterPushNotificationsErrors = { error: "DEVICE_IS_EMULATOR" };
 
 export const registerPushNotifications = createAsyncThunk<
   { token: ExpoPushToken | null; notificationPermissionsGranted: boolean },
   void,
   { state: { notification: NotificationSliceType } }
->('notification/registerPushNotifications', async (arg, thunkApi) => {
+>("notification/registerPushNotifications", async (arg, thunkApi) => {
   if (Device.isDevice) {
     // Get the user's current preference
     let settings = await Notifications.getPermissionsAsync();
 
     // If the user hasn't set a preference yet, ask them.
     if (
-      settings.status === 'undetermined' ||
+      settings.status === "undetermined" ||
       settings.ios?.status === Notifications.IosAuthorizationStatus.NOT_DETERMINED
     ) {
       settings = await Notifications.requestPermissionsAsync({
@@ -79,9 +78,9 @@ export const registerPushNotifications = createAsyncThunk<
       settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL ||
       settings.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED
     ) {
-      if (Device.osName === 'Android') {
-        Notifications.setNotificationChannelAsync('default', {
-          name: 'default',
+      if (Device.osName === "Android") {
+        Notifications.setNotificationChannelAsync("default", {
+          name: "default",
           importance: Notifications.AndroidImportance.MAX,
           vibrationPattern: [0, 250, 250, 250],
           lightColor: globalColors.red,
@@ -93,11 +92,11 @@ export const registerPushNotifications = createAsyncThunk<
         if (uuid) {
           // Store the push notification token in firebase
           await setDoc(
-            doc(firebaseFirestore, 'devices', uuid),
+            doc(firebaseFirestore, "devices", uuid),
             {
               expoPushToken: token.data || null,
             },
-            { mergeFields: ['expoPushToken'] }
+            { mergeFields: ["expoPushToken"] }
           );
         }
         return { token, notificationPermissionsGranted: true };
@@ -106,12 +105,12 @@ export const registerPushNotifications = createAsyncThunk<
       return { token: null, notificationPermissionsGranted: false };
     }
   } else {
-    return thunkApi.rejectWithValue({ error: 'DEVICE_IS_EMULATOR' });
+    return thunkApi.rejectWithValue({ error: "DEVICE_IS_EMULATOR" });
   }
 });
 
 export const refreshPastNotifications = createAsyncThunk(
-  'notification/updateConfig',
+  "notification/updateConfig",
   async () => {}
 );
 
@@ -120,7 +119,7 @@ export const refreshPastNotifications = createAsyncThunk(
 // which detects changes to a "draft state" and produces a brand new
 // immutable state based off those changes
 export const notificationSlice = createSlice({
-  name: 'notification',
+  name: "notification",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -139,15 +138,15 @@ export const notificationSlice = createSlice({
         }
       })
       .addCase(registerPushNotifications.rejected, (state, action) => {
-        if (action.error.message === 'Rejected') {
+        if (action.error.message === "Rejected") {
           switch ((action?.payload as RegisterPushNotificationsErrors)?.error) {
-            case 'DEVICE_IS_EMULATOR':
-              showMessage('Emulators will not receive push notifications');
+            case "DEVICE_IS_EMULATOR":
+              showMessage("Emulators will not receive push notifications");
               break;
             default:
               showMessage(
-                'DanceBlue Mobile ran into an unexpected issue with the notification server. This is a bug, please report it to the DanceBlue committee.',
-                'Notification Error',
+                "DanceBlue Mobile ran into an unexpected issue with the notification server. This is a bug, please report it to the DanceBlue committee.",
+                "Notification Error",
                 () => {},
                 true,
                 action

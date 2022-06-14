@@ -1,33 +1,33 @@
-/// <reference types="react" />
 // Import third-party dependencies
-import React, { useEffect, useRef } from 'react';
-import { StatusBar, Linking } from 'react-native';
-import NetInfo from '@react-native-community/netinfo';
-import * as Notifications from 'expo-notifications';
-import * as Application from 'expo-application';
-import { useAssets } from 'expo-asset';
-import AppLoading from 'expo-app-loading';
-import { NavigationContainer } from '@react-navigation/native';
-import { onAuthStateChanged } from 'firebase/auth';
-import { Provider } from 'react-redux';
+import { useEffect, useRef } from "react";
+import { StatusBar } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
+import * as Linking from "expo-linking";
+import * as Notifications from "expo-notifications";
+import * as Application from "expo-application";
+import { useAssets } from "expo-asset";
+import AppLoading from "expo-app-loading";
+import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
+import { onAuthStateChanged } from "firebase/auth";
+import { Provider } from "react-redux";
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
-import './src/common/AndroidTimerFix';
-import { ThemeProvider } from 'react-native-elements';
-import { doc, getDoc } from 'firebase/firestore';
-import RootScreen from './src/navigation/RootScreen';
-import { showMessage } from './src/common/AlertUtils';
+import "./src/common/AndroidTimerFix";
+import { ThemeProvider } from "react-native-elements";
+import { doc, getDoc } from "firebase/firestore";
+import RootScreen from "./src/navigation/RootScreen";
+import { showMessage } from "./src/common/AlertUtils";
 
-import store from './src/redux/store';
-import { authSlice, logout, syncAuthStateWithUser } from './src/redux/authSlice';
-import { firebaseAuth, firebaseFirestore } from './src/common/FirebaseApp';
-import { obtainUuid, registerPushNotifications } from './src/redux/notificationSlice';
-import { appConfigSlice, updateConfig } from './src/redux/appConfigSlice';
-import { rnElementsTheme } from './src/theme';
+import store from "./src/redux/store";
+import { authSlice, logout, syncAuthStateWithUser } from "./src/redux/authSlice";
+import { firebaseAuth, firebaseFirestore } from "./src/common/FirebaseApp";
+import { obtainUuid, registerPushNotifications } from "./src/redux/notificationSlice";
+import { appConfigSlice, updateConfig } from "./src/redux/appConfigSlice";
+import { rnElementsTheme } from "./src/theme";
 
 // All assets that should be preloaded:
-const homeBackgroundImg = require('./assets/home/db20_ribbon.jpg');
-const dbLogo = require('./assets/home/DB_Primary_Logo-01.png');
-const splashLoginBackground = require('./assets/home/Dancing-min.jpg');
+const homeBackgroundImg = require("./assets/home/db20_ribbon.jpg");
+const dbLogo = require("./assets/home/DB_Primary_Logo-01.png");
+const splashLoginBackground = require("./assets/home/Dancing-min.jpg");
 
 // Promise.allSettled polyfill
 Promise.allSettled =
@@ -37,11 +37,11 @@ Promise.allSettled =
       promises.map((p) =>
         p
           .then((value: any) => ({
-            status: 'fulfilled',
+            status: "fulfilled",
             value,
           }))
           .catch((reason: any) => ({
-            status: 'rejected',
+            status: "rejected",
             reason,
           }))
       )
@@ -65,46 +65,46 @@ const firstTimeSync = onAuthStateChanged(firebaseAuth, (user) => {
   store.dispatch(obtainUuid());
   store.dispatch(updateConfig());
 
-  getDoc(doc(firebaseFirestore, '__VERSION/required'))
+  getDoc(doc(firebaseFirestore, "__VERSION/required"))
     .then((majorVerSnap) => {
       // Parse app version
-      const versionTokens = Application.nativeApplicationVersion?.split('.', 2);
-      let appMajor = Number.parseInt(versionTokens?.[0] || '0', 10);
+      const versionTokens = Application.nativeApplicationVersion?.split(".", 2);
+      let appMajor = Number.parseInt(versionTokens?.[0] || "0", 10);
       if (Number.isNaN(appMajor)) {
         appMajor = 0;
       }
-      let appMinor = Number.parseInt(versionTokens?.[1] || '0', 10);
+      let appMinor = Number.parseInt(versionTokens?.[1] || "0", 10);
       if (Number.isNaN(appMinor)) {
         appMinor = 0;
       }
 
       // Parse required version
-      const reqMajor = majorVerSnap.get('major');
-      const reqMinor = majorVerSnap.get('minor');
-      if (typeof reqMajor !== 'number' || typeof reqMinor !== 'number') {
+      const reqMajor = majorVerSnap.get("major");
+      const reqMinor = majorVerSnap.get("minor");
+      if (typeof reqMajor !== "number" || typeof reqMinor !== "number") {
         return;
       }
       if (!((appMajor === reqMajor && appMinor >= reqMinor) || appMajor > reqMajor)) {
         // App needs an update
         const showUpdateMessage = () => {
           showMessage(
-            'Your version of the DanceBlue mobile app is out of date and must be updated before you can use it.',
-            'Old version',
+            "Your version of the DanceBlue mobile app is out of date and must be updated before you can use it.",
+            "Old version",
             showUpdateMessage
           );
         };
         showUpdateMessage();
       } else {
-        getDoc(doc(firebaseFirestore, '__VERSION/current'))
+        getDoc(doc(firebaseFirestore, "__VERSION/current"))
           .then((latestVerSnap) => {
             // Parse latest version
-            const currMajor = latestVerSnap.get('major');
-            const currMinor = latestVerSnap.get('minor');
-            if (typeof currMajor !== 'number' || typeof currMinor !== 'number') {
+            const currMajor = latestVerSnap.get("major");
+            const currMinor = latestVerSnap.get("minor");
+            if (typeof currMajor !== "number" || typeof currMinor !== "number") {
               return;
             }
             if (!((appMajor === currMajor && appMinor >= currMinor) || appMajor > currMajor)) {
-              showMessage('A new version of the DanceBlue app is available.', 'Update available');
+              showMessage("A new version of the DanceBlue app is available.", "Update available");
             }
           })
           .catch();
@@ -119,12 +119,96 @@ let hasPushRegistrationObserverFired = false;
 const pushRegistrationObserver = store.subscribe(() => {
   // This will run on every redux state update until a uuid is set when it will try to register for push notifications
   if (!hasPushRegistrationObserverFired && store.getState().notification.uuid) {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "DanceBlue",
+        body: "You have a new message!",
+        data: {
+          url: "exp://192.168.1.101:19000/--/",
+        },
+      },
+      trigger: {
+        seconds: 1,
+      },
+    });
     hasPushRegistrationObserverFired = true;
     store.dispatch(registerPushNotifications());
     pushRegistrationObserver();
   }
 });
 
+const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
+  prefixes: [Linking.createURL("/"), "https://www.danceblue.org/redirect/"],
+  config: {
+    initialRouteName: "Main",
+    screens: {
+      Main: {
+        initialRouteName: "Tab",
+        screens: {
+          Tab: {
+            initialRouteName: "Home",
+            screens: {
+              Home: { path: "" },
+              Scoreboard: "team-rankings",
+              Team: "my-team",
+              Store: "dancebluetique",
+              Donate: "donate",
+              HoursScreen: "marathon",
+            },
+          },
+          Profile: { path: "app-profile" },
+          Notifications: { path: "app-notifications" },
+          Event: { path: "event/:id" },
+        },
+      },
+    },
+  },
+  async getInitialURL(): Promise<string> {
+    // First, you may want to do the default deep link handling
+    // Check if app was opened from a deep link
+    let url = await Linking.getInitialURL();
+
+    if (url != null) {
+      console.log(1);
+      console.log(url);
+      return url;
+    }
+
+    // Handle URL from expo push notifications
+    const response = await Notifications.getLastNotificationResponseAsync();
+    url = response?.notification.request.content.data.url as string;
+
+    console.log(2);
+    console.log(url);
+
+    return url;
+  },
+  subscribe(listener) {
+    const onReceiveURL = ({ url }: { url: string }) => listener(url);
+
+    // Listen to incoming links from deep linking
+    Linking.addEventListener("url", onReceiveURL);
+
+    // Listen to expo push notifications
+    const expoSubscription = Notifications.addNotificationResponseReceivedListener((response) => {
+      const url = response.notification.request.content.data.url as string;
+
+      // Let React Navigation handle the URL
+
+      console.log(url);
+      listener(url);
+    });
+
+    return () => {
+      // Clean up the event listeners
+      Linking.removeEventListener("url", onReceiveURL);
+
+      if (expoSubscription) {
+        expoSubscription.remove();
+      }
+    };
+  },
+};
 /**
  * Main app container
  */
@@ -138,7 +222,7 @@ const App = () => {
         if (!state.isConnected && !isOfflineInternal.current) {
           isOfflineInternal.current = true;
           showMessage(
-            'You seem to be offline, some functionality may be unavailable or out of date'
+            "You seem to be offline, some functionality may be unavailable or out of date"
           );
           store.dispatch(appConfigSlice.actions.goOffline());
           store.dispatch(authSlice.actions.loginOffline());
@@ -154,7 +238,7 @@ const App = () => {
   );
 
   if (assetError) {
-    showMessage(assetError, 'Error loading assets');
+    showMessage(assetError, "Error loading assets");
   }
 
   if (!assets && hasPushRegistrationObserverFired) {
@@ -165,80 +249,7 @@ const App = () => {
     <Provider store={store}>
       <ThemeProvider theme={rnElementsTheme}>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
-        <NavigationContainer
-          linking={
-            // From https://docs.expo.dev/versions/latest/sdk/notifications/#handling-push-notifications-with-react-navigation
-            {
-              prefixes: ['danceblue://'],
-              config: {
-                screens: {
-                  Main: {
-                    initialRouteName: 'Tab',
-                    screens: {
-                      Tab: {
-                        screens: {
-                          Home: 'redirect',
-                          Scoreboard: 'redirect/team-rankings',
-                          Team: 'redirect/my-team',
-                          Store: 'redirect/dancebluetique',
-                          Donate: 'redirect/donate',
-                          HoursScreen: 'redirect/marathon',
-                        },
-                      },
-                      Profile: 'redirect/app-profile',
-                      Notifications: 'redirect/app-notifications',
-                    },
-                  },
-                  DefaultRoute: '*',
-                },
-              },
-              async getInitialURL(): Promise<string> {
-                // First, you may want to do the default deep link handling
-                // Check if app was opened from a deep link
-                let url = await Linking.getInitialURL();
-
-                if (url != null) {
-                  return url;
-                }
-
-                // Handle URL from expo push notifications
-                const response = await Notifications.getLastNotificationResponseAsync();
-                url = response?.notification.request.content.data.url as string;
-
-                return url;
-              },
-              subscribe(listener) {
-                const onReceiveURL = ({ url }: { url: string }) => listener(url);
-
-                // Listen to incoming links from deep linking
-                const deepLinkSubscription = Linking.addEventListener('url', onReceiveURL);
-
-                // Listen to expo push notifications
-                const expoSubscription = Notifications.addNotificationResponseReceivedListener(
-                  (response) => {
-                    const url = response.notification.request.content.data.url as string;
-
-                    // Any custom logic to see whether the URL needs to be handled
-                    // ...
-
-                    // Let React Navigation handle the URL
-                    listener(url);
-                  }
-                );
-
-                return () => {
-                  // Clean up the event listeners
-                  if (deepLinkSubscription) {
-                    deepLinkSubscription.remove();
-                  }
-                  if (expoSubscription) {
-                    expoSubscription.remove();
-                  }
-                };
-              },
-            }
-          }
-        >
+        <NavigationContainer linking={navLinking}>
           <RootScreen />
         </NavigationContainer>
       </ThemeProvider>

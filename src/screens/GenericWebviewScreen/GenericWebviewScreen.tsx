@@ -1,8 +1,7 @@
-/// <reference types="react" />
-import React, { useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
-import { WebView } from 'react-native-webview';
-import { globalStyles } from '../../theme';
+import { useState } from "react";
+import { ActivityIndicator, View } from "react-native";
+import { WebView } from "react-native-webview";
+import { globalStyles } from "../../theme";
 
 /**
  * A simple screen wrapper for a webview
@@ -35,7 +34,7 @@ const GenericWebviewScreen = ({ route }) => {
     <View style={globalStyles.genericView}>
       {isWebpageLoading && <ActivityIndicator />}
       <WebView
-        source={{ uri: 'https://www.danceblue.org/404/' }}
+        source={{ uri: "https://www.danceblue.org/404/" }}
         onLoadEnd={() => setIsWebpageLoading(false)}
       />
     </View>

@@ -1,8 +1,7 @@
-import React from 'react';
-import { View, Image, StyleSheet, ActivityIndicator } from 'react-native';
-import { Text } from 'react-native-elements';
-import { MaterialIcons } from '@expo/vector-icons';
-import { useFirebaseStorageUrl } from '../CustomHooks.ts';
+import { View, Image, StyleSheet, ActivityIndicator } from "react-native";
+import { Text } from "react-native-elements";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useFirebaseStorageUrl } from "../CustomHooks.ts";
 
 /**
  * A badge icon for use with profiles
@@ -28,13 +27,13 @@ const Badge = ({ imageURL, name }) => {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: "center",
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   icon: {
-    width: 50,
     height: 50,
+    width: 50,
   },
 });
 

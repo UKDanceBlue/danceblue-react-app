@@ -1,4 +1,4 @@
-export type UserLoginType = 'anonymous' | 'ms-oath-linkblue';
+export type UserLoginType = "anonymous" | "ms-oath-linkblue";
 type UserDataType = {
   firstName: string;
   lastName: string;

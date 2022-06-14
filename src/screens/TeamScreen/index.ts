@@ -1,3 +1,3 @@
-import TeamScreen from './TeamScreen';
+import TeamScreen from "./TeamScreen";
 
 export default TeamScreen;

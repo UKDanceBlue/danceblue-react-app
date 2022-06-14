@@ -1,11 +1,10 @@
-/// <reference types="react" />
-import React, { useEffect, useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
-import { Text } from 'react-native-elements';
-import { collection, getDocs } from 'firebase/firestore';
-import SponsorCard from '../../common/components/ImageCard';
-import { firebaseFirestore } from '../../common/FirebaseApp';
-import { FirestoreSponsor } from '../../types/FirebaseTypes';
+import { useEffect, useState } from "react";
+import { View, ScrollView, StyleSheet } from "react-native";
+import { Text } from "react-native-elements";
+import { collection, getDocs } from "firebase/firestore";
+import SponsorCard from "../../common/components/ImageCard";
+import { firebaseFirestore } from "../../common/FirebaseApp";
+import { FirestoreSponsor } from "../../types/FirebaseTypes";
 
 interface SponsorType extends FirestoreSponsor {
   id: string;
@@ -21,7 +20,7 @@ const SponsorCarousel = () => {
     let shouldUpdateState = true;
     async function getSnapshot() {
       const dbSponsors: SponsorType[] = [];
-      const snapshot = await getDocs(collection(firebaseFirestore, 'sponsors'));
+      const snapshot = await getDocs(collection(firebaseFirestore, "sponsors"));
       snapshot.forEach((document) => {
         dbSponsors.push({ ...document.data(), id: document.id });
       });
@@ -63,25 +62,25 @@ const SponsorCarousel = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    overflow: 'hidden',
-  },
-  sponsorView: {
-    padding: 5,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    backgroundColor: 'white',
-    flex: 1,
-  },
-  sponsorTitle: {
-    color: 'black',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  sponsorTitleView: {},
   cardScrollView: {
     height: 170,
     marginTop: 5,
+  },
+  container: {
+    overflow: "hidden",
+  },
+  sponsorTitle: {
+    color: "black",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  sponsorTitleView: {},
+  sponsorView: {
+    alignItems: "flex-start",
+    backgroundColor: "white",
+    flex: 1,
+    justifyContent: "flex-start",
+    padding: 5,
   },
 });
 
