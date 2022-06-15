@@ -8,10 +8,7 @@
     "notification": {
       "icon": "./assets/icon.png"
     },
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "version": "1.4.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,14 +24,15 @@
           "photosPermission": "The app accesses your photos to allow you to submit images for various DanceBlue activities.",
           "cameraPermission": "The app accesses your camera to allow you to submit images for various DanceBlue activities."
         }
-      ]
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
+      "expo-dev-client"
     ],
     "updates": {
       "enabled": false
     },
-    "assetBundlePatterns": [
-      "assets/**"
-    ],
+    "assetBundlePatterns": ["assets/**"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.danceblue.app",
@@ -45,19 +43,13 @@
       "infoPlist": {
         "NSRemindersUsageDescription": "Users may add DanceBlue events to their calendar."
       },
-      "associatedDomains": [
-        "https://www.danceblue.org"
-      ]
+      "associatedDomains": ["https://www.danceblue.org"],
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "package": "org.danceblue.app",
       "versionCode": 23,
-      "permissions": [
-        "WRITE_CALENDAR",
-        "READ_CALENDAR",
-        "CAMERA",
-        ""
-      ],
+      "permissions": ["WRITE_CALENDAR", "READ_CALENDAR", "CAMERA"],
       "googleServicesFile": "./google-services.json",
       "intentFilters": [
         {
@@ -69,10 +61,7 @@
               "pathPrefix": "/redirect"
             }
           ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ]
     },
