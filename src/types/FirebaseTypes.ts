@@ -1,5 +1,6 @@
-import { DocumentReference, Timestamp } from 'firebase/firestore';
-import { HourInstructionsType, SpecialComponentType } from './HourScreenTypes';
+import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+
+import { HourInstructionsType, SpecialComponentType } from "./HourScreenTypes";
 
 export interface FirestoreUser {
   attributes?: { [key: string]: string };
@@ -7,8 +8,8 @@ export interface FirestoreUser {
   firstName: string | null;
   lastName: string | null;
   linkblue?: string | null;
-  team?: DocumentReference | null;
-  pastNotifications?: DocumentReference[] | null;
+  team?: FirebaseFirestoreTypes.DocumentReference | null;
+  pastNotifications?: FirebaseFirestoreTypes.DocumentReference[] | null;
 }
 
 export interface FirestoreTeam {
@@ -36,7 +37,7 @@ export interface FirestoreSponsor {
 export interface FirestoreNotification {
   body: string;
   data?: { [key: string]: any };
-  sendTime: Timestamp;
+  sendTime: FirebaseFirestoreTypes.Timestamp;
   sound: string;
   title: string;
 }
@@ -46,8 +47,8 @@ export interface FirestoreEvent {
   description: string;
   image?: string;
   address?: string;
-  startTime?: Timestamp;
-  endTime?: Timestamp;
+  startTime?: FirebaseFirestoreTypes.Timestamp;
+  endTime?: FirebaseFirestoreTypes.Timestamp;
 }
 
 export interface FirestoreDevice {
@@ -57,10 +58,10 @@ export interface FirestoreDevice {
 }
 
 export interface FirestoreMobileAppConfig {
-  countdown: { time: Timestamp; title: string };
+  countdown: { time: FirebaseFirestoreTypes.Timestamp; title: string };
   currentTabs: string[];
   scoreboard: {
-    pointType: 'spirit' | 'morale';
+    pointType: "spirit" | "morale";
     showIcons: boolean;
     showTrophies: boolean;
   };
@@ -73,20 +74,20 @@ export interface FirestoreHour {
   name: string;
   description?: string;
   contentOrder: (
-    | 'text-instructions'
-    | 'gs-image'
-    | 'http-image'
-    | 'button'
-    | 'special'
-    | 'text-block'
-    | 'photo-upload'
-    | 'dad-joke-leaderboard'
+    | "text-instructions"
+    | "gs-image"
+    | "http-image"
+    | "button"
+    | "special"
+    | "text-block"
+    | "photo-upload"
+    | "dad-joke-leaderboard"
   )[];
-  textInstructions?: HourInstructionsType; // text-instructions
-  firebaseImageUri?: string | string[]; // gs-image
-  imageUri?: string | string[]; // http-image
-  buttonConfig?: { text: string; url: string } | { text: string; url: string }[]; // button
-  specialComponent?: SpecialComponentType | SpecialComponentType[]; // special
+  textInstructions?: HourInstructionsType; // Text-instructions
+  firebaseImageUri?: string | string[]; // Gs-image
+  imageUri?: string | string[]; // Http-image
+  buttonConfig?: { text: string; url: string } | { text: string; url: string }[]; // Button
+  specialComponent?: SpecialComponentType | SpecialComponentType[]; // Special
   textBlock?: string | string[];
 }
 

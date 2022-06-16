@@ -1,10 +1,11 @@
-import * as WebBrowser from "expo-web-browser";
+import auth from "@react-native-firebase/auth";
 import * as Linking from "expo-linking";
-import { linkWithCredential, signInWithCredential, signOut, OAuthProvider } from "firebase/auth";
-import { showMessage } from "./AlertUtils";
-import { firebaseAuth } from "./FirebaseApp";
+import * as WebBrowser from "expo-web-browser";
+
 import { loginSaml } from "../redux/authSlice";
 import store from "../redux/store";
+
+import { showMessage } from "./AlertUtils";
 
 let browserOpen = false;
 export default class SingleSignOn {
@@ -22,7 +23,7 @@ export default class SingleSignOn {
    * unavailable in React Native, and then passing the auth credential back to the app in
    * the query string of the expo-linking url
    */
-  async authenticate(operation) {
+  async authenticate(operation: string) {
     if (!store.getState().appConfig.ssoEnabled) {
       showMessage(
         "This is not a bug, the DanceBlue Committee has disabled SSO. This may or may not be temporary",
@@ -38,6 +39,7 @@ export default class SingleSignOn {
       // Open a browser that goes to backendUrl and passes the desired operation, firebase config, and a link back to the app
       const result = await WebBrowser.openAuthSessionAsync(
         `${this.backendUrl}?linkingUri=${Linking.createURL(`/${operation}`)}`,
+        // @ts-ignore
         undefined
       )
         .catch((reason) => {
@@ -48,33 +50,33 @@ export default class SingleSignOn {
         });
       if (typeof result === "object") {
         switch (result?.type) {
-          case WebBrowser.WebBrowserResultType.CANCEL:
-          case WebBrowser.WebBrowserResultType.DISMISS:
-          case WebBrowser.WebBrowserResultType.LOCKED:
-            showMessage("Sign in cancelled", "Browser closed");
-            break;
-          case "success":
-            if (result?.url) {
-              this.redirectData = Linking.parse(result.url);
-            }
-            break;
-          case null:
-          case undefined:
-            showMessage("Browser did not respond.\nSign in failed", "No response", undefined, true);
-            return;
-          default:
-            showMessage(
-              `Browser responded with type ${result.type}`,
-              "Unexpected response",
-              undefined,
-              true,
-              result
-            );
-            break;
+        case WebBrowser.WebBrowserResultType.CANCEL:
+        case WebBrowser.WebBrowserResultType.DISMISS:
+        case WebBrowser.WebBrowserResultType.LOCKED:
+          showMessage("Sign in cancelled", "Browser closed");
+          break;
+        case "success":
+          if (result?.url) {
+            this.redirectData = Linking.parse(result.url);
+          }
+          break;
+        case null:
+        case undefined:
+          showMessage("Browser did not respond.\nSign in failed", "No response", undefined, true);
+          return;
+        default:
+          showMessage(
+            `Browser responded with type ${result.type}`,
+            "Unexpected response",
+            undefined,
+            true,
+            result
+          );
+          break;
         }
       }
     } catch (error) {
-      showMessage(error, "Error with web browser");
+      showMessage(error as Error, "Error with web browser");
       return;
     }
 
@@ -92,28 +94,12 @@ export default class SingleSignOn {
     // IdP data available in result.additionalUserInfo.profile.
 
     // Get the OAuth access token and ID Token
-    const credential = OAuthProvider.credentialFromResult(oAuthResult);
-    const { accessToken } = credential;
-    const { idToken } = credential;
-
-    // AUTH FLOW IS OK UP TO HERE, AFTER THIS IT NEEDS TO BE UPDATED FROM OLD SAML BASED CODE
+    const credential = auth.OAuthProvider.credential(oAuthResult);
 
     // This is only used here because we are about to sign in again // TODO: replace with https://firebase.google.com/docs/auth/web/anonymous-auth#convert-an-anonymous-account-to-a-permanent-account
-    if (firebaseAuth.currentUser && firebaseAuth.currentUser.isAnonymous) {
-      linkWithCredential(firebaseAuth.currentUser, credential)
-        .then((userCredential) => {
-          store.dispatch(loginSaml(userCredential));
-        })
-        .catch(async () => {
-          showMessage(
-            "The data from your anonymous account could not be transferred to your SSO account. Sign in was successful.",
-            "Problem transferring data"
-          );
-          await signOut(firebaseAuth);
-          store.dispatch(loginSaml(await signInWithCredential(firebaseAuth, credential)));
-        });
-    } else {
-      store.dispatch(loginSaml(await signInWithCredential(firebaseAuth, credential)));
+    if (auth().currentUser) {
+      await auth().signOut();
     }
+    store.dispatch(loginSaml(await auth().signInWithCredential(credential)));
   }
 }
