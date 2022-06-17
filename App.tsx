@@ -6,20 +6,19 @@ import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
 import * as Application from "expo-application";
 import { useAssets } from "expo-asset";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
-import { onAuthStateChanged } from "firebase/auth";
 import { Provider } from "react-redux";
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
 import "./src/common/AndroidTimerFix";
 import { ThemeProvider } from "react-native-elements";
-import { doc, getDoc } from "firebase/firestore";
 import RootScreen from "./src/navigation/RootScreen";
 import { showMessage } from "./src/common/AlertUtils";
 
 import store from "./src/redux/store";
-import { authSlice, logout, syncAuthStateWithUser } from "./src/redux/authSlice";
-import { firebaseAuth, firebaseFirestore } from "./src/common/FirebaseApp";
+import { authSlice, updateUserData } from "./src/redux/authSlice";
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 import { obtainUuid, registerPushNotifications } from "./src/redux/notificationSlice";
 import { appConfigSlice, updateConfig } from "./src/redux/appConfigSlice";
 import { rnElementsTheme } from "./src/theme";
@@ -55,18 +54,20 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const firstTimeSync = onAuthStateChanged(firebaseAuth, (user) => {
+SplashScreen.preventAutoHideAsync();
+
+const firstTimeSync = auth().onAuthStateChanged((user) => {
   if (user) {
     // This will run after auth is initialized and never again
-    store.dispatch(syncAuthStateWithUser(user));
+    // TODO
   } else {
-    store.dispatch(logout());
+    // TODO
   }
+
   store.dispatch(obtainUuid());
   store.dispatch(updateConfig());
 
-  getDoc(doc(firebaseFirestore, "__VERSION/required"))
-    .then((majorVerSnap) => {
+  firestore().doc("__VERSION/required").get().then((majorVerSnap) => {
       // Parse app version
       const versionTokens = Application.nativeApplicationVersion?.split(".", 2);
       let appMajor = Number.parseInt(versionTokens?.[0] || "0", 10);
@@ -95,8 +96,7 @@ const firstTimeSync = onAuthStateChanged(firebaseAuth, (user) => {
         };
         showUpdateMessage();
       } else {
-        getDoc(doc(firebaseFirestore, "__VERSION/current"))
-          .then((latestVerSnap) => {
+        firestore().doc("__VERSION/current").get().then((latestVerSnap) => {
             // Parse latest version
             const currMajor = latestVerSnap.get("major");
             const currMinor = latestVerSnap.get("minor");
@@ -140,7 +140,6 @@ const pushRegistrationObserver = store.subscribe(() => {
 const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
   prefixes: [Linking.createURL("/"), "https://www.danceblue.org/redirect/"],
   config: {
-    initialRouteName: "Main",
     screens: {
       Main: {
         initialRouteName: "Tab",
@@ -224,13 +223,13 @@ const App = () => {
           showMessage(
             "You seem to be offline, some functionality may be unavailable or out of date"
           );
-          store.dispatch(appConfigSlice.actions.goOffline());
+          // store.dispatch(appConfigSlice.actions.goOffline()); TODO Reimplement
           store.dispatch(authSlice.actions.loginOffline());
         } else if (isOfflineInternal.current) {
-          store.dispatch(appConfigSlice.actions.goOnline());
-          if (firebaseAuth.currentUser) {
-            store.dispatch(syncAuthStateWithUser(firebaseAuth.currentUser));
-          }
+          // store.dispatch(appConfigSlice.actions.goOnline());
+          // if (firebaseAuth.currentUser) {
+          //   store.dispatch(syncAuthStateWithUser(firebaseAuth.currentUser));
+          // }
           isOfflineInternal.current = false;
         }
       }),
@@ -242,8 +241,10 @@ const App = () => {
   }
 
   if (!assets && hasPushRegistrationObserverFired) {
-    return <AppLoading />;
+    return null;
   }
+
+  SplashScreen.hideAsync();
 
   return (
     <Provider store={store}>

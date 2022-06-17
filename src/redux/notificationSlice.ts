@@ -2,12 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as Notifications from "expo-notifications";
 import * as SecureStore from "expo-secure-store";
 import * as Device from "expo-device";
-import { doc, setDoc } from "firebase/firestore";
 import { ExpoPushToken } from "expo-notifications";
 import { showMessage } from "../common/AlertUtils";
-import { firebaseFirestore } from "../common/FirebaseApp";
 import { globalColors } from "../theme";
 import generateUuid from "../common/GenerateUuid";
+import firestore from "@react-native-firebase/firestore";
 
 const uuidStoreKey = __DEV__ ? "danceblue.device-uuid.dev" : "danceblue.device-uuid";
 
@@ -33,7 +32,8 @@ export const obtainUuid = createAsyncThunk("notification/obtainUuid", async () =
       return uuid;
     }
 
-    uuid = generateUuid();
+    uuid = generateUuid() as string;
+
     await SecureStore.setItemAsync(uuidStoreKey, uuid, {
       keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
     });
@@ -91,9 +91,7 @@ export const registerPushNotifications = createAsyncThunk<
         const { uuid } = thunkApi.getState().notification;
         if (uuid) {
           // Store the push notification token in firebase
-          await setDoc(
-            doc(firebaseFirestore, "devices", uuid),
-            {
+          await firestore().doc(`devices/${uuid}`).set({
               expoPushToken: token.data || null,
             },
             { mergeFields: ["expoPushToken"] }
@@ -128,13 +126,13 @@ export const notificationSlice = createSlice({
         state.uuid = action.payload;
       })
       .addCase(obtainUuid.rejected, (state, action) => {
-        showMessage(action.error.message, action.error.code, null, true, action.error.stack);
+        showMessage(action.error.message ?? 'Undefined Error', action.error.code, undefined, true, action.error.stack);
       })
 
       .addCase(registerPushNotifications.fulfilled, (state, action) => {
         state.notificationPermissionsGranted = action.payload.notificationPermissionsGranted;
         if (action.payload.notificationPermissionsGranted) {
-          state.pushToken = action.payload.token.data;
+          state.pushToken = action.payload.token?.data ?? null;
         }
       })
       .addCase(registerPushNotifications.rejected, (state, action) => {
@@ -153,7 +151,7 @@ export const notificationSlice = createSlice({
               );
           }
         } else {
-          showMessage(action.error.message, action.error.code, null, true, action.error.stack);
+          showMessage(action.error.message ?? 'Undefined Error', action.error.code, undefined, true, action.error.stack);
         }
       });
   },

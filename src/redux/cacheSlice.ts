@@ -1,4 +1,3 @@
-import { type } from "os";
 import { FirestoreNotification } from "../types/FirebaseTypes";
 
 type CachedData<DataType> = {

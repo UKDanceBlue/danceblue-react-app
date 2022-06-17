@@ -2,7 +2,7 @@ import auth from "@react-native-firebase/auth";
 import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 
-import { loginSaml } from "../redux/authSlice";
+import { loginSSO } from "../redux/authSlice";
 import store from "../redux/store";
 
 import { showMessage } from "./AlertUtils";
@@ -11,7 +11,7 @@ let browserOpen = false;
 export default class SingleSignOn {
   backendUrl;
 
-  redirectData;
+  redirectData?: Linking.ParsedURL;
 
   constructor() {
     this.backendUrl = "https://app.danceblue.org/saml-relay.html";
@@ -23,8 +23,8 @@ export default class SingleSignOn {
    * unavailable in React Native, and then passing the auth credential back to the app in
    * the query string of the expo-linking url
    */
-  async authenticate(operation: string) {
-    if (!store.getState().appConfig.ssoEnabled) {
+  async authenticate(operation: string, ssoEnabled: boolean) {
+    if (ssoEnabled) {
       showMessage(
         "This is not a bug, the DanceBlue Committee has disabled SSO. This may or may not be temporary",
         "Single Sign On has been disabled"
@@ -90,16 +90,15 @@ export default class SingleSignOn {
       return;
     }
 
-    const oAuthResult = JSON.parse(this.redirectData.queryParams.credential);
-    // IdP data available in result.additionalUserInfo.profile.
+    const oAuthResult = JSON.parse(this.redirectData.queryParams.token);
 
     // Get the OAuth access token and ID Token
-    const credential = auth.OAuthProvider.credential(oAuthResult);
+    const credential = auth.OAuthProvider.credential(oAuthResult.accessToken ?? null, oAuthResult.secret ?? null);
 
     // This is only used here because we are about to sign in again // TODO: replace with https://firebase.google.com/docs/auth/web/anonymous-auth#convert-an-anonymous-account-to-a-permanent-account
     if (auth().currentUser) {
       await auth().signOut();
     }
-    store.dispatch(loginSaml(await auth().signInWithCredential(credential)));
+    store.dispatch(loginSSO(await auth().signInWithCredential(credential)));
   }
 }

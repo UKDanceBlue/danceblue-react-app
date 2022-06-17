@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getAll } from "firebase/remote-config";
+import firebaseRemoteConfig from "@react-native-firebase/remote-config";
 import { showMessage } from "../common/AlertUtils";
-import { firebaseRemoteConfig } from "../common/FirebaseApp";
 import { UserLoginType } from "./userDataSlice";
 
 type AppConfigSliceType = {
@@ -25,8 +24,11 @@ const initialState: AppConfigSliceType = {
 export const updateConfig = createAsyncThunk(
   "appConfig/updateConfig",
   async (): Promise<Partial<AppConfigSliceType>> => {
-    const remoteConfig = getAll(firebaseRemoteConfig);
-    console.log(remoteConfig);
+    await firebaseRemoteConfig().fetchAndActivate();
+    const remoteConfig = firebaseRemoteConfig().getAll();
+    console.log("Remote config:", remoteConfig);
+
+    return {};
   }
 );
 

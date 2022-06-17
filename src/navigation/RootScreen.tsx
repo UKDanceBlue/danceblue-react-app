@@ -1,12 +1,10 @@
 import { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ActivityIndicator } from "react-native";
-import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import SplashLogin from "../screens/Modals/SplashLogin";
 import MainStackRoot from "./MainStackRoot";
 import GenericWebviewScreen from "../screens/GenericWebviewScreen";
 import { globalColors } from "../theme";
-import { firebaseFirestore } from "../common/FirebaseApp";
 import { useAppSelector } from "../common/CustomHooks";
 import { RootStackParamList } from "../types/NavigationTypes";
 
@@ -37,20 +35,20 @@ const RootScreen = () => {
 
           // Add any attributes with isAudience to the audiences array
           for (let i = 0; i < attributeNames.length; i++) {
-            audiencePromises.push(
-              getDoc(doc(firebaseFirestore, "valid-attributes", attributeNames[i]))
-            );
+            // audiencePromises.push(
+              // getDoc(doc(firebaseFirestore, "valid-attributes", attributeNames[i])) TODO switch to remote config
+            // );
           }
-          await Promise.all(audiencePromises).then((audienceDocs) => {
-            for (let i = 0; i < audienceDocs.length; i++) {
-              const attributeData = audienceDocs[i].data();
-              const attributeName = audienceDocs[i].ref.id;
-              const userAttributeValue = userAttributes[attributeName];
-              if (attributeName === "team" || attributeData[userAttributeValue].isAudience) {
-                audiences.push(userAttributeValue);
-              }
-            }
-          });
+          // await Promise.all(audiencePromises).then((audienceDocs) => {
+          //   for (let i = 0; i < audienceDocs.length; i++) {
+          //     const attributeData = audienceDocs[i].data();
+          //     const attributeName = audienceDocs[i].ref.id;
+          //     const userAttributeValue = userAttributes[attributeName];
+          //     if (attributeName === "team" || attributeData[userAttributeValue].isAudience) {
+          //       audiences.push(userAttributeValue);
+          //     }
+          //   }
+          // });
         }
 
         // If the user is on a team, add the team ID as an audience
@@ -58,15 +56,15 @@ const RootScreen = () => {
           audiences.push(userTeamId);
         }
 
-        await setDoc(
-          doc(firebaseFirestore, "devices", uuid),
-          {
-            latestUserId: userId || null,
-            audiences,
-            lastConnected: Timestamp.now(),
-          },
-          { mergeFields: ["latestUserId", "audiences", "lastConnected"] }
-        );
+        // await setDoc(
+        //   doc(firebaseFirestore, "devices", uuid),
+        //   {
+        //     latestUserId: userId || null,
+        //     audiences,
+        //     lastConnected: Timestamp.now(),
+        //   },
+        //   { mergeFields: ["latestUserId", "audiences", "lastConnected"] }
+        // ); TODO reimplement
       }
     })();
   }, [userAttributes, isAuthLoaded, userTeamId, userId, uuid]);

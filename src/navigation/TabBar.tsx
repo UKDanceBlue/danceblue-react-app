@@ -25,8 +25,8 @@ const possibleTabs = {
 
 const TabBar = () => {
   const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
-  const configuredTabs = useAppSelector((state) => state.appConfig.configuredTabs);
-  const demoMode = useAppSelector((state) => state.appConfig.demoMode);
+  const configuredTabs = useAppSelector((state) => state.appConfig.enabledScreens);
+  const demoMode = false // useAppSelector((state) => state.appConfig.demoMode); TODO reimplement
 
   const [currentTabs, setCurrentTabs] = useState<JSX.Element[]>([]);
 
