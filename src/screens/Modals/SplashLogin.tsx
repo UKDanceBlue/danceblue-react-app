@@ -1,11 +1,11 @@
-import { TouchableOpacity, StyleSheet, View, ImageBackground, Dimensions } from "react-native";
+import { Dimensions, ImageBackground, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native-elements";
 
 import SingleSignOn from "../../common/SingleSignOn";
+import { loginAnon } from "../../redux/authSlice";
+import store from "../../redux/store";
 import { globalStyles, globalTextStyles } from "../../theme";
 
-import store from "../../redux/store";
-import { loginAnon } from "../../redux/authSlice";
 
 const splashBackground = require("../../../assets/home/Dancing-min.jpg");
 
@@ -65,9 +65,7 @@ const localStyles = {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
   },
-  textContainerWithBackground: StyleSheet.compose(globalStyles.genericView, {
-    backgroundColor: "#FFFFFF99",
-  }),
+  textContainerWithBackground: StyleSheet.compose(globalStyles.genericView, { backgroundColor: "#FFFFFF99" }),
 };
 
 export default SplashLoginScreen;

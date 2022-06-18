@@ -1,16 +1,17 @@
-import { useState } from "react";
-import { View, ActivityIndicator, TextInput, ImageSourcePropType } from "react-native";
-import { Text, Button, Image } from "react-native-elements";
-import * as Linking from "expo-linking";
-import { useAssets } from "expo-asset";
 import { nativeApplicationVersion } from "expo-application";
+import { useAssets } from "expo-asset";
+import * as Linking from "expo-linking";
+import { useState } from "react";
+import { ActivityIndicator, ImageSourcePropType, TextInput, View } from "react-native";
+import { Button, Image, Text } from "react-native-elements";
+
 import { useAppSelector } from "../../common/CustomHooks";
 import SingleSignOn from "../../common/SingleSignOn";
-import { globalStyles, globalColors, globalTextStyles } from "../../theme";
-
-import store from "../../redux/store";
-import { authSlice, logout } from "../../redux/authSlice";
 import { appConfigSlice } from "../../redux/appConfigSlice";
+import { authSlice, logout } from "../../redux/authSlice";
+import store from "../../redux/store";
+import { globalColors, globalStyles, globalTextStyles } from "../../theme";
+
 
 /**
  * Component for "Profile" screen in main navigation
@@ -19,9 +20,15 @@ const ProfileScreen = () => {
   const userData = useAppSelector((state) => state.auth);
   const demoModeKey = useAppSelector((state) => state.appConfig.demoModeKey);
   const isOffline = useAppSelector((state) => state.appConfig.offline);
-  const [assets, error] = useAssets(require("../../../assets/avatar.png"));
-  const [reportLongPressed, setReportLongPressed] = useState(false);
-  const [suggestLongPressed, setSuggestLongPressed] = useState(false);
+  const [
+    assets, error
+  ] = useAssets(require("../../../assets/avatar.png"));
+  const [
+    reportLongPressed, setReportLongPressed
+  ] = useState(false);
+  const [
+    suggestLongPressed, setSuggestLongPressed
+  ] = useState(false);
 
   return (
     <View style={{ alignItems: "center", ...globalStyles.genericView }}>
@@ -43,34 +50,34 @@ const ProfileScreen = () => {
               {
                 /* Start of logged in view */ userData.isLoggedIn &&
                   !userData.isAnonymous && (
-                    <>
-                      <Text style={globalStyles.genericText}>
+                  <>
+                    <Text style={globalStyles.genericText}>
                         You are logged in as {userData.firstName} {userData.lastName}
-                      </Text>
-                      <Text style={globalTextStyles.italicText}>{userData.email}</Text>
-                      <Button
-                        style={{ margin: 10, alignSelf: "center" }}
-                        onPress={() => store.dispatch(logout())}
-                        title="Log out"
-                      />
-                    </>
-                  ) /* End of logged in view */
+                    </Text>
+                    <Text style={globalTextStyles.italicText}>{userData.email}</Text>
+                    <Button
+                      style={{ margin: 10, alignSelf: "center" }}
+                      onPress={() => store.dispatch(logout())}
+                      title="Log out"
+                    />
+                  </>
+                ) /* End of logged in view */
               }
               {
                 /* Start of logged in anonymously view */ userData.isLoggedIn &&
                   userData.isAnonymous && (
-                    <>
-                      <Text>You are logged in {isOffline ? "offline" : "anonymously"}</Text>
-                      <Button
-                        style={{ margin: 10, alignSelf: "center" }}
-                        onPress={() => {
-                          const sso = new SingleSignOn();
-                          sso.authenticate("saml-sign-in");
-                        }}
-                        title="Log in"
-                      />
-                    </>
-                  ) /* End of logged in anonymously view */
+                  <>
+                    <Text>You are logged in {isOffline ? "offline" : "anonymously"}</Text>
+                    <Button
+                      style={{ margin: 10, alignSelf: "center" }}
+                      onPress={() => {
+                        const sso = new SingleSignOn();
+                        sso.authenticate("saml-sign-in");
+                      }}
+                      title="Log in"
+                    />
+                  </>
+                ) /* End of logged in anonymously view */
               }
               {
                 /* Start of logged out view */ !userData.isLoggedIn && (

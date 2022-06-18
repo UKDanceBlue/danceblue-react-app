@@ -1,6 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import firebaseRemoteConfig from "@react-native-firebase/remote-config";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
 import { showMessage } from "../common/AlertUtils";
+
 import { UserLoginType } from "./userDataSlice";
 
 type AppConfigSliceType = {
@@ -33,9 +35,9 @@ export const updateConfig = createAsyncThunk(
 );
 
 // Redux Toolkit allows us to write "mutating" logic in reducers. It
-// doesn't actually mutate the state because it uses the Immer library,
-// which detects changes to a "draft state" and produces a brand new
-// immutable state based off those changes
+// Doesn't actually mutate the state because it uses the Immer library,
+// Which detects changes to a "draft state" and produces a brand new
+// Immutable state based off those changes
 export const appConfigSlice = createSlice({
   name: "appConfig",
   initialState,
@@ -69,7 +71,7 @@ export const appConfigSlice = createSlice({
       })
       .addCase(updateConfig.rejected, (state, action) => {
         state.isConfigLoaded = true;
-        showMessage(action.error.message ?? '', action.error.code, undefined, true, action.error.stack);
+        showMessage(action.error.message ?? "", action.error.code, undefined, true, action.error.stack);
       });
   },
 });

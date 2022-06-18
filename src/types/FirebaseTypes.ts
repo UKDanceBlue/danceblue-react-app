@@ -1,7 +1,9 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+import { FirebaseStorageTypes } from "@react-native-firebase/storage";
 
 import { HourInstructionsType, SpecialComponentType } from "./HourScreenTypes";
 
+export type NativeFirebaseError = Parameters<FirebaseStorageTypes.TaskSnapshotObserver["error"]>[0]
 export interface FirestoreUser {
   attributes?: { [key: string]: string };
   email: string | null;

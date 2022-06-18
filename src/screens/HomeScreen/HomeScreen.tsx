@@ -1,8 +1,10 @@
 import { Linking, SafeAreaView, ScrollView } from "react-native";
 import { Button } from "react-native-elements";
+
 import { useAppSelector } from "../../common/CustomHooks";
-import SponsorCarousel from "./SponsorCarousel";
+
 import HeaderImage from "./HeaderImage";
+import SponsorCarousel from "./SponsorCarousel";
 
 /**
  * Component for home screen in main navigation
@@ -29,8 +31,6 @@ const HomeScreen = () => (
   </SafeAreaView>
 );
 
-HomeScreen.navigationOptions = {
-  title: "Home",
-};
+HomeScreen.navigationOptions = { title: "Home" };
 
 export default HomeScreen;

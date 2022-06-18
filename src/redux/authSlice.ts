@@ -247,48 +247,48 @@ export const authSlice = createSlice({
         teamIndividualSpiritPoints: null,
         teamFundraisingTotal: null,
         moraleTeamId: null,
-      }
+      };
       // {
-      //   isAuthLoaded: true,
-      //   isLoggedIn: true,
-      //   isAnonymous: false,
-      //   uid: "Xrwr8wgGA6azJL56PhGJPsvD95g2",
-      //   attributes: {
-      //     team: "jR29Y3wJ59evnRaWWKC4",
-      //     role: "dancer",
+      //   IsAuthLoaded: true,
+      //   IsLoggedIn: true,
+      //   IsAnonymous: false,
+      //   Uid: "Xrwr8wgGA6azJL56PhGJPsvD95g2",
+      //   Attributes: {
+      //     Team: "jR29Y3wJ59evnRaWWKC4",
+      //     Role: "dancer",
       //   },
-      //   pastNotifications: [
+      //   PastNotifications: [
       //     "past-notifications/kKdj538wXFc5o9BgW1Yh",
       //     "past-notifications/U5mF3dyUD96kf95qRh3f",
       //     "past-notifications/CvQe7SzDbpQnGPiEo8RI",
       //   ],
-      //   firstName: "Johnny",
-      //   lastName: "Appleseed",
-      //   email: "japl636@uky.edu",
-      //   linkblue: "japl636",
-      //   teamId: "jR29Y3wJ59evnRaWWKC4",
-      //   team: {
-      //     totalSpiritPoints: 341,
-      //     name: "Testing Team",
-      //     networkForGoodId: "0",
-      //     spiritSpreadsheetId: "Test Team",
-      //     members: {
-      //       jsmi333: "John Smith",
-      //       acba249: "Ashley Bates",
-      //       japl636: "Johnny Appleseed",
-      //       jtho264: "Tag Howard",
-      //       smca276: "Sophia Carlton",
-      //       ames223: "Abby Ison",
+      //   FirstName: "Johnny",
+      //   LastName: "Appleseed",
+      //   Email: "japl636@uky.edu",
+      //   Linkblue: "japl636",
+      //   TeamId: "jR29Y3wJ59evnRaWWKC4",
+      //   Team: {
+      //     TotalSpiritPoints: 341,
+      //     Name: "Testing Team",
+      //     NetworkForGoodId: "0",
+      //     SpiritSpreadsheetId: "Test Team",
+      //     Members: {
+      //       Jsmi333: "John Smith",
+      //       Acba249: "Ashley Bates",
+      //       Japl636: "Johnny Appleseed",
+      //       Jtho264: "Tag Howard",
+      //       Smca276: "Sophia Carlton",
+      //       Ames223: "Abby Ison",
       //     },
       //   },
-      //   teamIndividualSpiritPoints: {
-      //     jtho264: 148,
-      //     jsmi333: 46,
-      //     ames223: 0,
-      //     smca276: 70,
-      //     japl636: 77,
+      //   TeamIndividualSpiritPoints: {
+      //     Jtho264: 148,
+      //     Jsmi333: 46,
+      //     Ames223: 0,
+      //     Smca276: 70,
+      //     Japl636: 77,
       //   },
-      //   teamFundraisingTotal: { total: 13 },
+      //   TeamFundraisingTotal: { total: 13 },
       // };
       Object.assign(state, newState);
     },
@@ -320,14 +320,14 @@ export const authSlice = createSlice({
         state.moraleTeamId = action.payload.moraleTeamId ?? initialState.moraleTeamId;
       })
       .addCase(updateUserData.rejected, (state, action) => {
-        showMessage(action.error.message ?? 'Undefined Error', action.error.code, undefined, true, action.error.stack);
+        showMessage(action.error.message ?? "Undefined Error", action.error.code, undefined, true, action.error.stack);
       })
       // Anon login
       .addCase(loginAnon.pending, (state) => {
         Object.assign(state, initialState);
       })
       .addCase(loginAnon.rejected, (state, action) => {
-        showMessage(action.error.message ?? 'Undefined Error', action.error.code, undefined, true, action.error.stack);
+        showMessage(action.error.message ?? "Undefined Error", action.error.code, undefined, true, action.error.stack);
       })
       // Login SSO
       .addCase(loginSSO.pending, (state) => {
@@ -364,9 +364,9 @@ export const authSlice = createSlice({
             );
           }
         } else {
-          showMessage(action.error.message ?? 'Undefined Error', action.error.code, undefined, true, action.error.stack);
+          showMessage(action.error.message ?? "Undefined Error", action.error.code, undefined, true, action.error.stack);
         }
-      })
+      });
   },
 });
 

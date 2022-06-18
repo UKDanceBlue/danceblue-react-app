@@ -1,8 +1,7 @@
-/* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import firebaseFirestore from "@react-native-firebase/firestore";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
 import { showMessage } from "../common/AlertUtils";
-import { firebaseFirestore } from "../common/FirebaseApp";
 import { FirestoreHour, FirestoreMobileAppConfig } from "../types/FirebaseTypes";
 
 type AppConfigSliceType = {
@@ -41,22 +40,20 @@ export const updateConfig = createAsyncThunk(
   "appConfig/updateConfig",
   async (): Promise<Partial<AppConfigSliceType>> => {
     // Get app config
-    const snapshot = await getDoc(doc(firebaseFirestore, "configs", "mobile-app"));
+    const snapshot = await firebaseFirestore().doc("configs/mobile-app").get();
     const snapshotData = snapshot.data() as FirestoreMobileAppConfig;
 
     // !!!MARATHON CODE!!! Get marathon hours
-    const marathonHoursSnapshot = await getDocs(
-      collection(firebaseFirestore, "marathon", "2022/hours")
-    );
+    const marathonHoursSnapshot = await firebaseFirestore().collection("marathon/2022/hours").get();
     const marathonHours: FirestoreHour[] = [];
     marathonHoursSnapshot.forEach((docSnap) => marathonHours.push(docSnap.data() as FirestoreHour));
 
     return {
       countdown: snapshotData.countdown
         ? {
-            title: snapshotData.countdown.title,
-            millis: snapshotData.countdown.time.seconds * 1000,
-          }
+          title: snapshotData.countdown.title,
+          millis: snapshotData.countdown.time.seconds * 1000,
+        }
         : undefined,
       scoreboard: snapshotData.scoreboard,
       configuredTabs: snapshotData.currentTabs,
@@ -68,9 +65,9 @@ export const updateConfig = createAsyncThunk(
 );
 
 // Redux Toolkit allows us to write "mutating" logic in reducers. It
-// doesn't actually mutate the state because it uses the Immer library,
-// which detects changes to a "draft state" and produces a brand new
-// immutable state based off those changes
+// Doesn't actually mutate the state because it uses the Immer library,
+// Which detects changes to a "draft state" and produces a brand new
+// Immutable state based off those changes
 export const appConfigSlice = createSlice({
   name: "appConfig",
   initialState,

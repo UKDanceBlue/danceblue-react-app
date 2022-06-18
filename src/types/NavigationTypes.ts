@@ -1,6 +1,7 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { NavigatorScreenParams, CompositeScreenProps } from "@react-navigation/native";
+import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
+
 import { FirestoreHour } from "./FirebaseTypes";
 
 // Navigator param types

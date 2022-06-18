@@ -1,8 +1,9 @@
 // Import third-party dependencies
+import { FontAwesome5 } from "@expo/vector-icons";
 import { ReactElement, useState } from "react";
 import { View } from "react-native";
 import { ListItem, Text } from "react-native-elements";
-import { FontAwesome5 } from "@expo/vector-icons";
+
 import { globalColors } from "../../theme";
 import { firebaseAuth } from "../FirebaseApp";
 
@@ -26,21 +27,23 @@ const Place = ({
   dadJokeTempMagic?: boolean;
   dadJokeTempMagicCallback?: (arg0: boolean) => unknown;
 }) => {
-  const [dadJokeTempMagicIsChecked, setDadJokeTempMagicIsChecked] = useState(
+  const [
+    dadJokeTempMagicIsChecked, setDadJokeTempMagicIsChecked
+  ] = useState(
     dadJokeTempMagic && isHighlighted
   );
 
   // The 'top3Icon function adds an award icon to the top 3 targets
   const top3Icon = (rankForIcon: number): ReactElement | null => {
     switch (rankForIcon) {
-      case 1:
-        return <FontAwesome5 name="trophy" size={24} color="gold" />;
-      case 2:
-        return <FontAwesome5 name="award" size={30} color="silver" />;
-      case 3:
-        return <FontAwesome5 name="award" size={30} color="blue" />;
-      default:
-        return null;
+    case 1:
+      return <FontAwesome5 name="trophy" size={24} color="gold" />;
+    case 2:
+      return <FontAwesome5 name="award" size={30} color="silver" />;
+    case 3:
+      return <FontAwesome5 name="award" size={30} color="blue" />;
+    default:
+      return null;
     }
   };
   return (
@@ -72,9 +75,7 @@ const Place = ({
           {name}
         </ListItem.Title>
         <ListItem.Subtitle
-          style={{
-            color: !dadJokeTempMagic && isHighlighted ? globalColors.lightBlue : undefined,
-          }}
+          style={{ color: !dadJokeTempMagic && isHighlighted ? globalColors.lightBlue : undefined }}
           right
         >
           {points}

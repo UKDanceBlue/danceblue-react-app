@@ -1,30 +1,26 @@
+import { Duration, Interval } from "luxon";
 import { useEffect, useState } from "react";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { Text } from "react-native-elements";
-import { intervalToDuration } from "date-fns";
 
 import { useAppSelector } from "../CustomHooks";
+
 import TimeUnit from "./TimeUnit";
 
 const CountdownView = () => {
-  const isConfigLoaded = false; //useAppSelector((state) => state.appConfig.isConfigLoaded);
-  const countdownConfig = { millis: 1 }; //useAppSelector((state) => state.appConfig.countdown);
-  const title = ""; // useAppSelector((state) => state.appConfig.countdown.title);
-  const [countdownDisplayDuration, setCountdownDisplayDuration] = useState<Duration>({
-    years: 0,
-    months: 0,
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+  const isConfigLoaded = false; // UseAppSelector((state) => state.appConfig.isConfigLoaded);
+  const countdownConfig = { millis: 1 }; // UseAppSelector((state) => state.appConfig.countdown);
+  const title = ""; // UseAppSelector((state) => state.appConfig.countdown.title);
+  const [
+    countdownDisplayDuration, setCountdownDisplayDuration
+  ] = useState<Duration>(Duration.fromMillis(0));
 
   useEffect(() => {
     // 1 second timer
     const timer = setInterval(() => {
       // Get time components
       setCountdownDisplayDuration(
-        intervalToDuration({ start: new Date(), end: new Date(countdownConfig.millis) })
+        Interval.fromDateTimes(new Date(), new Date(countdownConfig.millis)).toDuration()
       );
     }, 1000);
 
@@ -46,7 +42,7 @@ const CountdownView = () => {
           <View style={styles.countdownTimer}>
             {
               // Check that this or any previous unit is nonzero
-              +!!countdownDisplayDuration.years > 0 && (
+              Number(!!countdownDisplayDuration.years) > 0 && (
                 <>
                   <TimeUnit unit="years" value={countdownDisplayDuration.years} />
 
@@ -64,7 +60,7 @@ const CountdownView = () => {
             }
             {
               // Check that this or any previous unit is nonzero
-              +!!countdownDisplayDuration.years + +!!countdownDisplayDuration.months > 0 && (
+              Number(!!countdownDisplayDuration.years) + Number(!!countdownDisplayDuration.months) > 0 && (
                 <>
                   <TimeUnit unit="months" value={countdownDisplayDuration.months} />
 
@@ -82,9 +78,9 @@ const CountdownView = () => {
             }
             {
               // Check that this or any previous unit is nonzero
-              +!!countdownDisplayDuration.years +
-                +!!countdownDisplayDuration.months +
-                +!!countdownDisplayDuration.days >
+              Number(!!countdownDisplayDuration.years) +
+                Number(!!countdownDisplayDuration.months) +
+                Number(!!countdownDisplayDuration.days) >
                 0 && (
                 <>
                   <TimeUnit unit="days" value={countdownDisplayDuration.days} />
@@ -103,10 +99,10 @@ const CountdownView = () => {
             }
             {
               // Check that this or any previous unit is nonzero
-              +!!countdownDisplayDuration.years +
-                +!!countdownDisplayDuration.months +
-                +!!countdownDisplayDuration.days +
-                +!!countdownDisplayDuration.hours >
+              Number(!!countdownDisplayDuration.years) +
+                Number(!!countdownDisplayDuration.months) +
+                Number(!!countdownDisplayDuration.days) +
+                Number(!!countdownDisplayDuration.hours) >
                 0 && (
                 <>
                   <TimeUnit unit="hours" value={countdownDisplayDuration.hours} />
@@ -125,11 +121,11 @@ const CountdownView = () => {
             }
             {
               // Check that this or any previous unit is nonzero
-              +!!countdownDisplayDuration.years +
-                +!!countdownDisplayDuration.months +
-                +!!countdownDisplayDuration.days +
-                +!!countdownDisplayDuration.hours +
-                +!!countdownDisplayDuration.minutes >
+              Number(!!countdownDisplayDuration.years) +
+                Number(!!countdownDisplayDuration.months) +
+                Number(!!countdownDisplayDuration.days) +
+                Number(!!countdownDisplayDuration.hours) +
+                Number(!!countdownDisplayDuration.minutes) >
                 0 && (
                 <>
                   <TimeUnit unit="minutes" value={countdownDisplayDuration.minutes} />
@@ -148,12 +144,12 @@ const CountdownView = () => {
             }
             {
               // Check that this or any previous unit is nonzero
-              +!!countdownDisplayDuration.years +
-                +!!countdownDisplayDuration.months +
-                +!!countdownDisplayDuration.days +
-                +!!countdownDisplayDuration.hours +
-                +!!countdownDisplayDuration.minutes +
-                +!!countdownDisplayDuration.seconds >
+              Number(!!countdownDisplayDuration.years) +
+                Number(!!countdownDisplayDuration.months) +
+                Number(!!countdownDisplayDuration.days) +
+                Number(!!countdownDisplayDuration.hours) +
+                Number(!!countdownDisplayDuration.minutes) +
+                Number(!!countdownDisplayDuration.seconds) >
                 0 && (
                 <>
                   <TimeUnit unit="seconds" value={countdownDisplayDuration.seconds} />

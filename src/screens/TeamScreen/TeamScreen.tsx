@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
 import { Text } from "react-native-elements";
+
 import { useAppSelector } from "../../common/CustomHooks";
 import Standings from "../../common/components/Standings";
 import { globalStyles, globalTextStyles } from "../../theme";
@@ -18,7 +19,9 @@ const TeamScreen = () => {
   const teamIndividualSpiritPoints = useAppSelector(
     (state) => state.auth.teamIndividualSpiritPoints
   );
-  const [standingData, setStandingData] = useState<StandingType[]>([]);
+  const [
+    standingData, setStandingData
+  ] = useState<StandingType[]>([]);
 
   useEffect(() => {
     let shouldUpdateState = true;
@@ -28,7 +31,9 @@ const TeamScreen = () => {
       const tempStandingData: StandingType[] = [];
       // Iterate through every record in the team's collection
       Object.entries(teamIndividualSpiritPoints).forEach((record) => {
-        const [recordLinkblue, recordPoints] = record;
+        const [
+          recordLinkblue, recordPoints
+        ] = record;
         // Add the information from each team to the temporary standingData object
         tempStandingData.push({
           id: recordLinkblue,
@@ -50,7 +55,9 @@ const TeamScreen = () => {
     return () => {
       shouldUpdateState = false;
     };
-  }, [linkblue, teamIndividualSpiritPoints, userTeam]);
+  }, [
+    linkblue, teamIndividualSpiritPoints, userTeam
+  ]);
 
   return (
     <View style={globalStyles.genericView}>

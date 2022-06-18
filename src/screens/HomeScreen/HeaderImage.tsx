@@ -1,8 +1,9 @@
-import { View, ImageBackground, Image, StyleSheet } from "react-native";
+import { Image, ImageBackground, StyleSheet, View } from "react-native";
+
 import { globalStyles } from "../../theme";
 
-const backgroundImg = require("../../../assets/home/db20_ribbon.jpg");
 const dbLogo = require("../../../assets/home/DB_Primary_Logo-01.png");
+const backgroundImg = require("../../../assets/home/db20_ribbon.jpg");
 
 /**
  * A header image container used on the home screen

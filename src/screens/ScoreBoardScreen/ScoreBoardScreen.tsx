@@ -1,14 +1,14 @@
+import firebaseFirestore from "@react-native-firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl, SafeAreaView, ScrollView } from "react-native";
-import { getDocs, collection } from "firebase/firestore";
+
+import { showMessage } from "../../common/AlertUtils";
 import { useAppSelector } from "../../common/CustomHooks";
 import Standings from "../../common/components/Standings";
-import { firebaseFirestore } from "../../common/FirebaseApp";
-import { globalColors, globalStyles } from "../../theme";
-import { StandingType } from "../../types/StandingType";
-import { showMessage } from "../../common/AlertUtils";
-import { FirestoreMoraleTeam, FirestoreTeam } from "../../types/FirebaseTypes";
 import store from "../../redux/store";
+import { globalColors, globalStyles } from "../../theme";
+import { FirestoreMoraleTeam, FirestoreTeam } from "../../types/FirebaseTypes";
+import { StandingType } from "../../types/StandingType";
 
 /**
  * Wrapper for a Standings component
@@ -17,8 +17,12 @@ const ScoreBoardScreen = () => {
   const { pointType } = useAppSelector((state) => state.appConfig.scoreboard);
   const userTeamId = useAppSelector((state) => state.auth.teamId);
   const moraleTeamId = useAppSelector((state) => state.auth.moraleTeamId);
-  const [standingData, setStandingData] = useState<StandingType[]>([]);
-  const [refreshing, setRefreshing] = useState<boolean>(true);
+  const [
+    standingData, setStandingData
+  ] = useState<StandingType[]>([]);
+  const [
+    refreshing, setRefreshing
+  ] = useState<boolean>(true);
 
   const refresh = useCallback(() => {
     setRefreshing(true);
@@ -27,8 +31,9 @@ const ScoreBoardScreen = () => {
       showMessage("You seem to be offline, connect to the internet to update the scoreboard");
     } else {
       switch (pointType) {
-        case "spirit":
-          getDocs(collection(firebaseFirestore, "teams")).then((querySnapshot) => {
+      case "spirit":
+        firebaseFirestore().collection("teams").get()
+          .then((querySnapshot) => {
             const tempStandingData: StandingType[] = [];
             querySnapshot.forEach((document) => {
               const teamData = document.data() as FirestoreTeam;
@@ -47,10 +52,11 @@ const ScoreBoardScreen = () => {
               setRefreshing(false);
             }
           });
-          break;
+        break;
 
-        case "morale":
-          getDocs(collection(firebaseFirestore, "marathon", "2022/morale-teams")).then(
+      case "morale":
+        firebaseFirestore().collection("marathon/2022/morale-teams").get()
+          .then(
             (querySnapshot) => {
               const tempStandingData: StandingType[] = [];
               querySnapshot.forEach((document) => {
@@ -68,25 +74,27 @@ const ScoreBoardScreen = () => {
               }
             }
           );
-          break;
+        break;
 
-        case undefined:
-          if (shouldUpdateState) {
-            setStandingData([]);
-            setRefreshing(false);
-          }
-          break;
+      case undefined:
+        if (shouldUpdateState) {
+          setStandingData([]);
+          setRefreshing(false);
+        }
+        break;
 
-        default:
-          showMessage("Failed to load valid point type configuration");
-          break;
+      default:
+        showMessage("Failed to load valid point type configuration");
+        break;
       }
     }
     return () => {
       shouldUpdateState = false;
       setRefreshing(false);
     };
-  }, [pointType, moraleTeamId, userTeamId]);
+  }, [
+    pointType, moraleTeamId, userTeamId
+  ]);
 
   useEffect(() => {
     refresh();

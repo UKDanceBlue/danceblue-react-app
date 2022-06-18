@@ -1,16 +1,17 @@
 import { useNavigation } from "@react-navigation/native";
-import { differenceInHours } from "date-fns";
+import { DateTime, Duration, Interval } from "luxon";
 import { useEffect, useMemo, useState } from "react";
-import { FlatList, Platform, StyleSheet, useWindowDimensions, View } from "react-native";
+import { FlatList, Platform, StyleSheet, View, useWindowDimensions } from "react-native";
 import { Divider, Image, ListItem, Text } from "react-native-elements";
-import CountdownView from "../../common/components/CountdownView";
+
 import { useCachedFiles } from "../../common/CacheUtils";
 import { useAppSelector, useCurrentDate } from "../../common/CustomHooks";
+import CountdownView from "../../common/components/CountdownView";
+import { appConfigSlice, updateConfig } from "../../redux/appConfigSlice";
+import store from "../../redux/store";
 import { globalColors } from "../../theme";
 import { FirestoreHour } from "../../types/FirebaseTypes";
 import { TabScreenProps } from "../../types/NavigationTypes";
-import store from "../../redux/store";
-import { appConfigSlice, updateConfig } from "../../redux/appConfigSlice";
 
 function revealRandomChars(input: string, charsToReveal: number): string {
   let tempOutputString = "";
@@ -30,8 +31,7 @@ function revealRandomChars(input: string, charsToReveal: number): string {
 
   for (let i = 0; i < charsToReveal; i++) {
     const inputIndex = Math.floor(input.length * ((Math.sin(seedNumber * i) + 1) / 2));
-    tempOutputString =
-      tempOutputString.substring(0, inputIndex) +
+    tempOutputString = tempOutputString.substring(0, inputIndex) +
       input[inputIndex] +
       tempOutputString.substring(inputIndex + 1);
   }
@@ -50,10 +50,16 @@ const HourRow = ({
   marathonHour: number;
   currentMinute: number;
 }) => {
-  const { name: hourName, hourNumber } = firestoreHour;
+  const {
+    name: hourName, hourNumber
+  } = firestoreHour;
   const navigation = useNavigation<TabScreenProps<"HoursScreen">["navigation"]>();
-  const [displayedName, setDisplayedName] = useState("");
-  const [clickable, setClickable] = useState(false);
+  const [
+    displayedName, setDisplayedName
+  ] = useState("");
+  const [
+    clickable, setClickable
+  ] = useState(false);
 
   // TODO change this so ti looks like wordle and reveals random letters up to half of the name; whole name at the hour so reveal stays fresh
   // Maybe choose which to reveal based on hash of name? Need to be the same every time
@@ -70,8 +76,7 @@ const HourRow = ({
       if (marathonHour === hourNumber - 1) {
         const hourPercent = (currentMinute + 1) / 60;
         const percentNameToShow = (hourPercent - 0.75) * 4;
-        const charsToShow =
-          percentNameToShow > 0 ? Math.trunc(hourName.length * percentNameToShow) : 0;
+        const charsToShow = percentNameToShow > 0 ? Math.trunc(hourName.length * percentNameToShow) : 0;
         tempDisplayedName = revealRandomChars(hourName, charsToShow);
       } else {
         for (let i = 0; i < hourName.length; i++) {
@@ -84,7 +89,9 @@ const HourRow = ({
       }
     }
     setDisplayedName(tempDisplayedName);
-  }, [currentMinute, hourName, hourNumber, marathonHour]);
+  }, [
+    currentMinute, hourName, hourNumber, marathonHour
+  ]);
 
   return (
     <ListItem
@@ -109,11 +116,15 @@ const HourRow = ({
 
 const HoursListScreen = () => {
   const firestoreHours = useAppSelector((state) => state.appConfig.marathonHours);
-  const [firestoreHoursWithKeys, setFirestoreHoursWithKeys] = useState<FirestoreHourWithKey[]>([]);
+  const [
+    firestoreHoursWithKeys, setFirestoreHoursWithKeys
+  ] = useState<FirestoreHourWithKey[]>([]);
   const countdown = useAppSelector((state) => state.appConfig.countdown);
   const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
   const currentDate = useCurrentDate();
-  const [marathonHour, setMarathonHour] = useState(-1);
+  const [
+    marathonHour, setMarathonHour
+  ] = useState(-1);
   const { width: screenWidth } = useWindowDimensions();
   const [mapOfMemorial] = useCachedFiles([
     {
@@ -137,7 +148,7 @@ const HoursListScreen = () => {
     // First programmed hour is 8:00pm or 20:00
     // Marathon is March 5th and 6th, I am hardcoding this, hope that causes no issues
     // This will set the hour to a negative number if the marathon has yet to start and should be between 0 and 23 for the duration of the marathon
-    const tempMarathonHour = 23 - differenceInHours(new Date(2022, 2, 6, 20, 0, 0, 0), currentDate);
+    const tempMarathonHour = 23 - Interval.fromDateTimes(DateTime.fromObject({ year: 2022, month: 2, day: 6, hour: 20 }), DateTime.fromJSDate(currentDate)).toDuration().as("hours");
     setMarathonHour(tempMarathonHour > 23 ? 23 : tempMarathonHour);
   }, [currentDate]);
 

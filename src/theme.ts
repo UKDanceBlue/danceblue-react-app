@@ -90,9 +90,7 @@ export const globalStyles = StyleSheet.create({
     color: globalColors.darkNavy,
     fontSize: 15,
   },
-  genericView: {
-    flex: 1,
-  },
+  genericView: { flex: 1 },
 });
 
 export const globalTextStyles = StyleSheet.create({

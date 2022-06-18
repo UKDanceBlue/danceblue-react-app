@@ -1,17 +1,17 @@
-import { useEffect, useMemo, useCallback, useState } from "react";
-import { RefreshControl, View, ScrollView } from "react-native";
-import { Text, Button, ListItem } from "react-native-elements";
-import * as Notifications from "expo-notifications";
-import * as SecureStore from "expo-secure-store";
+import firebaseFirestore, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import * as Device from "expo-device";
 import * as Linking from "expo-linking";
-import { doc, DocumentSnapshot, getDoc } from "firebase/firestore";
-import { useAppSelector } from "../../common/CustomHooks";
-import { globalStyles, globalTextStyles } from "../../theme";
-import { firebaseFirestore } from "../../common/FirebaseApp";
+import * as Notifications from "expo-notifications";
+import * as SecureStore from "expo-secure-store";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { RefreshControl, ScrollView, View } from "react-native";
+import { Button, ListItem, Text } from "react-native-elements";
+
 import { showMessage } from "../../common/AlertUtils";
-import store from "../../redux/store";
+import { useAppSelector } from "../../common/CustomHooks";
 import { registerPushNotifications } from "../../redux/notificationSlice";
+import store from "../../redux/store";
+import { globalStyles, globalTextStyles } from "../../theme";
 import { FirestoreNotification } from "../../types/FirebaseTypes";
 
 const uuidStoreKey = __DEV__ ? "danceblue.device-uuid.dev" : "danceblue.device-uuid";
@@ -27,8 +27,12 @@ const NotificationScreen = () => {
   const notificationPermissionsGranted = useAppSelector(
     (state) => state.notification.notificationPermissionsGranted
   );
-  const [notifications, setNotifications] = useState<FirestoreNotification[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [
+    notifications, setNotifications
+  ] = useState<FirestoreNotification[]>([]);
+  const [
+    isLoading, setIsLoading
+  ] = useState(true);
   const notificationReferences = useAppSelector((state) => state.auth.pastNotifications);
 
   useEffect(() => {
@@ -57,9 +61,7 @@ const NotificationScreen = () => {
       if (store.getState().appConfig.offline) {
         showMessage("You seem to be offline, connect to the internet to load notifications");
       } else {
-        const uuid = await SecureStore.getItemAsync(uuidStoreKey, {
-          keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
-        });
+        const uuid = await SecureStore.getItemAsync(uuidStoreKey, { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY });
 
         // We have already set a UUID and can use the retrieved value
         if (uuid) {
@@ -73,9 +75,9 @@ const NotificationScreen = () => {
           for (let i = 0; i < notificationReferences.length; i++) {
             if (!notificationsCache[notificationReferences[i]]) {
               newNotificationPromises.push(
-                getDoc(doc(firebaseFirestore, notificationReferences[i])).catch(() =>
-                  showMessage("Failed to get past notification from server")
-                )
+                firebaseFirestore().doc(notificationReferences[i]).get()
+                  .catch(() => showMessage("Failed to get past notification from server")
+                  )
               );
             } else {
               tempNotifications.push(notificationsCache[notificationReferences[i]]);
@@ -84,7 +86,7 @@ const NotificationScreen = () => {
           // Wait for any new notifications to download and add them to tempNotifications as well
           const newNotifications = (await Promise.all(
             newNotificationPromises
-          )) as DocumentSnapshot[];
+          )) as FirebaseFirestoreTypes.DocumentSnapshot[];
           for (let i = 0; i < newNotifications.length; i++) {
             if (newNotifications[i].ref) {
               const newNotificationData = newNotifications[i].data() as FirestoreNotification;
@@ -127,8 +129,8 @@ const NotificationScreen = () => {
               <Text>
                 {Date.now() - notifications[i].sendTime.toMillis() < 43200000
                   ? notifications[i].sendTime
-                      .toDate()
-                      .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                    .toDate()
+                    .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                   : notifications[i].sendTime.toDate().toLocaleDateString()}
               </Text>
             </ListItem.Subtitle>

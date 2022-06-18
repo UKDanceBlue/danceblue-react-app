@@ -1,14 +1,15 @@
-import { StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { BlurView } from "expo-blur";
+import { StyleSheet } from "react-native";
 
 import { EventView } from "../screens/EventScreen";
+import HourScreen from "../screens/HoursScreen/HourScreen";
 import NotificationScreen from "../screens/NotificationScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import TabBar from "./TabBar";
-import HeaderIcons from "./HeaderIcons";
-import HourScreen from "../screens/HoursScreen/HourScreen";
 import { MainStackParamList } from "../types/NavigationTypes";
+
+import HeaderIcons from "./HeaderIcons";
+import TabBar from "./TabBar";
 
 const MainStack = createStackNavigator<MainStackParamList>();
 

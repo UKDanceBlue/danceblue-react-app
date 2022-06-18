@@ -1,23 +1,31 @@
-import { getDownloadURL, ref } from "firebase/storage";
-import { DependencyList, useDebugValue, useEffect, useRef, useState } from "react";
+import firebaseStorage from "@react-native-firebase/storage";
 import { isEqual } from "lodash-es";
+import { DependencyList, useDebugValue, useEffect, useRef, useState } from "react";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+
 import { AppDispatch, RootState } from "../redux/store";
-import { firebaseStorage } from "./FirebaseApp";
 
 export function useFirebaseStorageUrl(googleUri: string) {
   useDebugValue(`Storage for ${googleUri}`);
 
-  const [state, setState] = useState<[string | null, Error | null]>([null, null]);
+  const [
+    state, setState
+  ] = useState<[string | null, Error | null]>([
+    null, null
+  ]);
 
   useEffect(() => {
     if (googleUri) {
-      getDownloadURL(ref(firebaseStorage, googleUri))
+      firebaseStorage().refFromURL(googleUri).getDownloadURL()
         .then((url) => {
-          setState([url, null]);
+          setState([
+            url, null
+          ]);
         })
         .catch((error) => {
-          setState([null, error as Error]);
+          setState([
+            null, error as Error
+          ]);
         });
     }
   }, [googleUri]);
@@ -38,11 +46,15 @@ export function useDeepEffect(effectFunc: () => unknown, deps: DependencyList) {
 
     isFirst.current = false;
     prevDeps.current = deps;
-  }, [deps, effectFunc]);
+  }, [
+    deps, effectFunc
+  ]);
 }
 
 export function useCurrentDate(refreshInterval?: number) {
-  const [state, setState] = useState(new Date());
+  const [
+    state, setState
+  ] = useState(new Date());
 
   useEffect(() => {
     // Set a *refreshInterval* second timer

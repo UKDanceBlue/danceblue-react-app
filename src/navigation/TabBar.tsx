@@ -1,18 +1,19 @@
 // Import third-party dependencies
-import { useEffect, useState } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useEffect, useState } from "react";
 
 // Import first-party dependencies
 import { useAppSelector } from "../common/CustomHooks";
-import ScoreboardScreen from "../screens/ScoreBoardScreen";
-import HomeScreen from "../screens/HomeScreen";
 import EventScreen from "../screens/EventScreen";
 import GenericWebviewScreen from "../screens/GenericWebviewScreen";
-import TeamScreen from "../screens/TeamScreen";
+import HomeScreen from "../screens/HomeScreen";
 import HoursScreen from "../screens/HoursScreen";
-import HeaderIcons from "./HeaderIcons";
+import ScoreboardScreen from "../screens/ScoreBoardScreen";
+import TeamScreen from "../screens/TeamScreen";
 import { TabNavigatorParamList } from "../types/NavigationTypes";
+
+import HeaderIcons from "./HeaderIcons";
 
 const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
 
@@ -26,9 +27,11 @@ const possibleTabs = {
 const TabBar = () => {
   const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
   const configuredTabs = useAppSelector((state) => state.appConfig.enabledScreens);
-  const demoMode = false // useAppSelector((state) => state.appConfig.demoMode); TODO reimplement
+  const demoMode = false; // UseAppSelector((state) => state.appConfig.demoMode); TODO reimplement
 
-  const [currentTabs, setCurrentTabs] = useState<JSX.Element[]>([]);
+  const [
+    currentTabs, setCurrentTabs
+  ] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
     if (isConfigLoaded) {
@@ -40,14 +43,20 @@ const TabBar = () => {
       }
       setCurrentTabs(tempCurrentTabs);
     }
-  }, [configuredTabs, isConfigLoaded]);
+  }, [
+    configuredTabs, isConfigLoaded
+  ]);
 
   return (
     <>
       {isConfigLoaded && (
         <Tabs.Navigator
-          screenOptions={({ route, navigation }) => ({
-            tabBarIcon: ({ color, size }) => {
+          screenOptions={({
+            route, navigation
+          }) => ({
+            tabBarIcon: ({
+              color, size
+            }) => {
               const iconMap = {
                 // https://icons.expo.fyi/
                 // Key: Screen   Value: Icon ID
@@ -77,9 +86,7 @@ const TabBar = () => {
             tabBarActiveTintColor: "white",
             tabBarActiveBackgroundColor: "#3248a8",
             tabBarStyle: [
-              {
-                display: "flex",
-              },
+              { display: "flex" },
               null,
             ],
           })}

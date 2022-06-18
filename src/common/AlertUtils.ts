@@ -1,13 +1,12 @@
-import { FirebaseError } from "firebase/app";
 import { Alert, Platform } from "react-native";
+
+import { NativeFirebaseError } from "../types/FirebaseTypes";
 
 function logToFirebase(title: string, message: unknown, logInfo: unknown) {
   try {
     fetch("https://us-central1-react-danceblue.cloudfunctions.net/writeLog", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
         {
           title,
@@ -37,9 +36,7 @@ export function showMessage(
   log = false,
   logInfo: unknown = ""
 ) {
-  Alert.alert(title.toString(), message.toString(), [
-    { text: "OK", onPress: onAccept || (() => {}) },
-  ]);
+  Alert.alert(title.toString(), message.toString(), [{ text: "OK", onPress: onAccept || (() => {}) }]);
 
   if (log) {
     console.log(
@@ -90,7 +87,7 @@ export function showPrompt(
 /**
  * Use showMessage to show a Firebase error code to the user and log the associated error message to stderr
  */
-export function handleFirebaseError(error: FirebaseError, log = false) {
+export function handleFirebaseError(error: NativeFirebaseError, log = false) {
   showMessage(`Error Code: ${error.code}`);
   if (log) {
     console.error(error.message);
@@ -99,9 +96,7 @@ export function handleFirebaseError(error: FirebaseError, log = false) {
     try {
       fetch("https://us-central1-react-danceblue.cloudfunctions.net/writeLog", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: JSON.stringify(error, undefined, "  "),
           severity: "ERROR",

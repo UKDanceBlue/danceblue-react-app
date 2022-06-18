@@ -1,50 +1,47 @@
 // Import third-party dependencies
-import { useEffect, useRef } from "react";
-import { StatusBar } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
-import * as Linking from "expo-linking";
-import * as Notifications from "expo-notifications";
-import * as Application from "expo-application";
-import { useAssets } from "expo-asset";
-import * as SplashScreen from "expo-splash-screen";
-import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
-import { Provider } from "react-redux";
-// https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
-import "./src/common/AndroidTimerFix";
-import { ThemeProvider } from "react-native-elements";
-import RootScreen from "./src/navigation/RootScreen";
-import { showMessage } from "./src/common/AlertUtils";
-
-import store from "./src/redux/store";
-import { authSlice, updateUserData } from "./src/redux/authSlice";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
-import { obtainUuid, registerPushNotifications } from "./src/redux/notificationSlice";
+import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
+import * as Application from "expo-application";
+import { useAssets } from "expo-asset";
+import * as Linking from "expo-linking";
+import * as Notifications from "expo-notifications";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect, useRef } from "react";
+import { StatusBar } from "react-native";
+import { ThemeProvider } from "react-native-elements";
+import { Provider } from "react-redux";
+
+// https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
+import "./src/common/AndroidTimerFix";
+import { showMessage } from "./src/common/AlertUtils";
+import RootScreen from "./src/navigation/RootScreen";
 import { appConfigSlice, updateConfig } from "./src/redux/appConfigSlice";
+import { authSlice, updateUserData } from "./src/redux/authSlice";
+import { obtainUuid, registerPushNotifications } from "./src/redux/notificationSlice";
+import store from "./src/redux/store";
 import { rnElementsTheme } from "./src/theme";
 
 // All assets that should be preloaded:
-const homeBackgroundImg = require("./assets/home/db20_ribbon.jpg");
 const dbLogo = require("./assets/home/DB_Primary_Logo-01.png");
 const splashLoginBackground = require("./assets/home/Dancing-min.jpg");
+const homeBackgroundImg = require("./assets/home/db20_ribbon.jpg");
 
 // Promise.allSettled polyfill
-Promise.allSettled =
-  Promise.allSettled ||
-  ((promises: any[]) =>
-    Promise.all(
-      promises.map((p) =>
-        p
-          .then((value: any) => ({
-            status: "fulfilled",
-            value,
-          }))
-          .catch((reason: any) => ({
-            status: "rejected",
-            reason,
-          }))
-      )
-    ));
+Promise.allSettled = Promise.allSettled ||
+  ((promises: any[]) => Promise.all(
+    promises.map((p) => p
+      .then((value: any) => ({
+        status: "fulfilled",
+        value,
+      }))
+      .catch((reason: any) => ({
+        status: "rejected",
+        reason,
+      }))
+    )
+  ));
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -67,8 +64,9 @@ const firstTimeSync = auth().onAuthStateChanged((user) => {
   store.dispatch(obtainUuid());
   store.dispatch(updateConfig());
 
-  firestore().doc("__VERSION/required").get().then((majorVerSnap) => {
-      // Parse app version
+  firestore().doc("__VERSION/required").get()
+    .then((majorVerSnap) => {
+    // Parse app version
       const versionTokens = Application.nativeApplicationVersion?.split(".", 2);
       let appMajor = Number.parseInt(versionTokens?.[0] || "0", 10);
       if (Number.isNaN(appMajor)) {
@@ -86,7 +84,7 @@ const firstTimeSync = auth().onAuthStateChanged((user) => {
         return;
       }
       if (!((appMajor === reqMajor && appMinor >= reqMinor) || appMajor > reqMajor)) {
-        // App needs an update
+      // App needs an update
         const showUpdateMessage = () => {
           showMessage(
             "Your version of the DanceBlue mobile app is out of date and must be updated before you can use it.",
@@ -96,7 +94,8 @@ const firstTimeSync = auth().onAuthStateChanged((user) => {
         };
         showUpdateMessage();
       } else {
-        firestore().doc("__VERSION/current").get().then((latestVerSnap) => {
+        firestore().doc("__VERSION/current").get()
+          .then((latestVerSnap) => {
             // Parse latest version
             const currMajor = latestVerSnap.get("major");
             const currMinor = latestVerSnap.get("minor");
@@ -123,13 +122,9 @@ const pushRegistrationObserver = store.subscribe(() => {
       content: {
         title: "DanceBlue",
         body: "You have a new message!",
-        data: {
-          url: "exp://192.168.1.101:19000/--/",
-        },
+        data: { url: "exp://192.168.1.101:19000/--/" },
       },
-      trigger: {
-        seconds: 1,
-      },
+      trigger: { seconds: 1 },
     });
     hasPushRegistrationObserverFired = true;
     store.dispatch(registerPushNotifications());
@@ -138,7 +133,9 @@ const pushRegistrationObserver = store.subscribe(() => {
 });
 
 const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
-  prefixes: [Linking.createURL("/"), "https://www.danceblue.org/redirect/"],
+  prefixes: [
+    Linking.createURL("/"), "https://www.danceblue.org/redirect/"
+  ],
   config: {
     screens: {
       Main: {
@@ -212,27 +209,30 @@ const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
  * Main app container
  */
 const App = () => {
-  const [assets, assetError] = useAssets([splashLoginBackground, homeBackgroundImg, dbLogo]);
+  const [
+    assets, assetError
+  ] = useAssets([
+    splashLoginBackground, homeBackgroundImg, dbLogo
+  ]);
 
   const isOfflineInternal = useRef(false);
   useEffect(
-    () =>
-      NetInfo.addEventListener((state) => {
-        if (!state.isConnected && !isOfflineInternal.current) {
-          isOfflineInternal.current = true;
-          showMessage(
-            "You seem to be offline, some functionality may be unavailable or out of date"
-          );
-          // store.dispatch(appConfigSlice.actions.goOffline()); TODO Reimplement
-          store.dispatch(authSlice.actions.loginOffline());
-        } else if (isOfflineInternal.current) {
-          // store.dispatch(appConfigSlice.actions.goOnline());
-          // if (firebaseAuth.currentUser) {
-          //   store.dispatch(syncAuthStateWithUser(firebaseAuth.currentUser));
-          // }
-          isOfflineInternal.current = false;
-        }
-      }),
+    () => NetInfo.addEventListener((state) => {
+      if (!state.isConnected && !isOfflineInternal.current) {
+        isOfflineInternal.current = true;
+        showMessage(
+          "You seem to be offline, some functionality may be unavailable or out of date"
+        );
+        // Store.dispatch(appConfigSlice.actions.goOffline()); TODO Reimplement
+        store.dispatch(authSlice.actions.loginOffline());
+      } else if (isOfflineInternal.current) {
+        // Store.dispatch(appConfigSlice.actions.goOnline());
+        // If (firebaseAuth.currentUser) {
+        //   Store.dispatch(syncAuthStateWithUser(firebaseAuth.currentUser));
+        // }
+        isOfflineInternal.current = false;
+      }
+    }),
     []
   );
 

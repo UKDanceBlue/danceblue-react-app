@@ -1,16 +1,18 @@
-import { useEffect, useState } from "react";
-import { ActivityIndicator, View, ScrollView, useWindowDimensions } from "react-native";
-import { Button, Image, Text, useTheme } from "react-native-elements";
 import { MaterialIcons } from "@expo/vector-icons";
-import * as Clipboard from "expo-clipboard";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
+import * as Clipboard from "expo-clipboard";
 import { openBrowserAsync } from "expo-web-browser";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, ScrollView, View, useWindowDimensions } from "react-native";
+import { Button, Image, Text, useTheme } from "react-native-elements";
+
+import { showPrompt } from "../../common/AlertUtils";
 import { UseCachedFilesType, useCachedImages } from "../../common/CacheUtils";
 import { globalTextStyles } from "../../theme";
 import { FirestoreHour } from "../../types/FirebaseTypes";
 import { HourInstructionsType } from "../../types/HourScreenTypes";
+
 import HourActivities, { DadJokeLeaderboard, PhotoUpload } from "./HourActivities";
-import { showPrompt } from "../../common/AlertUtils";
 
 function composeInstructions(hourInstructions: HourInstructionsType) {
   let tempHourInstructionsText = "";
@@ -75,18 +77,22 @@ const alphabet = [
   "z",
 ];
 
-const HourScreen = ({
-  route: { params },
-}: {
+const HourScreen = ({ route: { params } }: {
   route: { params: { firestoreHour: FirestoreHour } };
 }) => {
   const { firestoreHour } = params;
-  const [components, setComponents] = useState<JSX.Element[]>([]);
-  const [cacheOptions, setCacheOptions] = useState<UseCachedFilesType[]>([]);
+  const [
+    components, setComponents
+  ] = useState<JSX.Element[]>([]);
+  const [
+    cacheOptions, setCacheOptions
+  ] = useState<UseCachedFilesType[]>([]);
   const cachedImages = useCachedImages(cacheOptions);
   const { theme } = useTheme();
 
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const {
+    width: screenWidth, height: screenHeight
+  } = useWindowDimensions();
 
   // Setup the image cache
   useEffect(() => {
@@ -95,35 +101,35 @@ const HourScreen = ({
     let httpUriIndex = 0;
     for (let i = 0; i < firestoreHour.contentOrder.length; i++) {
       switch (firestoreHour.contentOrder[i]) {
-        case "http-image": {
-          const cacheOption: UseCachedFilesType = {
-            assetId: `Marathon Hour: ${firestoreHour.name} http file #${httpUriIndex}`,
-            freshnessTime: 14400,
-            base64: true,
-            downloadUri: Array.isArray(firestoreHour.imageUri)
-              ? firestoreHour.imageUri[httpUriIndex]
-              : firestoreHour.imageUri,
-          };
-          tempCacheOptions[i] = cacheOption;
-          httpUriIndex++;
-          break;
-        }
-        case "gs-image": {
-          const cacheOption: UseCachedFilesType = {
-            assetId: `Marathon Hour: ${firestoreHour.name} google storage file #${googleUriIndex}`,
-            freshnessTime: 14400,
-            base64: true,
-            googleUri: Array.isArray(firestoreHour.firebaseImageUri)
-              ? firestoreHour.firebaseImageUri[googleUriIndex]
-              : firestoreHour.firebaseImageUri,
-          };
-          tempCacheOptions[i] = cacheOption;
-          googleUriIndex++;
-          break;
-        }
-        default: {
-          break;
-        }
+      case "http-image": {
+        const cacheOption: UseCachedFilesType = {
+          assetId: `Marathon Hour: ${firestoreHour.name} http file #${httpUriIndex}`,
+          freshnessTime: 14400,
+          base64: true,
+          downloadUri: Array.isArray(firestoreHour.imageUri)
+            ? firestoreHour.imageUri[httpUriIndex]
+            : firestoreHour.imageUri,
+        };
+        tempCacheOptions[i] = cacheOption;
+        httpUriIndex++;
+        break;
+      }
+      case "gs-image": {
+        const cacheOption: UseCachedFilesType = {
+          assetId: `Marathon Hour: ${firestoreHour.name} google storage file #${googleUriIndex}`,
+          freshnessTime: 14400,
+          base64: true,
+          googleUri: Array.isArray(firestoreHour.firebaseImageUri)
+            ? firestoreHour.firebaseImageUri[googleUriIndex]
+            : firestoreHour.firebaseImageUri,
+        };
+        tempCacheOptions[i] = cacheOption;
+        googleUriIndex++;
+        break;
+      }
+      default: {
+        break;
+      }
       }
     }
     setCacheOptions(tempCacheOptions);
@@ -137,148 +143,148 @@ const HourScreen = ({
     let textBlockIndex = 0;
     for (let i = 0; i < firestoreHour.contentOrder.length; i++) {
       switch (firestoreHour.contentOrder[i]) {
-        case "text-instructions":
-          if (firestoreHour.textInstructions) {
-            tempComponents.push(
-              <>
-                <Text style={{ margin: 10 }} key={`${i}a`}>
+      case "text-instructions":
+        if (firestoreHour.textInstructions) {
+          tempComponents.push(
+            <>
+              <Text style={{ margin: 10 }} key={`${i}a`}>
                   Instructions:
-                </Text>
-                <Text style={{ margin: 10 }} key={`${i}b`}>
-                  {composeInstructions(firestoreHour.textInstructions)}
-                </Text>
-              </>
-            );
-          }
-          break;
-        case "text-block":
-          if (Array.isArray(firestoreHour.textBlock)) {
-            tempComponents.push(
-              <Text style={{ margin: 10 }} key={i}>
-                {firestoreHour.textBlock[textBlockIndex]}
               </Text>
-            );
-          } else {
-            tempComponents.push(
-              <Text style={{ margin: 10 }} key={i}>
-                {firestoreHour.textBlock}
+              <Text style={{ margin: 10 }} key={`${i}b`}>
+                {composeInstructions(firestoreHour.textInstructions)}
               </Text>
-            );
-          }
-          textBlockIndex++;
-          break;
+            </>
+          );
+        }
+        break;
+      case "text-block":
+        if (Array.isArray(firestoreHour.textBlock)) {
+          tempComponents.push(
+            <Text style={{ margin: 10 }} key={i}>
+              {firestoreHour.textBlock[textBlockIndex]}
+            </Text>
+          );
+        } else {
+          tempComponents.push(
+            <Text style={{ margin: 10 }} key={i}>
+              {firestoreHour.textBlock}
+            </Text>
+          );
+        }
+        textBlockIndex++;
+        break;
 
-        case "gs-image":
-        case "http-image":
-          if (cachedImages[i]) {
-            if (cachedImages[i][1] !== null) {
-              tempComponents.push(
-                <MaterialIcons key={i} name="image-not-supported" color="black" />
-              );
-            } else if (cachedImages[i][0] !== null) {
-              tempComponents.push(
-                <ReactNativeZoomableView
-                  maxZoom={3}
-                  minZoom={1}
-                  zoomStep={0.5}
-                  initialZoom={1}
-                  bindToBorders
+      case "gs-image":
+      case "http-image":
+        if (cachedImages[i]) {
+          if (cachedImages[i][1] !== null) {
+            tempComponents.push(
+              <MaterialIcons key={i} name="image-not-supported" color="black" />
+            );
+          } else if (cachedImages[i][0] !== null) {
+            tempComponents.push(
+              <ReactNativeZoomableView
+                maxZoom={3}
+                minZoom={1}
+                zoomStep={0.5}
+                initialZoom={1}
+                bindToBorders
+                style={{ padding: 10 }}
+                movementSensibility={5}
+              >
+                <Image
+                  source={{
+                    uri: cachedImages[i][0]?.imageBase64,
+                    width: cachedImages[i][0]?.imageWidth,
+                    height: cachedImages[i][0]?.imageHeight,
+                  }}
                   style={{
-                    padding: 10,
+                    width: screenWidth - 20,
+                    height: screenWidth / cachedImages[i][0]?.imageRatio,
+                    resizeMode: "contain",
+                    alignSelf: "center",
+                    margin: 10,
                   }}
-                  movementSensibility={5}
-                >
-                  <Image
-                    source={{
-                      uri: cachedImages[i][0]?.imageBase64,
-                      width: cachedImages[i][0]?.imageWidth,
-                      height: cachedImages[i][0]?.imageHeight,
-                    }}
-                    style={{
-                      width: screenWidth - 20,
-                      height: screenWidth / cachedImages[i][0]?.imageRatio,
-                      resizeMode: "contain",
-                      alignSelf: "center",
-                      margin: 10,
-                    }}
-                  />
-                </ReactNativeZoomableView>
-              );
-            } else {
-              tempComponents.push(<ActivityIndicator key={i} color="blue" />);
-            }
+                />
+              </ReactNativeZoomableView>
+            );
           } else {
-            tempComponents.push(<ActivityIndicator key={i} color="blue" style={{ padding: 10 }} />);
+            tempComponents.push(<ActivityIndicator key={i} color="blue" />);
           }
-          break;
+        } else {
+          tempComponents.push(<ActivityIndicator key={i} color="blue" style={{ padding: 10 }} />);
+        }
+        break;
 
-        case "special":
-          if (Array.isArray(firestoreHour.specialComponent)) {
-            tempComponents.push(
-              <View key={i}>
-                {HourActivities[firestoreHour.specialComponent[specialComponentIndex].id]}
-              </View>
-            );
-          } else if (firestoreHour.specialComponent) {
-            tempComponents.push(
-              <View key={i}>{HourActivities[firestoreHour.specialComponent.id]}</View>
-            );
-          }
-          specialComponentIndex++;
-          break;
+      case "special":
+        if (Array.isArray(firestoreHour.specialComponent)) {
+          tempComponents.push(
+            <View key={i}>
+              {HourActivities[firestoreHour.specialComponent[specialComponentIndex].id]}
+            </View>
+          );
+        } else if (firestoreHour.specialComponent) {
+          tempComponents.push(
+            <View key={i}>{HourActivities[firestoreHour.specialComponent.id]}</View>
+          );
+        }
+        specialComponentIndex++;
+        break;
 
-        case "photo-upload":
-          tempComponents.push(<PhotoUpload key={i} />);
-          break;
+      case "photo-upload":
+        tempComponents.push(<PhotoUpload key={i} />);
+        break;
 
-        case "dad-joke-leaderboard":
-          tempComponents.push(<DadJokeLeaderboard key={i} />);
-          break;
+      case "dad-joke-leaderboard":
+        tempComponents.push(<DadJokeLeaderboard key={i} />);
+        break;
 
-        case "button":
-          if (Array.isArray(firestoreHour.buttonConfig)) {
-            const buttonText = firestoreHour.buttonConfig[buttonIndex].text;
-            const buttonUrl = firestoreHour.buttonConfig[buttonIndex].url;
-            tempComponents.push(
-              <View key={i}>
-                <Button
-                  buttonStyle={{ marginHorizontal: 15, marginVertical: 5 }}
-                  title={buttonText}
-                  onPress={() => {
-                    openBrowserAsync(buttonUrl);
-                  }}
-                  onLongPress={() => {
-                    showPrompt("Would you like to copy the link?", "Copy link", undefined, () => {
-                      Clipboard.setString(buttonUrl);
-                    });
-                  }}
-                />
-              </View>
-            );
-          } else if (firestoreHour.buttonConfig) {
-            const buttonText = firestoreHour.buttonConfig.text;
-            const buttonUrl = firestoreHour.buttonConfig.url;
-            tempComponents.push(
-              <View key={i}>
-                <Button
-                  buttonStyle={{ marginHorizontal: 15, marginVertical: 5 }}
-                  title={buttonText}
-                  onPress={() => {
-                    openBrowserAsync(buttonUrl);
-                  }}
-                />
-              </View>
-            );
-          }
-          buttonIndex++;
-          break;
+      case "button":
+        if (Array.isArray(firestoreHour.buttonConfig)) {
+          const buttonText = firestoreHour.buttonConfig[buttonIndex].text;
+          const buttonUrl = firestoreHour.buttonConfig[buttonIndex].url;
+          tempComponents.push(
+            <View key={i}>
+              <Button
+                buttonStyle={{ marginHorizontal: 15, marginVertical: 5 }}
+                title={buttonText}
+                onPress={() => {
+                  openBrowserAsync(buttonUrl);
+                }}
+                onLongPress={() => {
+                  showPrompt("Would you like to copy the link?", "Copy link", undefined, () => {
+                    Clipboard.setString(buttonUrl);
+                  });
+                }}
+              />
+            </View>
+          );
+        } else if (firestoreHour.buttonConfig) {
+          const buttonText = firestoreHour.buttonConfig.text;
+          const buttonUrl = firestoreHour.buttonConfig.url;
+          tempComponents.push(
+            <View key={i}>
+              <Button
+                buttonStyle={{ marginHorizontal: 15, marginVertical: 5 }}
+                title={buttonText}
+                onPress={() => {
+                  openBrowserAsync(buttonUrl);
+                }}
+              />
+            </View>
+          );
+        }
+        buttonIndex++;
+        break;
 
-        default:
-          break;
+      default:
+        break;
       }
     }
     setComponents(tempComponents);
-  }, [cachedImages, firestoreHour, screenHeight, screenWidth]);
+  }, [
+    cachedImages, firestoreHour, screenHeight, screenWidth
+  ]);
 
   return (
     <ScrollView style={{ backgroundColor: theme.colors?.grey3 }}>

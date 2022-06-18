@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { WebView } from "react-native-webview";
+
 import { globalStyles } from "../../theme";
 
 /**
  * A simple screen wrapper for a webview
  */
 const GenericWebviewScreen = ({ route }) => {
-  const [isWebpageLoading, setIsWebpageLoading] = useState(true);
+  const [
+    isWebpageLoading, setIsWebpageLoading
+  ] = useState(true);
   // Is this a default case from react navigation deep linking?
   if (route.path) {
     return (

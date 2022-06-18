@@ -1,9 +1,9 @@
+import firebaseFirestore from "@react-native-firebase/firestore";
 import { useEffect, useState } from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "react-native-elements";
-import { collection, getDocs } from "firebase/firestore";
+
 import SponsorCard from "../../common/components/ImageCard";
-import { firebaseFirestore } from "../../common/FirebaseApp";
 import { FirestoreSponsor } from "../../types/FirebaseTypes";
 
 interface SponsorType extends FirestoreSponsor {
@@ -14,13 +14,15 @@ interface SponsorType extends FirestoreSponsor {
  * A horizontally scrolling carousel of SponsorCards
  */
 const SponsorCarousel = () => {
-  const [sponsors, setSponsors] = useState<SponsorType[]>([]);
+  const [
+    sponsors, setSponsors
+  ] = useState<SponsorType[]>([]);
 
   useEffect(() => {
     let shouldUpdateState = true;
     async function getSnapshot() {
       const dbSponsors: SponsorType[] = [];
-      const snapshot = await getDocs(collection(firebaseFirestore, "sponsors"));
+      const snapshot = await firebaseFirestore().collection("sponsors").get();
       snapshot.forEach((document) => {
         dbSponsors.push({ ...document.data(), id: document.id });
       });
@@ -66,9 +68,7 @@ const styles = StyleSheet.create({
     height: 170,
     marginTop: 5,
   },
-  container: {
-    overflow: "hidden",
-  },
+  container: { overflow: "hidden" },
   sponsorTitle: {
     color: "black",
     fontSize: 20,
