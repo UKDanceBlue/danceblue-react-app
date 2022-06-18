@@ -1,7 +1,7 @@
 {
   "cli": {
     "version": ">= 0.42.4",
-    "requireCommit": true,
+    "requireCommit": true
   },
   "build": {
     "dev-client": {
@@ -24,8 +24,6 @@
       "distribution": "store",
       "releaseChannel": "prod-v1",
       "ios": {
-        "appleId": "app@danceblue.org",
-        "appleTeamId": "622DXM8F44",
         "autoIncrement": "buildNumber"
       },
       "android": {
@@ -34,6 +32,20 @@
     }
   },
   "submit": {
-    "production": {}
+    "dev-client": {
+      "extends": "preview"
+    },
+    "development": {
+      "extends": "preview"
+    },
+    "preview": {
+      "extends": "production"
+    },
+    "production": {
+      "ios": {
+        "appleId": "app@danceblue.org",
+        "appleTeamId": "622DXM8F44"
+      }
+    }
   }
 }
