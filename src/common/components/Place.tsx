@@ -1,11 +1,11 @@
 // Import third-party dependencies
 import { FontAwesome5 } from "@expo/vector-icons";
+import firebaseAuth from "@react-native-firebase/auth";
 import { ReactElement, useState } from "react";
 import { View } from "react-native";
 import { ListItem, Text } from "react-native-elements";
 
 import { globalColors } from "../../theme";
-import { firebaseAuth } from "../FirebaseApp";
 
 /**
  * A row-based component showing a target name, their rank (if applicable), and their points
@@ -81,7 +81,7 @@ const Place = ({
           {points}
           {points === 1 ? " point  " : " points  "}
         </ListItem.Subtitle>
-        {dadJokeTempMagic && firebaseAuth.currentUser?.uid && (
+        {dadJokeTempMagic && firebaseAuth().currentUser?.uid && (
           <ListItem.CheckBox
             checked={dadJokeTempMagicIsChecked}
             onPress={() => {
