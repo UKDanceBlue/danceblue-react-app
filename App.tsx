@@ -16,10 +16,9 @@ import { Provider } from "react-redux";
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
 import "./src/common/AndroidTimerFix";
 import { showMessage } from "./src/common/AlertUtils";
+import { FirebaseProvider } from "./src/common/FirebaseApp";
 import RootScreen from "./src/navigation/RootScreen";
-import { appConfigSlice, updateConfig } from "./src/redux/appConfigSlice";
-import { authSlice, updateUserData } from "./src/redux/authSlice";
-import { obtainUuid, registerPushNotifications } from "./src/redux/notificationSlice";
+import { registerPushNotifications } from "./src/redux/notificationSlice";
 import store from "./src/redux/store";
 import { rnElementsTheme } from "./src/theme";
 
@@ -53,17 +52,7 @@ Notifications.setNotificationHandler({
 
 SplashScreen.preventAutoHideAsync();
 
-const firstTimeSync = auth().onAuthStateChanged((user) => {
-  if (user) {
-    // This will run after auth is initialized and never again
-    // TODO
-  } else {
-    // TODO
-  }
-
-  store.dispatch(obtainUuid());
-  store.dispatch(updateConfig());
-
+const firstTimeSync = auth().onAuthStateChanged(() => {
   firestore().doc("__VERSION/required").get()
     .then((majorVerSnap) => {
     // Parse app version
@@ -249,10 +238,12 @@ const App = () => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={rnElementsTheme}>
-        <StatusBar backgroundColor="white" barStyle="dark-content" />
-        <NavigationContainer linking={navLinking}>
-          <RootScreen />
-        </NavigationContainer>
+        <FirebaseProvider>
+          <StatusBar backgroundColor="white" barStyle="dark-content" />
+          <NavigationContainer linking={navLinking}>
+            <RootScreen />
+          </NavigationContainer>
+        </FirebaseProvider>
       </ThemeProvider>
     </Provider>
   );
