@@ -8,36 +8,35 @@ import { UserLoginType } from "./userDataSlice";
 type AppConfigSliceType = {
   isConfigLoaded: boolean;
   enabledScreens: string[];
-  countdowns: {
-    [key: string]: { millis: number; title: string };
-  };
   allowedLoginTypes: UserLoginType[];
+  scoreboardMode: {pointType:string;showIcons:boolean;showTrophies:boolean};
   demoModeKey: string;
 };
 
 const initialState: AppConfigSliceType = {
   isConfigLoaded: false,
   enabledScreens: [],
-  countdowns: {},
   allowedLoginTypes: [],
+  scoreboardMode: { pointType: "", showIcons: false, showTrophies: false },
   demoModeKey: Math.random().toString(), // Start the demo key as junk for safety's sake
 };
 
 export const updateConfig = createAsyncThunk(
   "appConfig/updateConfig",
   async (): Promise<Partial<AppConfigSliceType>> => {
-    await firebaseRemoteConfig().fetchAndActivate();
-    const remoteConfig = firebaseRemoteConfig().getAll();
-    console.log("Remote config:", remoteConfig);
+    const remoteConfigInstance = firebaseRemoteConfig();
+    await remoteConfigInstance.fetchAndActivate();
+    const remoteConfig = {} as Partial<AppConfigSliceType>;
 
-    return {};
+    remoteConfig.enabledScreens = JSON.parse(remoteConfigInstance.getString("rn_shown_tabs")) ?? undefined;
+    remoteConfig.allowedLoginTypes = JSON.parse(remoteConfigInstance.getString("login_mode"))?.rn ?? undefined;
+    remoteConfig.demoModeKey = remoteConfigInstance.getString("demo_mode_key") ?? undefined;
+    remoteConfig.scoreboardMode = JSON.parse(remoteConfigInstance.getString("rn_scoreboard_mode")) ?? undefined;
+
+    return remoteConfig;
   }
 );
 
-// Redux Toolkit allows us to write "mutating" logic in reducers. It
-// Doesn't actually mutate the state because it uses the Immer library,
-// Which detects changes to a "draft state" and produces a brand new
-// Immutable state based off those changes
 export const appConfigSlice = createSlice({
   name: "appConfig",
   initialState,
@@ -50,7 +49,7 @@ export const appConfigSlice = createSlice({
       Object.assign(state, {
         isConfigLoaded: false,
         enabledScreens: [],
-        countdowns: {},
+        scoreboardMode: {},
         allowedLoginTypes: [],
         demoModeKey: Math.random().toString(), // Start the demo key as junk for safety's sake
       });
@@ -64,7 +63,7 @@ export const appConfigSlice = createSlice({
       })
       .addCase(updateConfig.fulfilled, (state, action) => {
         state.enabledScreens = action.payload.enabledScreens || initialState.enabledScreens;
-        state.countdowns = action.payload.countdowns || initialState.countdowns;
+        state.scoreboardMode = action.payload.scoreboardMode || initialState.scoreboardMode;
         state.allowedLoginTypes = action.payload.allowedLoginTypes || initialState.allowedLoginTypes;
         state.demoModeKey = action.payload.demoModeKey || initialState.demoModeKey;
         state.isConfigLoaded = true;
