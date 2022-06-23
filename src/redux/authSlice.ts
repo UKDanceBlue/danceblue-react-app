@@ -1,6 +1,8 @@
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+import { startLoading, stopLoading } from "./globalLoadingSlice";
+
 type AuthSliceType = {
   isAuthLoaded: boolean;
   isLoggedIn: boolean;
@@ -20,7 +22,11 @@ const initialState: AuthSliceType = {
 // Async login action (for use with createAsyncThunk)
 export const syncAuth = createAsyncThunk(
   "auth/sync",
-  async (payload: {user: FirebaseAuthTypes.User}, { rejectWithValue }): Promise<Partial<AuthSliceType>> => {
+  async (payload: {user: FirebaseAuthTypes.User}, {
+    rejectWithValue, dispatch
+  }): Promise<Partial<AuthSliceType>> => {
+    dispatch(startLoading("auth/sync"));
+
     const { user } = payload;
     const authData = {} as Partial<AuthSliceType>;
 
@@ -30,6 +36,8 @@ export const syncAuth = createAsyncThunk(
       authData.authClaims = await user.getIdTokenResult();
     } catch (error) {
       throw rejectWithValue(error as Error);
+    } finally {
+      dispatch(stopLoading("auth/sync"));
     }
 
     return authData;

@@ -37,8 +37,8 @@ export const loadUserData = createAsyncThunk(
   async (payload: { userId: string, loginType: UserLoginType, firestore: FirebaseFirestoreTypes.Module }, {
     rejectWithValue, dispatch
   }): Promise<UserDataType> => {
-    // Get the user's base document
     dispatch(startLoading("userData/loadUserData"));
+    // Get the user's base document
     const userDataDoc = payload.firestore.collection("users").doc(payload.userId);
     const userDataSnapshot = await userDataDoc.get();
 
