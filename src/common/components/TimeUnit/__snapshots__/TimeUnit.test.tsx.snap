@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<TimeUnit /> renders correctly with a plural unit 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "paddingLeft": 7,
+      "paddingRight": 7,
+    }
+  }
+>
+  <Text
+    style={
+      Object {
+        "color": "white",
+        "fontSize": 40,
+        "fontWeight": "bold",
+      }
+    }
+  >
+    10
+  </Text>
+  <Text
+    style={
+      Object {
+        "color": "white",
+        "fontSize": 20,
+      }
+    }
+  >
+    seconds
+  </Text>
+</View>
+`;
+
+exports[`<TimeUnit /> renders correctly with a singular unit 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "paddingLeft": 7,
+      "paddingRight": 7,
+    }
+  }
+>
+  <Text
+    style={
+      Object {
+        "color": "white",
+        "fontSize": 40,
+        "fontWeight": "bold",
+      }
+    }
+  >
+    1
+  </Text>
+  <Text
+    style={
+      Object {
+        "color": "white",
+        "fontSize": 20,
+      }
+    }
+  >
+    second
+  </Text>
+</View>
+`;

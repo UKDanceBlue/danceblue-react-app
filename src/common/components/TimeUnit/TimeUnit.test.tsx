@@ -1,16 +1,47 @@
-import renderer from "react-test-renderer";
+import { render } from "@testing-library/react-native";
 
 import TimeUnit from ".";
 
-export default describe("<TimeUnit />", () => {
-  it("has 1 child", () => {
-    const tree = renderer.create(<TimeUnit value={1} unit={"seconds"} />).toJSON();
-    expect(tree).not.toBeNull();
-    if (tree && !Array.isArray(tree)) {
-      expect(tree.children).not.toBeNull();
-      if (tree.children) {
-        console.log(tree.children);
-      }
-    }
+describe("<TimeUnit />", () => {
+  it("renders correctly with a singular unit", () => {
+    const tree = render(<TimeUnit value={1} unit={"seconds"} />).toJSON();
+
+    expect(tree).toMatchSnapshot();
+  });
+  it("renders correctly with a plural unit", () => {
+    const tree = render(<TimeUnit value={10} unit={"seconds"} />).toJSON();
+
+    expect(tree).toMatchSnapshot();
+  });
+
+  it("renders 0 with a negative value", () => {
+    const tree = render(<TimeUnit value={-1} unit={"seconds"} />);
+
+    const valueElement = tree.queryAllByText("0");
+    expect(valueElement).toHaveLength(1);
+
+    const unitElement = tree.queryAllByText("seconds");
+    expect(unitElement).toHaveLength(1);
+  });
+
+  it("renders 0 with a nullish value", () => {
+    // @ts-ignore
+    const tree = render(<TimeUnit value={null} unit={"seconds"} />);
+
+    const valueElement = tree.queryAllByText("0");
+    expect(valueElement).toHaveLength(1);
+
+    const unitElement = tree.queryAllByText("seconds");
+    expect(unitElement).toHaveLength(1);
+  });
+
+  it("throws when passed an invalid type", () => {
+    const mockedConsoleError = jest.spyOn(console, "error").mockImplementation(() => {});
+
+    const invalidUnit = "an invalid unit";
+    // @ts-ignore
+    expect(() => render(<TimeUnit value={1} unit={invalidUnit} />)).toThrow(`Invalid unit: ${invalidUnit}`);
+
+    mockedConsoleError.mockRestore();
   });
 });

@@ -25,13 +25,11 @@ const possibleTabs = {
 } as { [key: string]: JSX.Element };
 
 const TabBar = () => {
-  const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
+  const isConfigLoaded = true; // UseAppSelector((state) => state.appConfig.isConfigLoaded);
   const configuredTabs = useAppSelector((state) => state.appConfig.enabledScreens);
   const demoMode = false; // UseAppSelector((state) => state.appConfig.demoMode); TODO reimplement
 
-  const [
-    currentTabs, setCurrentTabs
-  ] = useState<JSX.Element[]>([]);
+  const [ currentTabs, setCurrentTabs ] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
     if (isConfigLoaded) {
@@ -43,9 +41,7 @@ const TabBar = () => {
       }
       setCurrentTabs(tempCurrentTabs);
     }
-  }, [
-    configuredTabs, isConfigLoaded
-  ]);
+  }, [ configuredTabs, isConfigLoaded ]);
 
   return (
     <>
