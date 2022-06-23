@@ -6,9 +6,8 @@ import { ActivityIndicator, ImageSourcePropType, TextInput, View } from "react-n
 import { Button, Image, Text } from "react-native-elements";
 
 import { useAppSelector } from "../../common/CustomHooks";
-import SingleSignOn from "../../common/SingleSignOn";
 import { appConfigSlice } from "../../redux/appConfigSlice";
-import { authSlice, logout } from "../../redux/authSlice";
+import { authSlice } from "../../redux/authSlice";
 import store from "../../redux/store";
 import { globalColors, globalStyles, globalTextStyles } from "../../theme";
 
@@ -20,15 +19,9 @@ const ProfileScreen = () => {
   const userData = useAppSelector((state) => state.auth);
   const demoModeKey = useAppSelector((state) => state.appConfig.demoModeKey);
   const isOffline = useAppSelector((state) => state.appConfig.offline);
-  const [
-    assets, error
-  ] = useAssets(require("../../../assets/avatar.png"));
-  const [
-    reportLongPressed, setReportLongPressed
-  ] = useState(false);
-  const [
-    suggestLongPressed, setSuggestLongPressed
-  ] = useState(false);
+  const [ assets, error ] = useAssets(require("../../../assets/avatar.png"));
+  const [ reportLongPressed, setReportLongPressed ] = useState(false);
+  const [ suggestLongPressed, setSuggestLongPressed ] = useState(false);
 
   return (
     <View style={{ alignItems: "center", ...globalStyles.genericView }}>
@@ -71,8 +64,6 @@ const ProfileScreen = () => {
                     <Button
                       style={{ margin: 10, alignSelf: "center" }}
                       onPress={() => {
-                        const sso = new SingleSignOn();
-                        sso.authenticate("saml-sign-in");
                       }}
                       title="Log in"
                     />
@@ -86,8 +77,6 @@ const ProfileScreen = () => {
                     <Button
                       style={{ margin: 10, alignSelf: "center" }}
                       onPress={() => {
-                        const sso = new SingleSignOn();
-                        sso.authenticate("saml-sign-in");
                       }}
                       title="Log in"
                     />

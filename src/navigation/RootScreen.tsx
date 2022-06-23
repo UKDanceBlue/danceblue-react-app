@@ -74,9 +74,10 @@ const RootScreen = () => {
     userAttributes, isAuthLoaded, userTeamId, userId, uuid
   ]);
 
+
   return (
     <>
-      {isAuthLoaded && (
+      {!isAuthLoaded && (
         <ActivityIndicator
           size="large"
           color={globalColors.lightBlue}
@@ -87,7 +88,7 @@ const RootScreen = () => {
           }}
         />
       )}
-      {!isAuthLoaded && (
+      {isAuthLoaded && (
         <RootStack.Navigator>
           {isLoggedIn && (
             <RootStack.Screen

@@ -8,7 +8,7 @@ import remoteConfig, { FirebaseRemoteConfigTypes } from "@react-native-firebase/
 import storage, { FirebaseStorageTypes } from "@react-native-firebase/storage";
 import { ReactNode, createContext, useContext, useEffect } from "react";
 
-import { login, logout } from "../redux/authSlice";
+import { logout, syncAuth } from "../redux/authSlice";
 
 import { useAppDispatch } from "./CustomHooks";
 
@@ -39,7 +39,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => value.fbAuth.onAuthStateChanged((user) => {
     if (user) {
-      dispatch(login({ user }));
+      dispatch(syncAuth({ user }));
     } else {
       dispatch(logout());
     }

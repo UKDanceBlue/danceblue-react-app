@@ -124,9 +124,7 @@ const pushRegistrationObserver = store.subscribe(() => {
 });
 
 const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
-  prefixes: [
-    Linking.createURL("/"), "https://www.danceblue.org/redirect/"
-  ],
+  prefixes: [ Linking.createURL("/"), "https://www.danceblue.org/redirect/" ],
   config: {
     screens: {
       Main: {
@@ -156,17 +154,12 @@ const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
     let url = await Linking.getInitialURL();
 
     if (url != null) {
-      console.log(1);
-      console.log(url);
       return url;
     }
 
     // Handle URL from expo push notifications
     const response = await Notifications.getLastNotificationResponseAsync();
     url = response?.notification.request.content.data.url as string;
-
-    console.log(2);
-    console.log(url);
 
     return url;
   },
@@ -182,7 +175,6 @@ const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
 
       // Let React Navigation handle the URL
 
-      console.log(url);
       listener(url);
     });
 
@@ -200,9 +192,7 @@ const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
  * Main app container
  */
 const App = () => {
-  const [
-    assets, assetError
-  ] = useAssets([
+  const [ assets, assetError ] = useAssets([
     splashLoginBackground, homeBackgroundImg, dbLogo
   ]);
 

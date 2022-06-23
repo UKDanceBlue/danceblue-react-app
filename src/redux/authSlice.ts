@@ -18,8 +18,8 @@ const initialState: AuthSliceType = {
 };
 
 // Async login action (for use with createAsyncThunk)
-export const login = createAsyncThunk(
-  "auth/login",
+export const syncAuth = createAsyncThunk(
+  "auth/sync",
   async (payload: {user: FirebaseAuthTypes.User}, { rejectWithValue }): Promise<Partial<AuthSliceType>> => {
     const { user } = payload;
     const authData = {} as Partial<AuthSliceType>;
@@ -50,17 +50,17 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Login reducer
-    builder.addCase(login.pending, (state) => {
+    builder.addCase(syncAuth.pending, (state) => {
       state.isAuthLoaded = false;
     });
-    builder.addCase(login.fulfilled, (state, action: PayloadAction<Partial<AuthSliceType>>) => {
+    builder.addCase(syncAuth.fulfilled, (state, action: PayloadAction<Partial<AuthSliceType>>) => {
       state.isLoggedIn = true;
       state.isAnonymous = action.payload.isAnonymous ?? initialState.isAnonymous;
       state.uid = action.payload.uid ?? initialState.uid;
       state.authClaims = action.payload.authClaims ?? initialState.authClaims;
       state.isAuthLoaded = true;
     });
-    builder.addCase(login.rejected, (state) => {
+    builder.addCase(syncAuth.rejected, (state) => {
       Object.assign(state, initialState);
     });
   },
