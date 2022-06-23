@@ -20,6 +20,7 @@ const RootScreen = () => {
   const userId = useAppSelector((state) => state.auth.uid);
   const uuid = useAppSelector((state) => state.notification.uuid);
 
+
   useEffect(() => {
     (async () => {
       if (isAuthLoaded && uuid) {
@@ -75,7 +76,7 @@ const RootScreen = () => {
 
   return (
     <>
-      {!isAuthLoaded && (
+      {isAuthLoaded && (
         <ActivityIndicator
           size="large"
           color={globalColors.lightBlue}
@@ -86,7 +87,7 @@ const RootScreen = () => {
           }}
         />
       )}
-      {isAuthLoaded && (
+      {!isAuthLoaded && (
         <RootStack.Navigator>
           {isLoggedIn && (
             <RootStack.Screen

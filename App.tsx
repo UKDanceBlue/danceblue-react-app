@@ -53,52 +53,54 @@ Notifications.setNotificationHandler({
 SplashScreen.preventAutoHideAsync();
 
 const firstTimeSync = auth().onAuthStateChanged(() => {
-  firestore().doc("__VERSION/required").get()
-    .then((majorVerSnap) => {
-    // Parse app version
-      const versionTokens = Application.nativeApplicationVersion?.split(".", 2);
-      let appMajor = Number.parseInt(versionTokens?.[0] || "0", 10);
-      if (Number.isNaN(appMajor)) {
-        appMajor = 0;
-      }
-      let appMinor = Number.parseInt(versionTokens?.[1] || "0", 10);
-      if (Number.isNaN(appMinor)) {
-        appMinor = 0;
-      }
+  if (!__DEV__) {
+    firestore().doc("__VERSION/required").get()
+      .then((majorVerSnap) => {
+        // Parse app version
+        const versionTokens = Application.nativeApplicationVersion?.split(".", 2);
+        let appMajor = Number.parseInt(versionTokens?.[0] || "0", 10);
+        if (Number.isNaN(appMajor)) {
+          appMajor = 0;
+        }
+        let appMinor = Number.parseInt(versionTokens?.[1] || "0", 10);
+        if (Number.isNaN(appMinor)) {
+          appMinor = 0;
+        }
 
-      // Parse required version
-      const reqMajor = majorVerSnap.get("major");
-      const reqMinor = majorVerSnap.get("minor");
-      if (typeof reqMajor !== "number" || typeof reqMinor !== "number") {
-        return;
-      }
-      if (!((appMajor === reqMajor && appMinor >= reqMinor) || appMajor > reqMajor)) {
-      // App needs an update
-        const showUpdateMessage = () => {
-          showMessage(
-            "Your version of the DanceBlue mobile app is out of date and must be updated before you can use it.",
-            "Old version",
-            showUpdateMessage
-          );
-        };
-        showUpdateMessage();
-      } else {
-        firestore().doc("__VERSION/current").get()
-          .then((latestVerSnap) => {
+        // Parse required version
+        const reqMajor = majorVerSnap.get("major");
+        const reqMinor = majorVerSnap.get("minor");
+        if (typeof reqMajor !== "number" || typeof reqMinor !== "number") {
+          return;
+        }
+        if (!((appMajor === reqMajor && appMinor >= reqMinor) || appMajor > reqMajor)) {
+          // App needs an update
+          const showUpdateMessage = () => {
+            showMessage(
+              "Your version of the DanceBlue mobile app is out of date and must be updated before you can use it.",
+              "Old version",
+              showUpdateMessage
+            );
+          };
+          showUpdateMessage();
+        } else {
+          firestore().doc("__VERSION/current").get()
+            .then((latestVerSnap) => {
             // Parse latest version
-            const currMajor = latestVerSnap.get("major");
-            const currMinor = latestVerSnap.get("minor");
-            if (typeof currMajor !== "number" || typeof currMinor !== "number") {
-              return;
-            }
-            if (!((appMajor === currMajor && appMinor >= currMinor) || appMajor > currMajor)) {
-              showMessage("A new version of the DanceBlue app is available.", "Update available");
-            }
-          })
-          .catch();
-      }
-    })
-    .catch();
+              const currMajor = latestVerSnap.get("major");
+              const currMinor = latestVerSnap.get("minor");
+              if (typeof currMajor !== "number" || typeof currMinor !== "number") {
+                return;
+              }
+              if (!((appMajor === currMajor && appMinor >= currMinor) || appMajor > currMajor)) {
+                showMessage("A new version of the DanceBlue app is available.", "Update available");
+              }
+            })
+            .catch();
+        }
+      })
+      .catch();
+  }
 
   firstTimeSync();
 });

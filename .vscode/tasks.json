@@ -6,7 +6,7 @@
 			"script": "start",
 			"problemMatcher": [],
 			"label": "Start Expo Tunnel",
-			"detail": "expo start --tunnel",
+			"detail": "expo start --dev-client",
 			"group": {
 				"kind": "build",
 				"isDefault": true

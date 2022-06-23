@@ -1,9 +1,12 @@
-import { Dimensions, ImageBackground, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useEffect } from "react";
+import { ActivityIndicator, Dimensions, ImageBackground, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native-elements";
 
-import SingleSignOn from "../../common/SingleSignOn";
-import { loginAnon } from "../../redux/authSlice";
-import store from "../../redux/store";
+
+import { showMessage } from "../../common/AlertUtils";
+import { useAppSelector } from "../../common/CustomHooks";
+import { useFirebase } from "../../common/FirebaseApp";
+import { useLinkBlueLogin } from "../../common/auth";
 import { globalStyles, globalTextStyles } from "../../theme";
 
 
@@ -13,52 +16,83 @@ const splashBackground = require("../../../assets/home/Dancing-min.jpg");
  * A simplified sign in page shown when the user first opens the app
  * @class
  */
-const SplashLoginScreen = () => (
-  <View style={globalStyles.genericCenteredView}>
-    <ImageBackground source={splashBackground} style={localStyles.image}>
-      <View style={localStyles.textContainerWithBackground}>
-        <View style={globalStyles.genericHeaderContainer}>
-          <Text h2 style={{ textAlign: "center" }}>
+const SplashLoginScreen = () => {
+  const allowedLoginTypes = useAppSelector((state) => state.appConfig.allowedLoginTypes);
+  const {
+    fbAuth, fbFunctions
+  } = useFirebase();
+
+  const [
+    loading,
+    trigger,
+    userCredential,
+    error
+  ] = useLinkBlueLogin(fbAuth, fbFunctions);
+
+  useEffect(() => {
+    if (error) {
+      showMessage(error.message, "Error logging in");
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (userCredential) {
+      console.log("User credential: ", userCredential);
+    }
+  }, [userCredential]);
+
+  return (
+    <View style={globalStyles.genericCenteredView}>
+      <ImageBackground source={splashBackground} style={localStyles.image}>
+        <View style={localStyles.textContainerWithBackground}>
+          <View style={globalStyles.genericHeaderContainer}>
+            <Text h2 style={{ textAlign: "center" }}>
             Welcome to UK DanceBlue!
-          </Text>
-          <Text style={globalTextStyles.headerText}>
+            </Text>
+            <Text style={globalTextStyles.headerText}>
             The UK DanceBlue app has many features that are only available with a user account.
-          </Text>
-          <Text />
-          <Text style={globalTextStyles.headerText}>
+            </Text>
+            <Text />
+            <Text style={globalTextStyles.headerText}>
             With an account you get access to profile badges, team info, and other features coming
             soon!
-          </Text>
-        </View>
-        <View style={globalStyles.genericHeaderContainer}>
-          <Text h3 style={globalStyles.genericText}>
+            </Text>
+          </View>
+          {/* { allowedLoginTypes.includes("ms-oath-linkblue") && ( */}
+          <View style={globalStyles.genericHeaderContainer}>
+            <Text h3 style={globalStyles.genericText}>
             Sign in with your UK LinkBlue account
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              const sso = new SingleSignOn();
-              sso.authenticate("saml-sign-in");
-            }}
-            style={globalStyles.genericButton}
-          >
-            <Text style={globalStyles.genericText}>SSO Login!</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={globalStyles.genericCenteredView}>
-          <Text style={globalStyles.genericText}>
+            </Text>
+            <TouchableOpacity
+              onPress={() => trigger()}
+              style={globalStyles.genericButton}
+            >
+              <Text style={globalStyles.genericText}>SSO Login!</Text>
+            </TouchableOpacity>
+          </View>
+          {/* )} */}
+
+          {/* { allowedLoginTypes.includes("anonymous") && ( */}
+          <View style={globalStyles.genericCenteredView}>
+            <Text style={globalStyles.genericText}>
             Want to look around first? You can always sign in later on the profile page
-          </Text>
-          <TouchableOpacity
-            onPress={() => store.dispatch(loginAnon())}
-            style={globalStyles.genericButton}
-          >
-            <Text style={globalStyles.genericText}>Continue as a Guest</Text>
-          </TouchableOpacity>
+            </Text>
+            <TouchableOpacity
+              onPress={() => fbAuth.signInAnonymously()}
+              style={globalStyles.genericButton}
+            >
+              <Text style={globalStyles.genericText}>Continue as a Guest</Text>
+            </TouchableOpacity>
+          </View>
+          {/* )} */}
         </View>
-      </View>
-    </ImageBackground>
-  </View>
-);
+      </ImageBackground>
+      { loading && (
+        <ActivityIndicator style={{ position: "absolute", top: "50%" }} />
+      )}
+    </View>
+  );
+};
 
 const localStyles = {
   image: {

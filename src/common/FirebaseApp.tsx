@@ -1,18 +1,27 @@
-import analytics from "@react-native-firebase/analytics";
-import appCheck from "@react-native-firebase/app-check";
-import auth from "@react-native-firebase/auth";
-import crashlytics from "@react-native-firebase/crashlytics";
-import firestore from "@react-native-firebase/firestore";
-import functions from "@react-native-firebase/functions";
-import remoteConfig from "@react-native-firebase/remote-config";
-import storage from "@react-native-firebase/storage";
+import analytics, { FirebaseAnalyticsTypes } from "@react-native-firebase/analytics";
+import appCheck, { FirebaseAppCheckTypes } from "@react-native-firebase/app-check";
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import crashlytics, { FirebaseCrashlyticsTypes } from "@react-native-firebase/crashlytics";
+import firestore, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+import functions, { FirebaseFunctionsTypes } from "@react-native-firebase/functions";
+import remoteConfig, { FirebaseRemoteConfigTypes } from "@react-native-firebase/remote-config";
+import storage, { FirebaseStorageTypes } from "@react-native-firebase/storage";
 import { ReactNode, createContext, useContext, useEffect } from "react";
 
 import { login, logout } from "../redux/authSlice";
 
 import { useAppDispatch } from "./CustomHooks";
 
-export const FirebaseContext = createContext({});
+const FirebaseContext = createContext<{
+  fbAnalytics: FirebaseAnalyticsTypes.Module;
+  fbAppCheck: FirebaseAppCheckTypes.Module;
+  fbAuth: FirebaseAuthTypes.Module;
+  fbCrashlytics: FirebaseCrashlyticsTypes.Module;
+  fbFirestore: FirebaseFirestoreTypes.Module;
+  fbFunctions: FirebaseFunctionsTypes.Module;
+  fbRemoteConfig: FirebaseRemoteConfigTypes.Module;
+  fbStorage: FirebaseStorageTypes.Module;
+}>({} as never);
 
 export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
   const value = {
@@ -34,9 +43,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
     } else {
       dispatch(logout());
     }
-  }), [
-    dispatch, value.fbAuth
-  ]);
+  }), [ dispatch, value.fbAuth ]);
 
   return (
     <FirebaseContext.Provider value={value}>
