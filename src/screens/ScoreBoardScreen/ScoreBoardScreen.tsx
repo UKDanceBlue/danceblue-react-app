@@ -17,12 +17,8 @@ const ScoreBoardScreen = () => {
   const { pointType } = useAppSelector((state) => state.appConfig.scoreboard);
   const userTeamId = useAppSelector((state) => state.auth.teamId);
   const moraleTeamId = useAppSelector((state) => state.auth.moraleTeamId);
-  const [
-    standingData, setStandingData
-  ] = useState<StandingType[]>([]);
-  const [
-    refreshing, setRefreshing
-  ] = useState<boolean>(true);
+  const [ standingData, setStandingData ] = useState<StandingType[]>([]);
+  const [ refreshing, setRefreshing ] = useState<boolean>(true);
 
   const refresh = useCallback(() => {
     setRefreshing(true);

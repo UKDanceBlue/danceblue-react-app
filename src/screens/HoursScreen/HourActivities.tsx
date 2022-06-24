@@ -102,9 +102,7 @@ function getImageFromPhotosOrCamera(
 
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
-      aspect: [
-        4, 3
-      ],
+      aspect: [ 4, 3 ],
     });
 
     try {
@@ -144,9 +142,7 @@ function getImageFromPhotosOrCamera(
 
     const pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [
-        4, 3
-      ],
+      aspect: [ 4, 3 ],
     });
 
     if (!(await takePictureCallback((pickerResult as ImagePicker.ImageInfo).uri, hour))) {
@@ -184,12 +180,8 @@ function getImageFromPhotosOrCamera(
 
 // Life is a Highway
 export const PhotoUpload = () => {
-  const [
-    uploading, setUploading
-  ] = useState(false);
-  const [
-    selectedStation, setSelectedStation
-  ] = useState("Colorado");
+  const [ uploading, setUploading ] = useState(false);
+  const [ selectedStation, setSelectedStation ] = useState("Colorado");
 
   return (
     <View
@@ -237,9 +229,7 @@ export const PhotoUpload = () => {
 // Dad Joke
 export const DadJokeLeaderboard = () => {
   const dadJokesDoc = firebaseFirestore().doc("marathon/2022/dad-jokes/dad-jokes");
-  const [
-    dadJokes, setDadJokes
-  ] = useState<StandingType[]>([]);
+  const [ dadJokes, setDadJokes ] = useState<StandingType[]>([]);
 
   useEffect(() => dadJokesDoc.onSnapshot((dadJokeSnapshot) => {
     const dadJokeSnapshotData = dadJokeSnapshot.data() as {
@@ -247,9 +237,7 @@ export const DadJokeLeaderboard = () => {
       };
     if (dadJokeSnapshotData) {
       const dadJokeSnapshotArray = Object.entries(dadJokeSnapshotData);
-      const tempDadJokes = dadJokeSnapshotArray.map(([
-        id, joke
-      ]) => ({
+      const tempDadJokes = dadJokeSnapshotArray.map(([ id, joke ]) => ({
         id,
         name: joke.jokeText,
         points: joke.votes.length,

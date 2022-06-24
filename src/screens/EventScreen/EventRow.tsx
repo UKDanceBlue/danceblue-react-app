@@ -19,9 +19,7 @@ const EventRow = ({
   endDate: DateTime;
   title: string;
 }) => {
-  const [
-    imageRef, imageRefError
-  ] = useFirebaseStorageUrl(imageLink);
+  const [ imageRef, imageRefError ] = useFirebaseStorageUrl(imageLink);
 
   /**
    * Called to generate a React Native component

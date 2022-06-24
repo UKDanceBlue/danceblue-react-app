@@ -29,18 +29,10 @@ const Standings = ({
   dadJokeTempMagic?: boolean;
   dadJokeTempMagicCallback?: (arg0: boolean, arg1: string) => unknown;
 }) => {
-  const [
-    rows, setRows
-  ] = useState<ReactElement[]>([]);
-  const [
-    expanded, setExpanded
-  ] = useState<boolean>(!!startExpanded);
-  const [
-    rowsToShow, setRowsToShow
-  ] = useState<number>(collapsedRows);
-  const [
-    isLoading, setIsLoading
-  ] = useState<boolean>(true);
+  const [ rows, setRows ] = useState<ReactElement[]>([]);
+  const [ expanded, setExpanded ] = useState<boolean>(!!startExpanded);
+  const [ rowsToShow, setRowsToShow ] = useState<number>(collapsedRows);
+  const [ isLoading, setIsLoading ] = useState<boolean>(true);
 
   useEffect(
     () => setRowsToShow(expanded ? standingData.length : collapsedRows),
@@ -84,9 +76,7 @@ const Standings = ({
     }
     setRows(tempRows);
     setIsLoading(false);
-  }, [
-    standingData, rowsToShow
-  ]);
+  }, [ standingData, rowsToShow ]);
 
   return (
     <View style={globalStyles.genericView}>

@@ -33,25 +33,13 @@ const EventView = () => {
   // Const [isOnCalendar, setIsOnCalendar] = useState(false);
   // Const [calendarID, setCalendarID] = useState(undefined);
   // Const [eventCalendarID, setEventCalendarID] = useState(null);
-  const [
-    startTime, setStartTime
-  ] = useState<DateTime>(DateTime.now());
-  const [
-    endTime, setEndTime
-  ] = useState<DateTime>(DateTime.now());
+  const [ startTime, setStartTime ] = useState<DateTime>(DateTime.now());
+  const [ endTime, setEndTime ] = useState<DateTime>(DateTime.now());
   // Const [title, setTitle] = useState('');
-  const [
-    address, setAddress
-  ] = useState("");
-  const [
-    imageFirebaseRef, setImageFirebaseRef
-  ] = useState("");
-  const [
-    imageRef, imageRefError
-  ] = useFirebaseStorageUrl(imageFirebaseRef);
-  const [
-    description, setDescription
-  ] = useState("");
+  const [ address, setAddress ] = useState("");
+  const [ imageFirebaseRef, setImageFirebaseRef ] = useState("");
+  const [ imageRef, imageRefError ] = useFirebaseStorageUrl(imageFirebaseRef);
+  const [ description, setDescription ] = useState("");
   const route = useRoute<MainStackScreenProps<"Event">["route"]>();
 
   /**

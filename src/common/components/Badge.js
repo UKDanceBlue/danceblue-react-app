@@ -10,9 +10,7 @@ import { useFirebaseStorageUrl } from "../CustomHooks.ts";
 const Badge = ({
   imageURL, name
 }) => {
-  const [
-    imageRef, imageRefError
-  ] = useFirebaseStorageUrl(imageURL);
+  const [ imageRef, imageRefError ] = useFirebaseStorageUrl(imageURL);
 
   return (
     <View style={styles.container}>

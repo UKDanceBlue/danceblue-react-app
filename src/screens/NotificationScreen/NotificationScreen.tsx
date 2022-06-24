@@ -27,12 +27,8 @@ const NotificationScreen = () => {
   const notificationPermissionsGranted = useAppSelector(
     (state) => state.notification.notificationPermissionsGranted
   );
-  const [
-    notifications, setNotifications
-  ] = useState<FirestoreNotification[]>([]);
-  const [
-    isLoading, setIsLoading
-  ] = useState(true);
+  const [ notifications, setNotifications ] = useState<FirestoreNotification[]>([]);
+  const [ isLoading, setIsLoading ] = useState(true);
   const notificationReferences = useAppSelector((state) => state.auth.pastNotifications);
 
   useEffect(() => {

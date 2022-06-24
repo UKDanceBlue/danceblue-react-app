@@ -23,15 +23,9 @@ interface EventType extends FirestoreEvent {
  *  3. Make it a function component if possible
  */
 const EventScreen = () => {
-  const [
-    events, setEvents
-  ] = useState<EventType[]>([]);
-  const [
-    today, setToday
-  ] = useState<EventType[]>([]);
-  const [
-    upcoming, setUpcoming
-  ] = useState<EventType[]>([]);
+  const [ events, setEvents ] = useState<EventType[]>([]);
+  const [ today, setToday ] = useState<EventType[]>([]);
+  const [ upcoming, setUpcoming ] = useState<EventType[]>([]);
   const navigation = useNavigation<TabScreenProps<"Events">["navigation"]>();
 
   useEffect(() => {

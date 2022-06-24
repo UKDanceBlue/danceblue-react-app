@@ -31,9 +31,7 @@ async function getFile(
       new Date().getTime() / 1000 - localAssetInfo.modificationTime > cacheOption.freshnessTime
     ) {
       if (store.getState().appConfig.offline) {
-        return [
-          null, null
-        ];
+        return [ null, null ];
       } else {
         // If the file doesn't exist but we can download it we are going to do so
         // Start by getting figuring out a download uri
@@ -64,16 +62,12 @@ async function getFile(
 
     if (localFileContent) {
       // Set localFileContent into the hook state, we are done
-      return [
-        localFileContent, null
-      ];
+      return [ localFileContent, null ];
     } else {
       throw new Error(`No Content in ${localUri}`);
     }
   } catch (error) {
-    return [
-      null, error as Error
-    ];
+    return [ null, error as Error ];
   }
 }
 
@@ -86,16 +80,10 @@ export function useCachedFiles(
   alwaysReturnArray?: boolean
 ): [string | null, Error | null][];
 export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?: boolean) {
-  const [
-    hookState, setHookState
-  ] = useState<
+  const [ hookState, setHookState ] = useState<
     [string | null, Error | null][] | [string | null, Error | null]
-  >(Array(options.length).fill([
-    null, null
-  ]));
-  const [
-    localUris, setLocalUris
-  ] = useState<(string | null)[]>([]);
+  >(Array(options.length).fill([ null, null ]));
+  const [ localUris, setLocalUris ] = useState<(string | null)[]>([]);
 
   useDeepEffect(() => {
     const tempLocalUris = Array(options.length).fill("");
@@ -132,9 +120,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
             fileContentPromises.push(getFile(localUris[i] as string, options[i]));
           } else {
             // Mark an empty space
-            fileContentPromises.push((async () => [
-              null, null
-            ])());
+            fileContentPromises.push((async () => [ null, null ])());
           }
         }
 
@@ -166,19 +152,11 @@ export type UseCachedImagesReturnType = {
 };
 
 export function useCachedImages(options: UseCachedFilesType[]) {
-  const [
-    hookState, setHookState
-  ] = useState<[UseCachedImagesReturnType | null, Error | null][]>(
-    Array(options.length).fill([
-      null, null
-    ])
+  const [ hookState, setHookState ] = useState<[UseCachedImagesReturnType | null, Error | null][]>(
+    Array(options.length).fill([ null, null ])
   );
-  const [
-    imageSizes, setImageSizes
-  ] = useState<[number, number][]>(
-    Array(options.length).fill([
-      null, null
-    ])
+  const [ imageSizes, setImageSizes ] = useState<[number, number][]>(
+    Array(options.length).fill([ null, null ])
   );
   const cachedFiles = useCachedFiles(options, true);
 
@@ -189,9 +167,7 @@ export function useCachedImages(options: UseCachedFilesType[]) {
         // For some reason there is a comma at then end of the base64 string?? So this just removes the last character
         Image.getSize(
           `data:image/png;base64,${element}`.slice(0, -1),
-          (width, height) => resolved([
-            width, height
-          ]),
+          (width, height) => resolved([ width, height ]),
           rejected
         );
       })
@@ -223,15 +199,11 @@ export function useCachedImages(options: UseCachedFilesType[]) {
     const tempHookState: [UseCachedImagesReturnType | null, Error | null][] = [];
     for (let i = 0; i < cachedFiles.length; i++) {
       if (cachedFiles[i][1]) {
-        tempHookState[i] = [
-          null, cachedFiles[i][1]
-        ];
+        tempHookState[i] = [ null, cachedFiles[i][1] ];
       } else if (imageSizes[i]) {
         const cachedImage = cachedFiles[i];
         if (Array.isArray(imageSizes[i])) {
-          const [
-            imageWidth, imageHeight
-          ] = imageSizes[i];
+          const [ imageWidth, imageHeight ] = imageSizes[i];
           tempHookState[i] = [
             {
               imageBase64: `data:image/png;base64,${cachedImage[0]}`,
@@ -243,20 +215,14 @@ export function useCachedImages(options: UseCachedFilesType[]) {
           ];
         } else {
           // If imageSizes[i] is not an array then it must be the reason for the image sizing failing, pass it along
-          tempHookState[i] = [
-            null, new Error(imageSizes[i].toString())
-          ];
+          tempHookState[i] = [ null, new Error(imageSizes[i].toString()) ];
         }
       } else {
-        tempHookState[i] = [
-          null, null
-        ];
+        tempHookState[i] = [ null, null ];
       }
     }
     setHookState(tempHookState);
-  }, [
-    cachedFiles, imageSizes
-  ]);
+  }, [ cachedFiles, imageSizes ]);
 
   return hookState;
 }

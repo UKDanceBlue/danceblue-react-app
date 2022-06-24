@@ -81,12 +81,8 @@ const HourScreen = ({ route: { params } }: {
   route: { params: { firestoreHour: FirestoreHour } };
 }) => {
   const { firestoreHour } = params;
-  const [
-    components, setComponents
-  ] = useState<JSX.Element[]>([]);
-  const [
-    cacheOptions, setCacheOptions
-  ] = useState<UseCachedFilesType[]>([]);
+  const [ components, setComponents ] = useState<JSX.Element[]>([]);
+  const [ cacheOptions, setCacheOptions ] = useState<UseCachedFilesType[]>([]);
   const cachedImages = useCachedImages(cacheOptions);
   const { theme } = useTheme();
 

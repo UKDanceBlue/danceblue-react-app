@@ -27,9 +27,7 @@ const Place = ({
   dadJokeTempMagic?: boolean;
   dadJokeTempMagicCallback?: (arg0: boolean) => unknown;
 }) => {
-  const [
-    dadJokeTempMagicIsChecked, setDadJokeTempMagicIsChecked
-  ] = useState(
+  const [ dadJokeTempMagicIsChecked, setDadJokeTempMagicIsChecked ] = useState(
     dadJokeTempMagic && isHighlighted
   );
 

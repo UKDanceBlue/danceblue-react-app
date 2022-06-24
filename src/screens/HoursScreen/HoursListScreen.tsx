@@ -54,12 +54,8 @@ const HourRow = ({
     name: hourName, hourNumber
   } = firestoreHour;
   const navigation = useNavigation<TabScreenProps<"HoursScreen">["navigation"]>();
-  const [
-    displayedName, setDisplayedName
-  ] = useState("");
-  const [
-    clickable, setClickable
-  ] = useState(false);
+  const [ displayedName, setDisplayedName ] = useState("");
+  const [ clickable, setClickable ] = useState(false);
 
   // TODO change this so ti looks like wordle and reveals random letters up to half of the name; whole name at the hour so reveal stays fresh
   // Maybe choose which to reveal based on hash of name? Need to be the same every time
@@ -116,15 +112,11 @@ const HourRow = ({
 
 const HoursListScreen = () => {
   const firestoreHours = useAppSelector((state) => state.appConfig.marathonHours);
-  const [
-    firestoreHoursWithKeys, setFirestoreHoursWithKeys
-  ] = useState<FirestoreHourWithKey[]>([]);
+  const [ firestoreHoursWithKeys, setFirestoreHoursWithKeys ] = useState<FirestoreHourWithKey[]>([]);
   const countdown = useAppSelector((state) => state.appConfig.countdown);
   const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
   const currentDate = useCurrentDate();
-  const [
-    marathonHour, setMarathonHour
-  ] = useState(-1);
+  const [ marathonHour, setMarathonHour ] = useState(-1);
   const { width: screenWidth } = useWindowDimensions();
   const [mapOfMemorial] = useCachedFiles([
     {

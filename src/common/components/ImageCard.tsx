@@ -17,9 +17,7 @@ const SponsorCard = ({
   sponsorLink: string | undefined;
   name: string | undefined;
 }) => {
-  const [
-    imageContent, imageRefError
-  ] = useCachedFiles([
+  const [ imageContent, imageRefError ] = useCachedFiles([
     {
       assetId: `${name}-logo`,
       freshnessTime: 172800,

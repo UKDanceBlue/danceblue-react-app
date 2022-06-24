@@ -19,9 +19,7 @@ const TeamScreen = () => {
   const teamIndividualSpiritPoints = useAppSelector(
     (state) => state.auth.teamIndividualSpiritPoints
   );
-  const [
-    standingData, setStandingData
-  ] = useState<StandingType[]>([]);
+  const [ standingData, setStandingData ] = useState<StandingType[]>([]);
 
   useEffect(() => {
     let shouldUpdateState = true;
@@ -31,9 +29,7 @@ const TeamScreen = () => {
       const tempStandingData: StandingType[] = [];
       // Iterate through every record in the team's collection
       Object.entries(teamIndividualSpiritPoints).forEach((record) => {
-        const [
-          recordLinkblue, recordPoints
-        ] = record;
+        const [ recordLinkblue, recordPoints ] = record;
         // Add the information from each team to the temporary standingData object
         tempStandingData.push({
           id: recordLinkblue,

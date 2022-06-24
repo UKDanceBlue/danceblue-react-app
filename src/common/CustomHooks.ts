@@ -8,24 +8,16 @@ import { AppDispatch, RootState } from "../redux/store";
 export function useFirebaseStorageUrl(googleUri: string) {
   useDebugValue(`Storage for ${googleUri}`);
 
-  const [
-    state, setState
-  ] = useState<[string | null, Error | null]>([
-    null, null
-  ]);
+  const [ state, setState ] = useState<[string | null, Error | null]>([ null, null ]);
 
   useEffect(() => {
     if (googleUri) {
       firebaseStorage().refFromURL(googleUri).getDownloadURL()
         .then((url) => {
-          setState([
-            url, null
-          ]);
+          setState([ url, null ]);
         })
         .catch((error) => {
-          setState([
-            null, error as Error
-          ]);
+          setState([ null, error as Error ]);
         });
     }
   }, [googleUri]);
@@ -46,15 +38,11 @@ export function useDeepEffect(effectFunc: () => unknown, deps: DependencyList) {
 
     isFirst.current = false;
     prevDeps.current = deps;
-  }, [
-    deps, effectFunc
-  ]);
+  }, [ deps, effectFunc ]);
 }
 
 export function useCurrentDate(refreshInterval?: number) {
-  const [
-    state, setState
-  ] = useState(new Date());
+  const [ state, setState ] = useState(new Date());
 
   useEffect(() => {
     // Set a *refreshInterval* second timer

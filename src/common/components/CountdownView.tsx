@@ -11,9 +11,7 @@ const CountdownView = () => {
   const isConfigLoaded = false; // UseAppSelector((state) => state.appConfig.isConfigLoaded);
   const countdownConfig = { millis: 1 }; // UseAppSelector((state) => state.appConfig.countdown);
   const title = ""; // UseAppSelector((state) => state.appConfig.countdown.title);
-  const [
-    countdownDisplayDuration, setCountdownDisplayDuration
-  ] = useState<Duration>(Duration.fromMillis(0));
+  const [ countdownDisplayDuration, setCountdownDisplayDuration ] = useState<Duration>(Duration.fromMillis(0));
 
   useEffect(() => {
     // 1 second timer

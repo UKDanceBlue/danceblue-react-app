@@ -14,9 +14,7 @@ interface SponsorType extends FirestoreSponsor {
  * A horizontally scrolling carousel of SponsorCards
  */
 const SponsorCarousel = () => {
-  const [
-    sponsors, setSponsors
-  ] = useState<SponsorType[]>([]);
+  const [ sponsors, setSponsors ] = useState<SponsorType[]>([]);
 
   useEffect(() => {
     let shouldUpdateState = true;
