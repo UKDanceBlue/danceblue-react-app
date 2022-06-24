@@ -1,7 +1,7 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints, FirestoreUser } from "../types/FirebaseTypes";
+import { FirestoreNotification, FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints, FirestoreUser } from "../types/FirebaseTypes";
 
 import { startLoading, stopLoading } from "./globalLoadingSlice";
 
@@ -18,6 +18,7 @@ type UserDataType = {
   teamIndividualSpiritPoints: FirestoreTeamIndividualSpiritPoints | null;
   teamFundraisingTotal: FirestoreTeamFundraising | null;
   userLoginType: UserLoginType | null;
+  pastNotifications: FirestoreNotification[];
 };
 
 const initialState: UserDataType = {
@@ -30,6 +31,7 @@ const initialState: UserDataType = {
   teamIndividualSpiritPoints: null,
   teamFundraisingTotal: null,
   userLoginType: null,
+  pastNotifications: [],
 };
 
 export const loadUserData = createAsyncThunk(
@@ -66,6 +68,26 @@ export const loadUserData = createAsyncThunk(
     if (rawUserData.attributes != null) {
       loadUserData.attributes = rawUserData.attributes;
     }
+
+    // Check for past notifications
+    if (rawUserData.pastNotifications != null) {
+      const pastNotificationRefs = rawUserData.pastNotifications;
+      const pastNotifications: FirestoreNotification[] = [];
+
+      const promises: Promise<void>[] = [];
+
+      for (let i = 0; i < pastNotificationRefs.length; i++) {
+        promises.push((async () => {
+          const pastNotificationSnapshot = await pastNotificationRefs[i].get();
+          if (pastNotificationSnapshot.exists) {
+            pastNotifications.push(pastNotificationSnapshot.data() as FirestoreNotification);
+          }
+        })());
+      }
+
+      await Promise.all(promises);
+    }
+
 
     // Check for a user's team data
     if (rawUserData.team?.id != null) {
