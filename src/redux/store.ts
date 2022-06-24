@@ -2,7 +2,6 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import appConfigReducer from "./appConfigSlice";
 import authReducer from "./authSlice";
-import cacheReducer from "./cacheSlice";
 import deviceDataReducer from "./deviceDataSlice";
 import globalLoadingReducer from "./globalLoadingSlice";
 import marathonReducer from "./marathonSlice";
@@ -13,7 +12,6 @@ const store = configureStore({
   reducer: {
     appConfig: appConfigReducer,
     auth: authReducer,
-    cache: cacheReducer,
     deviceData: deviceDataReducer,
     globalLoading: globalLoadingReducer,
     marathon: marathonReducer,

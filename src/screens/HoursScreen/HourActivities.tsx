@@ -7,9 +7,9 @@ import { createRef, useEffect, useState } from "react";
 import { ActionSheetIOS, Platform, Text, TextInput, View } from "react-native";
 import { Button, Divider, Input } from "react-native-elements";
 
-import { showMessage } from "../../common/AlertUtils";
-import generateUuid from "../../common/GenerateUuid";
 import Standings from "../../common/components/Standings";
+import { showMessage } from "../../common/util/AlertUtils";
+import generateUuid from "../../common/util/GenerateUuid";
 import store from "../../redux/store";
 import { globalColors, globalTextStyles } from "../../theme";
 import { StandingType } from "../../types/StandingType";

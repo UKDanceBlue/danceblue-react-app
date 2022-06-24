@@ -6,7 +6,7 @@ import { ExpoPushToken } from "expo-notifications";
 import * as SecureStore from "expo-secure-store";
 
 import { showMessage } from "../common/AlertUtils";
-import generateUuid from "../common/GenerateUuid";
+import generateUuid from "../common/util/GenerateUuid";
 import { globalColors } from "../theme";
 
 const uuidStoreKey = __DEV__ ? "danceblue.device-uuid.dev" : "danceblue.device-uuid";
@@ -23,19 +23,20 @@ const initialState: NotificationSliceType = {
   notificationPermissionsGranted: null,
 };
 
-export const obtainUuid = createAsyncThunk("notification/obtainUuid", async () =>
+export const obtainUuid = createAsyncThunk("notification/obtainUuid", async () => {
   // Get UUID from async storage
-  SecureStore.getItemAsync(uuidStoreKey, { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY }).then(async (uuid) => {
-    // If nothing was in async storage, generate a new uuid and store it
-    if (uuid) {
-      return uuid;
-    }
+  let uuid = await SecureStore.getItemAsync(uuidStoreKey, { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY });
 
-    uuid = generateUuid() as string;
-
-    await SecureStore.setItemAsync(uuidStoreKey, uuid, { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY });
+  // If nothing was in async storage, generate a new uuid and store it
+  if (uuid) {
     return uuid;
-  })
+  }
+
+  uuid = generateUuid() as string;
+
+  await SecureStore.setItemAsync(uuidStoreKey, uuid, { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY });
+  return uuid;
+}
 );
 
 type RegisterPushNotificationsErrors = { error: "DEVICE_IS_EMULATOR" };
