@@ -2,13 +2,23 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import appConfigReducer from "./appConfigSlice";
 import authReducer from "./authSlice";
+import cacheReducer from "./cacheSlice";
+import deviceDataReducer from "./deviceDataSlice";
+import globalLoadingReducer from "./globalLoadingSlice";
+import marathonReducer from "./marathonSlice";
 import notificationReducer from "./notificationSlice";
+import userDataReducer from "./userDataSlice";
 
 const store = configureStore({
   reducer: {
-    auth: authReducer,
-    notification: notificationReducer,
     appConfig: appConfigReducer,
+    auth: authReducer,
+    cache: cacheReducer,
+    deviceData: deviceDataReducer,
+    globalLoading: globalLoadingReducer,
+    marathon: marathonReducer,
+    notification: notificationReducer,
+    userData: userDataReducer,
   },
 });
 export default store;

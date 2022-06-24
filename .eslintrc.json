@@ -84,13 +84,6 @@
     "no-promise-executor-return": "error",
     "no-self-compare": "error",
     "require-atomic-updates": "error",
-    "capitalized-comments": [
-      "error",
-      "always",
-      {
-        "ignoreInlineComments": true
-      }
-    ],
     "class-methods-use-this": "error",
     "eqeqeq": [
       "error",

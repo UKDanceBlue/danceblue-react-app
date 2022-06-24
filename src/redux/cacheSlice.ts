@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 import { FirestoreNotification } from "../types/FirebaseTypes";
 
 type CachedData<DataType> = {
@@ -13,4 +15,17 @@ type CacheSliceType = {
   cachedImage: { [key: string]: CachedData<string> };
 };
 
-const initialState = {};
+const initialState: CacheSliceType = {
+  cachedNotification: {},
+  cachedImage: {},
+};
+
+const cacheSlice = createSlice({
+  initialState,
+  name: "cache",
+  reducers: {}
+});
+
+// export const { } = cacheSlice.actions;
+
+export default cacheSlice.reducer;

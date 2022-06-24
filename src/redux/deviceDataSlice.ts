@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 type DeviceDataSliceType = {
   deviceId: string | null;
   demoModeEnabled: boolean;
@@ -12,3 +14,13 @@ const initialState: DeviceDataSliceType = {
   pushToken: null,
   getsNotifications: false,
 };
+
+const deviceDataSlice = createSlice({
+  initialState,
+  name: "deviceData",
+  reducers: {},
+});
+
+// export const {  } = deviceDataSlice.actions;
+
+export default deviceDataSlice.reducer;
