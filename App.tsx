@@ -14,7 +14,7 @@ import { ThemeProvider } from "react-native-elements";
 import { Provider } from "react-redux";
 
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
-import "./src/common/AndroidTimerFix";
+import "./src/common/util/AndroidTimerFix";
 import { showMessage } from "./src/common/AlertUtils";
 import { FirebaseProvider } from "./src/common/FirebaseApp";
 import RootScreen from "./src/navigation/RootScreen";
