@@ -1,48 +1,52 @@
 import { nativeApplicationVersion } from "expo-application";
-import { useAssets } from "expo-asset";
 import * as Linking from "expo-linking";
 import { useState } from "react";
-import { ActivityIndicator, ImageSourcePropType, TextInput, View } from "react-native";
+import { ActivityIndicator, TextInput, View } from "react-native";
 import { Button, Image, Text } from "react-native-elements";
 
+import avatarImage from "../../../assets/avatar.png";
 import { useAppSelector } from "../../common/CustomHooks";
+import { useFirebase } from "../../common/FirebaseApp";
+import { useLinkBlueLogin } from "../../common/auth";
 import { appConfigSlice } from "../../redux/appConfigSlice";
-import { authSlice } from "../../redux/authSlice";
+import { logout } from "../../redux/authSlice";
 import store from "../../redux/store";
 import { globalColors, globalStyles, globalTextStyles } from "../../theme";
-
 
 /**
  * Component for "Profile" screen in main navigation
  */
 const ProfileScreen = () => {
-  const userData = useAppSelector((state) => state.auth);
+  const authData = useAppSelector((state) => state.auth);
+  const userData = useAppSelector((state) => state.userData);
   const demoModeKey = useAppSelector((state) => state.appConfig.demoModeKey);
-  const isOffline = useAppSelector((state) => state.appConfig.offline);
-  const [ assets, error ] = useAssets(require("../../../assets/avatar.png"));
   const [ reportLongPressed, setReportLongPressed ] = useState(false);
   const [ suggestLongPressed, setSuggestLongPressed ] = useState(false);
+  const {
+    fbAuth, fbFunctions
+  } = useFirebase();
+
+  const [ loading, trigger ] = useLinkBlueLogin(fbAuth, fbFunctions);
 
   return (
     <View style={{ alignItems: "center", ...globalStyles.genericView }}>
       <>
         {
-          /* Start of still loading view */ !userData.isAuthLoaded && (
+          /* Start of still loading view */ !authData.isAuthLoaded || loading && (
             <ActivityIndicator size="large" color={globalColors.dbBlue} />
           ) /* End of still loading view */
         }
         {
-          /* Start of loaded view */ userData.isAuthLoaded && (
+          /* Start of loaded view */ authData.isAuthLoaded && (
             <>
-              {assets && (
-                <Image
-                  source={assets[0] as ImageSourcePropType}
-                  style={{ height: 64, width: 64 }}
-                />
-              )}
+              <Image
+                source={avatarImage}
+                height={64}
+                width={64}
+              />
               {
-                /* Start of logged in view */ userData.isLoggedIn &&
-                  !userData.isAnonymous && (
+                /* Start of logged in view */ authData.isLoggedIn &&
+                  !authData.isAnonymous && (
                   <>
                     <Text style={globalStyles.genericText}>
                         You are logged in as {userData.firstName} {userData.lastName}
@@ -57,13 +61,14 @@ const ProfileScreen = () => {
                 ) /* End of logged in view */
               }
               {
-                /* Start of logged in anonymously view */ userData.isLoggedIn &&
-                  userData.isAnonymous && (
+                /* Start of logged in anonymously view */ authData.isLoggedIn &&
+                  authData.isAnonymous && (
                   <>
-                    <Text>You are logged in {isOffline ? "offline" : "anonymously"}</Text>
+                    <Text>You are logged in anonymously</Text>
                     <Button
                       style={{ margin: 10, alignSelf: "center" }}
                       onPress={() => {
+                        trigger();
                       }}
                       title="Log in"
                     />
@@ -71,12 +76,13 @@ const ProfileScreen = () => {
                 ) /* End of logged in anonymously view */
               }
               {
-                /* Start of logged out view */ !userData.isLoggedIn && (
+                /* Start of logged out view */ !authData.isLoggedIn && (
                   <>
                     <Text>You are logged out, to log in:</Text>
                     <Button
                       style={{ margin: 10, alignSelf: "center" }}
                       onPress={() => {
+                        trigger();
                       }}
                       title="Log in"
                     />
@@ -91,7 +97,7 @@ const ProfileScreen = () => {
                   onSubmitEditing={(event) => {
                     if (event.nativeEvent.text === demoModeKey) {
                       store.dispatch(appConfigSlice.actions.enterDemoMode());
-                      store.dispatch(authSlice.actions.enterDemoMode());
+                      // store.dispatch(authSlice.actions.enterDemoMode()); TODO
                       setReportLongPressed(false);
                       setSuggestLongPressed(false);
                     }
@@ -107,7 +113,7 @@ const ProfileScreen = () => {
                     alignSelf: "center",
                   }}
                   onPress={() => {
-                    Linking.openURL(
+                    void Linking.openURL(
                       "mailto:app@danceblue.org?subject=DanceBlue%20App%20Issue%20Report&body=What%20happened%3A%0A%3Ctype%20here%3E%0A%0AWhat%20I%20was%20doing%3A%0A%3Ctype%20here%3E%0A%0AOther%20information%3A%0A%3Ctype%20here%3E"
                     );
                   }}
@@ -119,7 +125,7 @@ const ProfileScreen = () => {
                 <Button
                   style={{ margin: 10, alignSelf: "center" }}
                   onPress={() => {
-                    Linking.openURL(
+                    void Linking.openURL(
                       "mailto:app@danceblue.org?subject=DanceBlue%20App%20Suggestion&body=%3Ctype%20here%3E"
                     );
                   }}
@@ -130,7 +136,7 @@ const ProfileScreen = () => {
                 />
                 <Text
                   style={{ textAlign: "center" }}
-                >{`Version: ${nativeApplicationVersion}`}</Text>
+                >{`Version: ${nativeApplicationVersion ?? ""}`}</Text>
               </View>
             </>
           ) /* End of loaded view */

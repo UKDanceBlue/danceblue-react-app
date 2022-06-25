@@ -13,6 +13,7 @@ interface UserDataType {
   linkblue?: string | null;
   attributes: Record<string, string>;
   team: FirestoreTeam | null;
+  teamId: string | null;
   teamIndividualSpiritPoints: FirestoreTeamIndividualSpiritPoints | null;
   teamFundraisingTotal: FirestoreTeamFundraising | null;
   userLoginType: UserLoginType | null;
@@ -26,6 +27,7 @@ const initialState: UserDataType = {
   linkblue: null,
   attributes: {},
   team: null,
+  teamId: null,
   teamIndividualSpiritPoints: null,
   teamFundraisingTotal: null,
   userLoginType: null,
@@ -34,16 +36,14 @@ const initialState: UserDataType = {
 
 export const loadUserData = createAsyncThunk(
   "userData/loadUserData",
-  async (payload: { userId: string; loginType: UserLoginType; firestore: FirebaseFirestoreTypes.Module }, {
-    rejectWithValue, dispatch
-  }): Promise<UserDataType> => {
+  async (payload: { userId: string; loginType: UserLoginType; firestore: FirebaseFirestoreTypes.Module }, { dispatch }): Promise<UserDataType> => {
     dispatch(startLoading("userData/loadUserData"));
     // Get the user's base document
     const userDataDoc = payload.firestore.collection("users").doc(payload.userId);
     const userDataSnapshot = await userDataDoc.get();
 
     if (!userDataSnapshot.exists) {
-      throw rejectWithValue(new Error("User data not found"));
+      throw new Error("User data not found");
     }
 
     const rawUserData = userDataSnapshot.data() as FirestoreUser;
@@ -94,6 +94,7 @@ export const loadUserData = createAsyncThunk(
 
       if (userTeamSnapshot.exists) {
         loadUserData.team = userTeamSnapshot.data() as FirestoreTeam;
+        loadUserData.teamId = rawUserData.team.id;
 
         const userTeamIndividualPointsDoc = payload.firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("individualSpiritPoints");
         const userTeamIndividualPointsSnapshot = await userTeamIndividualPointsDoc.get();

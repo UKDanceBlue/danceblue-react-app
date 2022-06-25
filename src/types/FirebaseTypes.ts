@@ -36,7 +36,7 @@ export interface FirestoreSponsor {
 
 export interface FirestoreNotification {
   body: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
   sendTime: FirebaseFirestoreTypes.Timestamp;
   sound: string;
   title: string;

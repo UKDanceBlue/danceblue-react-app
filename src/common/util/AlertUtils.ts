@@ -1,6 +1,6 @@
 import { Alert, Platform } from "react-native";
 
-import { NativeFirebaseError } from "../types/FirebaseTypes";
+import { NativeFirebaseError } from "../../types/FirebaseTypes";
 
 function logToFirebase(title: string, message: unknown, logInfo: unknown) {
   try {
@@ -20,8 +20,10 @@ function logToFirebase(title: string, message: unknown, logInfo: unknown) {
         undefined,
         "  "
       ),
+      // eslint-disable-next-line no-console
     }).then(null, () => console.debug("Failed to upload log to firebase"));
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.debug("Failed to upload log to firebase");
   }
 }
@@ -30,24 +32,24 @@ function logToFirebase(title: string, message: unknown, logInfo: unknown) {
  * Show a one button prompt
  */
 export function showMessage(
-  message: string | object,
+  message: unknown,
   title = "Error",
-  onAccept: () => unknown = () => {},
+  onAccept: () => unknown = () => null,
   log = false,
   logInfo: unknown = ""
 ) {
-  Alert.alert(title.toString(), message.toString(), [{ text: "OK", onPress: onAccept || (() => {}) }]);
+  Alert.alert(title.toString(), typeof message === "string" ? message : JSON.stringify(message, undefined, 2), [{ text: "OK", onPress: onAccept }]);
 
   if (log) {
+    // eslint-disable-next-line no-console
     console.log(
-      `${title}:\n${message}\nLog info:\n${
-        typeof logInfo === "object" ? JSON.stringify(logInfo, undefined, "  ") : logInfo
-      }`
+      `${title}:\n${JSON.stringify(message, undefined, 2)}\nLog info:\n${JSON.stringify(logInfo, undefined, "  ")}`
     );
     if (!__DEV__) {
       try {
         logToFirebase(title, message, logInfo);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.debug("Failed to upload log to firebase");
       }
     }
@@ -60,26 +62,30 @@ export function showMessage(
 export function showPrompt(
   message: string | object,
   title = "Error",
-  negativeAction: () => unknown = () => {},
-  positiveAction: () => unknown = () => {},
+  negativeAction: () => unknown = () => null,
+  positiveAction: () => unknown = () => null,
   negativeText = "No",
   positiveText = "Yes",
   log = false,
   logInfo: unknown = ""
 ) {
-  Alert.alert(title.toString(), message.toString(), [
+  Alert.alert(title.toString(), typeof message === "string" ? message : JSON.stringify(message, undefined, 2), [
     { text: negativeText, onPress: negativeAction, style: "cancel" },
     { text: positiveText, onPress: positiveAction },
   ]);
 
   if (log) {
+    // eslint-disable-next-line no-console
     console.log(
-      `${title}:\n${message}\nLog info:\n${
-        typeof logInfo === "object" ? JSON.stringify(logInfo, undefined, "  ") : logInfo
-      }`
+      `${title}:\n${JSON.stringify(message, undefined, 2)}\nLog info:\n${JSON.stringify(logInfo, undefined, "  ")}`
     );
     if (!__DEV__) {
-      logToFirebase(title, message, logInfo);
+      try {
+        logToFirebase(title, message, logInfo);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.debug("Failed to upload log to firebase");
+      }
     }
   }
 }
@@ -88,7 +94,7 @@ export function showPrompt(
  * Use showMessage to show a Firebase error code to the user and log the associated error message to stderr
  */
 export function handleFirebaseError(error: NativeFirebaseError, log = false) {
-  showMessage(`Error Code: ${error.code}`);
+  showMessage(`Error Code: ${error.code}\n${error.message}`, error.name);
   if (log) {
     console.error(error.message);
   }
@@ -105,8 +111,10 @@ export function handleFirebaseError(error: NativeFirebaseError, log = false) {
             ...Platform.constants,
           },
         }),
+      // eslint-disable-next-line no-console
       }).then(null, () => console.debug("Failed to upload log to firebase"));
     } catch {
+      // eslint-disable-next-line no-console
       console.debug("Failed to upload log to firebase");
     }
   }

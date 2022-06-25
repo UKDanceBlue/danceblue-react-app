@@ -52,7 +52,6 @@
     "yoda": "error",
     "prefer-template": "warn",
     "curly": "error",
-    "guard-for-in": "error",
     "grouped-accessor-pairs": "error",
     "no-console": [
       "warn",
@@ -277,6 +276,10 @@
       }
     ],
     "@typescript-eslint/keyword-spacing": "error",
+    "@typescript-eslint/prefer-for-of": "off",
+    "@typescript-eslint/no-unnecessary-condition": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-floating-promises": "off",
     // jsdoc
     "jsdoc/no-types": "error",
     // Imports

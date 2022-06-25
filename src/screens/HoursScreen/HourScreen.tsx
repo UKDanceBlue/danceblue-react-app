@@ -23,23 +23,24 @@ function composeInstructions(hourInstructions: HourInstructionsType) {
   // If it's an array iterate over it and assemble a list of instructions
   if (Array.isArray(hourInstructions)) {
     for (let i = 0; i < hourInstructions.length; i++) {
+      const hourInstruction = hourInstructions[i];
       // Is this an instruction that we want to be a level lower
-      if (typeof hourInstructions[i] === "object") {
+      if (Array.isArray(hourInstruction)) {
         // Add a top level instruction as the first array element
-        tempHourInstructionsText += `${i + 1}. ${hourInstructions[i][0]}
+        tempHourInstructionsText += `${i + 1}. ${hourInstruction[0]}
 `;
         // Start at the second element, assuming the first is the top level instruction
         for (
           let j = 1;
-          j < Object.keys(hourInstructions[i]).length && j - 1 < alphabet.length;
+          j < Object.keys(hourInstruction).length && j - 1 < alphabet.length;
           j++
         ) {
-          tempHourInstructionsText += `      ${alphabet[j - 1]}. ${hourInstructions[i][j]}
+          tempHourInstructionsText += `      ${alphabet[j - 1]}. ${hourInstruction[j]}
 `;
         }
         // Otherwise just add it as a normal element
       } else {
-        tempHourInstructionsText += `${i + 1}. ${hourInstructions[i]}
+        tempHourInstructionsText += `${i + 1}. ${hourInstruction}
 `;
       }
     }
@@ -196,11 +197,13 @@ const HourScreen = ({ route: { params } }: {
                   }}
                   style={{
                     width: screenWidth - 20,
-                    height: screenWidth / cachedImages[i][0]?.imageRatio,
+                    height: screenWidth / (cachedImages[i][0]?.imageRatio ?? 1),
                     resizeMode: "contain",
                     alignSelf: "center",
                     margin: 10,
                   }}
+                  width={cachedImages[i][0]?.imageWidth}
+                  height={cachedImages[i][0]?.imageHeight}
                 />
               </ReactNativeZoomableView>
             );
@@ -245,11 +248,11 @@ const HourScreen = ({ route: { params } }: {
                 buttonStyle={{ marginHorizontal: 15, marginVertical: 5 }}
                 title={buttonText}
                 onPress={() => {
-                  openBrowserAsync(buttonUrl);
+                  void openBrowserAsync(buttonUrl);
                 }}
                 onLongPress={() => {
                   showPrompt("Would you like to copy the link?", "Copy link", undefined, () => {
-                    Clipboard.setString(buttonUrl);
+                    void Clipboard.setStringAsync(buttonUrl);
                   });
                 }}
               />
@@ -264,7 +267,7 @@ const HourScreen = ({ route: { params } }: {
                 buttonStyle={{ marginHorizontal: 15, marginVertical: 5 }}
                 title={buttonText}
                 onPress={() => {
-                  openBrowserAsync(buttonUrl);
+                  void openBrowserAsync(buttonUrl);
                 }}
               />
             </View>

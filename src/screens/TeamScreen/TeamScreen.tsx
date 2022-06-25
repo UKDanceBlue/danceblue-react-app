@@ -13,16 +13,15 @@ import { StandingType } from "../../types/StandingType";
 const TeamScreen = () => {
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const isAnonymous = useAppSelector((state) => state.auth.isAnonymous);
-  const linkblue = useAppSelector((state) => state.auth.linkblue);
-  const userTeam = useAppSelector((state) => state.auth.team);
-  const fundraisingTotal = useAppSelector((state) => state.auth.teamFundraisingTotal);
+  const linkblue = useAppSelector((state) => state.userData.linkblue);
+  const userTeam = useAppSelector((state) => state.userData.team);
+  const fundraisingTotal = useAppSelector((state) => state.userData.teamFundraisingTotal);
   const teamIndividualSpiritPoints = useAppSelector(
-    (state) => state.auth.teamIndividualSpiritPoints
+    (state) => state.userData.teamIndividualSpiritPoints
   );
-  const [ standingData, setStandingData ] = useState<StandingType[]>([]);
+  const [ standingData, setStandingData ] = useState<StandingType[] | null>([]);
 
   useEffect(() => {
-    let shouldUpdateState = true;
     // Only run if the user has already been set
     if (teamIndividualSpiritPoints) {
       // Get the spirit point data from the confidential collection
@@ -34,23 +33,17 @@ const TeamScreen = () => {
         tempStandingData.push({
           id: recordLinkblue,
           // Fallback in the unlikely case we don't have the team member's name
-          name: userTeam?.members[recordLinkblue]
+          name: userTeam?.members?.[recordLinkblue]
             ? userTeam.members[recordLinkblue]
             : recordLinkblue,
           points: recordPoints,
           highlighted: recordLinkblue === linkblue,
         });
       });
-      if (shouldUpdateState) {
-        // Once all the data has been loaded in, we can update the state
-      }
       setStandingData(tempStandingData);
-    } else if (shouldUpdateState) {
+    } else {
       setStandingData(null);
     }
-    return () => {
-      shouldUpdateState = false;
-    };
   }, [
     linkblue, teamIndividualSpiritPoints, userTeam
   ]);

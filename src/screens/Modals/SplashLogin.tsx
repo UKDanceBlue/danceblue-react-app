@@ -3,6 +3,7 @@ import { ActivityIndicator, Dimensions, ImageBackground, StyleSheet, TouchableOp
 import { Text } from "react-native-elements";
 
 
+import splashBackground from "../../../assets/home/Dancing-min.jpg";
 import { useAppSelector } from "../../common/CustomHooks";
 import { useFirebase } from "../../common/FirebaseApp";
 import { useLinkBlueLogin } from "../../common/auth";
@@ -10,7 +11,6 @@ import { showMessage } from "../../common/util/AlertUtils";
 import { globalStyles, globalTextStyles } from "../../theme";
 
 
-const splashBackground = require("../../../assets/home/Dancing-min.jpg");
 
 /**
  * A simplified sign in page shown when the user first opens the app
@@ -25,7 +25,7 @@ const SplashLoginScreen = () => {
   const [
     loading,
     trigger,
-    userCredential,
+    ,
     error
   ] = useLinkBlueLogin(fbAuth, fbFunctions);
 
@@ -34,13 +34,6 @@ const SplashLoginScreen = () => {
       showMessage(error.message, "Error logging in");
     }
   }, [error]);
-
-  useEffect(() => {
-    if (userCredential) {
-      console.log("User credential: ", userCredential);
-    }
-  }, [userCredential]);
-
   return (
     <View style={globalStyles.genericCenteredView}>
       <ImageBackground source={splashBackground} style={localStyles.image}>
@@ -58,33 +51,33 @@ const SplashLoginScreen = () => {
             soon!
             </Text>
           </View>
-          {/* { allowedLoginTypes.includes("ms-oath-linkblue") && ( */}
-          <View style={globalStyles.genericHeaderContainer}>
-            <Text h3 style={globalStyles.genericText}>
+          { allowedLoginTypes.includes("ms-oath-linkblue") && (
+            <View style={globalStyles.genericHeaderContainer}>
+              <Text h3 style={globalStyles.genericText}>
             Sign in with your UK LinkBlue account
-            </Text>
-            <TouchableOpacity
-              onPress={() => trigger()}
-              style={globalStyles.genericButton}
-            >
-              <Text style={globalStyles.genericText}>SSO Login!</Text>
-            </TouchableOpacity>
-          </View>
-          {/* )} */}
+              </Text>
+              <TouchableOpacity
+                onPress={() => trigger()}
+                style={globalStyles.genericButton}
+              >
+                <Text style={globalStyles.genericText}>SSO Login!</Text>
+              </TouchableOpacity>
+            </View>
+          )}
 
-          {/* { allowedLoginTypes.includes("anonymous") && ( */}
-          <View style={globalStyles.genericCenteredView}>
-            <Text style={globalStyles.genericText}>
+          { allowedLoginTypes.includes("anonymous") && (
+            <View style={globalStyles.genericCenteredView}>
+              <Text style={globalStyles.genericText}>
             Want to look around first? You can always sign in later on the profile page
-            </Text>
-            <TouchableOpacity
-              onPress={() => fbAuth.signInAnonymously()}
-              style={globalStyles.genericButton}
-            >
-              <Text style={globalStyles.genericText}>Continue as a Guest</Text>
-            </TouchableOpacity>
-          </View>
-          {/* )} */}
+              </Text>
+              <TouchableOpacity
+                onPress={() => void fbAuth.signInAnonymously()}
+                style={globalStyles.genericButton}
+              >
+                <Text style={globalStyles.genericText}>Continue as a Guest</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </ImageBackground>
       { loading && (

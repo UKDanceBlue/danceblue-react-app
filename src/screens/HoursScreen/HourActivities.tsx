@@ -150,11 +150,7 @@ function getImageFromPhotosOrCamera(
     }
   };
 
-  if (store.getState().appConfig.offline) {
-    showMessage(
-      "You seem to be offline, connect to the internet or talk to your morale group leader"
-    );
-  } else if (Platform.OS === "ios") {
+  if (Platform.OS === "ios") {
     ActionSheetIOS.showActionSheetWithOptions(
       {
         options: [
@@ -263,9 +259,9 @@ export const DadJokeLeaderboard = () => {
         dadJokeTempMagicCallback={(checked, id) => {
           if (firebaseAuth().currentUser?.uid) {
             if (checked) {
-              dadJokesDoc.update(`${id}.votes`, firebaseFirestore.FieldValue.arrayUnion(firebaseAuth().currentUser?.uid));
+              void dadJokesDoc.update(`${id}.votes`, firebaseFirestore.FieldValue.arrayUnion(firebaseAuth().currentUser?.uid));
             } else {
-              dadJokesDoc.update(`${id}.votes`, firebaseFirestore.FieldValue.arrayRemove(firebaseAuth().currentUser?.uid));
+              void dadJokesDoc.update(`${id}.votes`, firebaseFirestore.FieldValue.arrayRemove(firebaseAuth().currentUser?.uid));
             }
           }
         }}
@@ -285,7 +281,7 @@ export const DadJokeLeaderboard = () => {
         style={{ borderColor: "blue", borderWidth: 1, borderRadius: 5, marginTop: 10 }}
         autoCompleteType="off"
         autoComplete="off"
-        onSubmitEditing={async (event) => {
+        onSubmitEditing={(event) => {
           const submittedText = event.nativeEvent.text;
 
           if (firebaseAuth().currentUser?.uid) {
@@ -332,7 +328,7 @@ const activities = {
             !Number.isNaN(parsedText) &&
             parsedText > 0
           ) {
-            await firebaseFirestore().doc(`marathon/2022/guessing-game/${firebaseAuth().currentUser?.uid}`).set(
+            await firebaseFirestore().doc(`marathon/2022/guessing-game/${firebaseAuth().currentUser?.uid ?? ""}`).set(
               {
                 guess: parsedText,
                 email: firebaseAuth().currentUser?.email,
