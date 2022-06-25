@@ -1,10 +1,6 @@
 // Import third-party dependencies
 import NetInfo from "@react-native-community/netinfo";
-import auth from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
 import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
-import * as Application from "expo-application";
-import { useAssets } from "expo-asset";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
 import * as SplashScreen from "expo-splash-screen";
@@ -18,31 +14,16 @@ import "./src/common/util/AndroidTimerFix";
 import { FirebaseProvider } from "./src/common/FirebaseApp";
 import { showMessage } from "./src/common/util/AlertUtils";
 import RootScreen from "./src/navigation/RootScreen";
+import { logout } from "./src/redux/authSlice";
 import { registerPushNotifications } from "./src/redux/notificationSlice";
 import store from "./src/redux/store";
 import { rnElementsTheme } from "./src/theme";
 
 // All assets that should be preloaded:
-const dbLogo = require("./assets/home/DB_Primary_Logo-01.png");
-const splashLoginBackground = require("./assets/home/Dancing-min.jpg");
-const homeBackgroundImg = require("./assets/home/db20_ribbon.jpg");
 
-// Promise.allSettled polyfill
-Promise.allSettled = Promise.allSettled ||
-  ((promises: any[]) => Promise.all(
-    promises.map((p) => p
-      .then((value: any) => ({
-        status: "fulfilled",
-        value,
-      }))
-      .catch((reason: any) => ({
-        status: "rejected",
-        reason,
-      }))
-    )
-  ));
-
+// Configure the notifications handler
 Notifications.setNotificationHandler({
+  // eslint-disable-next-line @typescript-eslint/require-await
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: false,
@@ -50,66 +31,14 @@ Notifications.setNotificationHandler({
   }),
 });
 
-SplashScreen.preventAutoHideAsync();
-
-const firstTimeSync = auth().onAuthStateChanged(() => {
-  if (!__DEV__) {
-    firestore().doc("__VERSION/required").get()
-      .then((majorVerSnap) => {
-        // Parse app version
-        const versionTokens = Application.nativeApplicationVersion?.split(".", 2);
-        let appMajor = Number.parseInt(versionTokens?.[0] || "0", 10);
-        if (Number.isNaN(appMajor)) {
-          appMajor = 0;
-        }
-        let appMinor = Number.parseInt(versionTokens?.[1] || "0", 10);
-        if (Number.isNaN(appMinor)) {
-          appMinor = 0;
-        }
-
-        // Parse required version
-        const reqMajor = majorVerSnap.get("major");
-        const reqMinor = majorVerSnap.get("minor");
-        if (typeof reqMajor !== "number" || typeof reqMinor !== "number") {
-          return;
-        }
-        if (!((appMajor === reqMajor && appMinor >= reqMinor) || appMajor > reqMajor)) {
-          // App needs an update
-          const showUpdateMessage = () => {
-            showMessage(
-              "Your version of the DanceBlue mobile app is out of date and must be updated before you can use it.",
-              "Old version",
-              showUpdateMessage
-            );
-          };
-          showUpdateMessage();
-        } else {
-          firestore().doc("__VERSION/current").get()
-            .then((latestVerSnap) => {
-            // Parse latest version
-              const currMajor = latestVerSnap.get("major");
-              const currMinor = latestVerSnap.get("minor");
-              if (typeof currMajor !== "number" || typeof currMinor !== "number") {
-                return;
-              }
-              if (!((appMajor === currMajor && appMinor >= currMinor) || appMajor > currMajor)) {
-                showMessage("A new version of the DanceBlue app is available.", "Update available");
-              }
-            })
-            .catch();
-        }
-      })
-      .catch();
-  }
-
-  firstTimeSync();
-});
+// Don't hide the splash screen until it is dismissed automatically
+void SplashScreen.preventAutoHideAsync();
 
 let hasPushRegistrationObserverFired = false;
 const pushRegistrationObserver = store.subscribe(() => {
   // This will run on every redux state update until a uuid is set when it will try to register for push notifications
   if (!hasPushRegistrationObserverFired && store.getState().notification.uuid) {
-    Notifications.scheduleNotificationAsync({
+    void Notifications.scheduleNotificationAsync({
       content: {
         title: "DanceBlue",
         body: "You have a new message!",
@@ -118,7 +47,7 @@ const pushRegistrationObserver = store.subscribe(() => {
       trigger: { seconds: 1 },
     });
     hasPushRegistrationObserverFired = true;
-    store.dispatch(registerPushNotifications());
+    void store.dispatch(registerPushNotifications());
     pushRegistrationObserver();
   }
 });
@@ -182,9 +111,7 @@ const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
       // Clean up the event listeners
       Linking.removeEventListener("url", onReceiveURL);
 
-      if (expoSubscription) {
-        expoSubscription.remove();
-      }
+      expoSubscription.remove();
     };
   },
 };
@@ -192,10 +119,6 @@ const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
  * Main app container
  */
 const App = () => {
-  const [ assets, assetError ] = useAssets([
-    splashLoginBackground, homeBackgroundImg, dbLogo
-  ]);
-
   const isOfflineInternal = useRef(false);
   useEffect(
     () => NetInfo.addEventListener((state) => {
@@ -205,7 +128,7 @@ const App = () => {
           "You seem to be offline, some functionality may be unavailable or out of date"
         );
         // Store.dispatch(appConfigSlice.actions.goOffline()); TODO Reimplement
-        store.dispatch(authSlice.actions.loginOffline());
+        store.dispatch(logout());
       } else if (isOfflineInternal.current) {
         // Store.dispatch(appConfigSlice.actions.goOnline());
         // If (firebaseAuth.currentUser) {
@@ -217,15 +140,7 @@ const App = () => {
     []
   );
 
-  if (assetError) {
-    showMessage(assetError, "Error loading assets");
-  }
-
-  if (!assets && hasPushRegistrationObserverFired) {
-    return null;
-  }
-
-  SplashScreen.hideAsync();
+  void SplashScreen.hideAsync();
 
   return (
     <Provider store={store}>
