@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, View, useWindowDimensions } from "react-native";
 import { Button, Image, Text, useTheme } from "react-native-elements";
 
-import { showPrompt } from "../../common/AlertUtils";
 import { UseCachedFilesType, useCachedImages } from "../../common/CacheUtils";
+import { showPrompt } from "../../common/util/AlertUtils";
 import { globalTextStyles } from "../../theme";
 import { FirestoreHour } from "../../types/FirebaseTypes";
 import { HourInstructionsType } from "../../types/HourScreenTypes";

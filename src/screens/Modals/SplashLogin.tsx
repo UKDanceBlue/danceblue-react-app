@@ -3,10 +3,10 @@ import { ActivityIndicator, Dimensions, ImageBackground, StyleSheet, TouchableOp
 import { Text } from "react-native-elements";
 
 
-import { showMessage } from "../../common/AlertUtils";
 import { useAppSelector } from "../../common/CustomHooks";
 import { useFirebase } from "../../common/FirebaseApp";
 import { useLinkBlueLogin } from "../../common/auth";
+import { showMessage } from "../../common/util/AlertUtils";
 import { globalStyles, globalTextStyles } from "../../theme";
 
 

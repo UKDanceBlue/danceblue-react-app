@@ -25,7 +25,7 @@ describe("<TimeUnit />", () => {
   });
 
   it("renders 0 with a nullish value", () => {
-    // @ts-ignore
+    // @ts-expect-error
     const tree = render(<TimeUnit value={null} unit={"seconds"} />);
 
     const valueElement = tree.queryAllByText("0");
@@ -39,7 +39,7 @@ describe("<TimeUnit />", () => {
     const mockedConsoleError = jest.spyOn(console, "error").mockImplementation(() => {});
 
     const invalidUnit = "an invalid unit";
-    // @ts-ignore
+    // @ts-expect-error
     expect(() => render(<TimeUnit value={1} unit={invalidUnit} />)).toThrow(`Invalid unit: ${invalidUnit}`);
 
     mockedConsoleError.mockRestore();

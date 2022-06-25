@@ -22,7 +22,7 @@ const possibleTabs = {
   Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
   Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,
   MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
-} as { [key: string]: JSX.Element };
+} as Record<string, JSX.Element>;
 
 const TabBar = () => {
   const isConfigLoaded = true; // UseAppSelector((state) => state.appConfig.isConfigLoaded);
@@ -64,7 +64,7 @@ const TabBar = () => {
                 Team: "users",
                 Donate: "hand-holding-heart",
                 Marathon: "people-arrows",
-              } as { [key: string]: string };
+              } as Record<string, string>;
 
               // You can return any component that you like here!
               return (

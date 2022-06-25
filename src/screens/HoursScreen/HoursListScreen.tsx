@@ -94,7 +94,7 @@ const HourRow = ({
       hasTVPreferredFocus={undefined}
       tvParallaxProperties={undefined}
       onPress={
-        clickable ? () => navigation?.navigate("Hour Details", { firestoreHour }) : undefined
+        clickable ? () => navigation.navigate("Hour Details", { firestoreHour }) : undefined
       }
       disabled={!clickable}
       key={hourNumber}

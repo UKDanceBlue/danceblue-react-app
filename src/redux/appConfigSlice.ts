@@ -1,17 +1,17 @@
 import firebaseRemoteConfig from "@react-native-firebase/remote-config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { showMessage } from "../common/AlertUtils";
+import { showMessage } from "../common/util/AlertUtils";
 
 import { UserLoginType } from "./userDataSlice";
 
-type AppConfigSliceType = {
+interface AppConfigSliceType {
   isConfigLoaded: boolean;
   enabledScreens: string[];
   allowedLoginTypes: UserLoginType[];
-  scoreboardMode: {pointType:string;showIcons:boolean;showTrophies:boolean};
+  scoreboardMode: { pointType:string;showIcons:boolean;showTrophies:boolean };
   demoModeKey: string;
-};
+}
 
 const initialState: AppConfigSliceType = {
   isConfigLoaded: false,

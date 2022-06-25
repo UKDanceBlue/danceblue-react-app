@@ -2,9 +2,9 @@ import firebaseFirestore from "@react-native-firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl, SafeAreaView, ScrollView } from "react-native";
 
-import { showMessage } from "../../common/AlertUtils";
 import { useAppSelector } from "../../common/CustomHooks";
 import Standings from "../../common/components/Standings";
+import { showMessage } from "../../common/util/AlertUtils";
 import store from "../../redux/store";
 import { globalColors, globalStyles } from "../../theme";
 import { FirestoreMoraleTeam, FirestoreTeam } from "../../types/FirebaseTypes";

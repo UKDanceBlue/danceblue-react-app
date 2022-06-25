@@ -232,16 +232,14 @@ export const DadJokeLeaderboard = () => {
   const [ dadJokes, setDadJokes ] = useState<StandingType[]>([]);
 
   useEffect(() => dadJokesDoc.onSnapshot((dadJokeSnapshot) => {
-    const dadJokeSnapshotData = dadJokeSnapshot.data() as {
-        [key: string]: { jokeText: string; votes: string[] };
-      };
+    const dadJokeSnapshotData = dadJokeSnapshot.data() as Record<string, { jokeText: string; votes: string[] }>;
     if (dadJokeSnapshotData) {
       const dadJokeSnapshotArray = Object.entries(dadJokeSnapshotData);
       const tempDadJokes = dadJokeSnapshotArray.map(([ id, joke ]) => ({
         id,
         name: joke.jokeText,
         points: joke.votes.length,
-        highlighted: joke.votes.indexOf(firebaseAuth().currentUser?.uid || "") > -1, // Use highlighted to mark if it should be start checked
+        highlighted: joke.votes.includes(firebaseAuth().currentUser?.uid || ""), // Use highlighted to mark if it should be start checked
       }));
       setDadJokes(tempDadJokes);
     }
@@ -375,6 +373,6 @@ const activities = {
       onPress={() => getImageFromPhotosOrCamera(uploadImageAsync, "photo-booth")}
     />
   ),
-} as { [key: string]: JSX.Element };
+} as Record<string, JSX.Element>;
 
 export default activities;

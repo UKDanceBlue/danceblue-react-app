@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { FirestoreHour } from "../types/FirebaseTypes";
 
-type MarathonSliceType = {
+interface MarathonSliceType {
   marathonHours: FirestoreHour[];
-};
+}
 
 const initialState: MarathonSliceType = { marathonHours: [] };
 

@@ -7,8 +7,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import { Button, ListItem, Text } from "react-native-elements";
 
-import { showMessage } from "../../common/AlertUtils";
 import { useAppSelector } from "../../common/CustomHooks";
+import { showMessage } from "../../common/util/AlertUtils";
 import { registerPushNotifications } from "../../redux/notificationSlice";
 import store from "../../redux/store";
 import { globalStyles, globalTextStyles } from "../../theme";
@@ -16,9 +16,7 @@ import { FirestoreNotification } from "../../types/FirebaseTypes";
 
 const uuidStoreKey = __DEV__ ? "danceblue.device-uuid.dev" : "danceblue.device-uuid";
 
-const notificationsCache = {} as {
-  [key: string]: FirestoreNotification;
-};
+const notificationsCache = {} as Record<string, FirestoreNotification>;
 
 /**
  * Component for "Profile" screen in main navigation

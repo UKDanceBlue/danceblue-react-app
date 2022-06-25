@@ -3,9 +3,9 @@ import { FirebaseStorageTypes } from "@react-native-firebase/storage";
 
 import { HourInstructionsType, SpecialComponentType } from "./HourScreenTypes";
 
-export type NativeFirebaseError = Parameters<FirebaseStorageTypes.TaskSnapshotObserver["error"]>[0]
+export type NativeFirebaseError = Parameters<FirebaseStorageTypes.TaskSnapshotObserver["error"]>[0];
 export interface FirestoreUser {
-  attributes?: { [key: string]: string };
+  attributes?: Record<string, string>;
   email: string | null;
   firstName: string | null;
   lastName: string | null;
@@ -15,7 +15,7 @@ export interface FirestoreUser {
 }
 
 export interface FirestoreTeam {
-  members?: { [key: string]: string };
+  members?: Record<string, string>;
   name: string;
   spiritSpreadsheetId?: string;
   networkForGoodId?: string;
@@ -26,9 +26,7 @@ export interface FirestoreTeamFundraising {
   total?: number;
 }
 
-export interface FirestoreTeamIndividualSpiritPoints {
-  [key: string]: number;
-}
+export type FirestoreTeamIndividualSpiritPoints = Record<string, number>;
 
 export interface FirestoreSponsor {
   link?: string;
@@ -38,7 +36,7 @@ export interface FirestoreSponsor {
 
 export interface FirestoreNotification {
   body: string;
-  data?: { [key: string]: any };
+  data?: Record<string, any>;
   sendTime: FirebaseFirestoreTypes.Timestamp;
   sound: string;
   title: string;
@@ -94,7 +92,7 @@ export interface FirestoreHour {
 }
 
 export interface FirestoreMoraleTeam {
-  members: { [key: string]: string };
+  members: Record<string, string>;
   leaders: string;
   teamNumber: number;
   points: number;

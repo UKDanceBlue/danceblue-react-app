@@ -3,13 +3,13 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { startLoading, stopLoading } from "./globalLoadingSlice";
 
-type AuthSliceType = {
+interface AuthSliceType {
   isAuthLoaded: boolean;
   isLoggedIn: boolean;
   isAnonymous: boolean;
   uid: string | null;
   authClaims: FirebaseAuthTypes.IdTokenResult | null;
-};
+}
 
 const initialState: AuthSliceType = {
   isAuthLoaded: false,
@@ -22,7 +22,7 @@ const initialState: AuthSliceType = {
 // Async login action (for use with createAsyncThunk)
 export const syncAuth = createAsyncThunk(
   "auth/sync",
-  async (payload: {user: FirebaseAuthTypes.User}, {
+  async (payload: { user: FirebaseAuthTypes.User }, {
     rejectWithValue, dispatch
   }): Promise<Partial<AuthSliceType>> => {
     dispatch(startLoading("auth/sync"));

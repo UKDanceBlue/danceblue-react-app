@@ -15,8 +15,8 @@ import { Provider } from "react-redux";
 
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
 import "./src/common/util/AndroidTimerFix";
-import { showMessage } from "./src/common/AlertUtils";
 import { FirebaseProvider } from "./src/common/FirebaseApp";
+import { showMessage } from "./src/common/util/AlertUtils";
 import RootScreen from "./src/navigation/RootScreen";
 import { registerPushNotifications } from "./src/redux/notificationSlice";
 import store from "./src/redux/store";

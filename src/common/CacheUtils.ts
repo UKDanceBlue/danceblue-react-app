@@ -5,17 +5,17 @@ import { Image } from "react-native";
 
 import store from "../redux/store";
 
-import { showMessage } from "./AlertUtils";
 import { useDeepEffect } from "./CustomHooks";
+import { showMessage } from "./util/AlertUtils";
 
 
-export type UseCachedFilesType = {
+export interface UseCachedFilesType {
   assetId: string;
   freshnessTime: number;
   googleUri?: string;
   downloadUri?: string;
   base64?: boolean;
-};
+}
 
 async function getFile(
   localUri: string,
@@ -117,7 +117,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
 
         for (let i = 0; i < options.length; i++) {
           if (options[i]) {
-            fileContentPromises.push(getFile(localUris[i] as string, options[i]));
+            fileContentPromises.push(getFile(localUris[i]!, options[i]));
           } else {
             // Mark an empty space
             fileContentPromises.push((async () => [ null, null ])());
@@ -144,12 +144,12 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
   return hookState;
 }
 
-export type UseCachedImagesReturnType = {
+export interface UseCachedImagesReturnType {
   imageBase64: string;
   imageWidth: number;
   imageHeight: number;
   imageRatio: number;
-};
+}
 
 export function useCachedImages(options: UseCachedFilesType[]) {
   const [ hookState, setHookState ] = useState<[UseCachedImagesReturnType | null, Error | null][]>(

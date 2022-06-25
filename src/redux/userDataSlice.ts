@@ -6,20 +6,18 @@ import { FirestoreNotification, FirestoreTeam, FirestoreTeamFundraising, Firesto
 import { startLoading, stopLoading } from "./globalLoadingSlice";
 
 export type UserLoginType = "anonymous" | "ms-oath-linkblue";
-type UserDataType = {
+interface UserDataType {
   firstName: string | null;
   lastName: string | null;
   email: string | null;
   linkblue?: string | null;
-  attributes: {
-    [key: string]: string;
-  };
+  attributes: Record<string, string>;
   team: FirestoreTeam | null;
   teamIndividualSpiritPoints: FirestoreTeamIndividualSpiritPoints | null;
   teamFundraisingTotal: FirestoreTeamFundraising | null;
   userLoginType: UserLoginType | null;
   pastNotifications: FirestoreNotification[];
-};
+}
 
 const initialState: UserDataType = {
   firstName: null,
@@ -36,7 +34,7 @@ const initialState: UserDataType = {
 
 export const loadUserData = createAsyncThunk(
   "userData/loadUserData",
-  async (payload: { userId: string, loginType: UserLoginType, firestore: FirebaseFirestoreTypes.Module }, {
+  async (payload: { userId: string; loginType: UserLoginType; firestore: FirebaseFirestoreTypes.Module }, {
     rejectWithValue, dispatch
   }): Promise<UserDataType> => {
     dispatch(startLoading("userData/loadUserData"));

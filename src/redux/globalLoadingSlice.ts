@@ -1,9 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-type GlobalLoadingSliceType = {
+interface GlobalLoadingSliceType {
   loadingTokens: Record<string, boolean>;
   anyLoading: boolean;
-};
+}
 
 const initialState: GlobalLoadingSliceType = { loadingTokens: {}, anyLoading: false };
 
@@ -13,9 +13,9 @@ const globalLoadingSlice = createSlice({
   reducers: {
     setLoading: (state, action: PayloadAction<{ token: string; loading: boolean }>) => {
       state.loadingTokens[action.payload.token] = action.payload.loading;
-      if (action.payload.loading === true && state.anyLoading === false) {
+      if (action.payload.loading && !state.anyLoading) {
         state.anyLoading = true;
-      } else if (action.payload.loading === false && state.anyLoading === true) {
+      } else if (!action.payload.loading && state.anyLoading) {
         state.anyLoading = Object.values(state.loadingTokens).some((value) => value);
       }
     },

@@ -5,7 +5,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { FirestoreHour } from "./FirebaseTypes";
 
 // Navigator param types
-export type TabNavigatorParamList = {
+export interface TabNavigatorParamList {
   Events: undefined;
   Scoreboard: undefined;
   Team: undefined;
@@ -14,9 +14,9 @@ export type TabNavigatorParamList = {
   Donate: { uri: string } | undefined;
   Home: undefined;
   HoursScreen: undefined;
-};
+}
 
-export type MainStackParamList = {
+export interface MainStackParamList {
   Tab: NavigatorScreenParams<TabNavigatorParamList>;
   Notifications: undefined;
   Profile: undefined;
@@ -27,13 +27,13 @@ export type MainStackParamList = {
   "Hour Details": {
     firestoreHour: FirestoreHour;
   };
-};
+}
 
-export type RootStackParamList = {
+export interface RootStackParamList {
   Main: NavigatorScreenParams<MainStackParamList>;
   SplashLogin: undefined;
   DefaultRoute: { uri: string } | undefined;
-};
+}
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = StackScreenProps<
   RootStackParamList,
@@ -52,6 +52,6 @@ export type TabScreenProps<T extends keyof TabNavigatorParamList> = CompositeScr
 
 declare global {
   namespace ReactNavigation {
-    type RootParamList = RootStackParamList
+    type RootParamList = RootStackParamList;
   }
 }

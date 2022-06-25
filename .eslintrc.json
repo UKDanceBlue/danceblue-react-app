@@ -12,6 +12,9 @@
   ],
   "extends": [
     "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:@typescript-eslint/strict",
     "plugin:import/recommended",
     "plugin:import/typescript",
     "plugin:react/recommended",
@@ -39,11 +42,12 @@
   ],
   "rules": {
     // Possible Errors
+    "no-undef": "off",
     "spaced-comment": [
       "error",
       "always"
     ],
-    "require-await": "error",
+    "@typescript-eslint/require-await": "error",
     "radix": "error",
     "yoda": "error",
     "prefer-template": "warn",
@@ -69,7 +73,7 @@
     ],
     "no-implicit-globals": "error",
     "no-lonely-if": "error",
-    "no-return-await": "error",
+    "@typescript-eslint/return-await": "error",
     "no-var": "error",
     "prefer-const": "error",
     "object-shorthand": "error",
@@ -90,26 +94,27 @@
       "smart"
     ],
     // Style
-    "quotes": [
+    "@typescript-eslint/quotes": [
       "error",
       "double"
     ],
-    "semi": [
+    "@typescript-eslint/semi": [
       "error",
       "always"
     ],
+    "@typescript-eslint/member-delimiter-style": "error",
     "arrow-parens": [
       "error",
       "always"
     ],
-    "brace-style": [
+    "@typescript-eslint/brace-style": [
       "error",
       "1tbs",
       {
         "allowSingleLine": true
       }
     ],
-    "lines-between-class-members": [
+    "@typescript-eslint/lines-between-class-members": [
       "error",
       "always",
       {
@@ -147,7 +152,7 @@
         }
       }
     ],
-    "object-curly-spacing": [
+    "@typescript-eslint/object-curly-spacing": [
       "error",
       "always"
     ],
@@ -177,7 +182,7 @@
         "after": true
       }
     ],
-    "space-before-function-paren": [
+    "@typescript-eslint/space-before-function-paren": [
       "error",
       {
         "anonymous": "always",
@@ -219,7 +224,7 @@
         "after": true
       }
     ],
-    "comma-dangle": [
+    "@typescript-eslint/comma-dangle": [
       "error",
       {
         "arrays": "only-multiline",
@@ -233,7 +238,7 @@
       "error",
       "last"
     ],
-    "comma-spacing": [
+    "@typescript-eslint/comma-spacing": [
       "error",
       {
         "before": false,
@@ -271,7 +276,7 @@
         "afterColon": true
       }
     ],
-    "keyword-spacing": "error",
+    "@typescript-eslint/keyword-spacing": "error",
     // jsdoc
     "jsdoc/no-types": "error",
     // Imports
@@ -319,12 +324,7 @@
     "import/no-unresolved": "off",
     // React
     "react/jsx-uses-react": "off",
-    "react/react-in-jsx-scope": "off",
-    // Types
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "error"
-    ]
+    "react/react-in-jsx-scope": "off"
   },
   "settings": {
     "jsdoc": {

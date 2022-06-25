@@ -5,17 +5,17 @@ import * as Notifications from "expo-notifications";
 import { ExpoPushToken } from "expo-notifications";
 import * as SecureStore from "expo-secure-store";
 
-import { showMessage } from "../common/AlertUtils";
+import { showMessage } from "../common/util/AlertUtils";
 import generateUuid from "../common/util/GenerateUuid";
 import { globalColors } from "../theme";
 
 const uuidStoreKey = __DEV__ ? "danceblue.device-uuid.dev" : "danceblue.device-uuid";
 
-type NotificationSliceType = {
+interface NotificationSliceType {
   uuid: string | null;
   pushToken: string | null;
   notificationPermissionsGranted: boolean | null;
-};
+}
 
 const initialState: NotificationSliceType = {
   uuid: null,
@@ -39,7 +39,7 @@ export const obtainUuid = createAsyncThunk("notification/obtainUuid", async () =
 }
 );
 
-type RegisterPushNotificationsErrors = { error: "DEVICE_IS_EMULATOR" };
+interface RegisterPushNotificationsErrors { error: "DEVICE_IS_EMULATOR" }
 
 export const registerPushNotifications = createAsyncThunk<
   { token: ExpoPushToken | null; notificationPermissionsGranted: boolean },
@@ -135,7 +135,7 @@ export const notificationSlice = createSlice({
       })
       .addCase(registerPushNotifications.rejected, (state, action) => {
         if (action.error.message === "Rejected") {
-          switch ((action?.payload as RegisterPushNotificationsErrors)?.error) {
+          switch ((action.payload as RegisterPushNotificationsErrors).error) {
           case "DEVICE_IS_EMULATOR":
             showMessage("Emulators will not receive push notifications");
             break;

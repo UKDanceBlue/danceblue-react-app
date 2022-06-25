@@ -17,7 +17,7 @@ const TimeUnit = ({
   value: number | undefined;
   unit: typeof validUnits[number];
 }) => {
-  if (validUnits.indexOf(unit) === -1) {
+  if (!validUnits.includes(unit)) {
     throw new Error(`Invalid unit: ${unit}`);
   }
 
