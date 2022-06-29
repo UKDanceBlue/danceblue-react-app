@@ -1,9 +1,8 @@
+import NetInfo from "@react-native-community/netinfo";
 import firebaseStorage from "@react-native-firebase/storage";
 import * as FileSystem from "expo-file-system";
 import { SetStateAction, useEffect, useState } from "react";
 import { Image } from "react-native";
-
-import store from "../redux/store";
 
 import { useDeepEffect } from "./CustomHooks";
 import { showMessage } from "./util/AlertUtils";
@@ -30,33 +29,32 @@ async function getFile(
       !localAssetInfo.exists ||
       new Date().getTime() / 1000 - localAssetInfo.modificationTime > cacheOption.freshnessTime
     ) {
-      if (store.getState().appConfig.offline) {
+      if ((await NetInfo.fetch()).isConnected) {
         return [ null, null ];
-      } else {
-        // If the file doesn't exist but we can download it we are going to do so
-        // Start by getting figuring out a download uri
-        let { downloadUri } = cacheOption;
-        if (cacheOption.googleUri) {
-          downloadUri = await firebaseStorage().refFromURL(cacheOption.googleUri).getDownloadURL();
-        }
-        // If there is still no download Uri then throw an error
-        if (!downloadUri) {
-          throw new Error("No download uri could be determined");
-        }
-
-        // Check if the cache directory exists
-        const { exists: cacheDirectoryExists } = await FileSystem.getInfoAsync(
-          `${FileSystem.cacheDirectory}DBFileCache/`
-        );
-
-        // If not, make it
-        if (!cacheDirectoryExists) {
-          await FileSystem.makeDirectoryAsync(`${FileSystem.cacheDirectory}DBFileCache/`, { intermediates: true });
-        }
-
-        // Finally we download the file from downloadUri
-        await FileSystem.downloadAsync(downloadUri, localUri);
       }
+      // If the file doesn't exist but we can download it we are going to do so
+      // Start by getting figuring out a download uri
+      let { downloadUri } = cacheOption;
+      if (cacheOption.googleUri) {
+        downloadUri = await firebaseStorage().refFromURL(cacheOption.googleUri).getDownloadURL();
+      }
+      // If there is still no download Uri then throw an error
+      if (!downloadUri) {
+        throw new Error("No download uri could be determined");
+      }
+
+      // Check if the cache directory exists
+      const { exists: cacheDirectoryExists } = await FileSystem.getInfoAsync(
+        `${FileSystem.cacheDirectory ?? ""}DBFileCache/`
+      );
+
+      // If not, make it
+      if (!cacheDirectoryExists) {
+        await FileSystem.makeDirectoryAsync(`${FileSystem.cacheDirectory ?? ""}DBFileCache/`, { intermediates: true });
+      }
+
+      // Finally we download the file from downloadUri
+      await FileSystem.downloadAsync(downloadUri, localUri);
     }
     const localFileContent = await FileSystem.readAsStringAsync(localUri, { encoding: cacheOption.base64 ? FileSystem.EncodingType.Base64 : FileSystem.EncodingType.UTF8 });
 
@@ -89,7 +87,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
     const tempLocalUris = Array(options.length).fill("");
     for (let i = 0; i < options.length; i++) {
       if (options[i]) {
-        tempLocalUris[i] = `${FileSystem.cacheDirectory}DBFileCache/${encodeURIComponent(
+        tempLocalUris[i] = `${FileSystem.cacheDirectory ?? ""}DBFileCache/${encodeURIComponent(
           options[i].assetId
         )}`;
       }
@@ -99,7 +97,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
   }, [options]);
 
   useDeepEffect(() => {
-    (async () => {
+    void (async () => {
       let allNeededVariablesSet = true;
       for (let i = 0; i < options.length; i++) {
         if (options[i]) {
@@ -117,10 +115,10 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
 
         for (let i = 0; i < options.length; i++) {
           if (options[i]) {
-            fileContentPromises.push(getFile(localUris[i]!, options[i]));
+            fileContentPromises.push(getFile(localUris[i] ?? "", options[i]));
           } else {
             // Mark an empty space
-            fileContentPromises.push((async () => [ null, null ])());
+            fileContentPromises.push((() => new Promise((resolve) => {resolve([ null, null ]);}))());
           }
         }
 
@@ -166,7 +164,7 @@ export function useCachedImages(options: UseCachedFilesType[]) {
       (element) => new Promise((resolved, rejected) => {
         // For some reason there is a comma at then end of the base64 string?? So this just removes the last character
         Image.getSize(
-          `data:image/png;base64,${element}`.slice(0, -1),
+          `data:image/png;base64,${element.toString()}`.slice(0, -1),
           (width, height) => resolved([ width, height ]),
           rejected
         );
@@ -177,15 +175,13 @@ export function useCachedImages(options: UseCachedFilesType[]) {
     const dontUpdateState = () => {
       shouldUpdateState = false;
     };
-    Promise.allSettled(imageSizePromises).then((resolutions) => {
+    void Promise.allSettled(imageSizePromises).then((resolutions) => {
       const tempImageSizes: SetStateAction<[number, number][]> = [];
       resolutions.forEach((resolution, index) => {
         if (resolution.status === "fulfilled") {
           if (Array.isArray(resolution.value)) {
             tempImageSizes[index] = resolution.value as [number, number];
           }
-        } else {
-          tempImageSizes[index] = resolution.reason;
         }
       });
       if (shouldUpdateState) {
@@ -206,7 +202,7 @@ export function useCachedImages(options: UseCachedFilesType[]) {
           const [ imageWidth, imageHeight ] = imageSizes[i];
           tempHookState[i] = [
             {
-              imageBase64: `data:image/png;base64,${cachedImage[0]}`,
+              imageBase64: `data:image/png;base64,${cachedImage[0] ?? ""}`,
               imageWidth,
               imageHeight,
               imageRatio: imageWidth / imageHeight,

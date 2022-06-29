@@ -1,6 +1,6 @@
 import { Alert, Platform } from "react-native";
 
-import { NativeFirebaseError } from "../types/FirebaseTypes";
+import { NativeFirebaseError } from "../../types/FirebaseTypes";
 
 function logToFirebase(title: string, message: unknown, logInfo: unknown) {
   try {
@@ -32,7 +32,7 @@ function logToFirebase(title: string, message: unknown, logInfo: unknown) {
 export function showMessage(
   message: string | object,
   title = "Error",
-  onAccept: () => unknown = () => {},
+  onAccept: () => unknown = () => undefined,
   log = false,
   logInfo: unknown = ""
 ) {
