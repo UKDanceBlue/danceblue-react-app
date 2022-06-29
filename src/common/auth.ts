@@ -40,7 +40,7 @@ export const useLinkBlueLogin = (fbAuth: FirebaseAuthTypes.Module, fbFunctions: 
           const customToken = await generateCustomToken({
             accessToken: result.authentication.accessToken,
             // Nonce: nonce.current
-          });
+          }) as { data: string };
 
           setUserCredential(await fbAuth.signInWithCustomToken(customToken.data));
         }

@@ -28,10 +28,14 @@ export const updateConfig = createAsyncThunk(
     await remoteConfigInstance.fetchAndActivate();
     const remoteConfig = {} as Partial<AppConfigSliceType>;
 
-    remoteConfig.enabledScreens = JSON.parse(remoteConfigInstance.getString("rn_shown_tabs")) ?? undefined;
-    remoteConfig.allowedLoginTypes = JSON.parse(remoteConfigInstance.getString("login_mode"))?.rn ?? undefined;
-    remoteConfig.demoModeKey = remoteConfigInstance.getString("demo_mode_key") ?? undefined;
-    remoteConfig.scoreboardMode = JSON.parse(remoteConfigInstance.getString("rn_scoreboard_mode")) ?? undefined;
+    remoteConfig.enabledScreens = (JSON.parse(remoteConfigInstance.getString("rn_shown_tabs")) ?? undefined) as string[] | undefined;
+    remoteConfig.allowedLoginTypes = (JSON.parse(remoteConfigInstance.getString("login_mode"))?.rn ?? undefined) as UserLoginType[] | undefined;
+    remoteConfig.demoModeKey = remoteConfigInstance.getString("demo_mode_key");
+    remoteConfig.scoreboardMode = (JSON.parse(remoteConfigInstance.getString("rn_scoreboard_mode")) ?? undefined) as {
+      pointType: string;
+      showIcons: boolean;
+      showTrophies: boolean;
+  } | undefined;
 
     return remoteConfig;
   }
@@ -62,10 +66,10 @@ export const appConfigSlice = createSlice({
         Object.assign(state, initialState);
       })
       .addCase(updateConfig.fulfilled, (state, action) => {
-        state.enabledScreens = action.payload.enabledScreens || initialState.enabledScreens;
-        state.scoreboardMode = action.payload.scoreboardMode || initialState.scoreboardMode;
-        state.allowedLoginTypes = action.payload.allowedLoginTypes || initialState.allowedLoginTypes;
-        state.demoModeKey = action.payload.demoModeKey || initialState.demoModeKey;
+        state.enabledScreens = action.payload.enabledScreens ?? initialState.enabledScreens;
+        state.scoreboardMode = action.payload.scoreboardMode ?? initialState.scoreboardMode;
+        state.allowedLoginTypes = action.payload.allowedLoginTypes ?? initialState.allowedLoginTypes;
+        state.demoModeKey = action.payload.demoModeKey ?? initialState.demoModeKey;
         state.isConfigLoaded = true;
       })
       .addCase(updateConfig.rejected, (state, action) => {

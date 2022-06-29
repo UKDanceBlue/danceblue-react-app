@@ -10,7 +10,6 @@ import openMap from "react-native-open-maps";
 
 import { useFirebaseStorageUrl } from "../../common/CustomHooks";
 import { globalColors } from "../../theme";
-import { MainStackScreenProps } from "../../types/NavigationTypes";
 
 // Const danceBlueCalendarConfig = {
 //   Title: 'DanceBlue',
@@ -40,7 +39,7 @@ const EventView = () => {
   const [ imageFirebaseRef, setImageFirebaseRef ] = useState("");
   const [ imageRef, imageRefError ] = useFirebaseStorageUrl(imageFirebaseRef);
   const [ description, setDescription ] = useState("");
-  const route = useRoute<MainStackScreenProps<"Event">["route"]>();
+  const route = useRoute();
 
   /**
    * Check if the DanceBlue calendar exist's on the user's device
@@ -73,7 +72,9 @@ const EventView = () => {
     return () => {
       shouldUpdateState = false;
     };
-  }, [route.params.id]);
+  }, [
+    route.params.id, startTime, endTime, setStartTime, setEndTime
+  ]);
 
   /**
    * Check if the event exists on the DanceBlue calendar

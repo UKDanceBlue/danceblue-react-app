@@ -1,5 +1,6 @@
-import firebaseFirestore from "@react-native-firebase/firestore";
+import firebaseFirestore, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
+import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 
@@ -9,7 +10,6 @@ import { TabScreenProps } from "../../types/NavigationTypes";
 
 import EventRow from "./EventRow";
 
-const now = new Date();
 interface EventType extends FirestoreEvent {
   id: string;
 }
@@ -31,20 +31,23 @@ const EventScreen = () => {
   useEffect(() => {
     let componentUnmounted = false;
     const firestoreEvents: EventType[] = [];
-    firebaseFirestore().collection("events").where("endTime", ">", "now")
+    void firebaseFirestore().collection("events").where("endTime", ">", "now")
       .get()
       .then(
         (snapshot) => {
-          snapshot.forEach((document) => firestoreEvents.push({
-            id: document.id,
-            title: document.get("title"),
-            description: document.get("description"),
-            image: document.get("image"),
-            address: document.get("address"),
-            startTime: document.get("startTime"),
-            endTime: document.get("endTime"),
-          })
-          );
+          snapshot.forEach((document) => {
+            const startTime = document.get("startTime");
+            const endTime = document.get("endTime");
+            return firestoreEvents.push({
+              id: document.id,
+              title: document.get("title"),
+              description: document.get("description"),
+              image: document.get("image")?.toString(),
+              address: document.get("address")?.toString(),
+              startTime: startTime instanceof FirebaseFirestoreTypes.Timestamp ? startTime : undefined,
+              endTime: endTime instanceof FirebaseFirestoreTypes.Timestamp ? endTime : undefined,
+            });
+          });
 
           if (!componentUnmounted) {
             setEvents(firestoreEvents);
@@ -63,8 +66,14 @@ const EventScreen = () => {
     const todayFromEvents: EventType[] = [];
     const upcomingFromEvents: EventType[] = [];
     events.forEach((event) => {
-      const startTime = event.startTime.toDate();
-      if (startTime <= now) {todayFromEvents.push(event);} else {upcomingFromEvents.push(event);}
+      if (event.startTime != null) {
+        const startTime = event.startTime.toMillis();
+        if (startTime <= DateTime.now().toMillis()) {
+          todayFromEvents.push(event);
+        } else {
+          upcomingFromEvents.push(event);
+        }
+      }
     });
     setToday(todayFromEvents);
     setUpcoming(upcomingFromEvents);
@@ -84,13 +93,10 @@ const EventScreen = () => {
             key={row.id}
           >
             <EventRow
-              styles={styles}
               key={row.id}
-              id={row.id}
               title={row.title}
-              startDate={row.startTime.toDate()}
-              endDate={row.endTime.toDate()}
-              showIfToday
+              startDate={DateTime.fromMillis(row.startTime?.toMillis() ?? 0)}
+              endDate={DateTime.fromMillis(row.endTime?.toMillis() ?? 0)}
               imageLink={row.image}
             />
           </TouchableOpacity>
@@ -105,13 +111,10 @@ const EventScreen = () => {
               key={row.id}
             >
               <EventRow
-                styles={styles}
                 key={row.id}
-                id={row.id}
                 title={row.title}
-                startDate={row.startTime.toDate()}
-                endDate={row.endTime.toDate()}
-                showIfToday
+                startDate={DateTime.fromMillis(row.startTime?.toMillis() ?? 0)}
+                endDate={DateTime.fromMillis(row.endTime?.toMillis() ?? 0)}
                 imageLink={row.image}
               />
             </TouchableOpacity>

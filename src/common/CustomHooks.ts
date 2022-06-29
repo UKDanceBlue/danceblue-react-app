@@ -6,8 +6,8 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import { AppDispatch, RootState } from "../redux/store";
 
-export function useFirebaseStorageUrl(googleUri: string) {
-  useDebugValue(`Storage for ${googleUri}`);
+export function useFirebaseStorageUrl(googleUri?: string) {
+  useDebugValue(`Storage for ${googleUri ?? "undefined"}`);
 
   const [ state, setState ] = useState<[string | null, Error | null]>([ null, null ]);
 

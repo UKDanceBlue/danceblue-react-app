@@ -11,14 +11,12 @@ import Place from "./Place";
  * Standings implementation for the a generic leaderboard
  */
 const Standings = ({
-  titleText,
   standingData,
   expandable = false,
   startExpanded = false,
   collapsedRows = 3,
-  lastRow,
   dadJokeTempMagic = false,
-  dadJokeTempMagicCallback = () => {},
+  dadJokeTempMagicCallback = () => undefined
 }: {
   titleText: string;
   standingData: StandingType[];
@@ -76,7 +74,9 @@ const Standings = ({
     }
     setRows(tempRows);
     setIsLoading(false);
-  }, [ standingData, rowsToShow ]);
+  }, [
+    standingData, rowsToShow, dadJokeTempMagic, dadJokeTempMagicCallback
+  ]);
 
   return (
     <View style={globalStyles.genericView}>

@@ -39,7 +39,8 @@ function composeInstructions(hourInstructions: HourInstructionsType) {
         }
         // Otherwise just add it as a normal element
       } else {
-        tempHourInstructionsText += `${i + 1}. ${hourInstructions[i]}
+        const instruction = hourInstructions[i];
+        tempHourInstructionsText += `${i + 1}. ${Array.isArray(instruction) ? instruction.join() : instruction}
 `;
       }
     }
@@ -195,12 +196,12 @@ const HourScreen = ({ route: { params } }: {
                     height: cachedImages[i][0]?.imageHeight,
                   }}
                   style={{
-                    width: screenWidth - 20,
-                    height: screenWidth / cachedImages[i][0]?.imageRatio,
                     resizeMode: "contain",
                     alignSelf: "center",
                     margin: 10,
                   }}
+                  width={screenWidth - 20}
+                  height={screenWidth / (cachedImages[i][0]?.imageRatio ?? 1)}
                 />
               </ReactNativeZoomableView>
             );
@@ -245,11 +246,11 @@ const HourScreen = ({ route: { params } }: {
                 buttonStyle={{ marginHorizontal: 15, marginVertical: 5 }}
                 title={buttonText}
                 onPress={() => {
-                  openBrowserAsync(buttonUrl);
+                  void openBrowserAsync(buttonUrl);
                 }}
                 onLongPress={() => {
                   showPrompt("Would you like to copy the link?", "Copy link", undefined, () => {
-                    Clipboard.setString(buttonUrl);
+                    void Clipboard.setStringAsync(buttonUrl);
                   });
                 }}
               />
@@ -264,7 +265,7 @@ const HourScreen = ({ route: { params } }: {
                 buttonStyle={{ marginHorizontal: 15, marginVertical: 5 }}
                 title={buttonText}
                 onPress={() => {
-                  openBrowserAsync(buttonUrl);
+                  void openBrowserAsync(buttonUrl);
                 }}
               />
             </View>
