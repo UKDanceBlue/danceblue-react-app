@@ -65,7 +65,7 @@ const TabBar = () => {
                 Team: "users",
                 Donate: "hand-holding-heart",
                 Marathon: "people-arrows",
-              } as Record<string, string>;
+              };
 
               // You can return any component that you like here!
               return (
@@ -89,7 +89,6 @@ const TabBar = () => {
           })}
         >
           <Tabs.Screen name="Home" component={HomeScreen} />
-          <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />
           {currentTabs}
         </Tabs.Navigator>
       )}

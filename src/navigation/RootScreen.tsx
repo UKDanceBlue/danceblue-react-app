@@ -1,8 +1,10 @@
 import { StackNavigationProp, createStackNavigator } from "@react-navigation/stack";
 import { BlurView } from "expo-blur";
+import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 
-import { useAppSelector } from "../common/CustomHooks";
+import { useAppDispatch, useAppSelector } from "../common/CustomHooks";
+import { updateConfig } from "../redux/appConfigSlice";
 import { EventView } from "../screens/EventScreen";
 import HourScreen from "../screens/HoursScreen/HourScreen";
 import SplashLogin from "../screens/Modals/SplashLogin";
@@ -19,6 +21,14 @@ const RootStack = createStackNavigator<RootStackParamList>();
 const RootScreen = () => {
   const isAuthLoaded = useAppSelector((state) => state.auth.isAuthLoaded);
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (isAuthLoaded) {
+      void dispatch(updateConfig());
+    }
+  }, [ dispatch, isAuthLoaded ]);
 
   return (
     <>
@@ -39,7 +49,7 @@ const RootScreen = () => {
             headerRight: ({ tintColor }) => <HeaderIcons navigation={navigation} color={tintColor} />,
             headerBackTitle: "Back",
           })}>
-          {isLoggedIn && (
+          {isLoggedIn ? (
             <>
               <RootStack.Screen name="Tab" options={{ headerShown: false }} component={TabBar} />
               <RootStack.Screen
@@ -62,8 +72,7 @@ const RootScreen = () => {
               />
               <RootStack.Screen name="Hour Details" component={HourScreen} />
             </>
-          )}
-          {!isLoggedIn && (
+          ) : (
             <RootStack.Screen
               name="SplashLogin"
               component={SplashLogin}

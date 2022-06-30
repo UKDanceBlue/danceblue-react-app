@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ActivityIndicator, TextInput, View } from "react-native";
 import { Button, Image, Text } from "react-native-elements";
 
-import avatar from "../../assets/avatar.png";
+import avatar from "../../../assets/avatar.png";
 import { useAppSelector } from "../../common/CustomHooks";
 import { useFirebase } from "../../common/FirebaseApp";
 import { useLinkBlueLogin } from "../../common/auth";

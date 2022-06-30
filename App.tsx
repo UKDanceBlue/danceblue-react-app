@@ -55,26 +55,20 @@ const pushRegistrationObserver = store.subscribe(() => {
 const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
   prefixes: [ Linking.createURL("/"), "https://www.danceblue.org/redirect/" ],
   config: {
+    initialRouteName: "Tab",
     screens: {
-      Main: {
-        initialRouteName: "Tab",
+      Tab: {
+        initialRouteName: "Home",
         screens: {
-          Tab: {
-            initialRouteName: "Home",
-            screens: {
-              Home: { path: "" },
-              Scoreboard: "team-rankings",
-              Team: "my-team",
-              Store: "dancebluetique",
-              Donate: "donate",
-              HoursScreen: "marathon",
-            },
-          },
-          Profile: { path: "app-profile" },
-          Notifications: { path: "app-notifications" },
-          Event: { path: "event/:id" },
+          Home: { path: "" },
+          Scoreboard: "team-rankings",
+          Team: "my-team",
+          Marathon: "marathon",
         },
       },
+      Profile: { path: "app-profile" },
+      Notifications: { path: "app-notifications" },
+      Event: { path: "event/:id" },
     },
   },
   async getInitialURL(): Promise<string> {
