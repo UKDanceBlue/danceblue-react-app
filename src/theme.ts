@@ -59,9 +59,9 @@ export const globalStyles = StyleSheet.create({
   },
   genericIcon: {
     flex: 1,
-    height: null,
+    height: undefined,
     resizeMode: "contain",
-    width: null,
+    width: undefined,
   },
   genericRow: {
     alignItems: "center",

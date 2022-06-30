@@ -4,9 +4,9 @@ import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
 import * as SplashScreen from "expo-splash-screen";
+import { NativeBaseProvider } from "native-base";
 import { useEffect, useRef } from "react";
 import { StatusBar } from "react-native";
-import { ThemeProvider } from "react-native-elements";
 import { Provider } from "react-redux";
 
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
@@ -17,7 +17,6 @@ import RootScreen from "./src/navigation/RootScreen";
 import { logout } from "./src/redux/authSlice";
 import { registerPushNotifications } from "./src/redux/notificationSlice";
 import store from "./src/redux/store";
-import { rnElementsTheme } from "./src/theme";
 
 // All assets that should be preloaded:
 
@@ -138,14 +137,14 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <ThemeProvider theme={rnElementsTheme}>
+      <NativeBaseProvider>
         <FirebaseProvider>
           <StatusBar backgroundColor="white" barStyle="dark-content" />
           <NavigationContainer linking={navLinking}>
             <RootScreen />
           </NavigationContainer>
         </FirebaseProvider>
-      </ThemeProvider>
+      </NativeBaseProvider>
     </Provider>
   );
 };
