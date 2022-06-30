@@ -19,8 +19,6 @@ const ScoreBoardScreen = () => {
   const [ standingData, setStandingData ] = useState<StandingType[]>([]);
   const [ loading, setLoading ] = useState(true);
 
-  const shouldUpdateState = useRef(true);
-
   const refresh = useCallback(() => {
     switch (pointType) {
     case "spirit":

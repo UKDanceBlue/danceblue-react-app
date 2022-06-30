@@ -74,9 +74,9 @@ export const loadUserData = createAsyncThunk(
 
       const promises: Promise<void>[] = [];
 
-      for (let i = 0; i < pastNotificationRefs.length; i++) {
+      for (const pastNotificationRef of pastNotificationRefs) {
         promises.push((async () => {
-          const pastNotificationSnapshot = await pastNotificationRefs[i].get();
+          const pastNotificationSnapshot = await pastNotificationRef.get();
           if (pastNotificationSnapshot.exists) {
             pastNotifications.push(pastNotificationSnapshot.data() as FirestoreNotification);
           }

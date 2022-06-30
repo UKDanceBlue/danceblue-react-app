@@ -5,9 +5,8 @@ import { useEffect, useMemo } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import { Button, ListItem, Text } from "react-native-elements";
 
-import { useAppSelector } from "../../common/CustomHooks";
+import { useAppDispatch, useAppSelector } from "../../common/CustomHooks";
 import { registerPushNotifications } from "../../redux/notificationSlice";
-import store from "../../redux/store";
 import { globalStyles, globalTextStyles } from "../../theme";
 
 /**
@@ -18,7 +17,9 @@ const NotificationScreen = () => {
     (state) => state.notification.notificationPermissionsGranted
   );
   const notifications = useAppSelector((state) => state.userData.pastNotifications);
-  const userDataLoading = useAppSelector((state) => state.globalLoading.loadingTokens["userData/loadUserData"] ?? false);
+  const userDataLoading = useAppSelector((state) => state.globalLoading.loadingTokens["userData/loadUserData"]);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     let shouldUpdateState = true;
@@ -30,14 +31,14 @@ const NotificationScreen = () => {
         notificationPermissionsGranted
       ) {
         if (shouldUpdateState) {
-          void store.dispatch(registerPushNotifications());
+          void dispatch(registerPushNotifications());
         }
       }
     });
     return () => {
       shouldUpdateState = false;
     };
-  }, [notificationPermissionsGranted]);
+  }, [ dispatch, notificationPermissionsGranted ]);
 
   // Only run the function in this hook if notifications changes
   const notificationsListView = useMemo(() => {

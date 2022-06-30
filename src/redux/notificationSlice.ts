@@ -2,12 +2,13 @@ import firestore from "@react-native-firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import { ExpoPushToken } from "expo-notifications";
 import * as SecureStore from "expo-secure-store";
 
 import { showMessage } from "../common/util/AlertUtils";
 import generateUuid from "../common/util/GenerateUuid";
 import { globalColors } from "../theme";
+
+import { RootState } from "./store";
 
 const uuidStoreKey = __DEV__ ? "danceblue.device-uuid.dev" : "danceblue.device-uuid";
 
@@ -41,11 +42,7 @@ export const obtainUuid = createAsyncThunk("notification/obtainUuid", async () =
 
 interface RegisterPushNotificationsErrors { error: "DEVICE_IS_EMULATOR" }
 
-export const registerPushNotifications = createAsyncThunk<
-  { token: ExpoPushToken | null; notificationPermissionsGranted: boolean },
-  never,
-  { state: { notification: NotificationSliceType } }
->("notification/registerPushNotifications", async (arg, thunkApi) => {
+export const registerPushNotifications = createAsyncThunk("notification/registerPushNotifications", async (arg, thunkApi) => {
   if (Device.isDevice) {
     // Get the user's current preference
     let settings = await Notifications.getPermissionsAsync();
@@ -77,7 +74,7 @@ export const registerPushNotifications = createAsyncThunk<
       settings.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED
     ) {
       if (Device.osName === "Android") {
-        Notifications.setNotificationChannelAsync("default", {
+        void Notifications.setNotificationChannelAsync("default", {
           name: "default",
           importance: Notifications.AndroidImportance.MAX,
           vibrationPattern: [
@@ -88,7 +85,7 @@ export const registerPushNotifications = createAsyncThunk<
       }
 
       return Notifications.getExpoPushTokenAsync().then(async (token) => {
-        const { uuid } = thunkApi.getState().notification;
+        const { uuid } = (thunkApi.getState() as RootState).notification;
         if (uuid) {
           // Store the push notification token in firebase
           await firestore().doc(`devices/${uuid}`).set({ expoPushToken: token.data || null },
@@ -107,7 +104,7 @@ export const registerPushNotifications = createAsyncThunk<
 
 export const refreshPastNotifications = createAsyncThunk(
   "notification/updateConfig",
-  async () => {}
+  () => undefined
 );
 
 // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -143,7 +140,7 @@ export const notificationSlice = createSlice({
             showMessage(
               "DanceBlue Mobile ran into an unexpected issue with the notification server. This is a bug, please report it to the DanceBlue committee.",
               "Notification Error",
-              () => {},
+              () => undefined,
               true,
               action
             );

@@ -29,7 +29,7 @@ export const updateConfig = createAsyncThunk(
     const remoteConfig = {} as Partial<AppConfigSliceType>;
 
     remoteConfig.enabledScreens = (JSON.parse(remoteConfigInstance.getString("rn_shown_tabs")) ?? undefined) as string[] | undefined;
-    remoteConfig.allowedLoginTypes = (JSON.parse(remoteConfigInstance.getString("login_mode"))?.rn ?? undefined) as UserLoginType[] | undefined;
+    remoteConfig.allowedLoginTypes = ((JSON.parse(remoteConfigInstance.getString("login_mode")) as { rn?: UserLoginType[] }).rn ?? undefined);
     remoteConfig.demoModeKey = remoteConfigInstance.getString("demo_mode_key");
     remoteConfig.scoreboardMode = (JSON.parse(remoteConfigInstance.getString("rn_scoreboard_mode")) ?? undefined) as {
       pointType: string;

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import firebaseAuth from "@react-native-firebase/auth";
 import firebaseFirestore from "@react-native-firebase/firestore";
 import firebaseStorage from "@react-native-firebase/storage";
