@@ -9,7 +9,7 @@ import { useAppSelector, useCurrentDate } from "../../common/CustomHooks";
 import { appConfigSlice, updateConfig } from "../../redux/appConfigSlice";
 import store from "../../redux/store";
 import { FirestoreHour } from "../../types/FirebaseTypes";
-import { TabScreenProps } from "../../types/NavigationTypes";
+import { TabNavigatorProps } from "../../types/NavigationTypes";
 
 function revealRandomChars(input: string, charsToReveal: number): string {
   let tempOutputString = "";
@@ -51,11 +51,11 @@ const HourRow = ({
   const {
     name: hourName, hourNumber
   } = firestoreHour;
-  const navigation = useNavigation<TabScreenProps<"HoursScreen">["navigation"]>();
+  const navigation = useNavigation<TabNavigatorProps<"Marathon">["navigation"]>();
   const [ displayedName, setDisplayedName ] = useState("");
   const [ clickable, setClickable ] = useState(false);
 
-  // TODO change this so ti looks like wordle and reveals random letters up to half of the name; whole name at the hour so reveal stays fresh
+  // TODO change this so it looks like wordle and reveals random letters up to half of the name; whole name at the hour so reveal stays fresh
   // Maybe choose which to reveal based on hash of name? Need to be the same every time
   useEffect(() => {
     let tempDisplayedName = "";

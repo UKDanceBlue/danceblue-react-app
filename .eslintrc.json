@@ -48,6 +48,7 @@
         "plugin:@typescript-eslint/strict"
       ],
       "rules": {
+        "@typescript-eslint/consistent-indexed-object-style": "off",
         "@typescript-eslint/require-await": "error",
         "@typescript-eslint/return-await": "error",
         "@typescript-eslint/quotes": [

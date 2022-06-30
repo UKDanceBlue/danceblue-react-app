@@ -1,17 +1,18 @@
 // Import third-party dependencies
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useEffect, useState } from "react";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ReactElement, useEffect, useState } from "react";
 
 // Import first-party dependencies
 import { useAppSelector } from "../common/CustomHooks";
 import EventScreen from "../screens/EventScreen";
-import GenericWebviewScreen from "../screens/GenericWebviewScreen";
 import HomeScreen from "../screens/HomeScreen";
 import HoursScreen from "../screens/HoursScreen";
 import ScoreboardScreen from "../screens/ScoreBoardScreen";
 import TeamScreen from "../screens/TeamScreen";
-import { TabNavigatorParamList } from "../types/NavigationTypes";
+import { RootStackParamList, TabNavigatorParamList } from "../types/NavigationTypes";
 
 import HeaderIcons from "./HeaderIcons";
 
@@ -22,22 +23,19 @@ const possibleTabs = {
   Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
   Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,
   MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
-} as Record<string, JSX.Element>;
+} as { [name: string]: ReactElement };
 
 const TabBar = () => {
-  const isConfigLoaded = true; // UseAppSelector((state) => state.appConfig.isConfigLoaded);
+  const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
   const configuredTabs = useAppSelector((state) => state.appConfig.enabledScreens);
-  const demoMode = false; // UseAppSelector((state) => state.appConfig.demoMode); TODO reimplement
 
-  const [ currentTabs, setCurrentTabs ] = useState<JSX.Element[]>([]);
+  const [ currentTabs, setCurrentTabs ] = useState<ReactElement[]>([]);
 
   useEffect(() => {
     if (isConfigLoaded) {
       const tempCurrentTabs = [];
-      for (let i = 0; i < configuredTabs.length; i++) {
-        if (possibleTabs[configuredTabs[i]]) {
-          tempCurrentTabs.push(possibleTabs[configuredTabs[i]]);
-        }
+      for (const configuredTab of configuredTabs) {
+        tempCurrentTabs.push(possibleTabs[configuredTab]);
       }
       setCurrentTabs(tempCurrentTabs);
     }
@@ -49,7 +47,10 @@ const TabBar = () => {
         <Tabs.Navigator
           screenOptions={({
             route, navigation
-          }) => ({
+          }: {
+            navigation: StackNavigationProp<RootStackParamList>;
+            route: RouteProp<TabNavigatorParamList>;
+        }) => ({
             tabBarIcon: ({
               color, size
             }) => {
@@ -89,8 +90,7 @@ const TabBar = () => {
         >
           <Tabs.Screen name="Home" component={HomeScreen} />
           <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />
-          {!demoMode && currentTabs}
-          {demoMode && Object.values(possibleTabs)}
+          {currentTabs}
         </Tabs.Navigator>
       )}
     </>

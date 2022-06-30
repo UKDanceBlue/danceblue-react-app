@@ -1,5 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
+import type { StackScreenProps } from "@react-navigation/stack";
 import * as Clipboard from "expo-clipboard";
 import { openBrowserAsync } from "expo-web-browser";
 import { useEffect, useState } from "react";
@@ -9,10 +10,12 @@ import { Button, Image, Text, useTheme } from "react-native-elements";
 import { UseCachedFilesType, useCachedImages } from "../../common/CacheUtils";
 import { showPrompt } from "../../common/util/AlertUtils";
 import { globalTextStyles } from "../../theme";
-import { FirestoreHour } from "../../types/FirebaseTypes";
 import { HourInstructionsType } from "../../types/HourScreenTypes";
+import { RootStackParamList } from "../../types/NavigationTypes";
 
 import HourActivities, { DadJokeLeaderboard, PhotoUpload } from "./HourActivities";
+
+type Props = StackScreenProps<RootStackParamList, "Hour Details">;
 
 function composeInstructions(hourInstructions: HourInstructionsType) {
   let tempHourInstructionsText = "";
@@ -79,10 +82,7 @@ const alphabet = [
   "z",
 ];
 
-const HourScreen = ({ route: { params } }: {
-  route: { params: { firestoreHour: FirestoreHour } };
-}) => {
-  const { firestoreHour } = params;
+const HourScreen = ({ route: { params: { firestoreHour } } }: { route: Props["route"] }) => {
   const [ components, setComponents ] = useState<JSX.Element[]>([]);
   const [ cacheOptions, setCacheOptions ] = useState<UseCachedFilesType[]>([]);
   const cachedImages = useCachedImages(cacheOptions);

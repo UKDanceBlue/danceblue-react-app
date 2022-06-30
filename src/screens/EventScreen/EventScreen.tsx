@@ -6,7 +6,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity } from "re
 
 
 import { FirestoreEvent } from "../../types/FirebaseTypes";
-import { TabScreenProps } from "../../types/NavigationTypes";
+import { TabNavigatorProps } from "../../types/NavigationTypes";
 
 import EventRow from "./EventRow";
 
@@ -26,7 +26,7 @@ const EventScreen = () => {
   const [ events, setEvents ] = useState<EventType[]>([]);
   const [ today, setToday ] = useState<EventType[]>([]);
   const [ upcoming, setUpcoming ] = useState<EventType[]>([]);
-  const navigation = useNavigation<TabScreenProps<"Events">["navigation"]>();
+  const navigation = useNavigation<TabNavigatorProps<"Events">["navigation"]>();
 
   useEffect(() => {
     let componentUnmounted = false;
