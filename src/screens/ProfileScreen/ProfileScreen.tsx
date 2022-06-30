@@ -1,16 +1,14 @@
+import { useNetInfo } from "@react-native-community/netinfo";
 import { nativeApplicationVersion } from "expo-application";
 import * as Linking from "expo-linking";
 import { useState } from "react";
 import { ActivityIndicator, TextInput, View } from "react-native";
 import { Button, Image, Text } from "react-native-elements";
 
-import avatarImage from "../../../assets/avatar.png";
+import avatar from "../../assets/avatar.png";
 import { useAppSelector } from "../../common/CustomHooks";
 import { useFirebase } from "../../common/FirebaseApp";
 import { useLinkBlueLogin } from "../../common/auth";
-import { appConfigSlice } from "../../redux/appConfigSlice";
-import { logout } from "../../redux/authSlice";
-import store from "../../redux/store";
 import { globalColors, globalStyles, globalTextStyles } from "../../theme";
 
 /**
@@ -20,6 +18,7 @@ const ProfileScreen = () => {
   const authData = useAppSelector((state) => state.auth);
   const userData = useAppSelector((state) => state.userData);
   const demoModeKey = useAppSelector((state) => state.appConfig.demoModeKey);
+  const { isConnected } = useNetInfo();
   const [ reportLongPressed, setReportLongPressed ] = useState(false);
   const [ suggestLongPressed, setSuggestLongPressed ] = useState(false);
   const {
@@ -40,7 +39,7 @@ const ProfileScreen = () => {
           /* Start of loaded view */ authData.isAuthLoaded && (
             <>
               <Image
-                source={avatarImage}
+                source={avatar}
                 height={64}
                 width={64}
               />
@@ -54,7 +53,7 @@ const ProfileScreen = () => {
                     <Text style={globalTextStyles.italicText}>{userData.email}</Text>
                     <Button
                       style={{ margin: 10, alignSelf: "center" }}
-                      onPress={() => store.dispatch(logout())}
+                      onPress={() => void fbAuth.signOut()}
                       title="Log out"
                     />
                   </>
@@ -62,14 +61,12 @@ const ProfileScreen = () => {
               }
               {
                 /* Start of logged in anonymously view */ authData.isLoggedIn &&
-                  authData.isAnonymous && (
+                authData.isAnonymous && (
                   <>
-                    <Text>You are logged in anonymously</Text>
+                    <Text>You are logged in {isConnected ? "anonymously" : "offline"}</Text>
                     <Button
                       style={{ margin: 10, alignSelf: "center" }}
-                      onPress={() => {
-                        trigger();
-                      }}
+                      onPress={() => trigger()}
                       title="Log in"
                     />
                   </>
@@ -81,9 +78,7 @@ const ProfileScreen = () => {
                     <Text>You are logged out, to log in:</Text>
                     <Button
                       style={{ margin: 10, alignSelf: "center" }}
-                      onPress={() => {
-                        trigger();
-                      }}
+                      onPress={() => trigger()}
                       title="Log in"
                     />
                   </>
@@ -96,8 +91,7 @@ const ProfileScreen = () => {
                   secureTextEntry
                   onSubmitEditing={(event) => {
                     if (event.nativeEvent.text === demoModeKey) {
-                      store.dispatch(appConfigSlice.actions.enterDemoMode());
-                      // store.dispatch(authSlice.actions.enterDemoMode()); TODO
+                      // store.dispatch(authSlice.actions.enterDemoMode());
                       setReportLongPressed(false);
                       setSuggestLongPressed(false);
                     }

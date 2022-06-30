@@ -34,7 +34,7 @@ function logToFirebase(title: string, message: unknown, logInfo: unknown) {
 export function showMessage(
   message: unknown,
   title = "Error",
-  onAccept: () => unknown = () => null,
+  onAccept: () => unknown = () => undefined,
   log = false,
   logInfo: unknown = ""
 ) {

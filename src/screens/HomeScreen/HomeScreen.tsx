@@ -1,7 +1,5 @@
-import { Linking, SafeAreaView, ScrollView } from "react-native";
+import { Linking, SafeAreaView } from "react-native";
 import { Button } from "react-native-elements";
-
-import { useAppSelector } from "../../common/CustomHooks";
 
 import HeaderImage from "./HeaderImage";
 import SponsorCarousel from "./SponsorCarousel";
@@ -15,15 +13,17 @@ const HomeScreen = () => (
     <Button
       style={{ margin: 10, alignSelf: "center" }}
       onPress={() => {
-        if (
-          Linking.canOpenURL(
-            "https://danceblue.networkforgood.com/causes/4789-danceblue-golden-matrix-fund-dance-teams?utm_source=website&utm_medium=unit_website"
-          )
-        ) {
-          Linking.openURL(
-            "https://danceblue.networkforgood.com/causes/4789-danceblue-golden-matrix-fund-dance-teams?utm_source=website&utm_medium=unit_website"
-          );
-        }
+        void (async () => {
+          if (
+            await Linking.canOpenURL(
+              "https://danceblue.networkforgood.com/causes/4789-danceblue-golden-matrix-fund-dance-teams?utm_source=website&utm_medium=unit_website"
+            )
+          ) {
+            void Linking.openURL(
+              "https://danceblue.networkforgood.com/causes/4789-danceblue-golden-matrix-fund-dance-teams?utm_source=website&utm_medium=unit_website"
+            );
+          }
+        })();
       }}
       title="Donate!"
     />

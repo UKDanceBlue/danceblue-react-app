@@ -28,7 +28,7 @@ const SponsorCarousel = () => {
         setSponsors(dbSponsors);
       }
     }
-    getSnapshot();
+    void getSnapshot();
     return () => {
       shouldUpdateState = false;
     };

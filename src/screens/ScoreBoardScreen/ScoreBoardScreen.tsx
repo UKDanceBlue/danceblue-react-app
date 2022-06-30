@@ -1,5 +1,5 @@
 import firebaseFirestore from "@react-native-firebase/firestore";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { RefreshControl, SafeAreaView, ScrollView } from "react-native";
 
 import { useAppSelector } from "../../common/CustomHooks";
@@ -14,14 +14,14 @@ import { StandingType } from "../../types/StandingType";
  */
 const ScoreBoardScreen = () => {
   const { pointType } = useAppSelector((state) => state.appConfig.scoreboardMode);
-  const userTeamId = useAppSelector((state) => state.userData.teamId);
+  const userTeamName = useAppSelector((state) => state.userData.team?.name);
+  // const moraleTeamName = useAppSelector((state) => state);
   const [ standingData, setStandingData ] = useState<StandingType[]>([]);
-  const [ refreshing, setRefreshing ] = useState<boolean>(true);
+  const [ loading, setLoading ] = useState(true);
 
   const shouldUpdateState = useRef(true);
 
   const refresh = useCallback(() => {
-    setRefreshing(true);
     switch (pointType) {
     case "spirit":
       void firebaseFirestore().collection("teams").get()
@@ -35,14 +35,11 @@ const ScoreBoardScreen = () => {
                 id: document.id,
                 name: teamData.name,
                 points: teamData.totalSpiritPoints ?? 0,
-                highlighted: userTeamId === document.id,
+                highlighted: userTeamName === teamData.name,
               });
             }
           });
-          if (shouldUpdateState.current) {
-            setStandingData(tempStandingData);
-            setRefreshing(false);
-          }
+          setStandingData(tempStandingData);
         });
       break;
 
@@ -60,19 +57,13 @@ const ScoreBoardScreen = () => {
                 highlighted: false // moraleTeamId === teamData.teamNumber,
               });
             });
-            if (shouldUpdateState.current) {
-              setStandingData(tempStandingData);
-              setRefreshing(false);
-            }
+            setStandingData(tempStandingData);
           }
         );
       break;
 
     case undefined:
-      if (shouldUpdateState.current) {
-        setStandingData([]);
-        setRefreshing(false);
-      }
+      setStandingData([]);
       break;
 
     default:
@@ -80,19 +71,14 @@ const ScoreBoardScreen = () => {
       break;
     }
     return () => {
-      shouldUpdateState.current = false;
-      setRefreshing(false);
+      setLoading(false);
     };
-  }, [ pointType, userTeamId ]);
-
-  useEffect(() => {
-    refresh();
-  }, [refresh]);
+  }, [ pointType, userTeamName ]);
 
   return (
     <ScrollView
       showsVerticalScrollIndicator
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
+      refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} />}
     >
       <SafeAreaView style={globalStyles.genericView}>
         <Standings titleText="Spirit Point Standings" standingData={standingData} startExpanded />

@@ -1,22 +1,20 @@
 import { useNavigation } from "@react-navigation/native";
-import { DateTime, Duration, Interval } from "luxon";
-import { useEffect, useMemo, useState } from "react";
-import { FlatList, Platform, StyleSheet, View, useWindowDimensions } from "react-native";
+import { DateTime, Interval } from "luxon";
+import { useEffect, useState } from "react";
+import { FlatList, View, useWindowDimensions } from "react-native";
 import { Divider, Image, ListItem, Text } from "react-native-elements";
 
 import { useCachedFiles } from "../../common/CacheUtils";
 import { useAppSelector, useCurrentDate } from "../../common/CustomHooks";
-import CountdownView from "../../common/components/CountdownView";
 import { appConfigSlice, updateConfig } from "../../redux/appConfigSlice";
 import store from "../../redux/store";
-import { globalColors } from "../../theme";
 import { FirestoreHour } from "../../types/FirebaseTypes";
 import { TabScreenProps } from "../../types/NavigationTypes";
 
 function revealRandomChars(input: string, charsToReveal: number): string {
   let tempOutputString = "";
-  for (let i = 0; i < input.length; i++) {
-    if (input[i] === " ") {
+  for (const char of input) {
+    if (char === " ") {
       tempOutputString += " ";
     } else {
       tempOutputString += "■";
@@ -65,9 +63,8 @@ const HourRow = ({
     if (marathonHour + 1 > hourNumber) {
       tempDisplayedName = hourName;
       setClickable(true);
-    }
-    // Should we check if we should start revealing this one?
-    else {
+    } else {
+      // Should we check if we should start revealing this one?
       setClickable(false);
       if (marathonHour === hourNumber - 1) {
         const hourPercent = (currentMinute + 1) / 60;
@@ -75,8 +72,8 @@ const HourRow = ({
         const charsToShow = percentNameToShow > 0 ? Math.trunc(hourName.length * percentNameToShow) : 0;
         tempDisplayedName = revealRandomChars(hourName, charsToShow);
       } else {
-        for (let i = 0; i < hourName.length; i++) {
-          if (hourName[i] === " ") {
+        for (const char of hourName) {
+          if (char === " ") {
             tempDisplayedName += " ";
           } else {
             tempDisplayedName += "■";
@@ -111,9 +108,8 @@ const HourRow = ({
 };
 
 const HoursListScreen = () => {
-  const firestoreHours = useAppSelector((state) => state.appConfig.marathonHours);
+  const firestoreHours = useAppSelector((state) => state.marathon.marathonHours);
   const [ firestoreHoursWithKeys, setFirestoreHoursWithKeys ] = useState<FirestoreHourWithKey[]>([]);
-  const countdown = useAppSelector((state) => state.appConfig.countdown);
   const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
   const currentDate = useCurrentDate();
   const [ marathonHour, setMarathonHour ] = useState(-1);
@@ -146,22 +142,22 @@ const HoursListScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {marathonHour < 0 && isConfigLoaded && countdown && (
+      {/* marathonHour < 0 && isConfigLoaded && countdown && (
         <>
           <View style={{ flexGrow: 1, flexShrink: 0 }}>
             <CountdownView />
           </View>
           <View style={{ flexGrow: 2, height: 0 }} />
         </>
-      )}
+      )*/}
       {marathonHour >= 0 && (
         <>
           {mapOfMemorial && (
             <>
               <Divider width={2} />
               <Image
-                style={{ width: screenWidth, height: screenWidth * (1194 / 1598) }}
                 source={{ uri: `data:image/png;base64,${mapOfMemorial}` }}
+                width={screenWidth} height={screenWidth * (1194 / 1598)}
               />
               <Divider width={2} />
             </>
@@ -187,7 +183,7 @@ const HoursListScreen = () => {
             refreshing={!isConfigLoaded}
             onRefresh={() => {
               store.dispatch(appConfigSlice.actions.resetConfig());
-              store.dispatch(updateConfig());
+              void store.dispatch(updateConfig());
             }}
           />
         </>
@@ -195,16 +191,5 @@ const HoursListScreen = () => {
     </View>
   );
 };
-
-const style = StyleSheet.create({
-  hourRow: {
-    alignItems: "center",
-    backgroundColor: globalColors.white,
-    flexDirection: "row",
-    flex: 1,
-    height: 30,
-    justifyContent: "space-between",
-  },
-});
 
 export default HoursListScreen;

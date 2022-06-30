@@ -14,7 +14,7 @@ const EventRow = ({
   endDate,
   title,
 }: {
-  imageLink: string;
+  imageLink?: string;
   startDate: DateTime;
   endDate: DateTime;
   title: string;

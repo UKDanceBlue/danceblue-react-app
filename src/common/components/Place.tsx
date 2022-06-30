@@ -17,7 +17,7 @@ const Place = ({
   points = 0,
   lastRow,
   dadJokeTempMagic = false,
-  dadJokeTempMagicCallback = () => {},
+  dadJokeTempMagicCallback = () => undefined,
 }: {
   isHighlighted: boolean;
   rank: number;
@@ -51,14 +51,18 @@ const Place = ({
       bottomDivider={!lastRow}
       style={{ width: "100%", backgroundColor: globalColors.white }}
       containerStyle={{ backgroundColor: "white" }}
+      hasTVPreferredFocus={undefined}
+      tvParallaxProperties={undefined}
     >
       <ListItem.Content style={{ flexDirection: "row" }}>
         <View style={{ flexDirection: "row", justifyContent: "flex-start", width: "20%" }}>
-          <Text style={{ fontSize: 20, marginLeft: 10, marginRight: 10 }}>
-            {/* Renders the rank/place of the target */}
-            {rank}
-          </Text>
-          {top3Icon(rank)}
+          <>
+            <Text style={{ fontSize: 20, marginLeft: 10, marginRight: 10 }}>
+              {/* Renders the rank/place of the target */}
+              {rank}
+            </Text>
+            {top3Icon(rank)}
+          </>
         </View>
         <ListItem.Title
           style={{
@@ -68,7 +72,6 @@ const Place = ({
             textAlign: "left",
             fontWeight: "bold",
           }}
-          h5
         >
           {name}
         </ListItem.Title>

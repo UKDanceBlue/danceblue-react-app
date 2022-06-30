@@ -83,7 +83,7 @@
     "@typescript-eslint/parser": "^5.22.0",
     "babel-jest": "^27.3.1",
     "eas-cli": "^0.46.0",
-    "eslint": "^8.14.0",
+    "eslint": "^8.18.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "^26.5.3",
     "eslint-plugin-jsdoc": "^39.3.2",

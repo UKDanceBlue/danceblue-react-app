@@ -39,7 +39,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => value.fbAuth.onAuthStateChanged((user) => {
     if (user) {
-      dispatch(syncAuth({ user }));
+      void dispatch(syncAuth({ user }));
     } else {
       dispatch(logout());
     }

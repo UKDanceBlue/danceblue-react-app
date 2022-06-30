@@ -40,7 +40,8 @@ function composeInstructions(hourInstructions: HourInstructionsType) {
         }
         // Otherwise just add it as a normal element
       } else {
-        tempHourInstructionsText += `${i + 1}. ${hourInstruction}
+        const instruction = hourInstructions[i];
+        tempHourInstructionsText += `${i + 1}. ${Array.isArray(instruction) ? instruction.join() : instruction}
 `;
       }
     }
@@ -196,14 +197,12 @@ const HourScreen = ({ route: { params } }: {
                     height: cachedImages[i][0]?.imageHeight,
                   }}
                   style={{
-                    width: screenWidth - 20,
-                    height: screenWidth / (cachedImages[i][0]?.imageRatio ?? 1),
                     resizeMode: "contain",
                     alignSelf: "center",
                     margin: 10,
                   }}
-                  width={cachedImages[i][0]?.imageWidth}
-                  height={cachedImages[i][0]?.imageHeight}
+                  width={screenWidth - 20}
+                  height={screenWidth / (cachedImages[i][0]?.imageRatio ?? 1)}
                 />
               </ReactNativeZoomableView>
             );

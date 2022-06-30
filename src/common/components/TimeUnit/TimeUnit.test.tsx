@@ -4,12 +4,12 @@ import TimeUnit from ".";
 
 describe("<TimeUnit />", () => {
   it("renders correctly with a singular unit", () => {
-    const tree = render(<TimeUnit value={1} unit={"seconds"} />).toJSON();
+    const tree = render(<TimeUnit value={1} unit={"seconds"} />).toJSON() as unknown;
 
     expect(tree).toMatchSnapshot();
   });
   it("renders correctly with a plural unit", () => {
-    const tree = render(<TimeUnit value={10} unit={"seconds"} />).toJSON();
+    const tree = render(<TimeUnit value={10} unit={"seconds"} />).toJSON() as unknown;
 
     expect(tree).toMatchSnapshot();
   });
@@ -25,7 +25,7 @@ describe("<TimeUnit />", () => {
   });
 
   it("renders 0 with a nullish value", () => {
-    // @ts-expect-error
+    // @ts-expect-error Testing nullish values
     const tree = render(<TimeUnit value={null} unit={"seconds"} />);
 
     const valueElement = tree.queryAllByText("0");
@@ -36,10 +36,10 @@ describe("<TimeUnit />", () => {
   });
 
   it("throws when passed an invalid type", () => {
-    const mockedConsoleError = jest.spyOn(console, "error").mockImplementation(() => {});
+    const mockedConsoleError = jest.spyOn(console, "error").mockImplementation(() => undefined);
 
     const invalidUnit = "an invalid unit";
-    // @ts-expect-error
+    // @ts-expect-error Testing an invalid unit
     expect(() => render(<TimeUnit value={1} unit={invalidUnit} />)).toThrow(`Invalid unit: ${invalidUnit}`);
 
     mockedConsoleError.mockRestore();
