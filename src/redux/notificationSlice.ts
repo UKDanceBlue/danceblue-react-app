@@ -84,7 +84,9 @@ export const registerPushNotifications = createAsyncThunk("notification/register
         });
       }
 
-      return Notifications.getExpoPushTokenAsync().then(async (token) => {
+      return Notifications.getExpoPushTokenAsync(
+        { experienceId: "@university-of-kentucky-danceblue/danceblue-mobile" }
+      ).then(async (token) => {
         const { uuid } = (thunkApi.getState() as RootState).notification;
         if (uuid) {
           // Store the push notification token in firebase
