@@ -1,6 +1,6 @@
 import NetInfo, { NetInfoState, NetInfoStateType, NetInfoUnknownState } from "@react-native-community/netinfo";
 import firebaseStorage from "@react-native-firebase/storage";
-import { isEqual } from "lodash-es";
+import { isEqual } from "lodash";
 import { DependencyList, useDebugValue, useEffect, useRef, useState } from "react";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
