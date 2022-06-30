@@ -43,7 +43,7 @@ interface RegisterPushNotificationsErrors { error: "DEVICE_IS_EMULATOR" }
 
 export const registerPushNotifications = createAsyncThunk<
   { token: ExpoPushToken | null; notificationPermissionsGranted: boolean },
-  void,
+  never,
   { state: { notification: NotificationSliceType } }
 >("notification/registerPushNotifications", async (arg, thunkApi) => {
   if (Device.isDevice) {

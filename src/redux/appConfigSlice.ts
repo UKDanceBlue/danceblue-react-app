@@ -62,10 +62,10 @@ export const appConfigSlice = createSlice({
         Object.assign(state, initialState);
       })
       .addCase(updateConfig.fulfilled, (state, action) => {
-        state.enabledScreens = action.payload.enabledScreens || initialState.enabledScreens;
-        state.scoreboardMode = action.payload.scoreboardMode || initialState.scoreboardMode;
-        state.allowedLoginTypes = action.payload.allowedLoginTypes || initialState.allowedLoginTypes;
-        state.demoModeKey = action.payload.demoModeKey || initialState.demoModeKey;
+        state.enabledScreens = action.payload.enabledScreens ?? initialState.enabledScreens;
+        state.scoreboardMode = action.payload.scoreboardMode ?? initialState.scoreboardMode;
+        state.allowedLoginTypes = action.payload.allowedLoginTypes ?? initialState.allowedLoginTypes;
+        state.demoModeKey = action.payload.demoModeKey ?? initialState.demoModeKey;
         state.isConfigLoaded = true;
       })
       .addCase(updateConfig.rejected, (state, action) => {

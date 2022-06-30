@@ -22,9 +22,7 @@ const initialState: AuthSliceType = {
 // Async login action (for use with createAsyncThunk)
 export const syncAuth = createAsyncThunk(
   "auth/sync",
-  async (payload: { user: FirebaseAuthTypes.User }, {
-    rejectWithValue, dispatch
-  }): Promise<Partial<AuthSliceType>> => {
+  async (payload: { user: FirebaseAuthTypes.User }, { dispatch }): Promise<Partial<AuthSliceType>> => {
     dispatch(startLoading("auth/sync"));
 
     const { user } = payload;
@@ -35,7 +33,7 @@ export const syncAuth = createAsyncThunk(
       authData.uid = user.uid;
       authData.authClaims = await user.getIdTokenResult();
     } catch (error) {
-      throw rejectWithValue(error as Error);
+      throw error as Error;
     } finally {
       dispatch(stopLoading("auth/sync"));
     }
