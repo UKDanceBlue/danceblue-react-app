@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
-import { StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Text } from "react-native";
-import { collection, getDocs, where, query } from "firebase/firestore";
+import firebaseFirestore, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
-import EventRow from "./EventRow";
-import { firebaseFirestore } from "../../common/FirebaseApp";
-import { FirestoreEvent } from "../../types/FirebaseTypes";
-import { TabScreenProps } from "../../types/NavigationTypes";
+import { DateTime } from "luxon";
+import { useEffect, useState } from "react";
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 
-const now = new Date();
+
+import { FirestoreEvent } from "../../types/FirebaseTypes";
+import { TabNavigatorProps } from "../../types/NavigationTypes";
+
+import EventRow from "./EventRow";
+
 interface EventType extends FirestoreEvent {
   id: string;
 }
@@ -21,33 +23,37 @@ interface EventType extends FirestoreEvent {
  *  3. Make it a function component if possible
  */
 const EventScreen = () => {
-  const [events, setEvents] = useState<EventType[]>([]);
-  const [today, setToday] = useState<EventType[]>([]);
-  const [upcoming, setUpcoming] = useState<EventType[]>([]);
-  const navigation = useNavigation<TabScreenProps<"Events">["navigation"]>();
+  const [ events, setEvents ] = useState<EventType[]>([]);
+  const [ today, setToday ] = useState<EventType[]>([]);
+  const [ upcoming, setUpcoming ] = useState<EventType[]>([]);
+  const navigation = useNavigation<TabNavigatorProps<"Events">["navigation"]>();
 
   useEffect(() => {
     let componentUnmounted = false;
     const firestoreEvents: EventType[] = [];
-    getDocs(query(collection(firebaseFirestore, "events"), where("endTime", ">", now))).then(
-      (snapshot) => {
-        snapshot.forEach((document) =>
-          firestoreEvents.push({
-            id: document.id,
-            title: document.get("title"),
-            description: document.get("description"),
-            image: document.get("image"),
-            address: document.get("address"),
-            startTime: document.get("startTime"),
-            endTime: document.get("endTime"),
-          })
-        );
+    void firebaseFirestore().collection("events").where("endTime", ">", "now")
+      .get()
+      .then(
+        (snapshot) => {
+          snapshot.forEach((document) => {
+            const startTime = document.get("startTime");
+            const endTime = document.get("endTime");
+            return firestoreEvents.push({
+              id: document.id,
+              title: document.get("title"),
+              description: document.get("description"),
+              image: document.get("image")?.toString(),
+              address: document.get("address")?.toString(),
+              startTime: startTime instanceof FirebaseFirestoreTypes.Timestamp ? startTime : undefined,
+              endTime: endTime instanceof FirebaseFirestoreTypes.Timestamp ? endTime : undefined,
+            });
+          });
 
-        if (!componentUnmounted) {
-          setEvents(firestoreEvents);
+          if (!componentUnmounted) {
+            setEvents(firestoreEvents);
+          }
         }
-      }
-    );
+      );
     return () => {
       componentUnmounted = true;
     };
@@ -60,9 +66,14 @@ const EventScreen = () => {
     const todayFromEvents: EventType[] = [];
     const upcomingFromEvents: EventType[] = [];
     events.forEach((event) => {
-      const startTime = event.startTime.toDate();
-      if (startTime <= now) todayFromEvents.push(event);
-      else upcomingFromEvents.push(event);
+      if (event.startTime != null) {
+        const startTime = event.startTime.toMillis();
+        if (startTime <= DateTime.now().toMillis()) {
+          todayFromEvents.push(event);
+        } else {
+          upcomingFromEvents.push(event);
+        }
+      }
     });
     setToday(todayFromEvents);
     setUpcoming(upcomingFromEvents);
@@ -82,20 +93,17 @@ const EventScreen = () => {
             key={row.id}
           >
             <EventRow
-              styles={styles}
               key={row.id}
-              id={row.id}
               title={row.title}
-              startDate={row.startTime.toDate()}
-              endDate={row.endTime.toDate()}
-              showIfToday
+              startDate={DateTime.fromMillis(row.startTime?.toMillis() ?? 0)}
+              endDate={DateTime.fromMillis(row.endTime?.toMillis() ?? 0)}
               imageLink={row.image}
             />
           </TouchableOpacity>
         ))}
         <Text style={styles.heading}>Upcoming Events</Text>
         {
-          /* jscpd:ignore-start */
+          /* Jscpd:ignore-start */
           upcoming.map((row) => (
             <TouchableOpacity
               style={styles.eventRow}
@@ -103,27 +111,22 @@ const EventScreen = () => {
               key={row.id}
             >
               <EventRow
-                styles={styles}
                 key={row.id}
-                id={row.id}
                 title={row.title}
-                startDate={row.startTime.toDate()}
-                endDate={row.endTime.toDate()}
-                showIfToday
+                startDate={DateTime.fromMillis(row.startTime?.toMillis() ?? 0)}
+                endDate={DateTime.fromMillis(row.endTime?.toMillis() ?? 0)}
                 imageLink={row.image}
               />
             </TouchableOpacity>
           ))
-          /* jscpd:ignore-end */
+          /* Jscpd:ignore-end */
         }
       </SafeAreaView>
     </ScrollView>
   );
 };
 
-EventScreen.navigationOptions = {
-  title: "Events",
-};
+EventScreen.navigationOptions = { title: "Events" };
 
 const styles = StyleSheet.create({
   body: {

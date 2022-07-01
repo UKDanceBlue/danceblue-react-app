@@ -1,22 +1,20 @@
+import { Text } from "native-base";
 import { ReactElement, useEffect, useState } from "react";
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
-import { Text } from "react-native-elements";
-import Place from "./Place";
+import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from "react-native";
+
 import { globalColors, globalStyles, globalTextStyles } from "../../theme";
 import { StandingType } from "../../types/StandingType";
+
+import Place from "./Place";
 
 /**
  * Standings implementation for the a generic leaderboard
  */
 const Standings = ({
-  titleText,
   standingData,
   expandable = false,
   startExpanded = false,
   collapsedRows = 3,
-  lastRow,
-  dadJokeTempMagic = false,
-  dadJokeTempMagicCallback = () => {},
 }: {
   titleText: string;
   standingData: StandingType[];
@@ -24,17 +22,18 @@ const Standings = ({
   startExpanded?: boolean;
   showTrophies?: boolean;
   collapsedRows?: number;
-  dadJokeTempMagic?: boolean;
   dadJokeTempMagicCallback?: (arg0: boolean, arg1: string) => unknown;
 }) => {
-  const [rows, setRows] = useState<ReactElement[]>([]);
-  const [expanded, setExpanded] = useState<boolean>(!!startExpanded);
-  const [rowsToShow, setRowsToShow] = useState<number>(collapsedRows);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [ rows, setRows ] = useState<ReactElement[]>([]);
+  const [ expanded, setExpanded ] = useState<boolean>(!!startExpanded);
+  const [ rowsToShow, setRowsToShow ] = useState<number>(collapsedRows);
+  const [ isLoading, setIsLoading ] = useState<boolean>(true);
 
   useEffect(
     () => setRowsToShow(expanded ? standingData.length : collapsedRows),
-    [expanded, standingData, collapsedRows]
+    [
+      expanded, standingData, collapsedRows
+    ]
   );
 
   useEffect(() => {
@@ -64,16 +63,12 @@ const Standings = ({
           points={sortedStandings[i].points}
           isHighlighted={sortedStandings[i].highlighted}
           lastRow={i === sortedStandings.length - 1 && i === rowsToShow - 1}
-          dadJokeTempMagic={dadJokeTempMagic}
-          dadJokeTempMagicCallback={(arg0: boolean) =>
-            dadJokeTempMagicCallback(arg0, sortedStandings[i].id)
-          }
         />
       );
     }
     setRows(tempRows);
     setIsLoading(false);
-  }, [standingData, rowsToShow]);
+  }, [ standingData, rowsToShow ]);
 
   return (
     <View style={globalStyles.genericView}>

@@ -1,75 +1,34 @@
+import { StackNavigationProp, createStackNavigator } from "@react-navigation/stack";
+import { BlurView } from "expo-blur";
 import { useEffect } from "react";
-import { createStackNavigator } from "@react-navigation/stack";
-import { ActivityIndicator } from "react-native";
-import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
+import { ActivityIndicator, StyleSheet } from "react-native";
+
+import { useAppDispatch, useAppSelector } from "../common/CustomHooks";
+import { updateConfig } from "../redux/appConfigSlice";
+import { EventView } from "../screens/EventScreen";
+import HourScreen from "../screens/HoursScreen/HourScreen";
 import SplashLogin from "../screens/Modals/SplashLogin";
-import MainStackRoot from "./MainStackRoot";
-import GenericWebviewScreen from "../screens/GenericWebviewScreen";
+import NotificationScreen from "../screens/NotificationScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 import { globalColors } from "../theme";
-import { firebaseFirestore } from "../common/FirebaseApp";
-import { useAppSelector } from "../common/CustomHooks";
 import { RootStackParamList } from "../types/NavigationTypes";
+
+import HeaderIcons from "./HeaderIcons";
+import TabBar from "./TabBar";
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
 const RootScreen = () => {
   const isAuthLoaded = useAppSelector((state) => state.auth.isAuthLoaded);
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
-  const userAttributes = useAppSelector((state) => state.auth.attributes);
-  const userTeamId = useAppSelector((state) => state.auth.teamId);
-  const userId = useAppSelector((state) => state.auth.uid);
-  const uuid = useAppSelector((state) => state.notification.uuid);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    (async () => {
-      if (isAuthLoaded && uuid) {
-        // Update the audience data in this device's firebase document
-        const audiences = ["all"];
-        if (
-          typeof userAttributes === "object" &&
-          !Array.isArray(userAttributes) &&
-          userAttributes !== null &&
-          Object.keys(userAttributes).length > 0
-        ) {
-          // Grab the user's attributes
-          const attributeNames = Object.keys(userAttributes);
-          const audiencePromises = [];
-
-          // Add any attributes with isAudience to the audiences array
-          for (let i = 0; i < attributeNames.length; i++) {
-            audiencePromises.push(
-              getDoc(doc(firebaseFirestore, "valid-attributes", attributeNames[i]))
-            );
-          }
-          await Promise.all(audiencePromises).then((audienceDocs) => {
-            for (let i = 0; i < audienceDocs.length; i++) {
-              const attributeData = audienceDocs[i].data();
-              const attributeName = audienceDocs[i].ref.id;
-              const userAttributeValue = userAttributes[attributeName];
-              if (attributeName === "team" || attributeData[userAttributeValue].isAudience) {
-                audiences.push(userAttributeValue);
-              }
-            }
-          });
-        }
-
-        // If the user is on a team, add the team ID as an audience
-        if (userTeamId) {
-          audiences.push(userTeamId);
-        }
-
-        await setDoc(
-          doc(firebaseFirestore, "devices", uuid),
-          {
-            latestUserId: userId || null,
-            audiences,
-            lastConnected: Timestamp.now(),
-          },
-          { mergeFields: ["latestUserId", "audiences", "lastConnected"] }
-        );
-      }
-    })();
-  }, [userAttributes, isAuthLoaded, userTeamId, userId, uuid]);
+    if (isAuthLoaded) {
+      void dispatch(updateConfig());
+    }
+  }, [ dispatch, isAuthLoaded ]);
 
   return (
     <>
@@ -85,26 +44,41 @@ const RootScreen = () => {
         />
       )}
       {isAuthLoaded && (
-        <RootStack.Navigator>
-          {isLoggedIn && (
-            <RootStack.Screen
-              name="Main"
-              component={MainStackRoot}
-              options={{ headerShown: false }}
-            />
-          )}
-          {!isLoggedIn && (
+        <RootStack.Navigator
+          screenOptions={({ navigation }: { navigation: StackNavigationProp<RootStackParamList> }) => ({
+            headerRight: ({ tintColor }) => <HeaderIcons navigation={navigation} color={tintColor} />,
+            headerBackTitle: "Back",
+          })}>
+          {isLoggedIn ? (
+            <>
+              <RootStack.Screen name="Tab" options={{ headerShown: false }} component={TabBar} />
+              <RootStack.Screen
+                name="Notifications"
+                component={NotificationScreen}
+                options={{ headerRight: undefined }}
+              />
+              <RootStack.Screen name="Profile" component={ProfileScreen} options={{ headerRight: undefined }} />
+              <RootStack.Screen
+                name="Event"
+                component={EventView}
+                options={({ route }) => ({
+                  title: route.params.name,
+                  headerTransparent: true,
+                  headerMode: "screen",
+                  headerBackground: () => (
+                    <BlurView tint="light" intensity={100} style={StyleSheet.absoluteFill} />
+                  ),
+                })}
+              />
+              <RootStack.Screen name="Hour Details" component={HourScreen} />
+            </>
+          ) : (
             <RootStack.Screen
               name="SplashLogin"
               component={SplashLogin}
               options={{ headerShown: false, presentation: "modal", gestureEnabled: false }}
             />
           )}
-          <RootStack.Screen
-            name="DefaultRoute"
-            component={GenericWebviewScreen}
-            options={{ headerBackTitle: "Back", headerTitle: "DanceBlue" }}
-          />
         </RootStack.Navigator>
       )}
     </>

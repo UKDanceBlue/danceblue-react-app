@@ -1,13 +1,19 @@
-import { View, Image, StyleSheet, ActivityIndicator } from "react-native";
-import { Text } from "react-native-elements";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useFirebaseStorageUrl } from "../CustomHooks.ts";
+import { Text } from "native-base";
+import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
+
+import { useFirebaseStorageUrl } from "../CustomHooks";
 
 /**
  * A badge icon for use with profiles
  */
-const Badge = ({ imageURL, name }) => {
-  const [imageRef, imageRefError] = useFirebaseStorageUrl(imageURL);
+const Badge = ({
+  imageURL, name
+}: {
+  imageURL: string;
+  name: string;
+}) => {
+  const [ imageRef, imageRefError ] = useFirebaseStorageUrl(imageURL);
 
   return (
     <View style={styles.container}>

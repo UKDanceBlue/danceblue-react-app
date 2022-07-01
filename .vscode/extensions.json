@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "bycedric.vscode-expo",
+    "eg2.vscode-npm-script",
+    "christian-kohler.npm-intellisense",
+    "cmstead.js-codeformer"
+  ]
+}

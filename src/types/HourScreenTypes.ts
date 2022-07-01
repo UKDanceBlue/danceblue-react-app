@@ -1,6 +1,6 @@
 export type HourInstructionsType = string | (string | string[])[];
 
-export type SpecialComponentType = {
+export interface SpecialComponentType {
   id: string;
-  uniqueOptions: { [key: string]: string };
-};
+  uniqueOptions: Record<string, string>;
+}

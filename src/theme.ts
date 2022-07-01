@@ -59,9 +59,9 @@ export const globalStyles = StyleSheet.create({
   },
   genericIcon: {
     flex: 1,
-    height: null,
+    height: undefined,
     resizeMode: "contain",
-    width: null,
+    width: undefined,
   },
   genericRow: {
     alignItems: "center",
@@ -90,9 +90,7 @@ export const globalStyles = StyleSheet.create({
     color: globalColors.darkNavy,
     fontSize: 15,
   },
-  genericView: {
-    flex: 1,
-  },
+  genericView: { flex: 1 },
 });
 
 export const globalTextStyles = StyleSheet.create({

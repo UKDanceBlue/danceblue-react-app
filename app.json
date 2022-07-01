@@ -13,6 +13,9 @@
       "android"
     ],
     "version": "1.4.3",
+    "runtimeVersion": {
+      "policy": "nativeVersion"
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -21,13 +24,33 @@
       "backgroundColor": "#ffffff"
     },
     "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
+      "expo-calendar",
+      "expo-camera",
+      "expo-file-system",
       [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to allow you to submit images for various DanceBlue activities.",
           "cameraPermission": "The app accesses your camera to allow you to submit images for various DanceBlue activities."
         }
-      ]
+      ],
+      "expo-splash-screen",
+      "expo-dev-client",
+      "expo-updates",
+      [
+        "expo-notifications",
+        {
+          "icon": "./local/assets/notification-icon.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./local/assets/notification-sound.wav",
+            "./local/assets/notification-sound-other.wav"
+          ]
+        }
+      ],
+      "./config-plugins/rnf-disable-ai-id-support.plugin"
     ],
     "updates": {
       "enabled": false
@@ -47,7 +70,8 @@
       },
       "associatedDomains": [
         "https://www.danceblue.org"
-      ]
+      ],
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "package": "org.danceblue.app",
@@ -55,8 +79,7 @@
       "permissions": [
         "WRITE_CALENDAR",
         "READ_CALENDAR",
-        "CAMERA",
-        ""
+        "CAMERA"
       ],
       "googleServicesFile": "./google-services.json",
       "intentFilters": [
@@ -76,6 +99,7 @@
         }
       ]
     },
-    "description": "University of Kentucky DanceBlue Mobile Application"
+    "description": "University of Kentucky DanceBlue Mobile Application",
+    "sdkVersion": "45.0.0"
   }
 }

@@ -1,7 +1,8 @@
-import { View, TouchableHighlight, StyleSheet, ActivityIndicator, Image } from "react-native";
-import * as WebBrowser from "expo-web-browser";
-
 import { MaterialIcons } from "@expo/vector-icons";
+import * as WebBrowser from "expo-web-browser";
+import { ActivityIndicator, Image, StyleSheet, TouchableHighlight, View } from "react-native";
+
+
 import { useCachedFiles } from "../CacheUtils";
 
 /**
@@ -16,9 +17,9 @@ const SponsorCard = ({
   sponsorLink: string | undefined;
   name: string | undefined;
 }) => {
-  const [imageContent, imageRefError] = useCachedFiles([
+  const [ imageContent, imageRefError ] = useCachedFiles([
     {
-      assetId: `${name}-logo`,
+      assetId: `${name ?? ""}-logo`,
       freshnessTime: 172800,
       base64: true,
       googleUri: imageLink,

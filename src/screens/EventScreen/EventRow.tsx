@@ -1,7 +1,8 @@
-import { Image, ActivityIndicator, StyleSheet, View } from "react-native";
-import { Text } from "react-native-elements";
-import { format, isSameDay } from "date-fns";
 import { MaterialIcons } from "@expo/vector-icons";
+import { DateTime } from "luxon";
+import { Text } from "native-base";
+import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
+
 import { useFirebaseStorageUrl } from "../../common/CustomHooks";
 
 /**
@@ -13,21 +14,21 @@ const EventRow = ({
   endDate,
   title,
 }: {
-  imageLink: string;
-  startDate: Date;
-  endDate: Date;
+  imageLink?: string;
+  startDate: DateTime;
+  endDate: DateTime;
   title: string;
 }) => {
-  const [imageRef, imageRefError] = useFirebaseStorageUrl(imageLink);
+  const [ imageRef, imageRefError ] = useFirebaseStorageUrl(imageLink);
 
   /**
    * Called to generate a React Native component
    */
   let whenString = "";
-  if (isSameDay(startDate, endDate)) {
-    whenString = `${format(startDate, "M/d/yyyy h:mm a")} - ${format(endDate, "h:mm a")}`;
+  if (startDate.equals(endDate)) {
+    whenString = `${startDate.toFormat("L/d/yyyy h:mm a")} - ${endDate.toFormat("h:mm a")}`;
   } else {
-    whenString = `${format(startDate, "M/d/yyyy h:mm a")} - ${format(endDate, "M/d/yyyy h:mm a")}`;
+    whenString = `${startDate.toFormat("L/d/yyyy h:mm a")} - ${endDate.toFormat("L/d/yyyy h:mm a")}`;
   }
   return (
     <View style={styles.body}>

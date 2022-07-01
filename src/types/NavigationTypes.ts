@@ -1,21 +1,27 @@
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { NavigatorScreenParams, CompositeScreenProps } from "@react-navigation/native";
+import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
+
 import { FirestoreHour } from "./FirebaseTypes";
 
-// Navigator param types
 export type TabNavigatorParamList = {
+  Home: undefined;
   Events: undefined;
   Scoreboard: undefined;
   Team: undefined;
   Marathon: undefined;
-  Store: { uri: string } | undefined;
-  Donate: { uri: string } | undefined;
-  Home: undefined;
-  HoursScreen: undefined;
 };
 
-export type MainStackParamList = {
+export type TabNavigatorProps<T extends keyof TabNavigatorParamList> =
+  CompositeScreenProps<
+    BottomTabScreenProps<TabNavigatorParamList, T>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
+
+export type RootStackParamList = {
+  Main: undefined;
+  SplashLogin: undefined;
   Tab: NavigatorScreenParams<TabNavigatorParamList>;
   Notifications: undefined;
   Profile: undefined;
@@ -23,34 +29,16 @@ export type MainStackParamList = {
     id: string;
     name: string;
   };
-  "Hour Details": {
-    firestoreHour: FirestoreHour;
-  };
+  "Hour Details": { firestoreHour: FirestoreHour };
 };
 
-export type RootStackParamList = {
-  Main: NavigatorScreenParams<MainStackParamList>;
-  SplashLogin: undefined;
-  DefaultRoute: { uri: string } | undefined;
-};
-
-export type RootStackScreenProps<T extends keyof RootStackParamList> = StackScreenProps<
-  RootStackParamList,
-  T
->;
-
-export type MainStackScreenProps<T extends keyof MainStackParamList> = CompositeScreenProps<
-  StackScreenProps<MainStackParamList, T>,
-  RootStackScreenProps<keyof RootStackParamList>
->;
-
-export type TabScreenProps<T extends keyof TabNavigatorParamList> = CompositeScreenProps<
-  BottomTabScreenProps<TabNavigatorParamList, T>,
-  MainStackScreenProps<keyof MainStackParamList>
->;
+export type RootStackScreenProps<T extends keyof RootStackParamList> =
+  StackScreenProps<RootStackParamList, T>;
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace ReactNavigation {
-    type RootParamList = RootStackParamList
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface RootParamList extends RootStackParamList {}
   }
 }

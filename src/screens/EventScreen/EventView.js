@@ -1,28 +1,27 @@
-import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, TouchableHighlight, View, Image } from "react-native";
-import { Text } from "react-native-elements";
-import { format, isSameDay } from "date-fns";
-import openMap from "react-native-open-maps";
-// import * as Calendar from 'expo-calendar';
-import { doc, getDoc } from "firebase/firestore";
 import { MaterialIcons } from "@expo/vector-icons";
+import firebaseFirestore from "@react-native-firebase/firestore";
 import { useRoute } from "@react-navigation/native";
-import { globalColors } from "../../theme";
-import { firebaseFirestore } from "../../common/FirebaseApp";
-import { useFirebaseStorageUrl } from "../../common/CustomHooks";
-import { MainStackScreenProps } from "../../types/NavigationTypes";
+import { DateTime } from "luxon";
+import { Text } from "native-base";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Image, StyleSheet, TouchableHighlight, View } from "react-native";
+import openMap from "react-native-open-maps";
+// Import * as Calendar from 'expo-calendar';
 
-// const danceBlueCalendarConfig = {
-//   title: 'DanceBlue',
-//   color: globalColors.dbBlue,
-//   entityType: Calendar.EntityTypes.EVENT,
-//   source: {
-//     isLocalAccount: true,
-//     name: 'DanceBlue Mobile',
+import { useFirebaseStorageUrl } from "../../common/CustomHooks";
+import { globalColors } from "../../theme";
+
+// Const danceBlueCalendarConfig = {
+//   Title: 'DanceBlue',
+//   Color: globalColors.dbBlue,
+//   EntityType: Calendar.EntityTypes.EVENT,
+//   Source: {
+//     IsLocalAccount: true,
+//     Name: 'DanceBlue Mobile',
 //   },
-//   name: 'dancebluemobile',
-//   ownerAccount: 'DanceBlue Mobile',
-//   accessLevel: Calendar.CalendarAccessLevel.OWNER,
+//   Name: 'dancebluemobile',
+//   OwnerAccount: 'DanceBlue Mobile',
+//   AccessLevel: Calendar.CalendarAccessLevel.OWNER,
 // };
 
 /**
@@ -30,69 +29,72 @@ import { MainStackScreenProps } from "../../types/NavigationTypes";
  * @see {@link https://docs.expo.dev/versions/latest/sdk/calendar/ Expo's Calendar API}
  */
 const EventView = () => {
-  // const [isOnCalendar, setIsOnCalendar] = useState(false);
-  // const [calendarID, setCalendarID] = useState(undefined);
-  // const [eventCalendarID, setEventCalendarID] = useState(null);
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
-  // const [title, setTitle] = useState('');
-  const [address, setAddress] = useState("");
-  const [imageFirebaseRef, setImageFirebaseRef] = useState("");
-  const [imageRef, imageRefError] = useFirebaseStorageUrl(imageFirebaseRef);
-  const [description, setDescription] = useState("");
-  const route = useRoute<MainStackScreenProps<"Event">["route"]>();
+  // Const [isOnCalendar, setIsOnCalendar] = useState(false);
+  // Const [calendarID, setCalendarID] = useState(undefined);
+  // Const [eventCalendarID, setEventCalendarID] = useState(null);
+  const [ startTime, setStartTime ] = useState<DateTime>(DateTime.now());
+  const [ endTime, setEndTime ] = useState<DateTime>(DateTime.now());
+  // Const [title, setTitle] = useState('');
+  const [ address, setAddress ] = useState("");
+  const [ imageFirebaseRef, setImageFirebaseRef ] = useState("");
+  const [ imageRef, imageRefError ] = useFirebaseStorageUrl(imageFirebaseRef);
+  const [ description, setDescription ] = useState("");
+  const route = useRoute();
 
   /**
    * Check if the DanceBlue calendar exist's on the user's device
    */
-  // const checkDBCalendar = async () => {
-  //   let foundCalendar = false;
-  //   const calendars = await Calendar.getCalendarsAsync();
-  //   calendars.forEach((calendar) => {
-  //     if (calendar.name === 'dancebluemobile') {
-  //       setCalendarID(calendar.id);
-  //       foundCalendar = true;
+  // Const checkDBCalendar = async () => {
+  //   Let foundCalendar = false;
+  //   Const calendars = await Calendar.getCalendarsAsync();
+  //   Calendars.forEach((calendar) => {
+  //     If (calendar.name === 'dancebluemobile') {
+  //       SetCalendarID(calendar.id);
+  //       FoundCalendar = true;
   //     }
   //   });
-  //   return foundCalendar;
+  //   Return foundCalendar;
   // };
 
   useEffect(() => {
     let shouldUpdateState = true;
-    getDoc(doc(firebaseFirestore, "events", route.params.id)).then((document) => {
-      if (shouldUpdateState) {
-        // setTitle(document.data().title);
-        setStartTime(document.data().startTime.toDate());
-        setEndTime(document.data().endTime.toDate());
-        setAddress(document.data().address);
-        setDescription(document.data().description);
-        setImageFirebaseRef(document.data().image);
-      }
-    });
+    firebaseFirestore().doc(`events/${route.params.id}`).get()
+      .then((document) => {
+        if (shouldUpdateState) {
+        // SetTitle(document.data().title);
+          setStartTime(document.data().startTime.toDate());
+          setEndTime(document.data().endTime.toDate());
+          setAddress(document.data().address);
+          setDescription(document.data().description);
+          setImageFirebaseRef(document.data().image);
+        }
+      });
     return () => {
       shouldUpdateState = false;
     };
-  }, [route.params.id]);
+  }, [
+    route.params.id, startTime, endTime, setStartTime, setEndTime
+  ]);
 
   /**
    * Check if the event exists on the DanceBlue calendar
    * If it exists then it adds *{isOnCalendar: true}* and *eventCalendarID* to *this.state*
    */
-  // useEffect(() => {
-  //   if (!isLoading) {
+  // UseEffect(() => {
+  //   If (!isLoading) {
   //     Calendar.requestCalendarPermissionsAsync()
   //       .then(checkDBCalendar)
   //       .then(async (calendarExists) => {
-  //         if (calendarExists) {
-  //           const events = await Calendar.getEventsAsync(
+  //         If (calendarExists) {
+  //           Const events = await Calendar.getEventsAsync(
   //             [calendarID],
-  //             startTime.toDate(),
-  //             endTime.toDate()
+  //             StartTime.toDate(),
+  //             EndTime.toDate()
   //           );
-  //           events.forEach((event) => {
-  //             if (event.title === title) {
-  //               setIsOnCalendar(true);
-  //               setEventCalendarID(event.id);
+  //           Events.forEach((event) => {
+  //             If (event.title === title) {
+  //               SetIsOnCalendar(true);
+  //               SetEventCalendarID(event.id);
   //             }
   //           });
   //         }
@@ -103,7 +105,7 @@ const EventView = () => {
   /**
    * Creates a new calendar on the user's device and adds *calendarID* to *this.state*
    */
-  // const createDBCalendar = () =>
+  // Const createDBCalendar = () =>
   //   Calendar.createCalendarAsync(danceBlueCalendarConfig).then((localId) => setCalendarID(localId));
 
   /**
@@ -111,21 +113,21 @@ const EventView = () => {
    * While the function is running *isAddingToCalendar* will return true
    * If the event is successfully created *{isAddingToCalendar: false, isOnCalendar: true}* and eventCalendarID will be added to this.state
    */
-  // const addToCalendar = () => {
+  // Const addToCalendar = () => {
   //   Calendar.requestCalendarPermissionsAsync()
   //     .then(checkDBCalendar)
   //     .then(async (calendarExists) => {
-  //       if (!calendarExists) {
-  //         await createDBCalendar();
+  //       If (!calendarExists) {
+  //         Await createDBCalendar();
   //       }
-  //       return Calendar.createEventAsync(calendarID, {
-  //         title,
-  //         startDate: startTime.toDate(),
-  //         endDate: endTime.toDate(),
-  //         location: address,
+  //       Return Calendar.createEventAsync(calendarID, {
+  //         Title,
+  //         StartDate: startTime.toDate(),
+  //         EndDate: endTime.toDate(),
+  //         Location: address,
   //       }).then((localId) => {
-  //         setEventCalendarID(localId);
-  //         setIsOnCalendar(true);
+  //         SetEventCalendarID(localId);
+  //         SetIsOnCalendar(true);
   //       });
   //     });
   // };
@@ -134,17 +136,17 @@ const EventView = () => {
    * Removes an event from the calendar
    * While the function is running *isAddingToCalendar* will return true
    */
-  // const removeFromCalendar = async () => {
-  //   await Calendar.deleteEventAsync(eventCalendarID);
-  //   setIsOnCalendar(false);
-  //   setEventCalendarID(null);
+  // Const removeFromCalendar = async () => {
+  //   Await Calendar.deleteEventAsync(eventCalendarID);
+  //   SetIsOnCalendar(false);
+  //   SetEventCalendarID(null);
   // };
 
   let whenString = "";
-  if (isSameDay(startTime, endTime)) {
-    whenString = `${format(startTime, "M/d/yyyy h:mm a")} - ${format(endTime, "h:mm a")}`;
+  if (startTime.equals(endTime)) {
+    whenString = `${startTime.toFormat("L/d/yyyy h:mm a")} - ${endTime.toFormat("h:mm a")}`;
   } else {
-    whenString = `${format(startTime, "M/d/yyyy h:mm a")} - ${format(endTime, "M/d/yyyy h:mm a")}`;
+    whenString = `${startTime.toFormat("L/d/yyyy h:mm a")} - ${endTime.toFormat("L/d/yyyy h:mm a")}`;
   }
   return (
     <>
@@ -210,16 +212,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingTop: 10,
   },
-  buttonText: {
-    color: "white",
-  },
+  buttonText: { color: "white" },
   image: {
     height: 250,
     width: "100%",
   },
-  text: {
-    fontSize: 17,
-  },
+  text: { fontSize: 17 },
 });
 
 export default EventView;

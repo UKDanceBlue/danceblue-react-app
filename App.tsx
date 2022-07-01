@@ -1,53 +1,28 @@
 // Import third-party dependencies
-import { useEffect, useRef } from "react";
-import { StatusBar } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
+import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
-import * as Application from "expo-application";
-import { useAssets } from "expo-asset";
-import AppLoading from "expo-app-loading";
-import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
-import { onAuthStateChanged } from "firebase/auth";
+import * as SplashScreen from "expo-splash-screen";
+import { NativeBaseProvider } from "native-base";
+import { useEffect, useRef } from "react";
+import { StatusBar } from "react-native";
 import { Provider } from "react-redux";
-// https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
-import "./src/common/AndroidTimerFix";
-import { ThemeProvider } from "react-native-elements";
-import { doc, getDoc } from "firebase/firestore";
-import RootScreen from "./src/navigation/RootScreen";
-import { showMessage } from "./src/common/AlertUtils";
 
+// https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
+import "./src/common/util/AndroidTimerFix";
+import { FirebaseProvider } from "./src/common/FirebaseApp";
+import { showMessage } from "./src/common/util/AlertUtils";
+import RootScreen from "./src/navigation/RootScreen";
+import { logout } from "./src/redux/authSlice";
+import { registerPushNotifications } from "./src/redux/notificationSlice";
 import store from "./src/redux/store";
-import { authSlice, logout, syncAuthStateWithUser } from "./src/redux/authSlice";
-import { firebaseAuth, firebaseFirestore } from "./src/common/FirebaseApp";
-import { obtainUuid, registerPushNotifications } from "./src/redux/notificationSlice";
-import { appConfigSlice, updateConfig } from "./src/redux/appConfigSlice";
-import { rnElementsTheme } from "./src/theme";
 
 // All assets that should be preloaded:
-const homeBackgroundImg = require("./assets/home/db20_ribbon.jpg");
-const dbLogo = require("./assets/home/DB_Primary_Logo-01.png");
-const splashLoginBackground = require("./assets/home/Dancing-min.jpg");
 
-// Promise.allSettled polyfill
-Promise.allSettled =
-  Promise.allSettled ||
-  ((promises: any[]) =>
-    Promise.all(
-      promises.map((p) =>
-        p
-          .then((value: any) => ({
-            status: "fulfilled",
-            value,
-          }))
-          .catch((reason: any) => ({
-            status: "rejected",
-            reason,
-          }))
-      )
-    ));
-
+// Configure the notifications handler
 Notifications.setNotificationHandler({
+  // eslint-disable-next-line @typescript-eslint/require-await
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: false,
@@ -55,112 +30,44 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const firstTimeSync = onAuthStateChanged(firebaseAuth, (user) => {
-  if (user) {
-    // This will run after auth is initialized and never again
-    store.dispatch(syncAuthStateWithUser(user));
-  } else {
-    store.dispatch(logout());
-  }
-  store.dispatch(obtainUuid());
-  store.dispatch(updateConfig());
-
-  getDoc(doc(firebaseFirestore, "__VERSION/required"))
-    .then((majorVerSnap) => {
-      // Parse app version
-      const versionTokens = Application.nativeApplicationVersion?.split(".", 2);
-      let appMajor = Number.parseInt(versionTokens?.[0] || "0", 10);
-      if (Number.isNaN(appMajor)) {
-        appMajor = 0;
-      }
-      let appMinor = Number.parseInt(versionTokens?.[1] || "0", 10);
-      if (Number.isNaN(appMinor)) {
-        appMinor = 0;
-      }
-
-      // Parse required version
-      const reqMajor = majorVerSnap.get("major");
-      const reqMinor = majorVerSnap.get("minor");
-      if (typeof reqMajor !== "number" || typeof reqMinor !== "number") {
-        return;
-      }
-      if (!((appMajor === reqMajor && appMinor >= reqMinor) || appMajor > reqMajor)) {
-        // App needs an update
-        const showUpdateMessage = () => {
-          showMessage(
-            "Your version of the DanceBlue mobile app is out of date and must be updated before you can use it.",
-            "Old version",
-            showUpdateMessage
-          );
-        };
-        showUpdateMessage();
-      } else {
-        getDoc(doc(firebaseFirestore, "__VERSION/current"))
-          .then((latestVerSnap) => {
-            // Parse latest version
-            const currMajor = latestVerSnap.get("major");
-            const currMinor = latestVerSnap.get("minor");
-            if (typeof currMajor !== "number" || typeof currMinor !== "number") {
-              return;
-            }
-            if (!((appMajor === currMajor && appMinor >= currMinor) || appMajor > currMajor)) {
-              showMessage("A new version of the DanceBlue app is available.", "Update available");
-            }
-          })
-          .catch();
-      }
-    })
-    .catch();
-
-  firstTimeSync();
-});
+// Don't hide the splash screen until it is dismissed automatically
+void SplashScreen.preventAutoHideAsync();
 
 let hasPushRegistrationObserverFired = false;
 const pushRegistrationObserver = store.subscribe(() => {
   // This will run on every redux state update until a uuid is set when it will try to register for push notifications
   if (!hasPushRegistrationObserverFired && store.getState().notification.uuid) {
-    Notifications.scheduleNotificationAsync({
+    void Notifications.scheduleNotificationAsync({
       content: {
         title: "DanceBlue",
         body: "You have a new message!",
-        data: {
-          url: "exp://192.168.1.101:19000/--/",
-        },
+        data: { url: "exp://192.168.1.101:19000/--/" },
       },
-      trigger: {
-        seconds: 1,
-      },
+      trigger: { seconds: 1 },
     });
     hasPushRegistrationObserverFired = true;
-    store.dispatch(registerPushNotifications());
+    void store.dispatch(registerPushNotifications());
     pushRegistrationObserver();
   }
 });
 
 const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
-  prefixes: [Linking.createURL("/"), "https://www.danceblue.org/redirect/"],
+  prefixes: [ Linking.createURL("/"), "https://www.danceblue.org/redirect/" ],
   config: {
-    initialRouteName: "Main",
+    initialRouteName: "Tab",
     screens: {
-      Main: {
-        initialRouteName: "Tab",
+      Tab: {
+        initialRouteName: "Home",
         screens: {
-          Tab: {
-            initialRouteName: "Home",
-            screens: {
-              Home: { path: "" },
-              Scoreboard: "team-rankings",
-              Team: "my-team",
-              Store: "dancebluetique",
-              Donate: "donate",
-              HoursScreen: "marathon",
-            },
-          },
-          Profile: { path: "app-profile" },
-          Notifications: { path: "app-notifications" },
-          Event: { path: "event/:id" },
+          Home: { path: "" },
+          Scoreboard: "team-rankings",
+          Team: "my-team",
+          Marathon: "marathon",
         },
       },
+      Profile: { path: "app-profile" },
+      Notifications: { path: "app-notifications" },
+      Event: { path: "event/:id" },
     },
   },
   async getInitialURL(): Promise<string> {
@@ -169,17 +76,12 @@ const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
     let url = await Linking.getInitialURL();
 
     if (url != null) {
-      console.log(1);
-      console.log(url);
       return url;
     }
 
     // Handle URL from expo push notifications
     const response = await Notifications.getLastNotificationResponseAsync();
     url = response?.notification.request.content.data.url as string;
-
-    console.log(2);
-    console.log(url);
 
     return url;
   },
@@ -195,7 +97,6 @@ const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
 
       // Let React Navigation handle the URL
 
-      console.log(url);
       listener(url);
     });
 
@@ -203,9 +104,7 @@ const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
       // Clean up the event listeners
       Linking.removeEventListener("url", onReceiveURL);
 
-      if (expoSubscription) {
-        expoSubscription.remove();
-      }
+      expoSubscription.remove();
     };
   },
 };
@@ -213,46 +112,39 @@ const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
  * Main app container
  */
 const App = () => {
-  const [assets, assetError] = useAssets([splashLoginBackground, homeBackgroundImg, dbLogo]);
-
   const isOfflineInternal = useRef(false);
   useEffect(
-    () =>
-      NetInfo.addEventListener((state) => {
-        if (!state.isConnected && !isOfflineInternal.current) {
-          isOfflineInternal.current = true;
-          showMessage(
-            "You seem to be offline, some functionality may be unavailable or out of date"
-          );
-          store.dispatch(appConfigSlice.actions.goOffline());
-          store.dispatch(authSlice.actions.loginOffline());
-        } else if (isOfflineInternal.current) {
-          store.dispatch(appConfigSlice.actions.goOnline());
-          if (firebaseAuth.currentUser) {
-            store.dispatch(syncAuthStateWithUser(firebaseAuth.currentUser));
-          }
-          isOfflineInternal.current = false;
-        }
-      }),
+    () => NetInfo.addEventListener((state) => {
+      if (!state.isConnected && !isOfflineInternal.current) {
+        isOfflineInternal.current = true;
+        showMessage(
+          "You seem to be offline, some functionality may be unavailable or out of date"
+        );
+        // Store.dispatch(appConfigSlice.actions.goOffline()); TODO Reimplement
+        store.dispatch(logout());
+      } else if (isOfflineInternal.current) {
+        // Store.dispatch(appConfigSlice.actions.goOnline());
+        // If (firebaseAuth.currentUser) {
+        //   Store.dispatch(syncAuthStateWithUser(firebaseAuth.currentUser));
+        // }
+        isOfflineInternal.current = false;
+      }
+    }),
     []
   );
 
-  if (assetError) {
-    showMessage(assetError, "Error loading assets");
-  }
-
-  if (!assets && hasPushRegistrationObserverFired) {
-    return <AppLoading />;
-  }
+  void SplashScreen.hideAsync();
 
   return (
     <Provider store={store}>
-      <ThemeProvider theme={rnElementsTheme}>
-        <StatusBar backgroundColor="white" barStyle="dark-content" />
-        <NavigationContainer linking={navLinking}>
-          <RootScreen />
-        </NavigationContainer>
-      </ThemeProvider>
+      <NativeBaseProvider>
+        <FirebaseProvider>
+          <StatusBar backgroundColor="white" barStyle="dark-content" />
+          <NavigationContainer linking={navLinking}>
+            <RootScreen />
+          </NavigationContainer>
+        </FirebaseProvider>
+      </NativeBaseProvider>
     </Provider>
   );
 };

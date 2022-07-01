@@ -1,18 +1,20 @@
 // Import third-party dependencies
-import { useEffect, useState } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ReactElement, useEffect, useState } from "react";
 
 // Import first-party dependencies
 import { useAppSelector } from "../common/CustomHooks";
-import ScoreboardScreen from "../screens/ScoreBoardScreen";
-import HomeScreen from "../screens/HomeScreen";
 import EventScreen from "../screens/EventScreen";
-import GenericWebviewScreen from "../screens/GenericWebviewScreen";
-import TeamScreen from "../screens/TeamScreen";
+import HomeScreen from "../screens/HomeScreen";
 import HoursScreen from "../screens/HoursScreen";
+import ScoreboardScreen from "../screens/ScoreBoardScreen";
+import TeamScreen from "../screens/TeamScreen";
+import { RootStackParamList, TabNavigatorParamList } from "../types/NavigationTypes";
+
 import HeaderIcons from "./HeaderIcons";
-import { TabNavigatorParamList } from "../types/NavigationTypes";
 
 const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
 
@@ -21,33 +23,37 @@ const possibleTabs = {
   Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
   Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,
   MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
-} as { [key: string]: JSX.Element };
+} as { [name: string]: ReactElement };
 
 const TabBar = () => {
   const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
-  const configuredTabs = useAppSelector((state) => state.appConfig.configuredTabs);
-  const demoMode = useAppSelector((state) => state.appConfig.demoMode);
+  const configuredTabs = useAppSelector((state) => state.appConfig.enabledScreens);
 
-  const [currentTabs, setCurrentTabs] = useState<JSX.Element[]>([]);
+  const [ currentTabs, setCurrentTabs ] = useState<ReactElement[]>([]);
 
   useEffect(() => {
     if (isConfigLoaded) {
       const tempCurrentTabs = [];
-      for (let i = 0; i < configuredTabs.length; i++) {
-        if (possibleTabs[configuredTabs[i]]) {
-          tempCurrentTabs.push(possibleTabs[configuredTabs[i]]);
-        }
+      for (const configuredTab of configuredTabs) {
+        tempCurrentTabs.push(possibleTabs[configuredTab]);
       }
       setCurrentTabs(tempCurrentTabs);
     }
-  }, [configuredTabs, isConfigLoaded]);
+  }, [ configuredTabs, isConfigLoaded ]);
 
   return (
     <>
       {isConfigLoaded && (
         <Tabs.Navigator
-          screenOptions={({ route, navigation }) => ({
-            tabBarIcon: ({ color, size }) => {
+          screenOptions={({
+            route, navigation
+          }: {
+            navigation: StackNavigationProp<RootStackParamList>;
+            route: RouteProp<TabNavigatorParamList>;
+        }) => ({
+            tabBarIcon: ({
+              color, size
+            }) => {
               const iconMap = {
                 // https://icons.expo.fyi/
                 // Key: Screen   Value: Icon ID
@@ -59,7 +65,7 @@ const TabBar = () => {
                 Team: "users",
                 Donate: "hand-holding-heart",
                 Marathon: "people-arrows",
-              } as { [key: string]: string };
+              };
 
               // You can return any component that you like here!
               return (
@@ -77,17 +83,13 @@ const TabBar = () => {
             tabBarActiveTintColor: "white",
             tabBarActiveBackgroundColor: "#3248a8",
             tabBarStyle: [
-              {
-                display: "flex",
-              },
+              { display: "flex" },
               null,
             ],
           })}
         >
           <Tabs.Screen name="Home" component={HomeScreen} />
-          <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />
-          {!demoMode && currentTabs}
-          {demoMode && Object.values(possibleTabs)}
+          {currentTabs}
         </Tabs.Navigator>
       )}
     </>

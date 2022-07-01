@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { Text } from "native-base";
+import { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
-import { Text } from "react-native-elements";
+
 import { useAppSelector } from "../../common/CustomHooks";
 import Standings from "../../common/components/Standings";
 import { globalStyles, globalTextStyles } from "../../theme";
@@ -12,45 +13,40 @@ import { StandingType } from "../../types/StandingType";
 const TeamScreen = () => {
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const isAnonymous = useAppSelector((state) => state.auth.isAnonymous);
-  const linkblue = useAppSelector((state) => state.auth.linkblue);
-  const userTeam = useAppSelector((state) => state.auth.team);
-  const fundraisingTotal = useAppSelector((state) => state.auth.teamFundraisingTotal);
+  const linkblue = useAppSelector((state) => state.userData.linkblue);
+  const userTeam = useAppSelector((state) => state.userData.team);
+  const fundraisingTotal = useAppSelector((state) => state.userData.teamFundraisingTotal);
   const teamIndividualSpiritPoints = useAppSelector(
-    (state) => state.auth.teamIndividualSpiritPoints
+    (state) => state.userData.teamIndividualSpiritPoints
   );
-  const [standingData, setStandingData] = useState<StandingType[]>([]);
+  const [ standingData, setStandingData ] = useState<StandingType[] | null>([]);
 
   useEffect(() => {
-    let shouldUpdateState = true;
     // Only run if the user has already been set
     if (teamIndividualSpiritPoints) {
       // Get the spirit point data from the confidential collection
       const tempStandingData: StandingType[] = [];
       // Iterate through every record in the team's collection
       Object.entries(teamIndividualSpiritPoints).forEach((record) => {
-        const [recordLinkblue, recordPoints] = record;
+        const [ recordLinkblue, recordPoints ] = record;
         // Add the information from each team to the temporary standingData object
         tempStandingData.push({
           id: recordLinkblue,
           // Fallback in the unlikely case we don't have the team member's name
-          name: userTeam?.members[recordLinkblue]
+          name: userTeam?.members?.[recordLinkblue]
             ? userTeam.members[recordLinkblue]
             : recordLinkblue,
           points: recordPoints,
           highlighted: recordLinkblue === linkblue,
         });
       });
-      if (shouldUpdateState) {
-        // Once all the data has been loaded in, we can update the state
-      }
       setStandingData(tempStandingData);
-    } else if (shouldUpdateState) {
+    } else {
       setStandingData(null);
     }
-    return () => {
-      shouldUpdateState = false;
-    };
-  }, [linkblue, teamIndividualSpiritPoints, userTeam]);
+  }, [
+    linkblue, teamIndividualSpiritPoints, userTeam
+  ]);
 
   return (
     <View style={globalStyles.genericView}>

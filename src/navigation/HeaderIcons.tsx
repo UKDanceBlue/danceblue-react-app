@@ -1,11 +1,17 @@
-import { View, PixelRatio, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { PixelRatio, TouchableOpacity, View } from "react-native";
 
-const HeaderIcons = ({ navigation, color }) => (
+import { RootStackParamList } from "../types/NavigationTypes";
+
+const HeaderIcons = ({
+  navigation, color
+}: {
+  navigation: StackNavigationProp<RootStackParamList>;
+  color?: string;
+}) => (
   <View
-    style={{
-      flexDirection: "row",
-    }}
+    style={{ flexDirection: "row" }}
   >
     <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
       <FontAwesome5

@@ -1,15 +1,51 @@
 {
   "cli": {
-    "version": ">= 0.42.4"
+    "version": ">= 0.42.4",
+    "requireCommit": true
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
+    "dev-client": {
+      "distribution": "internal",
+      "releaseChannel": "development",
+      "developmentClient": true
     },
-    "production": {}
+    "development": {
+      "distribution": "internal",
+      "releaseChannel": "development",
+      "ios": {
+        "simulator": true
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "releaseChannel": "preview"
+    },
+    "production": {
+      "distribution": "store",
+      "releaseChannel": "prod-v1",
+      "ios": {
+        "autoIncrement": "buildNumber"
+      },
+      "android": {
+        "autoIncrement": "versionCode"
+      }
+    }
   },
   "submit": {
-    "production": {}
+    "dev-client": {
+      "extends": "preview"
+    },
+    "development": {
+      "extends": "preview"
+    },
+    "preview": {
+      "extends": "production"
+    },
+    "production": {
+      "ios": {
+        "appleId": "app@danceblue.org",
+        "appleTeamId": "622DXM8F44"
+      }
+    }
   }
 }
