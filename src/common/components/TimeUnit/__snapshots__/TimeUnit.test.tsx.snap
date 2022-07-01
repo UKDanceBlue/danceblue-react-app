@@ -1,69 +1,149 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<TimeUnit /> renders correctly with a plural unit 1`] = `
-<View
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
   style={
-    Object {
-      "alignItems": "center",
-      "paddingLeft": 7,
-      "paddingRight": 7,
-    }
+    Array [
+      Object {
+        "flex": 1,
+      },
+      undefined,
+    ]
   }
 >
-  <Text
+  <View
     style={
       Object {
-        "color": "white",
-        "fontSize": 40,
-        "fontWeight": "bold",
+        "alignItems": "center",
+        "paddingLeft": 7,
+        "paddingRight": 7,
       }
     }
   >
-    10
-  </Text>
-  <Text
-    style={
-      Object {
-        "color": "white",
-        "fontSize": 20,
+    <Text
+      dataSet={Object {}}
+      style={
+        Array [
+          Object {
+            "backgroundColor": undefined,
+            "color": "#171717",
+            "fontFamily": undefined,
+            "fontSize": 14,
+            "fontStyle": "normal",
+            "fontWeight": "400",
+            "letterSpacing": 0,
+            "lineHeight": 21,
+            "textDecorationLine": undefined,
+          },
+          Object {
+            "color": "white",
+            "fontSize": 40,
+            "fontWeight": "bold",
+          },
+        ]
       }
-    }
-  >
-    seconds
-  </Text>
-</View>
+    >
+      10
+    </Text>
+    <Text
+      dataSet={Object {}}
+      style={
+        Array [
+          Object {
+            "backgroundColor": undefined,
+            "color": "#171717",
+            "fontFamily": undefined,
+            "fontSize": 14,
+            "fontStyle": "normal",
+            "fontWeight": "400",
+            "letterSpacing": 0,
+            "lineHeight": 21,
+            "textDecorationLine": undefined,
+          },
+          Object {
+            "color": "white",
+            "fontSize": 20,
+          },
+        ]
+      }
+    >
+      seconds
+    </Text>
+  </View>
+</RNCSafeAreaProvider>
 `;
 
 exports[`<TimeUnit /> renders correctly with a singular unit 1`] = `
-<View
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
   style={
-    Object {
-      "alignItems": "center",
-      "paddingLeft": 7,
-      "paddingRight": 7,
-    }
+    Array [
+      Object {
+        "flex": 1,
+      },
+      undefined,
+    ]
   }
 >
-  <Text
+  <View
     style={
       Object {
-        "color": "white",
-        "fontSize": 40,
-        "fontWeight": "bold",
+        "alignItems": "center",
+        "paddingLeft": 7,
+        "paddingRight": 7,
       }
     }
   >
-    1
-  </Text>
-  <Text
-    style={
-      Object {
-        "color": "white",
-        "fontSize": 20,
+    <Text
+      dataSet={Object {}}
+      style={
+        Array [
+          Object {
+            "backgroundColor": undefined,
+            "color": "#171717",
+            "fontFamily": undefined,
+            "fontSize": 14,
+            "fontStyle": "normal",
+            "fontWeight": "400",
+            "letterSpacing": 0,
+            "lineHeight": 21,
+            "textDecorationLine": undefined,
+          },
+          Object {
+            "color": "white",
+            "fontSize": 40,
+            "fontWeight": "bold",
+          },
+        ]
       }
-    }
-  >
-    second
-  </Text>
-</View>
+    >
+      1
+    </Text>
+    <Text
+      dataSet={Object {}}
+      style={
+        Array [
+          Object {
+            "backgroundColor": undefined,
+            "color": "#171717",
+            "fontFamily": undefined,
+            "fontSize": 14,
+            "fontStyle": "normal",
+            "fontWeight": "400",
+            "letterSpacing": 0,
+            "lineHeight": 21,
+            "textDecorationLine": undefined,
+          },
+          Object {
+            "color": "white",
+            "fontSize": 20,
+          },
+        ]
+      }
+    >
+      second
+    </Text>
+  </View>
+</RNCSafeAreaProvider>
 `;
