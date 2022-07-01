@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { DateTime, Interval } from "luxon";
+import { Button, Divider, Image, Text } from "native-base";
 import { useEffect, useState } from "react";
 import { FlatList, View, useWindowDimensions } from "react-native";
-import { Divider, Image, ListItem, Text } from "react-native-elements";
 
 import { useCachedFiles } from "../../common/CacheUtils";
 import { useAppSelector, useCurrentDate } from "../../common/CustomHooks";
@@ -87,23 +87,21 @@ const HourRow = ({
   ]);
 
   return (
-    <ListItem
-      hasTVPreferredFocus={undefined}
-      tvParallaxProperties={undefined}
+    <Button
       onPress={
         clickable ? () => navigation.navigate("Hour Details", { firestoreHour }) : undefined
       }
       disabled={!clickable}
       key={hourNumber}
     >
-      <ListItem.Content style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-        <Text h4 h4Style={{ fontSize: 19 }}>{`${hourNumber + 1}. `}</Text>
-        <Text h4 h4Style={{ fontSize: 19 }}>
+      <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+        <Text h="4" style={{ fontSize: 19 }}>{`${hourNumber + 1}. `}</Text>
+        <Text h="4" style={{ fontSize: 19 }}>
           {displayedName}
         </Text>
-      </ListItem.Content>
-      {clickable && <ListItem.Chevron tvParallaxProperties={undefined} />}
-    </ListItem>
+      </View>
+      {/* {clickable && <ListItem.Chevron tvParallaxProperties={undefined} />} */}
+    </Button>
   );
 };
 

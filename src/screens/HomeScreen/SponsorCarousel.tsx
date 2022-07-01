@@ -1,7 +1,7 @@
 import firebaseFirestore from "@react-native-firebase/firestore";
+import { Text } from "native-base";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { Text } from "react-native-elements";
 
 import SponsorCard from "../../common/components/ImageCard";
 import { FirestoreSponsor } from "../../types/FirebaseTypes";

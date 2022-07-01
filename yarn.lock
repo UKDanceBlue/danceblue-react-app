@@ -6223,10 +6223,10 @@ expo-modules-core@0.9.2:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
 
-expo-notifications@~0.15.3:
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.15.3.tgz#d87dfc2601620ea89ed1a154a3e71ff7e99256d2"
-  integrity sha512-ln2aFWxKj3jEr5fRTgudxq5v0my+GyYUcfKiKJ7Z/7flRczjZ2Kp8WChZllRYAvncybpghMzpksKg8f5YtAZ2g==
+expo-notifications@~0.15.4:
+  version "0.15.4"
+  resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.15.4.tgz#e255927a239a1b49bf6dfe3d2d6d3fee308165e2"
+  integrity sha512-CHjzA0d4NQU9Es//tTSEKQl3Hfj9hdrV6k79G+2/dnAXIa+KjvDGUTjPlhVqvt9ApT4Ly6UbwoY5Cb5qgKMEWA==
   dependencies:
     "@expo/config-plugins" "^4.0.14"
     "@expo/image-utils" "^0.3.18"

@@ -1,5 +1,5 @@
+import { Text } from "native-base";
 import { View } from "react-native";
-import { Text } from "react-native-elements";
 
 const validUnits = [
   "seconds", "minutes", "hours", "days", "months", "years"

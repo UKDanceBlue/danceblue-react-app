@@ -1,9 +1,9 @@
 import * as Device from "expo-device";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
-import { useEffect, useMemo } from "react";
-import { RefreshControl, ScrollView, View } from "react-native";
-import { Button, ListItem, Text } from "react-native-elements";
+import { Box, Button, FlatList, Heading, Text } from "native-base";
+import { useEffect } from "react";
+import { RefreshControl, View } from "react-native";
 
 import { useAppDispatch, useAppSelector } from "../../common/CustomHooks";
 import { registerPushNotifications } from "../../redux/notificationSlice";
@@ -40,67 +40,50 @@ const NotificationScreen = () => {
     };
   }, [ dispatch, notificationPermissionsGranted ]);
 
-  // Only run the function in this hook if notifications changes
-  const notificationsListView = useMemo(() => {
-    const tempNotificationsListView = [];
-    for (let i = 0; i < notifications.length; i++) {
-      tempNotificationsListView.push(
-        <ListItem key={i} style={{ flexDirection: "column" }} hasTVPreferredFocus={undefined} tvParallaxProperties={undefined}>
-          <View>
-            <ListItem.Title style={globalTextStyles.boldText}>
-              {notifications[i].title}
-            </ListItem.Title>
-            <ListItem.Subtitle>
-              <Text>
-                {Date.now() - notifications[i].sendTime.toMillis() < 43200000
-                  ? notifications[i].sendTime
-                    .toDate()
-                    .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-                  : notifications[i].sendTime.toDate().toLocaleDateString()}
-              </Text>
-            </ListItem.Subtitle>
-          </View>
-          <ListItem.Content style={globalStyles.genericText}>
-            <Text>{notifications[i].body}</Text>
-          </ListItem.Content>
-        </ListItem>
-      );
-    }
-
-    // If there were no notifications to display, show a message saying as much
-    if (tempNotificationsListView.length === 0) {
-      tempNotificationsListView.push(
-        <View style={globalStyles.genericRow} key={0}>
+  return (
+    <>
+      {notificationPermissionsGranted
+        ? (notifications.length > 0 ? (
+          <FlatList
+            style={globalStyles.genericView}
+            refreshControl={<RefreshControl refreshing={userDataLoading} />}
+            data={notifications}
+            renderItem={({ item: notification }) => (
+              <Box>
+                <View>
+                  <Heading style={globalTextStyles.boldText}>
+                    {notification.title}
+                  </Heading>
+                  <Heading>
+                    <Text>
+                      {Date.now() - notification.sendTime.toMillis() < 43200000
+                        ? notification.sendTime
+                          .toDate()
+                          .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                        : notification.sendTime.toDate().toLocaleDateString()}
+                    </Text>
+                  </Heading>
+                </View>
+                <Text style={globalStyles.genericText}>
+                  <Text>{notification.body}</Text>
+                </Text>
+              </Box>
+            )}
+          />
+        ) : <View style={globalStyles.genericRow}>
           <View style={globalStyles.genericView}>
             <Text style={globalTextStyles.headerText}>No notifications</Text>
           </View>
-        </View>
-      );
-    }
-
-    return tempNotificationsListView;
-  }, [notifications]);
-
-  return (
-    <>
-      {notificationPermissionsGranted && (
-        <ScrollView
-          style={globalStyles.genericView}
-          refreshControl={<RefreshControl refreshing={userDataLoading} />}
-        >
-          {notificationsListView}
-        </ScrollView>
-      )}
-      {!notificationPermissionsGranted && (
-        <View>
-          <Text>
+        </View>) : (
+          <View>
+            <Text>
             You have not enabled notifications for this device, enable them in the settings app
-          </Text>
-          {Device.manufacturer === "Apple" && (
-            <Button onPress={() => void Linking.openSettings()} title="Open Settings" />
-          )}
-        </View>
-      )}
+            </Text>
+            {Device.manufacturer === "Apple" && (
+              <Button onPress={() => void Linking.openSettings()} title="Open Settings" />
+            )}
+          </View>
+        )}
     </>
   );
 };

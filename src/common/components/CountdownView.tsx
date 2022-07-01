@@ -1,7 +1,7 @@
 import { DateTime, Duration, Interval } from "luxon";
+import { Text } from "native-base";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-elements";
 
 import TimeUnit from "./TimeUnit";
 

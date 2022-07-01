@@ -1,7 +1,6 @@
+import { Text } from "native-base";
 import { useEffect } from "react";
-import { ActivityIndicator, Dimensions, ImageBackground, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Text } from "react-native-elements";
-
+import { ActivityIndicator, Dimensions, ImageBackground, TouchableOpacity, View } from "react-native";
 
 import splashBackground from "../../../assets/home/Dancing-min.jpg";
 import { useAppSelector } from "../../common/CustomHooks";
@@ -9,8 +8,6 @@ import { useFirebase } from "../../common/FirebaseApp";
 import { useLinkBlueLogin } from "../../common/auth";
 import { showMessage } from "../../common/util/AlertUtils";
 import { globalStyles, globalTextStyles } from "../../theme";
-
-
 
 /**
  * A simplified sign in page shown when the user first opens the app
@@ -37,9 +34,9 @@ const SplashLoginScreen = () => {
   return (
     <View style={globalStyles.genericCenteredView}>
       <ImageBackground source={splashBackground} style={localStyles.image}>
-        <View style={localStyles.textContainerWithBackground}>
+        <View style={globalStyles.genericView}>
           <View style={globalStyles.genericHeaderContainer}>
-            <Text h2 style={{ textAlign: "center" }}>
+            <Text h="2" style={{ textAlign: "center" }}>
             Welcome to UK DanceBlue!
             </Text>
             <Text style={globalTextStyles.headerText}>
@@ -53,7 +50,7 @@ const SplashLoginScreen = () => {
           </View>
           { allowedLoginTypes.includes("ms-oath-linkblue") && (
             <View style={globalStyles.genericHeaderContainer}>
-              <Text h3 style={globalStyles.genericText}>
+              <Text h="3" style={globalStyles.genericText}>
             Sign in with your UK LinkBlue account
               </Text>
               <TouchableOpacity
@@ -91,8 +88,7 @@ const localStyles = {
   image: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
-  },
-  textContainerWithBackground: StyleSheet.compose(globalStyles.genericView, { backgroundColor: "#FFFFFF99" }),
+  }
 };
 
 export default SplashLoginScreen;

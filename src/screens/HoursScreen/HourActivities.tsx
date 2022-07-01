@@ -6,7 +6,7 @@ import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { createRef, useEffect, useState } from "react";
 import { ActionSheetIOS, Platform, Text, TextInput, View } from "react-native";
-import { Button, Divider, Input } from "react-native-elements";
+import { Button, Divider, Input } from "native-base";
 
 import Standings from "../../common/components/Standings";
 import { showMessage } from "../../common/util/AlertUtils";
@@ -56,12 +56,12 @@ async function uploadImageAsync(uri: string, hour: string) {
     firebaseFirestore().collection("marathon/2022/photo-booth").add({
       photoUri: result.ref.fullPath,
       hour,
-      name: `${store.getState().auth.firstName?.toString()} ${store
+      name: `${store.getState().userData.firstName?.toString()} ${store
         .getState()
-        .auth.lastName?.toString()}`,
-      linkblue: store.getState().auth.linkblue || null,
-      email: store.getState().auth.email || null,
-      moraleTeamID: store.getState().auth.moraleTeamId || null,
+        .userData.lastName?.toString()}`,
+      linkblue: store.getState().userData.linkblue || null,
+      email: store.getState().userData.email || null,
+      // moraleTeamID: store.getState().userData.moraleTeamId || null,
       deviceId: store.getState().notification.uuid || null,
       pushToken: store.getState().notification.pushToken || null,
     })
@@ -215,8 +215,13 @@ export const PhotoUpload = () => {
         disabled={uploading}
         onPress={() => {
           setUploading(true);
-          getImageFromPhotosOrCamera(uploadImageAsync, selectedStation).then(() => setUploading(false)
-          );
+          getImageFromPhotosOrCamera(
+            (uri: string, hour: string) => {
+              return uploadImageAsync(uri, hour).then((val) => {
+                setUploading(false);
+                return val;
+              });
+            }, selectedStation);
         }}
       />
     </View>
@@ -256,16 +261,6 @@ export const DadJokeLeaderboard = () => {
         standingData={dadJokes}
         expandable
         collapsedRows={5}
-        dadJokeTempMagic
-        dadJokeTempMagicCallback={(checked, id) => {
-          if (firebaseAuth().currentUser?.uid) {
-            if (checked) {
-              void dadJokesDoc.update(`${id}.votes`, firebaseFirestore.FieldValue.arrayUnion(firebaseAuth().currentUser?.uid));
-            } else {
-              void dadJokesDoc.update(`${id}.votes`, firebaseFirestore.FieldValue.arrayRemove(firebaseAuth().currentUser?.uid));
-            }
-          }
-        }}
       />
       <Input
         ref={dadInput}

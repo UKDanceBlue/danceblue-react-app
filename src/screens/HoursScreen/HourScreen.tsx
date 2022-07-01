@@ -3,9 +3,9 @@ import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-vi
 import type { StackScreenProps } from "@react-navigation/stack";
 import * as Clipboard from "expo-clipboard";
 import { openBrowserAsync } from "expo-web-browser";
+import { Button, Image, Text, useTheme } from "native-base";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, View, useWindowDimensions } from "react-native";
-import { Button, Image, Text, useTheme } from "react-native-elements";
 
 import { UseCachedFilesType, useCachedImages } from "../../common/CacheUtils";
 import { showPrompt } from "../../common/util/AlertUtils";
@@ -86,7 +86,7 @@ const HourScreen = ({ route: { params: { firestoreHour } } }: { route: Props["ro
   const [ components, setComponents ] = useState<JSX.Element[]>([]);
   const [ cacheOptions, setCacheOptions ] = useState<UseCachedFilesType[]>([]);
   const cachedImages = useCachedImages(cacheOptions);
-  const { theme } = useTheme();
+  const { colors } = useTheme();
 
   const {
     width: screenWidth, height: screenHeight
@@ -285,9 +285,9 @@ const HourScreen = ({ route: { params: { firestoreHour } } }: { route: Props["ro
   ]);
 
   return (
-    <ScrollView style={{ backgroundColor: theme.colors?.grey3 }}>
+    <ScrollView style={{ backgroundColor: colors.gray[500] }}>
       <View style={{ justifyContent: "space-between" }}>
-        <Text h3 style={{ margin: 10, ...globalTextStyles.headerText }}>{`${
+        <Text h="3" style={{ margin: 10, ...globalTextStyles.headerText }}>{`${
           firestoreHour.hourNumber + 1
         }. ${firestoreHour.name}`}</Text>
         {firestoreHour.description && (

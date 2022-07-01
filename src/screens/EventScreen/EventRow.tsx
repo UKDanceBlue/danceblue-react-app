@@ -1,7 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { DateTime } from "luxon";
+import { Text } from "native-base";
 import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
-import { Text } from "react-native-elements";
 
 import { useFirebaseStorageUrl } from "../../common/CustomHooks";
 

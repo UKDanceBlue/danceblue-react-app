@@ -1,5 +1,5 @@
+import { Button } from "native-base";
 import { Linking, SafeAreaView } from "react-native";
-import { Button } from "react-native-elements";
 
 import HeaderImage from "./HeaderImage";
 import SponsorCarousel from "./SponsorCarousel";
