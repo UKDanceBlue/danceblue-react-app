@@ -1,5 +1,23 @@
+import { extendTheme } from "native-base";
 import { StyleSheet } from "react-native";
 
+/*
+ * Useful links for extending the theme:
+ * https://docs.nativebase.io/default-theme
+ * https://docs.nativebase.io/dark-mode
+ */
+export const customTheme = extendTheme({});
+
+// 2. Get the type of the CustomTheme
+type CustomThemeType = typeof customTheme;
+
+// 3. Extend the internal NativeBase Theme
+declare module "native-base" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface ICustomTheme extends CustomThemeType {}
+}
+
+/** @deprecated */
 export const globalColors = {
   white: "#F2F3F8",
   darkNavy: "#1F2236",
@@ -12,6 +30,7 @@ export const globalColors = {
   dbSaffron: "#FFC72C",
 };
 
+/** @deprecated */
 export const rnElementsTheme = {
   colors: {
     primary: globalColors.dbBlue,
@@ -33,6 +52,7 @@ export const rnElementsTheme = {
   },
 };
 
+/** @deprecated */
 export const globalStyles = StyleSheet.create({
   genericButton: {
     alignItems: "center",
@@ -93,6 +113,7 @@ export const globalStyles = StyleSheet.create({
   genericView: { flex: 1 },
 });
 
+/** @deprecated */
 export const globalTextStyles = StyleSheet.create({
   boldText: {
     ...globalStyles.genericText,

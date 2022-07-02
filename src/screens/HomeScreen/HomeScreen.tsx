@@ -1,5 +1,5 @@
-import { Button } from "native-base";
-import { Linking, SafeAreaView } from "react-native";
+import { Button, VStack } from "native-base";
+import { Linking } from "react-native";
 
 import HeaderImage from "./HeaderImage";
 import SponsorCarousel from "./SponsorCarousel";
@@ -8,10 +8,10 @@ import SponsorCarousel from "./SponsorCarousel";
  * Component for home screen in main navigation
  */
 const HomeScreen = () => (
-  <SafeAreaView style={{ flex: 1 }}>
+  <VStack>
     <HeaderImage />
     <Button
-      style={{ margin: 10, alignSelf: "center" }}
+      m={ 5 }
       onPress={() => {
         void (async () => {
           if (
@@ -25,10 +25,11 @@ const HomeScreen = () => (
           }
         })();
       }}
-      title="Donate!"
-    />
+    >
+      Donate!
+    </Button>
     <SponsorCarousel />
-  </SafeAreaView>
+  </VStack>
 );
 
 HomeScreen.navigationOptions = { title: "Home" };

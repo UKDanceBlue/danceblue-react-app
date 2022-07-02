@@ -5,7 +5,7 @@ import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
 import * as SplashScreen from "expo-splash-screen";
-import { NativeBaseProvider } from "native-base";
+import { ICustomTheme, NativeBaseProvider } from "native-base";
 import { useEffect, useRef } from "react";
 import { StatusBar } from "react-native";
 import { Provider } from "react-redux";
@@ -18,6 +18,7 @@ import RootScreen from "./src/navigation/RootScreen";
 import { logout } from "./src/redux/authSlice";
 import { registerPushNotifications } from "./src/redux/notificationSlice";
 import store from "./src/redux/store";
+import { customTheme } from "./src/theme";
 
 // All assets that should be preloaded:
 
@@ -138,7 +139,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <NativeBaseProvider>
+      <NativeBaseProvider config={{ strictMode: __DEV__ ? "error" : "off" }} theme={customTheme as ICustomTheme}>
         <FirebaseProvider>
           <StatusBar backgroundColor="white" barStyle="dark-content" />
           <NavigationContainer linking={navLinking}>

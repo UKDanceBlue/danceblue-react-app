@@ -36,8 +36,8 @@ const SponsorCarousel = () => {
 
   const cards = sponsors.map((sponsor) => (
     <SponsorCard
-      name={sponsor.name}
-      imageLink={sponsor.logo}
+      name={sponsor.name ?? ""}
+      imagePath={sponsor.logo ?? ""}
       sponsorLink={sponsor.link}
       key={sponsor.id}
     />
@@ -45,16 +45,14 @@ const SponsorCarousel = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView scrollEventThrottle={16}>
-        <View style={styles.sponsorView}>
-          <View style={styles.sponsorTitleView}>
-            <Text style={styles.sponsorTitle}> SPONSORS </Text>
-          </View>
-          <View style={styles.cardScrollView}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ padding: 10 }}>
-              {cards}
-            </ScrollView>
-          </View>
+      <View>
+        <Text style={styles.sponsorTitle}> SPONSORS </Text>
+      </View>
+      <ScrollView scrollEventThrottle={16} horizontal>
+        <View style={styles.cardScrollView}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {cards}
+          </ScrollView>
         </View>
       </ScrollView>
     </View>
@@ -71,14 +69,6 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 20,
     fontWeight: "bold",
-  },
-  sponsorTitleView: {},
-  sponsorView: {
-    alignItems: "flex-start",
-    backgroundColor: "white",
-    flex: 1,
-    justifyContent: "flex-start",
-    padding: 5,
   },
 });
 
