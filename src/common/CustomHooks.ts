@@ -1,6 +1,7 @@
 import NetInfo, { NetInfoState, NetInfoStateType, NetInfoUnknownState } from "@react-native-community/netinfo";
 import firebaseStorage from "@react-native-firebase/storage";
 import { isEqual } from "lodash";
+import { useColorModeValue as useColorModeValueNativeBase } from "native-base";
 import { DependencyList, useDebugValue, useEffect, useRef, useState } from "react";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
@@ -76,6 +77,8 @@ export function useCurrentDate(refreshInterval?: number) {
 
   return state;
 }
+
+export const useColorModeValue = <A, B>(lightValue: A, darkValue: B): A | B => useColorModeValueNativeBase(lightValue, darkValue) as A | B;
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = () => useDispatch<AppDispatch>();

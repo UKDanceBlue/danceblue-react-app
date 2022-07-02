@@ -9,6 +9,7 @@ import storage, { FirebaseStorageTypes } from "@react-native-firebase/storage";
 import { ReactNode, createContext, useContext, useEffect } from "react";
 
 import { logout, syncAuth } from "../redux/authSlice";
+import { loadUserData } from "../redux/userDataSlice";
 
 import { useAppDispatch } from "./CustomHooks";
 
@@ -39,11 +40,15 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => value.fbAuth.onAuthStateChanged((user) => {
     if (user) {
-      void dispatch(syncAuth({ user }));
+      void dispatch(syncAuth({ user })).then(() => {
+        void dispatch(loadUserData({ firestore: value.fbFirestore, loginType: user.isAnonymous? "anonymous" : "ms-oath-linkblue", userId: user.uid }));
+      });
     } else {
       dispatch(logout());
     }
-  }), [ dispatch, value.fbAuth ]);
+  }), [
+    dispatch, value.fbAuth, value.fbFirestore
+  ]);
 
   return (
     <FirebaseContext.Provider value={value}>
