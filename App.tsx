@@ -1,4 +1,5 @@
 // Import third-party dependencies
+import "expo-dev-client";
 import NetInfo from "@react-native-community/netinfo";
 import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
 import * as Linking from "expo-linking";

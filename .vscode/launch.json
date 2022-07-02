@@ -5,10 +5,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name":"Attach to packager",
-      "request":"attach",
-      "type":"reactnative",
-      "cwd":"${workspaceFolder}",
+      "name": "Attach to packager",
+      "request": "attach",
+      "type": "reactnative",
+      "cwd": "${workspaceFolder}",
       "address": "localhost",
       "port": 8081
     }

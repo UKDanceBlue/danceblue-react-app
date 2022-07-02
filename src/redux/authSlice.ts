@@ -52,6 +52,7 @@ const authSlice = createSlice({
       state.isAnonymous = false;
       state.uid = null;
       state.authClaims = null;
+      state.isAuthLoaded = true;
     },
   },
   extraReducers: (builder) => {
