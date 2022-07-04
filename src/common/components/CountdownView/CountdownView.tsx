@@ -3,7 +3,7 @@ import { Text } from "native-base";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import TimeUnit from "./TimeUnit";
+import TimeUnit from "../TimeUnit";
 
 const CountdownView = ({
   title, endTime

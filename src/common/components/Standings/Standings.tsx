@@ -2,10 +2,9 @@ import { Text } from "native-base";
 import { ReactElement, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from "react-native";
 
-import { globalColors, globalStyles, globalTextStyles } from "../../theme";
-import { StandingType } from "../../types/StandingType";
-
-import Place from "./Place";
+import { globalColors, globalStyles, globalTextStyles } from "../../../theme";
+import { StandingType } from "../../../types/StandingType";
+import Place from "../Place";
 
 /**
  * Standings implementation for the a generic leaderboard

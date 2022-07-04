@@ -5,6 +5,7 @@
     "christian-kohler.npm-intellisense",
     "cmstead.js-codeformer",
     "orta.vscode-jest",
-    "msjsdiag.vscode-react-native"
+    "msjsdiag.vscode-react-native",
+    "jingkaizhao.vscode-redux-devtools"
   ]
 }

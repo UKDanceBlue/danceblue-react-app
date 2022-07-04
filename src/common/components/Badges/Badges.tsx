@@ -1,7 +1,7 @@
 import { Text } from "react-native";
 import { FlatGrid } from "react-native-super-grid";
 
-import Badge from "./Badge";
+import Badge from "../Badge";
 
 /**
  * A row of a user's {@link Badge}s loaded from Firebase

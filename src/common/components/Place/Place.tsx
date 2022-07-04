@@ -4,7 +4,7 @@ import { Divider, Heading, Text } from "native-base";
 import { ReactElement } from "react";
 import { View } from "react-native";
 
-import { globalColors } from "../../theme";
+import { globalColors } from "../../../theme";
 
 /**
  * A row-based component showing a target name, their rank (if applicable), and their points

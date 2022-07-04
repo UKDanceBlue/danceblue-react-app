@@ -2,7 +2,7 @@ import * as WebBrowser from "expo-web-browser";
 import { Image } from "native-base";
 import { PixelRatio, TouchableHighlight } from "react-native";
 
-import { useFirebaseStorageUrl } from "../CustomHooks";
+import { useFirebaseStorageUrl } from "../../CustomHooks";
 
 /**
  * A card showing a Sponsor's logo that link's to their website
