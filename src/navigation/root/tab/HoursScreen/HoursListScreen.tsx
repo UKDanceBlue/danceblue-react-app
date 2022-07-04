@@ -4,12 +4,12 @@ import { Button, Divider, Image, Text } from "native-base";
 import { useEffect, useState } from "react";
 import { FlatList, View, useWindowDimensions } from "react-native";
 
-import { useCachedFiles } from "../../common/CacheUtils";
-import { useAppSelector, useCurrentDate } from "../../common/CustomHooks";
-import { appConfigSlice, updateConfig } from "../../redux/appConfigSlice";
-import store from "../../redux/store";
-import { FirestoreHour } from "../../types/FirebaseTypes";
-import { TabNavigatorProps } from "../../types/NavigationTypes";
+import { useCachedFiles } from "../../../../common/CacheUtils";
+import { useAppSelector, useCurrentDate } from "../../../../common/CustomHooks";
+import { appConfigSlice, updateConfig } from "../../../../redux/appConfigSlice";
+import store from "../../../../redux/store";
+import { FirestoreHour } from "../../../../types/FirebaseTypes";
+import { TabNavigatorProps } from "../../../../types/NavigationTypes";
 
 function revealRandomChars(input: string, charsToReveal: number): string {
   let tempOutputString = "";

@@ -2,10 +2,10 @@ import { Text } from "native-base";
 import { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
 
-import { useAppSelector } from "../../common/CustomHooks";
-import Standings from "../../common/components/Standings";
-import { globalStyles, globalTextStyles } from "../../theme";
-import { StandingType } from "../../types/StandingType";
+import { useAppSelector } from "../../../../common/CustomHooks";
+import Standings from "../../../../common/components/Standings";
+import { globalStyles, globalTextStyles } from "../../../../theme";
+import { StandingType } from "../../../../types/StandingType";
 
 /**
  * A screen shown to users with an assigned team that display's their teams fundraising total, and spirit point numbers

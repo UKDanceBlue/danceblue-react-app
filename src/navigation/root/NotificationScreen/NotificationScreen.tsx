@@ -5,9 +5,9 @@ import { Box, Button, FlatList, Heading, Text } from "native-base";
 import { useEffect } from "react";
 import { RefreshControl, View } from "react-native";
 
-import { useAppDispatch, useAppSelector } from "../../common/CustomHooks";
-import { registerPushNotifications } from "../../redux/notificationSlice";
-import { globalStyles, globalTextStyles } from "../../theme";
+import { useAppDispatch, useAppSelector } from "../../../common/CustomHooks";
+import { registerPushNotifications } from "../../../redux/notificationSlice";
+import { globalStyles, globalTextStyles } from "../../../theme";
 
 /**
  * Component for "Profile" screen in main navigation

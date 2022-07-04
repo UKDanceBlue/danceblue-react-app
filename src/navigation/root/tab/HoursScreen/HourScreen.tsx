@@ -7,11 +7,11 @@ import { Button, Image, Text, useTheme } from "native-base";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, View, useWindowDimensions } from "react-native";
 
-import { UseCachedFilesType, useCachedImages } from "../../common/CacheUtils";
-import { showPrompt } from "../../common/util/AlertUtils";
-import { globalTextStyles } from "../../theme";
-import { HourInstructionsType } from "../../types/HourScreenTypes";
-import { RootStackParamList } from "../../types/NavigationTypes";
+import { UseCachedFilesType, useCachedImages } from "../../../../common/CacheUtils";
+import { showPrompt } from "../../../../common/util/AlertUtils";
+import { globalTextStyles } from "../../../../theme";
+import { HourInstructionsType } from "../../../../types/HourScreenTypes";
+import { RootStackParamList } from "../../../../types/NavigationTypes";
 
 import HourActivities, { DadJokeLeaderboard, PhotoUpload } from "./HourActivities";
 

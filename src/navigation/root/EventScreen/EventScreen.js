@@ -8,8 +8,8 @@ import { ActivityIndicator, Image, StyleSheet, TouchableHighlight, View } from "
 import openMap from "react-native-open-maps";
 // Import * as Calendar from 'expo-calendar';
 
-import { useFirebaseStorageUrl } from "../../common/CustomHooks";
-import { globalColors } from "../../theme";
+import { useFirebaseStorageUrl } from "../../../common/CustomHooks";
+import { globalColors } from "../../../theme";
 
 // Const danceBlueCalendarConfig = {
 //   Title: 'DanceBlue',
@@ -28,7 +28,7 @@ import { globalColors } from "../../theme";
  * A component for showing a particular calendar event
  * @see {@link https://docs.expo.dev/versions/latest/sdk/calendar/ Expo's Calendar API}
  */
-const EventView = () => {
+const EventScreen = () => {
   // Const [isOnCalendar, setIsOnCalendar] = useState(false);
   // Const [calendarID, setCalendarID] = useState(undefined);
   // Const [eventCalendarID, setEventCalendarID] = useState(null);
@@ -220,4 +220,4 @@ const styles = StyleSheet.create({
   text: { fontSize: 17 },
 });
 
-export default EventView;
+export default EventScreen;

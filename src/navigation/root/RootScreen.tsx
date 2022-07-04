@@ -3,18 +3,18 @@ import { BlurView } from "expo-blur";
 import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 
-import { useAppDispatch, useAppSelector } from "../common/CustomHooks";
-import { updateConfig } from "../redux/appConfigSlice";
-import { EventView } from "../screens/EventScreen";
-import HourScreen from "../screens/HoursScreen/HourScreen";
-import SplashLogin from "../screens/Modals/SplashLogin";
-import NotificationScreen from "../screens/NotificationScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import { globalColors } from "../theme";
-import { RootStackParamList } from "../types/NavigationTypes";
+import { useAppDispatch, useAppSelector } from "../../common/CustomHooks";
+import { updateConfig } from "../../redux/appConfigSlice";
+import { globalColors } from "../../theme";
+import { RootStackParamList } from "../../types/NavigationTypes";
+import HeaderIcons from "../HeaderIcons";
 
-import HeaderIcons from "./HeaderIcons";
-import TabBar from "./TabBar";
+import EventScreen from "./EventScreen";
+import SplashLogin from "./Modals/SplashLogin";
+import NotificationScreen from "./NotificationScreen";
+import ProfileScreen from "./ProfileScreen";
+import HourScreen from "./tab/HoursScreen/HourScreen";
+import TabBar from "./tab/TabBar";
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -60,7 +60,7 @@ const RootScreen = () => {
               <RootStack.Screen name="Profile" component={ProfileScreen} options={{ headerRight: undefined }} />
               <RootStack.Screen
                 name="Event"
-                component={EventView}
+                component={EventScreen}
                 options={({ route }) => ({
                   title: route.params.name,
                   headerTransparent: true,

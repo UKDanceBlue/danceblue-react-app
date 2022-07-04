@@ -2,12 +2,12 @@ import firebaseFirestore from "@react-native-firebase/firestore";
 import { useCallback, useState } from "react";
 import { RefreshControl, SafeAreaView, ScrollView } from "react-native";
 
-import { useAppSelector } from "../../common/CustomHooks";
-import Standings from "../../common/components/Standings";
-import { showMessage } from "../../common/util/AlertUtils";
-import { globalStyles } from "../../theme";
-import { FirestoreMoraleTeam, FirestoreTeam } from "../../types/FirebaseTypes";
-import { StandingType } from "../../types/StandingType";
+import { useAppSelector } from "../../../../common/CustomHooks";
+import Standings from "../../../../common/components/Standings";
+import { showMessage } from "../../../../common/util/AlertUtils";
+import { globalStyles } from "../../../../theme";
+import { FirestoreMoraleTeam, FirestoreTeam } from "../../../../types/FirebaseTypes";
+import { StandingType } from "../../../../types/StandingType";
 
 /**
  * Wrapper for a Standings component

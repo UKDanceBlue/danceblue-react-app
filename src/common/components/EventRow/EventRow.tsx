@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import { Text } from "native-base";
 import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
 
-import { useFirebaseStorageUrl } from "../../common/CustomHooks";
+import { useFirebaseStorageUrl } from "../../CustomHooks";
 
 /**
  * A simple row of *Event*s from *startDate* to *endDate*

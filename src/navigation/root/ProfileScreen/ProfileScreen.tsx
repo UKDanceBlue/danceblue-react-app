@@ -6,10 +6,10 @@ import { useState } from "react";
 import { ActivityIndicator, TextInput, View } from "react-native";
 
 import avatar from "../../../assets/avatar.png";
-import { useAppSelector } from "../../common/CustomHooks";
-import { useFirebase } from "../../common/FirebaseApp";
-import { useLinkBlueLogin } from "../../common/auth";
-import { globalColors, globalStyles, globalTextStyles } from "../../theme";
+import { useAppSelector } from "../../../common/CustomHooks";
+import { useFirebase } from "../../../common/FirebaseApp";
+import { useLinkBlueLogin } from "../../../common/auth";
+import { globalColors, globalStyles, globalTextStyles } from "../../../theme";
 
 /**
  * Component for "Profile" screen in main navigation

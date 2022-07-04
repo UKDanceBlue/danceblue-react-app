@@ -5,24 +5,16 @@ import { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 
-import { FirestoreEvent } from "../../types/FirebaseTypes";
-import { TabNavigatorProps } from "../../types/NavigationTypes";
+import EventRow from "../../../../common/components/EventRow";
+import { FirestoreEvent } from "../../../../types/FirebaseTypes";
+import { TabNavigatorProps } from "../../../../types/NavigationTypes";
 
-import EventRow from "./EventRow";
 
 interface EventType extends FirestoreEvent {
   id: string;
 }
 
-/**
- * Component for "Events" screen in main navigation
- *
- * TODO figure out how this works and then:
- *  1. Simplify it
- *  2. Add inline comments
- *  3. Make it a function component if possible
- */
-const EventScreen = () => {
+const EventListScreen = () => {
   const [ events, setEvents ] = useState<EventType[]>([]);
   const [ today, setToday ] = useState<EventType[]>([]);
   const [ upcoming, setUpcoming ] = useState<EventType[]>([]);
@@ -126,7 +118,7 @@ const EventScreen = () => {
   );
 };
 
-EventScreen.navigationOptions = { title: "Events" };
+EventListScreen.navigationOptions = { title: "Events" };
 
 const styles = StyleSheet.create({
   body: {
@@ -144,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EventScreen;
+export default EventListScreen;

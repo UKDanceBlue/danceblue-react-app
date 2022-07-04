@@ -8,12 +8,12 @@ import { createRef, useEffect, useState } from "react";
 import { ActionSheetIOS, Platform, Text, TextInput, View } from "react-native";
 import { Button, Divider, Input } from "native-base";
 
-import Standings from "../../common/components/Standings";
-import { showMessage } from "../../common/util/AlertUtils";
-import generateUuid from "../../common/util/GenerateUuid";
-import store from "../../redux/store";
-import { globalColors, globalTextStyles } from "../../theme";
-import { StandingType } from "../../types/StandingType";
+import Standings from "../../../../common/components/Standings";
+import { showMessage } from "../../../../common/util/AlertUtils";
+import generateUuid from "../../../../common/util/GenerateUuid";
+import store from "../../../../redux/store";
+import { globalColors, globalTextStyles } from "../../../../theme";
+import { StandingType } from "../../../../types/StandingType";
 
 const guessInput = createRef<TextInput>();
 const dadInput = createRef<TextInput>();

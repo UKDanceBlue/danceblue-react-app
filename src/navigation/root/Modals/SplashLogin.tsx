@@ -3,11 +3,11 @@ import { useEffect } from "react";
 import { ActivityIndicator, Dimensions, ImageBackground, TouchableOpacity, View } from "react-native";
 
 import splashBackground from "../../../assets/home/Dancing-min.jpg";
-import { useAppSelector } from "../../common/CustomHooks";
-import { useFirebase } from "../../common/FirebaseApp";
-import { useLinkBlueLogin } from "../../common/auth";
-import { showMessage } from "../../common/util/AlertUtils";
-import { globalStyles, globalTextStyles } from "../../theme";
+import { useAppSelector } from "../../../common/CustomHooks";
+import { useFirebase } from "../../../common/FirebaseApp";
+import { useLinkBlueLogin } from "../../../common/auth";
+import { showMessage } from "../../../common/util/AlertUtils";
+import { globalStyles, globalTextStyles } from "../../../theme";
 
 /**
  * A simplified sign in page shown when the user first opens the app

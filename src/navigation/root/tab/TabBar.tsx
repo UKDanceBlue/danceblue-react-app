@@ -6,20 +6,20 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { ReactElement, useEffect, useState } from "react";
 
 // Import first-party dependencies
-import { useAppSelector } from "../common/CustomHooks";
-import EventScreen from "../screens/EventScreen";
-import HomeScreen from "../screens/HomeScreen";
-import HoursScreen from "../screens/HoursScreen";
-import ScoreboardScreen from "../screens/ScoreBoardScreen";
-import TeamScreen from "../screens/TeamScreen";
-import { RootStackParamList, TabNavigatorParamList } from "../types/NavigationTypes";
+import { useAppSelector } from "../../../common/CustomHooks";
+import { RootStackParamList, TabNavigatorParamList } from "../../../types/NavigationTypes";
+import HeaderIcons from "../../HeaderIcons";
 
-import HeaderIcons from "./HeaderIcons";
+import EventListScreen from "./EventListScreen";
+import HomeScreen from "./HomeScreen";
+import HoursScreen from "./HoursScreen";
+import ScoreboardScreen from "./ScoreBoardScreen";
+import TeamScreen from "./TeamScreen";
 
 const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
 
 const possibleTabs = {
-  Events: <Tabs.Screen key="Events" name="Events" component={EventScreen} />,
+  Events: <Tabs.Screen key="Events" name="Events" component={EventListScreen} />,
   Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
   Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,
   MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,

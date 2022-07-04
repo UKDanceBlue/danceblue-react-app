@@ -1,7 +1,7 @@
 import { Box, Image, ZStack } from "native-base";
 
-import dbLogo from "../../../assets/home/DB_Primary_Logo-01.png";
-import backgroundImg from "../../../assets/home/db20_ribbon.jpg";
+import dbLogo from "../../../../../assets/home/DB_Primary_Logo-01.png";
+import backgroundImg from "../../../../../assets/home/db20_ribbon.jpg";
 
 /**
  * A header image container used on the home screen

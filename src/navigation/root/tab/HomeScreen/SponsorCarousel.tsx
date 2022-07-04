@@ -3,8 +3,8 @@ import { Text } from "native-base";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
-import SponsorCard from "../../common/components/ImageCard";
-import { FirestoreSponsor } from "../../types/FirebaseTypes";
+import SponsorCard from "../../../../common/components/ImageCard";
+import { FirestoreSponsor } from "../../../../types/FirebaseTypes";
 
 interface SponsorType extends FirestoreSponsor {
   id: string;
