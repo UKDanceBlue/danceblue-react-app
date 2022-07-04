@@ -7,6 +7,7 @@ import { Image } from "react-native";
 import { useDeepEffect } from "./CustomHooks";
 import { showMessage } from "./util/AlertUtils";
 
+// TODO replace all of this with a better implementation
 
 export interface UseCachedFilesType {
   assetId: string;
