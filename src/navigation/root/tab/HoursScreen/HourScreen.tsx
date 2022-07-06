@@ -3,9 +3,9 @@ import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-vi
 import type { StackScreenProps } from "@react-navigation/stack";
 import * as Clipboard from "expo-clipboard";
 import { openBrowserAsync } from "expo-web-browser";
-import { Button, Image, Text, useTheme } from "native-base";
+import { Button, Image, Text, View, useTheme } from "native-base";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, View, useWindowDimensions } from "react-native";
+import { ActivityIndicator, ScrollView, useWindowDimensions } from "react-native";
 
 import { UseCachedFilesType, useCachedImages } from "../../../../common/CacheUtils";
 import { showPrompt } from "../../../../common/util/AlertUtils";

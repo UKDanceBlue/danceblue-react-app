@@ -1,6 +1,6 @@
-import { Text } from "native-base";
+import { Text, View } from "native-base";
 import { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
+import { SafeAreaView, ScrollView } from "react-native";
 
 import { useAppSelector } from "../../../../common/CustomHooks";
 import Standings from "../../../../common/components/Standings";

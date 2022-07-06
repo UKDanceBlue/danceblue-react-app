@@ -5,8 +5,8 @@ import firebaseStorage from "@react-native-firebase/storage";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { createRef, useEffect, useState } from "react";
-import { ActionSheetIOS, Platform, Text, TextInput, View } from "react-native";
-import { Button, Divider, Input } from "native-base";
+import { ActionSheetIOS, Platform } from "react-native";
+import { Button, Divider, Input, Text, View } from "native-base";
 
 import Standings from "../../../../common/components/Standings";
 import { showMessage } from "../../../../common/util/AlertUtils";
@@ -15,8 +15,8 @@ import store from "../../../../redux/store";
 import { globalColors, globalTextStyles } from "../../../../theme";
 import { StandingType } from "../../../../types/StandingType";
 
-const guessInput = createRef<TextInput>();
-const dadInput = createRef<TextInput>();
+const guessInput = createRef<typeof Input>();
+const dadInput = createRef<typeof Input>();
 
 // From https://github.com/expo/examples/blob/master/with-firebase-storage-upload/App.js
 async function uploadImageAsync(uri: string, hour: string) {

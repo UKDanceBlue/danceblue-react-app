@@ -1,8 +1,9 @@
 import firebaseFirestore, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { DateTime } from "luxon";
+import { ScrollView, Text } from "native-base";
 import { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView, StyleSheet, TouchableOpacity } from "react-native";
 
 
 import EventRow from "../../../../common/components/EventRow";

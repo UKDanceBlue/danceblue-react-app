@@ -13,12 +13,16 @@ exports[`<TimeUnit /> renders correctly with a plural unit 1`] = `
   }
 >
   <View
+    dataSet={Object {}}
     style={
-      Object {
-        "alignItems": "center",
-        "paddingLeft": 7,
-        "paddingRight": 7,
-      }
+      Array [
+        Object {},
+        Object {
+          "alignItems": "center",
+          "paddingLeft": 7,
+          "paddingRight": 7,
+        },
+      ]
     }
   >
     <Text
@@ -87,12 +91,16 @@ exports[`<TimeUnit /> renders correctly with a singular unit 1`] = `
   }
 >
   <View
+    dataSet={Object {}}
     style={
-      Object {
-        "alignItems": "center",
-        "paddingLeft": 7,
-        "paddingRight": 7,
-      }
+      Array [
+        Object {},
+        Object {
+          "alignItems": "center",
+          "paddingLeft": 7,
+          "paddingRight": 7,
+        },
+      ]
     }
   >
     <Text

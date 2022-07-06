@@ -1,9 +1,9 @@
 import * as Device from "expo-device";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
-import { Box, Button, FlatList, Heading, Text } from "native-base";
+import { Box, Button, FlatList, Heading, Text, View } from "native-base";
 import { useEffect } from "react";
-import { RefreshControl, View } from "react-native";
+import { RefreshControl } from "react-native";
 
 import { useAppDispatch, useAppSelector } from "../../../common/CustomHooks";
 import { registerPushNotifications } from "../../../redux/notificationSlice";

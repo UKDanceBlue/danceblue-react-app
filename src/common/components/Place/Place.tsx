@@ -1,8 +1,7 @@
 // Import third-party dependencies
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Divider, Heading, Text } from "native-base";
+import { Divider, Heading, Text, View } from "native-base";
 import { ReactElement } from "react";
-import { View } from "react-native";
 
 import { globalColors } from "../../../theme";
 

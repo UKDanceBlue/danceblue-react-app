@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { DateTime, Interval } from "luxon";
-import { Button, Divider, Image, Text } from "native-base";
+import { Button, Divider, Image, Text, View } from "native-base";
 import { useEffect, useState } from "react";
-import { FlatList, View, useWindowDimensions } from "react-native";
+import { FlatList, useWindowDimensions } from "react-native";
 
 import { useCachedFiles } from "../../../../common/CacheUtils";
 import { useAppSelector, useCurrentDate } from "../../../../common/CustomHooks";

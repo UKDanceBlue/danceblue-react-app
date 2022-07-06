@@ -1,9 +1,9 @@
 import { useNetInfo } from "@react-native-community/netinfo";
 import { nativeApplicationVersion } from "expo-application";
 import * as Linking from "expo-linking";
-import { Button, Image, Text } from "native-base";
+import { Button, Image, Text, View } from "native-base";
 import { useState } from "react";
-import { ActivityIndicator, TextInput, View } from "react-native";
+import { ActivityIndicator, TextInput } from "react-native";
 
 import avatar from "../../../assets/avatar.png";
 import { useAppSelector } from "../../../common/CustomHooks";

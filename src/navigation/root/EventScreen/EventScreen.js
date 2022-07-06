@@ -2,9 +2,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import firebaseFirestore from "@react-native-firebase/firestore";
 import { useRoute } from "@react-navigation/native";
 import { DateTime } from "luxon";
-import { Text } from "native-base";
+import { Text, View } from "native-base";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Image, StyleSheet, TouchableHighlight, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, TouchableHighlight } from "react-native";
 import openMap from "react-native-open-maps";
 // Import * as Calendar from 'expo-calendar';
 

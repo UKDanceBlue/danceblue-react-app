@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { Text } from "native-base";
 import { FlatGrid } from "react-native-super-grid";
 
 import Badge from "../Badge";
