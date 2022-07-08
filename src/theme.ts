@@ -1,12 +1,62 @@
-import { extendTheme } from "native-base";
-import { StyleSheet } from "react-native";
+import { Theme, extendTheme } from "native-base";
+
+import { RecursivePartial } from "./types/TsUtils";
 
 /*
  * Useful links for extending the theme:
  * https://docs.nativebase.io/default-theme
  * https://docs.nativebase.io/dark-mode
  */
-export const customTheme = extendTheme({});
+export const customTheme = extendTheme({
+  colors: {
+    primary: {
+      50: "#e0f5ff",
+      100: "#b1d8ff",
+      200: "#7fb9ff",
+      300: "#4d97ff",
+      400: "#1e72fe",
+      500: "#0751e5",
+      600: "#0033A0", // DanceBlue official color
+      700: "#003281",
+      800: "#002250",
+      900: "#000e20",
+    },
+    secondary: {
+      50: "#e0e8ff",
+      100: "#b1beff",
+      200: "#7f97ff",
+      300: "#4d73ff",
+      400: "#1e54fe",
+      500: "#0742e5",
+      600: "#0039b3",
+      700: "#002081",
+      800: "#000d50",
+      900: "#000220",
+    },
+    tertiary: {
+      50: "#fff3da",
+      100: "#ffe3ad",
+      200: "#ffd47d",
+      300: "#ffca4b",
+      400: "#FFC72C", // DanceBlue official color
+      500: "#e69a00",
+      600: "#b36b00",
+      700: "#804400",
+      800: "#4e2300",
+      900: "#1d0900",
+    },
+  },
+  components: {
+    Button: {
+      baseStyle: {
+        borderRadius: 5,
+        margin: 10,
+        padding: 10,
+      }
+    },
+    Text: { baseStyle: { fontSize: 15 } }
+  }
+} as RecursivePartial<Theme>);
 
 // 2. Get the type of the CustomTheme
 type CustomThemeType = typeof customTheme;
@@ -16,120 +66,3 @@ declare module "native-base" {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface ICustomTheme extends CustomThemeType {}
 }
-
-/** @deprecated Use NativeBase's theme instead */
-export const globalColors = {
-  white: "#F2F3F8",
-  darkNavy: "#1F2236",
-  grey: "#8697B0",
-  lightGrey: "#D3D3D3",
-  dbBlue: "#0033A0",
-  lightBlue: "#8BA9FC",
-  red: "#BA0725",
-  green: "#55D128",
-  dbSaffron: "#FFC72C",
-};
-
-/** @deprecated Use NativeBase's theme instead */
-export const rnElementsTheme = {
-  colors: {
-    primary: globalColors.dbBlue,
-    secondary: globalColors.lightBlue,
-    white: globalColors.white,
-    black: "#000",
-    grey0: "#393e42",
-    grey1: "#43484d",
-    grey2: globalColors.grey,
-    grey3: "#86939e",
-    grey4: globalColors.lightGrey,
-    grey5: "#e1e8ee",
-    greyOutline: globalColors.darkNavy,
-    searchBg: "#303337",
-    success: globalColors.green,
-    error: globalColors.red,
-    warning: "#ADFF2F",
-    divider: globalColors.darkNavy,
-  },
-};
-
-/** @deprecated Use NativeBase's theme instead */
-export const globalStyles = StyleSheet.create({
-  genericButton: {
-    alignItems: "center",
-    backgroundColor: globalColors.dbSaffron,
-    borderRadius: 5,
-    margin: 10,
-    padding: 10,
-  },
-  genericCenteredView: {
-    alignItems: "center",
-    flex: 1,
-    justifyContent: "center",
-  },
-  genericFillImage: {
-    flex: 1,
-    height: "100%",
-    resizeMode: "contain",
-    width: "100%",
-  },
-  genericHeaderContainer: {
-    alignItems: "center",
-    flex: 1,
-    justifyContent: "center",
-  },
-  genericIcon: {
-    flex: 1,
-    height: undefined,
-    resizeMode: "contain",
-    width: undefined,
-  },
-  genericRow: {
-    alignItems: "center",
-    borderTopColor: globalColors.darkNavy,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingBottom: 10,
-    paddingTop: 10,
-  },
-  genericRowCenter: {
-    flexDirection: "column",
-    textAlign: "center",
-    width: "50%",
-  },
-  genericRowLeft: {
-    flexDirection: "row",
-    width: "20%",
-  },
-  genericRowRight: {
-    justifyContent: "flex-end",
-    textAlign: "right",
-    width: "30%",
-  },
-  genericText: {
-    color: globalColors.darkNavy,
-    fontSize: 15,
-  },
-  genericView: { flex: 1 },
-});
-
-/** @deprecated Use NativeBase's theme instead */
-export const globalTextStyles = StyleSheet.create({
-  boldText: {
-    ...globalStyles.genericText,
-    fontWeight: "bold",
-  },
-  headerText: {
-    ...globalStyles.genericText,
-    fontSize: 16,
-    textAlign: "center",
-  },
-  italicText: {
-    ...globalStyles.genericText,
-    fontStyle: "italic",
-  },
-  underlineText: {
-    ...globalStyles.genericText,
-    textDecorationLine: "underline",
-  },
-});

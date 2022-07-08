@@ -3,8 +3,6 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Divider, Heading, Text, View } from "native-base";
 import { ReactElement } from "react";
 
-import { globalColors } from "../../../theme";
-
 /**
  * A row-based component showing a target name, their rank (if applicable), and their points
  */
@@ -38,7 +36,7 @@ const Place = ({
     // Renders the individual row of the leaderboard for each target
     <View
       key={rank}
-      style={{ width: "100%", backgroundColor: globalColors.white }}
+      style={{ width: "100%" }}
     >
       <View style={{ flexDirection: "row" }}>
         <View style={{ flexDirection: "row", justifyContent: "flex-start", width: "20%" }}>
@@ -52,7 +50,7 @@ const Place = ({
         </View>
         <Heading
           style={{
-            color: isHighlighted ? globalColors.lightBlue : undefined,
+            color: isHighlighted ? "#00f" : undefined,
             alignSelf: "center",
             width: "60%",
             textAlign: "left",
@@ -62,7 +60,7 @@ const Place = ({
           {name}
         </Heading>
         <Text
-          style={{ textAlign: "right", color: isHighlighted ? globalColors.lightBlue : undefined }}
+          style={{ textAlign: "right", color: isHighlighted ? "#00f" : undefined }}
         >
           {points}
           {points === 1 ? " point  " : " points  "}

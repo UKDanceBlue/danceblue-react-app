@@ -1,11 +1,11 @@
 import { StackNavigationProp, createStackNavigator } from "@react-navigation/stack";
 import { BlurView } from "expo-blur";
+import { useTheme } from "native-base";
 import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 
-import { useAppDispatch, useAppSelector } from "../../common/CustomHooks";
+import { useAppDispatch, useAppSelector, useColorModeValue } from "../../common/CustomHooks";
 import { updateConfig } from "../../redux/appConfigSlice";
-import { globalColors } from "../../theme";
 import { RootStackParamList } from "../../types/NavigationTypes";
 import HeaderIcons from "../HeaderIcons";
 
@@ -22,6 +22,10 @@ const RootScreen = () => {
   const isAuthLoaded = useAppSelector((state) => state.auth.isAuthLoaded);
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
+  const { colors } = useTheme();
+  const headerBgColor = useColorModeValue(colors.white, colors.gray[800]);
+  const headerFgColor = useColorModeValue(colors.gray[800], colors.light[600]);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -35,7 +39,7 @@ const RootScreen = () => {
       {!isAuthLoaded && (
         <ActivityIndicator
           size="large"
-          color={globalColors.lightBlue}
+
           style={{
             alignItems: "center",
             justifyContent: "center",
@@ -46,7 +50,9 @@ const RootScreen = () => {
       {isAuthLoaded && (
         <RootStack.Navigator
           screenOptions={({ navigation }: { navigation: StackNavigationProp<RootStackParamList> }) => ({
-            headerRight: ({ tintColor }) => <HeaderIcons navigation={navigation} color={tintColor} />,
+            headerStyle: { backgroundColor: headerBgColor },
+            headerTitleStyle: { color: headerFgColor },
+            headerRight: () => <HeaderIcons navigation={navigation} color={headerFgColor} />,
             headerBackTitle: "Back",
           })}>
           {isLoggedIn ? (

@@ -4,7 +4,6 @@ import { SafeAreaView, ScrollView } from "react-native";
 
 import { useAppSelector } from "../../../../common/CustomHooks";
 import Standings from "../../../../common/components/Standings";
-import { globalStyles, globalTextStyles } from "../../../../theme";
 import { StandingType } from "../../../../types/StandingType";
 
 /**
@@ -49,18 +48,18 @@ const TeamScreen = () => {
   ]);
 
   return (
-    <View style={globalStyles.genericView}>
+    <View>
       {(!isLoggedIn || isAnonymous) && (
-        <Text style={globalTextStyles.headerText}>
+        <Text>
           You are logged out, if you are on a team log in to see your standings and fundraising
           information
         </Text>
       )}
       {isLoggedIn && !isAnonymous && (
         <ScrollView showsVerticalScrollIndicator>
-          <SafeAreaView style={globalStyles.genericView}>
+          <SafeAreaView>
             {fundraisingTotal?.total && (
-              <Text style={globalTextStyles.headerText}>
+              <Text>
                 Fundraising total: $
                 {
                   /* Format as decimal */ fundraisingTotal.total

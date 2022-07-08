@@ -2,7 +2,6 @@ import { Text, View } from "native-base";
 import { ReactElement, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
 
-import { globalColors, globalStyles, globalTextStyles } from "../../../theme";
 import { StandingType } from "../../../types/StandingType";
 import Place from "../Place";
 
@@ -70,7 +69,7 @@ const Standings = ({
   }, [ standingData, rowsToShow ]);
 
   return (
-    <View style={globalStyles.genericView}>
+    <View>
       <View style={localStyles.ListView}>
         {!isLoading && (
           <>
@@ -78,11 +77,11 @@ const Standings = ({
             {expandable &&
               (expanded ? (
                 <TouchableOpacity onPress={() => setExpanded(false)}>
-                  <Text style={globalTextStyles.italicText}>Show less...</Text>
+                  <Text>Show less...</Text>
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity onPress={() => setExpanded(true)}>
-                  <Text style={globalTextStyles.italicText}>Show more...</Text>
+                  <Text>Show more...</Text>
                 </TouchableOpacity>
               ))}
           </>
@@ -91,7 +90,7 @@ const Standings = ({
       {isLoading && (
         <ActivityIndicator
           size="large"
-          color={globalColors.lightBlue}
+
           style={{
             alignItems: "center",
             justifyContent: "center",

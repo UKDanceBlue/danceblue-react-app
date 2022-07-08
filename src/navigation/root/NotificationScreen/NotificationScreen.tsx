@@ -7,7 +7,6 @@ import { RefreshControl } from "react-native";
 
 import { useAppDispatch, useAppSelector } from "../../../common/CustomHooks";
 import { registerPushNotifications } from "../../../redux/notificationSlice";
-import { globalStyles, globalTextStyles } from "../../../theme";
 
 /**
  * Component for "Profile" screen in main navigation
@@ -45,13 +44,13 @@ const NotificationScreen = () => {
       {notificationPermissionsGranted
         ? (notifications.length > 0 ? (
           <FlatList
-            style={globalStyles.genericView}
+
             refreshControl={<RefreshControl refreshing={userDataLoading} />}
             data={notifications}
             renderItem={({ item: notification }) => (
               <Box>
                 <View>
-                  <Heading style={globalTextStyles.boldText}>
+                  <Heading>
                     {notification.title}
                   </Heading>
                   <Heading>
@@ -64,15 +63,15 @@ const NotificationScreen = () => {
                     </Text>
                   </Heading>
                 </View>
-                <Text style={globalStyles.genericText}>
+                <Text>
                   <Text>{notification.body}</Text>
                 </Text>
               </Box>
             )}
           />
-        ) : <View style={globalStyles.genericRow}>
-          <View style={globalStyles.genericView}>
-            <Text style={globalTextStyles.headerText}>No notifications</Text>
+        ) : <View>
+          <View>
+            <Text>No notifications</Text>
           </View>
         </View>) : (
           <View>

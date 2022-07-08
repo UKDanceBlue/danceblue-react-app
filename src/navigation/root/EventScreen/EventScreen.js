@@ -9,7 +9,6 @@ import openMap from "react-native-open-maps";
 // Import * as Calendar from 'expo-calendar';
 
 import { useFirebaseStorageUrl } from "../../../common/CustomHooks";
-import { globalColors } from "../../../theme";
 
 // Const danceBlueCalendarConfig = {
 //   Title: 'DanceBlue',
@@ -203,7 +202,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-    backgroundColor: globalColors.dbBlue,
+    // backgroundColor: globalColors.dbBlue,
     borderRadius: 5,
     padding: 10,
     width: "45%",

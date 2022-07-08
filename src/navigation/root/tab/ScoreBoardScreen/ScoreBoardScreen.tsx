@@ -5,7 +5,6 @@ import { RefreshControl, SafeAreaView, ScrollView } from "react-native";
 import { useAppSelector } from "../../../../common/CustomHooks";
 import Standings from "../../../../common/components/Standings";
 import { showMessage } from "../../../../common/util/AlertUtils";
-import { globalStyles } from "../../../../theme";
 import { FirestoreMoraleTeam, FirestoreTeam } from "../../../../types/FirebaseTypes";
 import { StandingType } from "../../../../types/StandingType";
 
@@ -78,7 +77,7 @@ const ScoreBoardScreen = () => {
       showsVerticalScrollIndicator
       refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} />}
     >
-      <SafeAreaView style={globalStyles.genericView}>
+      <SafeAreaView>
         <Standings titleText="Spirit Point Standings" standingData={standingData} startExpanded />
       </SafeAreaView>
     </ScrollView>

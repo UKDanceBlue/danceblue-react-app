@@ -12,7 +12,6 @@ import Standings from "../../../../common/components/Standings";
 import { showMessage } from "../../../../common/util/AlertUtils";
 import generateUuid from "../../../../common/util/GenerateUuid";
 import store from "../../../../redux/store";
-import { globalColors, globalTextStyles } from "../../../../theme";
 import { StandingType } from "../../../../types/StandingType";
 
 const guessInput = createRef<typeof Input>();
@@ -184,7 +183,6 @@ export const PhotoUpload = () => {
     <View
       style={{
         borderRadius: 5,
-        backgroundColor: globalColors.lightGrey,
         margin: 15,
         flexDirection: "row",
         justifyContent: "space-between",
@@ -346,7 +344,6 @@ const activities = {
       />
       <Text
         style={{
-          ...globalTextStyles.italicText,
           marginHorizontal: 10,
           textAlign: "center",
           fontSize: 10,
@@ -354,7 +351,7 @@ const activities = {
       >
         IF YOU ARE NOT LOGGED IN YOUR GUESS WILL NOT BE COUNTED
       </Text>
-      <Divider width={3} color={globalColors.lightGrey} style={{ borderRadius: 3 }} />
+      <Divider width={3}  />
     </View>
   ),
   "photo-booth": (

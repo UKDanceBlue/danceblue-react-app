@@ -7,7 +7,6 @@ import { useAppSelector } from "../../../common/CustomHooks";
 import { useFirebase } from "../../../common/FirebaseApp";
 import { useLinkBlueLogin } from "../../../common/auth";
 import { showMessage } from "../../../common/util/AlertUtils";
-import { globalStyles, globalTextStyles } from "../../../theme";
 
 /**
  * A simplified sign in page shown when the user first opens the app
@@ -32,46 +31,46 @@ const SplashLoginScreen = () => {
     }
   }, [error]);
   return (
-    <View style={globalStyles.genericCenteredView}>
+    <View>
       <ImageBackground source={splashBackground} style={localStyles.image}>
-        <View style={globalStyles.genericView}>
-          <View style={globalStyles.genericHeaderContainer}>
+        <View>
+          <View>
             <Text h="2" style={{ textAlign: "center" }}>
             Welcome to UK DanceBlue!
             </Text>
-            <Text style={globalTextStyles.headerText}>
+            <Text>
             The UK DanceBlue app has many features that are only available with a user account.
             </Text>
             <Text />
-            <Text style={globalTextStyles.headerText}>
+            <Text>
             With an account you get access to profile badges, team info, and other features coming
             soon!
             </Text>
           </View>
           { allowedLoginTypes.includes("ms-oath-linkblue") && (
-            <View style={globalStyles.genericHeaderContainer}>
-              <Text h="3" style={globalStyles.genericText}>
+            <View>
+              <Text h="3">
             Sign in with your UK LinkBlue account
               </Text>
               <TouchableOpacity
                 onPress={() => trigger()}
-                style={globalStyles.genericButton}
+
               >
-                <Text style={globalStyles.genericText}>SSO Login!</Text>
+                <Text>SSO Login!</Text>
               </TouchableOpacity>
             </View>
           )}
 
           { allowedLoginTypes.includes("anonymous") && (
-            <View style={globalStyles.genericCenteredView}>
-              <Text style={globalStyles.genericText}>
+            <View>
+              <Text>
             Want to look around first? You can always sign in later on the profile page
               </Text>
               <TouchableOpacity
                 onPress={() => void fbAuth.signInAnonymously()}
-                style={globalStyles.genericButton}
+
               >
-                <Text style={globalStyles.genericText}>Continue as a Guest</Text>
+                <Text>Continue as a Guest</Text>
               </TouchableOpacity>
             </View>
           )}

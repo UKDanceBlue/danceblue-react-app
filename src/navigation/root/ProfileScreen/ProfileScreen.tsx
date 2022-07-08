@@ -9,7 +9,6 @@ import avatar from "../../../../assets/avatar.png";
 import { useAppSelector, useColorModeValue } from "../../../common/CustomHooks";
 import { useFirebase } from "../../../common/FirebaseApp";
 import { useLinkBlueLogin } from "../../../common/auth";
-import { globalColors, globalStyles, globalTextStyles } from "../../../theme";
 
 /**
  * Component for "Profile" screen in main navigation
@@ -32,11 +31,11 @@ const ProfileScreen = () => {
   const [ loading, trigger ] = useLinkBlueLogin(fbAuth, fbFunctions);
 
   return (
-    <View style={{ alignItems: "center", ...globalStyles.genericView }}>
+    <View style={{ alignItems: "center" }}>
       <>
         {
           /* Start of still loading view */ !authData.isAuthLoaded || loading && (
-            <ActivityIndicator size="large" color={globalColors.dbBlue} />
+            <ActivityIndicator size="large" />
           ) /* End of still loading view */
         }
         {
@@ -52,10 +51,10 @@ const ProfileScreen = () => {
                 /* Start of logged in view */ authData.isLoggedIn &&
                   !authData.isAnonymous && (
                   <>
-                    <Text style={globalStyles.genericText}>
+                    <Text>
                         You are logged in as {userData.firstName} {userData.lastName}
                     </Text>
-                    <Text style={globalTextStyles.italicText}>{userData.email}</Text>
+                    <Text></Text>
                     <Button
                       style={{ margin: 10, alignSelf: "center" }}
                       onPress={() => void fbAuth.signOut()}

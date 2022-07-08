@@ -9,7 +9,6 @@ import { ActivityIndicator, ScrollView, useWindowDimensions } from "react-native
 
 import { UseCachedFilesType, useCachedImages } from "../../../../common/CacheUtils";
 import { showPrompt } from "../../../../common/util/AlertUtils";
-import { globalTextStyles } from "../../../../theme";
 import { HourInstructionsType } from "../../../../types/HourScreenTypes";
 import { RootStackParamList } from "../../../../types/NavigationTypes";
 
@@ -287,7 +286,7 @@ const HourScreen = ({ route: { params: { firestoreHour } } }: { route: Props["ro
   return (
     <ScrollView style={{ backgroundColor: colors.gray[500] }}>
       <View style={{ justifyContent: "space-between" }}>
-        <Text h="3" style={{ margin: 10, ...globalTextStyles.headerText }}>{`${
+        <Text h="3" style={{ margin: 10 }}>{`${
           firestoreHour.hourNumber + 1
         }. ${firestoreHour.name}`}</Text>
         {firestoreHour.description && (

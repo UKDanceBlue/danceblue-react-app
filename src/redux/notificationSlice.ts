@@ -6,7 +6,6 @@ import * as SecureStore from "expo-secure-store";
 
 import { showMessage } from "../common/util/AlertUtils";
 import generateUuid from "../common/util/GenerateUuid";
-import { globalColors } from "../theme";
 
 import { RootState } from "./store";
 
@@ -80,7 +79,6 @@ export const registerPushNotifications = createAsyncThunk("notification/register
           vibrationPattern: [
             0, 250, 250, 250
           ],
-          lightColor: globalColors.red,
         });
       }
 
