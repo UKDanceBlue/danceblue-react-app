@@ -50,7 +50,7 @@ const SponsorCarousel = () => {
       </View>
       <ScrollView scrollEventThrottle={16} horizontal>
         <View style={styles.cardScrollView}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <ScrollView horizontal >
             {cards}
           </ScrollView>
         </View>

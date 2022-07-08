@@ -17,7 +17,7 @@ declare module "native-base" {
   interface ICustomTheme extends CustomThemeType {}
 }
 
-/** @deprecated Use NativeBase themes instead */
+/** @deprecated Use NativeBase's theme instead */
 export const globalColors = {
   white: "#F2F3F8",
   darkNavy: "#1F2236",
@@ -30,7 +30,7 @@ export const globalColors = {
   dbSaffron: "#FFC72C",
 };
 
-/** @deprecated Use NativeBase themes instead */
+/** @deprecated Use NativeBase's theme instead */
 export const rnElementsTheme = {
   colors: {
     primary: globalColors.dbBlue,
@@ -52,7 +52,7 @@ export const rnElementsTheme = {
   },
 };
 
-/** @deprecated Use NativeBase themes instead */
+/** @deprecated Use NativeBase's theme instead */
 export const globalStyles = StyleSheet.create({
   genericButton: {
     alignItems: "center",
@@ -113,7 +113,7 @@ export const globalStyles = StyleSheet.create({
   genericView: { flex: 1 },
 });
 
-/** @deprecated Use NativeBase themes instead */
+/** @deprecated Use NativeBase's theme instead */
 export const globalTextStyles = StyleSheet.create({
   boldText: {
     ...globalStyles.genericText,

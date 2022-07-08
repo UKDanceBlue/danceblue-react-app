@@ -1,12 +1,12 @@
 import { useNetInfo } from "@react-native-community/netinfo";
 import { nativeApplicationVersion } from "expo-application";
 import * as Linking from "expo-linking";
-import { Button, Image, Text, View } from "native-base";
+import { Button, Image, Text, View, useColorMode } from "native-base";
 import { useState } from "react";
 import { ActivityIndicator, TextInput } from "react-native";
 
 import avatar from "../../../../assets/avatar.png";
-import { useAppSelector } from "../../../common/CustomHooks";
+import { useAppSelector, useColorModeValue } from "../../../common/CustomHooks";
 import { useFirebase } from "../../../common/FirebaseApp";
 import { useLinkBlueLogin } from "../../../common/auth";
 import { globalColors, globalStyles, globalTextStyles } from "../../../theme";
@@ -25,6 +25,10 @@ const ProfileScreen = () => {
     fbAuth, fbFunctions
   } = useFirebase();
 
+
+  const { toggleColorMode } = useColorMode();
+  const modeToChangeTo = useColorModeValue("Dark", "Light");
+
   const [ loading, trigger ] = useLinkBlueLogin(fbAuth, fbFunctions);
 
   return (
@@ -42,6 +46,7 @@ const ProfileScreen = () => {
                 source={avatar}
                 height={64}
                 width={64}
+                alt="DanceBlue Logo"
               />
               {
                 /* Start of logged in view */ authData.isLoggedIn &&
@@ -54,8 +59,9 @@ const ProfileScreen = () => {
                     <Button
                       style={{ margin: 10, alignSelf: "center" }}
                       onPress={() => void fbAuth.signOut()}
-                      title="Log out"
-                    />
+                    >
+                      Log out
+                    </Button>
                   </>
                 ) /* End of logged in view */
               }
@@ -67,8 +73,8 @@ const ProfileScreen = () => {
                     <Button
                       style={{ margin: 10, alignSelf: "center" }}
                       onPress={() => trigger()}
-                      title="Log in"
-                    />
+                    >Log in</Button>
+
                   </>
                 ) /* End of logged in anonymously view */
               }
@@ -79,8 +85,9 @@ const ProfileScreen = () => {
                     <Button
                       style={{ margin: 10, alignSelf: "center" }}
                       onPress={() => trigger()}
-                      title="Log in"
-                    />
+                    >
+                        Log in
+                    </Button>
                   </>
                 ) /* End of logged in view */
               }
@@ -101,8 +108,17 @@ const ProfileScreen = () => {
               <View style={{ position: "absolute", bottom: 0 }}>
                 <Button
                   style={{
-                    justifyContent: "center",
-                    alignItems: "center",
+                    margin: 10,
+                    marginBottom: 20,
+                    alignSelf: "center",
+                  }}
+                  onPress={toggleColorMode}
+                >
+                  {`Set color mode to ${modeToChangeTo}`}
+                </Button>
+
+                <Button
+                  style={{
                     margin: 10,
                     alignSelf: "center",
                   }}
@@ -114,8 +130,9 @@ const ProfileScreen = () => {
                   onLongPress={() => {
                     setReportLongPressed(true);
                   }}
-                  title="Report an issue"
-                />
+                >Report an issue
+                </Button>
+
                 <Button
                   style={{ margin: 10, alignSelf: "center" }}
                   onPress={() => {
@@ -126,8 +143,8 @@ const ProfileScreen = () => {
                   onLongPress={() => {
                     setSuggestLongPressed(!!reportLongPressed);
                   }}
-                  title="Suggest a change"
-                />
+                >Suggest a change
+                </Button>
                 <Text
                   style={{ textAlign: "center" }}
                 >{`Version: ${nativeApplicationVersion ?? ""}`}</Text>

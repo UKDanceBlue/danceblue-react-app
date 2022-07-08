@@ -133,6 +133,7 @@ const userDataSlice = createSlice({
       state.userLoginType = null;
     });
     builder.addCase(loadUserData.fulfilled, (state, action) => {
+      Object.assign(state, action.payload);
       state.userLoginType = action.payload.userLoginType;
     });
     builder.addCase(loadUserData.rejected, (state) => {

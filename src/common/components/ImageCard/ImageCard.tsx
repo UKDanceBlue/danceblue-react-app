@@ -29,6 +29,9 @@ const SponsorCard = ({
         style={{
           flex: 1,
           resizeMode: "contain",
+          backgroundColor: "white",
+          marginHorizontal: 5,
+          borderRadius: 6,
         }}
       />
     </TouchableHighlight>
