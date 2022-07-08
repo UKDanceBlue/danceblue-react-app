@@ -2,7 +2,7 @@ import { Text, View } from "native-base";
 import { useEffect } from "react";
 import { ActivityIndicator, Dimensions, ImageBackground, TouchableOpacity } from "react-native";
 
-import splashBackground from "../../../assets/home/Dancing-min.jpg";
+import splashBackground from "../../../../assets/home/Dancing-min.jpg";
 import { useAppSelector } from "../../../common/CustomHooks";
 import { useFirebase } from "../../../common/FirebaseApp";
 import { useLinkBlueLogin } from "../../../common/auth";

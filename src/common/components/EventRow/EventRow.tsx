@@ -1,85 +1,54 @@
-import { MaterialIcons } from "@expo/vector-icons";
-import { DateTime } from "luxon";
-import { Text, View } from "native-base";
-import { ActivityIndicator, Image, StyleSheet } from "react-native";
+import { Interval } from "luxon";
+import { Box, Heading, Image, Text, useTheme } from "native-base";
+import { ImageSourcePropType, useWindowDimensions } from "react-native";
 
-import { useFirebaseStorageUrl } from "../../CustomHooks";
 
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
  */
 const EventRow = ({
-  imageLink,
-  startDate,
-  endDate,
+  imageSource,
   title,
+  interval,
+  blurb,
 }: {
-  imageLink?: string;
-  startDate: DateTime;
-  endDate: DateTime;
+  imageSource?: ImageSourcePropType;
   title: string;
+  interval: Interval;
+  blurb?: string;
 }) => {
-  const [ imageRef, imageRefError ] = useFirebaseStorageUrl(imageLink);
-
+  const { width: windowWidth } = useWindowDimensions();
+  const { colors } = useTheme();
   /**
    * Called to generate a React Native component
    */
   let whenString = "";
-  if (startDate.equals(endDate)) {
-    whenString = `${startDate.toFormat("L/d/yyyy h:mm a")} - ${endDate.toFormat("h:mm a")}`;
+  if (interval.hasSame("day")) {
+    whenString = `${interval.start.toFormat("L/d/yyyy h:mm a")} - ${interval.end.toFormat("h:mm a")}`;
   } else {
-    whenString = `${startDate.toFormat("L/d/yyyy h:mm a")} - ${endDate.toFormat("L/d/yyyy h:mm a")}`;
+    whenString = interval.toFormat("L/d/yyyy h:mm a");
   }
   return (
-    <View style={styles.body}>
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.date}>{whenString}</Text>
-      </View>
-      <View style={styles.imageContainer}>
-        {!imageRef && !imageRefError && <ActivityIndicator size="large" color="blue" />}
-        {imageRefError && <MaterialIcons name="image-not-supported" size={36} color="black" />}
-        {imageRef && <Image style={styles.image} source={{ uri: imageRef }} />}
-      </View>
-    </View>
+    <Box
+      flexDirection="row"
+      justifyContent={"space-around"}
+      backgroundColor={colors.gray[300]}
+      safeArea>
+      {imageSource &&
+      <Image
+        testID="event-thumbnail"
+        source={imageSource}
+        alt="Event Thumbnail"
+        width={windowWidth / 4}
+        height={windowWidth / 4}
+        resizeMode="center"/>}
+      <Box flexDirection="column" width={(windowWidth / 4 * 2.5)}>
+        <Heading testID="event-title">{title}</Heading>
+        <Text testID="event-time-interval">{whenString}</Text>
+        {blurb && <Text testID="event-blurb">{blurb}</Text>}
+      </Box>
+    </Box>
   );
 };
-
-const styles = StyleSheet.create({
-  body: {
-    borderColor: "#3248a8",
-    borderRadius: 10,
-    borderWidth: 2,
-    flexDirection: "row",
-    flex: 1,
-    padding: 5,
-  },
-  date: {
-    flex: 1,
-    flexGrow: 0,
-    flexShrink: 1,
-    fontSize: 17,
-  },
-  image: {
-    flex: 1,
-    resizeMode: "contain",
-  },
-  imageContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
-  textContainer: {
-    flex: 4,
-    flexGrow: 1,
-    flexShrink: 1,
-  },
-  title: {
-    flex: 1,
-    flexGrow: 0,
-    flexShrink: 1,
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});
 
 export default EventRow;

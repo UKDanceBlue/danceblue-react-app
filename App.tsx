@@ -1,7 +1,7 @@
 // Import third-party dependencies
-import "expo-dev-client";
 import NetInfo from "@react-native-community/netinfo";
 import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
+import { DevMenu, isDevelopmentBuild } from "expo-dev-client";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
 import * as SplashScreen from "expo-splash-screen";
@@ -19,6 +19,11 @@ import { logout } from "./src/redux/authSlice";
 import { registerPushNotifications } from "./src/redux/notificationSlice";
 import store from "./src/redux/store";
 import { customTheme } from "./src/theme";
+
+if (isDevelopmentBuild()) {
+  // eslint-disable-next-line
+  void DevMenu.registerDevMenuItems([{ name: "Print Redux State", callback: () => console.log(JSON.stringify(store.getState(), null, 2)) }]);
+}
 
 // All assets that should be preloaded:
 

@@ -1,6 +1,7 @@
-import firebaseFirestore, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+import firebaseFirestore from "@react-native-firebase/firestore";
+import firebaseStorage from "@react-native-firebase/storage";
 import { useNavigation } from "@react-navigation/native";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 import { ScrollView, Text } from "native-base";
 import { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, TouchableOpacity } from "react-native";
@@ -13,6 +14,7 @@ import { TabNavigatorProps } from "../../../../types/NavigationTypes";
 
 interface EventType extends FirestoreEvent {
   id: string;
+  imageUrl: string;
 }
 
 const EventListScreen = () => {
@@ -24,23 +26,23 @@ const EventListScreen = () => {
   useEffect(() => {
     let componentUnmounted = false;
     const firestoreEvents: EventType[] = [];
-    void firebaseFirestore().collection("events").where("endTime", ">", "now")
+    void firebaseFirestore().collection("events").where("endTime", ">", firebaseFirestore.Timestamp.now())
       .get()
       .then(
-        (snapshot) => {
-          snapshot.forEach((document) => {
+        async (snapshot) => {
+          await Promise.all(snapshot.docs.map(async (document) => {
             const startTime = document.get("startTime");
             const endTime = document.get("endTime");
-            return firestoreEvents.push({
+            firestoreEvents.push({
               id: document.id,
               title: document.get("title"),
               description: document.get("description"),
-              image: document.get("image")?.toString(),
+              imageUrl: await firebaseStorage().ref(document.get("image")?.toString()).getDownloadURL(),
               address: document.get("address")?.toString(),
-              startTime: startTime instanceof FirebaseFirestoreTypes.Timestamp ? startTime : undefined,
-              endTime: endTime instanceof FirebaseFirestoreTypes.Timestamp ? endTime : undefined,
+              startTime: startTime instanceof firebaseFirestore.Timestamp ? startTime : undefined,
+              endTime: endTime instanceof firebaseFirestore.Timestamp ? endTime : undefined,
             });
-          });
+          }));
 
           if (!componentUnmounted) {
             setEvents(firestoreEvents);
@@ -88,15 +90,14 @@ const EventListScreen = () => {
             <EventRow
               key={row.id}
               title={row.title}
-              startDate={DateTime.fromMillis(row.startTime?.toMillis() ?? 0)}
-              endDate={DateTime.fromMillis(row.endTime?.toMillis() ?? 0)}
-              imageLink={row.image}
+              blurb={`${row.description.substring(0, 100) }...`}
+              interval={Interval.fromDateTimes(DateTime.fromMillis(row.startTime?.toMillis() ?? 0), DateTime.fromMillis(row.endTime?.toMillis() ?? 0))}
+              imageSource={{ uri: row.imageUrl }}
             />
           </TouchableOpacity>
         ))}
         <Text style={styles.heading}>Upcoming Events</Text>
         {
-          /* Jscpd:ignore-start */
           upcoming.map((row) => (
             <TouchableOpacity
               style={styles.eventRow}
@@ -106,13 +107,15 @@ const EventListScreen = () => {
               <EventRow
                 key={row.id}
                 title={row.title}
-                startDate={DateTime.fromMillis(row.startTime?.toMillis() ?? 0)}
-                endDate={DateTime.fromMillis(row.endTime?.toMillis() ?? 0)}
-                imageLink={row.image}
+                blurb={`${row.description.substring(0, 100) }...`}
+                interval={Interval.fromDateTimes(DateTime.fromMillis(row.startTime?.toMillis() ?? 0), DateTime.fromMillis(row.endTime?.toMillis() ?? 0))}
+                imageSource={{
+                  uri: row.imageUrl,
+                  width: 128
+                }}
               />
             </TouchableOpacity>
           ))
-          /* Jscpd:ignore-end */
         }
       </SafeAreaView>
     </ScrollView>
@@ -120,7 +123,6 @@ const EventListScreen = () => {
 };
 
 EventListScreen.navigationOptions = { title: "Events" };
-
 const styles = StyleSheet.create({
   body: {
     backgroundColor: "white",

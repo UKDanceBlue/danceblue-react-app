@@ -8,7 +8,7 @@ interface AuthSliceType {
   isLoggedIn: boolean;
   isAnonymous: boolean;
   uid: string | null;
-  authClaims: FirebaseAuthTypes.IdTokenResult | null;
+  authClaims: { [key: string]: string | unknown } | null;
 }
 
 const initialState: AuthSliceType = {
@@ -31,7 +31,7 @@ export const syncAuth = createAsyncThunk(
     try {
       authData.isAnonymous = user.isAnonymous;
       authData.uid = user.uid;
-      authData.authClaims = await user.getIdTokenResult();
+      authData.authClaims = (await user.getIdTokenResult()).claims;
     } catch (error) {
       throw error as Error;
     } finally {
