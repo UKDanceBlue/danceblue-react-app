@@ -77,19 +77,20 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-After you clone the repository install expo CLI
+You will need expo-cli and yarn to run the project, install them as follows:
 
 ```sh
-yarn install expo-cli@latest -g
+npm i -g yarn expo-cli
 ```
 
 ### Getting up and running
 
-1. Run `yarn --frozen-lockfile` to install the same dependency tree I use or `yarn install` to generate a new dependency tree
-2. Install expo go on your phone or on an emulator
-3. Run `yarn start` to start Expo's testing environment
-4. Scan the QR code Expo generates
+1. Run `yarn install` to install project dependencies, this will take some time
+2. Install the development build of the app on your phone (contact the app coordinator if you have an iPhone)
+3. Run `yarn start` (or ctrl+shift+b in VSCode) to start Expo's testing environment
+4. Scan the QR code Expo generates with your phone's camera
 5. You should now be able to work on the code and hot reload the app on expo go as you work
+6. In VSCode you can also activate the "attach to packager" debug  configuration to interactively debug the ap
 
 ### Building
 

@@ -1,6 +1,7 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { PixelRatio, TouchableOpacity, View } from "react-native";
+import { View } from "native-base";
+import { PixelRatio, TouchableOpacity } from "react-native";
 
 import { RootStackParamList } from "../types/NavigationTypes";
 

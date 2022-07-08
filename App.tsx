@@ -14,7 +14,7 @@ import { Provider } from "react-redux";
 import "./src/common/util/AndroidTimerFix";
 import { FirebaseProvider } from "./src/common/FirebaseApp";
 import { showMessage } from "./src/common/util/AlertUtils";
-import RootScreen from "./src/navigation/RootScreen";
+import RootScreen from "./src/navigation/root/RootScreen";
 import { logout } from "./src/redux/authSlice";
 import { registerPushNotifications } from "./src/redux/notificationSlice";
 import store from "./src/redux/store";

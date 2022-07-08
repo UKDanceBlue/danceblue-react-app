@@ -3,17 +3,6 @@ import { renderWithNativeBase } from "../../test-helpers/NativeBase";
 import TimeUnit from ".";
 
 describe("<TimeUnit />", () => {
-  it("renders correctly with a singular unit", () => {
-    const tree = renderWithNativeBase(<TimeUnit value={1} unit={"seconds"} />).toJSON() as unknown;
-
-    expect(tree).toMatchSnapshot();
-  });
-  it("renders correctly with a plural unit", () => {
-    const tree = renderWithNativeBase(<TimeUnit value={10} unit={"seconds"} />).toJSON() as unknown;
-
-    expect(tree).toMatchSnapshot();
-  });
-
   it("renders 0 with a negative value", () => {
     const tree = renderWithNativeBase(<TimeUnit value={-1} unit={"seconds"} />);
 
@@ -43,5 +32,16 @@ describe("<TimeUnit />", () => {
     expect(() => renderWithNativeBase(<TimeUnit value={1} unit={invalidUnit} />)).toThrow(`Invalid unit: ${invalidUnit}`);
 
     mockedConsoleError.mockRestore();
+  });
+
+  it("renders correctly with a singular unit", () => {
+    const tree = renderWithNativeBase(<TimeUnit value={1} unit={"seconds"} />).toJSON() as unknown;
+
+    expect(tree).toMatchSnapshot();
+  });
+  it("renders correctly with a plural unit", () => {
+    const tree = renderWithNativeBase(<TimeUnit value={10} unit={"seconds"} />).toJSON() as unknown;
+
+    expect(tree).toMatchSnapshot();
   });
 });

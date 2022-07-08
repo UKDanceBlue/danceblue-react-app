@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Badge /> renders correctly 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    Array [
+      Object {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    dataSet={Object {}}
+    style={
+      Array [
+        Object {},
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "justifyContent": "center",
+        },
+      ]
+    }
+  >
+    <Image
+      accessibilityLabel="Icon for Test"
+      alt="Icon for Test"
+      dataSet={Object {}}
+      onError={[Function]}
+      source={
+        Object {
+          "uri": "www.example.com",
+        }
+      }
+      style={
+        Array [
+          Object {
+            "maxWidth": "100%",
+          },
+          Object {
+            "height": 50,
+            "width": 50,
+          },
+        ]
+      }
+    />
+    <Text
+      dataSet={Object {}}
+      style={
+        Object {
+          "backgroundColor": undefined,
+          "color": "#171717",
+          "fontFamily": undefined,
+          "fontSize": 14,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0,
+          "lineHeight": 21,
+          "textDecorationLine": undefined,
+        }
+      }
+    >
+      Test
+    </Text>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`<Badge /> renders correctly with no name 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    Array [
+      Object {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    dataSet={Object {}}
+    style={
+      Array [
+        Object {},
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "justifyContent": "center",
+        },
+      ]
+    }
+  >
+    <Image
+      accessibilityLabel="Badge Icon"
+      alt="Badge Icon"
+      dataSet={Object {}}
+      onError={[Function]}
+      source={
+        Object {
+          "uri": "www.example.com",
+        }
+      }
+      style={
+        Array [
+          Object {
+            "maxWidth": "100%",
+          },
+          Object {
+            "height": 50,
+            "width": 50,
+          },
+        ]
+      }
+    />
+  </View>
+</RNCSafeAreaProvider>
+`;
