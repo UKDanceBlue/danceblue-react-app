@@ -2,11 +2,12 @@ import firebaseFirestore from "@react-native-firebase/firestore";
 import firebaseStorage from "@react-native-firebase/storage";
 import { useNavigation } from "@react-navigation/native";
 import { DateTime, Interval } from "luxon";
-import { ScrollView, Text } from "native-base";
+import { Divider, Heading, ScrollView, useTheme } from "native-base";
 import { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, TouchableOpacity } from "react-native";
+import { SafeAreaView, TouchableOpacity } from "react-native";
 
 
+import { useColorModeValue } from "../../../../common/CustomHooks";
 import EventRow from "../../../../common/components/EventRow";
 import { FirestoreEvent } from "../../../../types/FirebaseTypes";
 import { TabNavigatorProps } from "../../../../types/NavigationTypes";
@@ -18,6 +19,9 @@ interface EventType extends FirestoreEvent {
 }
 
 const EventListScreen = () => {
+  const { colors } = useTheme();
+  const screenBackgroundColor = useColorModeValue(colors.white, colors.gray[900]);
+
   const [ events, setEvents ] = useState<EventType[]>([]);
   const [ today, setToday ] = useState<EventType[]>([]);
   const [ upcoming, setUpcoming ] = useState<EventType[]>([]);
@@ -78,12 +82,19 @@ const EventListScreen = () => {
    * Called by React Native when rendering the screen
    */
   return (
-    <ScrollView style={styles.body}>
+    <ScrollView backgroundColor={screenBackgroundColor}>
       <SafeAreaView>
-        <Text style={styles.heading}>Today&apos;s Events</Text>
+        {
+          today.length >= 1 &&
+          <>
+            <Heading fontSize="3xl" m="1">
+            Today&apos;s Events
+            </Heading>
+            <Divider/>
+          </>
+        }
         {today.map((row) => (
           <TouchableOpacity
-            style={styles.eventRow}
             onPress={() => navigation.navigate("Event", { id: row.id, name: row.title })}
             key={row.id}
           >
@@ -96,11 +107,19 @@ const EventListScreen = () => {
             />
           </TouchableOpacity>
         ))}
-        <Text style={styles.heading}>Upcoming Events</Text>
+        {
+          upcoming.length >= 1 &&
+          <>
+            <Heading fontSize="3xl" m="1">
+            Upcoming Events
+            </Heading>
+            <Divider/>
+          </>
+        }
         {
           upcoming.map((row) => (
             <TouchableOpacity
-              style={styles.eventRow}
+
               onPress={() => navigation.navigate("Event", { id: row.id, name: row.title })}
               key={row.id}
             >
@@ -123,20 +142,5 @@ const EventListScreen = () => {
 };
 
 EventListScreen.navigationOptions = { title: "Events" };
-const styles = StyleSheet.create({
-  body: {
-    backgroundColor: "white",
-    flex: 1,
-    padding: 10,
-  },
-  eventRow: {
-    marginBottom: 5,
-    marginTop: 5,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-});
 
 export default EventListScreen;

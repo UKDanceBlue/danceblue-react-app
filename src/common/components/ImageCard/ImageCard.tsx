@@ -1,5 +1,5 @@
 import * as WebBrowser from "expo-web-browser";
-import { Image } from "native-base";
+import { Box, Image } from "native-base";
 import { PixelRatio, TouchableHighlight } from "react-native";
 
 import { useFirebaseStorageUrl } from "../../CustomHooks";
@@ -23,17 +23,13 @@ const SponsorCard = ({
       onPress={sponsorLink ? () => WebBrowser.openBrowserAsync(sponsorLink) : undefined}
       underlayColor="#dddddd"
     >
-      <Image
-        source={{ uri: url ?? undefined, width: PixelRatio.getPixelSizeForLayoutSize(75), height: PixelRatio.getPixelSizeForLayoutSize(50) }}
-        alt={name}
-        style={{
-          flex: 1,
-          resizeMode: "contain",
-          backgroundColor: "white",
-          marginHorizontal: 5,
-          borderRadius: 6,
-        }}
-      />
+      <Box shadow="6" flex={1} backgroundColor="white" p="1" m="2" borderRadius={6} justifyContent="center">
+        <Image
+          source={{ uri: url ?? undefined, width: PixelRatio.getPixelSizeForLayoutSize(75), height: PixelRatio.getPixelSizeForLayoutSize(50) }}
+          alt={name}
+          style={{ resizeMode: "contain" }}
+        />
+      </Box>
     </TouchableHighlight>
   );
 };

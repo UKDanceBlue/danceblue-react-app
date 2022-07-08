@@ -1,7 +1,6 @@
 import firebaseFirestore from "@react-native-firebase/firestore";
-import { Text, View } from "native-base";
+import { Box, Heading, ScrollView, View } from "native-base";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
 
 import SponsorCard from "../../../../common/components/ImageCard";
 import { FirestoreSponsor } from "../../../../types/FirebaseTypes";
@@ -44,32 +43,17 @@ const SponsorCarousel = () => {
   ));
 
   return (
-    <View style={styles.container}>
+    <View height="100%" flex={1} alignContent="flex-end">
       <View>
-        <Text style={styles.sponsorTitle}> SPONSORS </Text>
+        <Heading> SPONSORS </Heading>
       </View>
-      <ScrollView scrollEventThrottle={16} horizontal>
-        <View style={styles.cardScrollView}>
-          <ScrollView horizontal >
-            {cards}
-          </ScrollView>
-        </View>
-      </ScrollView>
+      <Box flexDirection="row" flex={1} alignItems="center">
+        <ScrollView scrollEventThrottle={16} horizontal flex={1} height="4/5" p="2">
+          {cards}
+        </ScrollView>
+      </Box>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  cardScrollView: {
-    height: 170,
-    marginTop: 5,
-  },
-  container: { overflow: "hidden" },
-  sponsorTitle: {
-    color: "black",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-});
 
 export default SponsorCarousel;

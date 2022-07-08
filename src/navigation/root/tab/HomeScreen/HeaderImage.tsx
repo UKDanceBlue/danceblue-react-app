@@ -7,7 +7,7 @@ import backgroundImg from "../../../../../assets/home/db20_ribbon.jpg";
  * A header image container used on the home screen
  */
 const HeaderImage = () => (
-  <ZStack height="1/2" width="full" m={0}>
+  <ZStack height="100%" width="full" m={0}>
     <Image
       source={backgroundImg}
       size="full"
