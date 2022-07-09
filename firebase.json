@@ -18,5 +18,12 @@
     "ui": {
       "enabled": true
     }
+  },
+  "react-native": {
+    "analytics_auto_collection_enabled": false,
+    "analytics_collection_deactivated": true,
+    "google_analytics_automatic_screen_reporting_enabled": false,
+    "google_analytics_registration_with_ad_network_enabled": false,
+    "messaging_auto_init_enabled": false
   }
 }
