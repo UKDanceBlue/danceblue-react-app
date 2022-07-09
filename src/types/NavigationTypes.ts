@@ -3,6 +3,8 @@ import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 
+import { ParsedEvent } from "../common/firestore/events";
+
 import { FirestoreHour } from "./FirebaseTypes";
 
 export type TabNavigatorParamList = {
@@ -26,8 +28,7 @@ export type RootStackParamList = {
   Notifications: undefined;
   Profile: undefined;
   Event: {
-    id: string;
-    name: string;
+    event: ParsedEvent;
   };
   "Hour Details": { firestoreHour: FirestoreHour };
 };

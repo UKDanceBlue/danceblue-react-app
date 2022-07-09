@@ -44,7 +44,6 @@ const NotificationScreen = () => {
       {notificationPermissionsGranted
         ? (notifications.length > 0 ? (
           <FlatList
-
             refreshControl={<RefreshControl refreshing={userDataLoading} />}
             data={notifications}
             renderItem={({ item: notification }) => (

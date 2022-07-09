@@ -1,5 +1,4 @@
 import firebaseFirestore from "@react-native-firebase/firestore";
-import firebaseStorage from "@react-native-firebase/storage";
 import { useNavigation } from "@react-navigation/native";
 import { DateTime, Interval } from "luxon";
 import { Divider, Heading, ScrollView, useTheme } from "native-base";
@@ -8,44 +7,33 @@ import { SafeAreaView, TouchableOpacity } from "react-native";
 
 
 import { useColorModeValue } from "../../../../common/CustomHooks";
+import { useFirebase } from "../../../../common/FirebaseApp";
 import EventRow from "../../../../common/components/EventRow";
-import { FirestoreEvent } from "../../../../types/FirebaseTypes";
+import { FirestoreEvent, ParsedEvent, parseFirestoreEvent } from "../../../../common/firestore/events";
 import { TabNavigatorProps } from "../../../../types/NavigationTypes";
 
-
-interface EventType extends FirestoreEvent {
-  id: string;
-  imageUrl: string;
-}
-
 const EventListScreen = () => {
+  const {
+    fbStorage, fbFirestore
+  } = useFirebase();
   const { colors } = useTheme();
   const screenBackgroundColor = useColorModeValue(colors.white, colors.gray[900]);
 
-  const [ events, setEvents ] = useState<EventType[]>([]);
-  const [ today, setToday ] = useState<EventType[]>([]);
-  const [ upcoming, setUpcoming ] = useState<EventType[]>([]);
+  const [ events, setEvents ] = useState<ParsedEvent[]>([]);
+  const [ today, setToday ] = useState<ParsedEvent[]>([]);
+  const [ upcoming, setUpcoming ] = useState<ParsedEvent[]>([]);
   const navigation = useNavigation<TabNavigatorProps<"Events">["navigation"]>();
 
   useEffect(() => {
     let componentUnmounted = false;
-    const firestoreEvents: EventType[] = [];
-    void firebaseFirestore().collection("events").where("endTime", ">", firebaseFirestore.Timestamp.now())
+    const firestoreEvents: ParsedEvent[] = [];
+    void fbFirestore.collection("events").where("endTime", ">", firebaseFirestore.Timestamp.now())
       .get()
       .then(
         async (snapshot) => {
-          await Promise.all(snapshot.docs.map(async (document) => {
-            const startTime = document.get("startTime");
-            const endTime = document.get("endTime");
-            firestoreEvents.push({
-              id: document.id,
-              title: document.get("title"),
-              description: document.get("description"),
-              imageUrl: await firebaseStorage().ref(document.get("image")?.toString()).getDownloadURL(),
-              address: document.get("address")?.toString(),
-              startTime: startTime instanceof firebaseFirestore.Timestamp ? startTime : undefined,
-              endTime: endTime instanceof firebaseFirestore.Timestamp ? endTime : undefined,
-            });
+          await Promise.all(snapshot.docs.map(async (doc) => {
+            const data = doc.data() as FirestoreEvent;
+            firestoreEvents.push(await parseFirestoreEvent(data, fbStorage));
           }));
 
           if (!componentUnmounted) {
@@ -56,18 +44,17 @@ const EventListScreen = () => {
     return () => {
       componentUnmounted = true;
     };
-  }, []);
+  }, [ fbFirestore, fbStorage ]);
 
   /**
    * Splits *events* into *today* and *upcoming* based on the events' start day
    */
   useEffect(() => {
-    const todayFromEvents: EventType[] = [];
-    const upcomingFromEvents: EventType[] = [];
+    const todayFromEvents: ParsedEvent[] = [];
+    const upcomingFromEvents: ParsedEvent[] = [];
     events.forEach((event) => {
-      if (event.startTime != null) {
-        const startTime = event.startTime.toMillis();
-        if (startTime <= DateTime.now().toMillis()) {
+      if (event.interval != null) {
+        if (event.interval.overlaps(Interval.fromDateTimes(DateTime.local().startOf("day"), DateTime.local().endOf("day")))) {
           todayFromEvents.push(event);
         } else {
           upcomingFromEvents.push(event);
@@ -93,17 +80,17 @@ const EventListScreen = () => {
             <Divider/>
           </>
         }
-        {today.map((row) => (
+        {today.map((row, index) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate("Event", { id: row.id, name: row.title })}
-            key={row.id}
+            onPress={() => navigation.navigate("Event", { event: row })}
+            key={index}
           >
             <EventRow
-              key={row.id}
+              key={index}
               title={row.title}
               blurb={`${row.description.substring(0, 100) }...`}
-              interval={Interval.fromDateTimes(DateTime.fromMillis(row.startTime?.toMillis() ?? 0), DateTime.fromMillis(row.endTime?.toMillis() ?? 0))}
-              imageSource={{ uri: row.imageUrl }}
+              interval={row.interval}
+              imageSource={{ uri: row.image?.url, width: row.image?.width, height: row.image?.height }}
             />
           </TouchableOpacity>
         ))}
@@ -117,21 +104,17 @@ const EventListScreen = () => {
           </>
         }
         {
-          upcoming.map((row) => (
+          upcoming.map((row, index) => (
             <TouchableOpacity
-
-              onPress={() => navigation.navigate("Event", { id: row.id, name: row.title })}
-              key={row.id}
+              onPress={() => navigation.navigate("Event", { event: row })}
+              key={index}
             >
               <EventRow
-                key={row.id}
+                key={index}
                 title={row.title}
                 blurb={`${row.description.substring(0, 100) }...`}
-                interval={Interval.fromDateTimes(DateTime.fromMillis(row.startTime?.toMillis() ?? 0), DateTime.fromMillis(row.endTime?.toMillis() ?? 0))}
-                imageSource={{
-                  uri: row.imageUrl,
-                  width: 128
-                }}
+                interval={row.interval}
+                imageSource={{ uri: row.image?.url, width: row.image?.width, height: row.image?.height }}
               />
             </TouchableOpacity>
           ))

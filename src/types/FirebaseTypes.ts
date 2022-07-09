@@ -4,70 +4,6 @@ import { FirebaseStorageTypes } from "@react-native-firebase/storage";
 import { HourInstructionsType, SpecialComponentType } from "./HourScreenTypes";
 
 export type NativeFirebaseError = Parameters<FirebaseStorageTypes.TaskSnapshotObserver["error"]>[0];
-export interface FirestoreUser {
-  attributes?: Record<string, string>;
-  email: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  linkblue?: string | null;
-  team?: FirebaseFirestoreTypes.DocumentReference | null;
-  pastNotifications?: FirebaseFirestoreTypes.DocumentReference[] | null;
-}
-
-export interface FirestoreTeam {
-  members?: Record<string, string>;
-  name: string;
-  spiritSpreadsheetId?: string;
-  networkForGoodId?: string;
-  totalSpiritPoints?: number;
-}
-
-export interface FirestoreTeamFundraising {
-  total?: number;
-}
-
-export type FirestoreTeamIndividualSpiritPoints = Record<string, number>;
-
-export interface FirestoreSponsor {
-  link?: string;
-  logo?: string;
-  name?: string;
-}
-
-export interface FirestoreNotification {
-  body: string;
-  data?: Record<string, unknown>;
-  sendTime: FirebaseFirestoreTypes.Timestamp;
-  sound: string;
-  title: string;
-}
-
-export interface FirestoreEvent {
-  title: string;
-  description: string;
-  image?: string;
-  address?: string;
-  startTime?: FirebaseFirestoreTypes.Timestamp;
-  endTime?: FirebaseFirestoreTypes.Timestamp;
-}
-
-export interface FirestoreDevice {
-  audiences?: string[] | null;
-  expoPushToken?: string | null;
-  latestUserId?: string | null;
-}
-
-export interface FirestoreMobileAppConfig {
-  countdown: { time: FirebaseFirestoreTypes.Timestamp; title: string };
-  currentTabs: string[];
-  scoreboard: {
-    pointType: "spirit" | "morale";
-    showIcons: boolean;
-    showTrophies: boolean;
-  };
-  demoModeKey: string;
-  ssoEnabled: boolean;
-}
 
 export interface FirestoreHour {
   hourNumber: number;
@@ -97,3 +33,34 @@ export interface FirestoreMoraleTeam {
   teamNumber: number;
   points: number;
 }
+
+export const isCollectionReference = (firestoreReference?: unknown): firestoreReference is FirebaseFirestoreTypes.CollectionReference => {
+  if (typeof firestoreReference !== "object" || firestoreReference == null) {
+    return false;
+  }
+  if (typeof (firestoreReference as FirebaseFirestoreTypes.CollectionReference).id !== "string") {
+    return false;
+  }
+  if (typeof (firestoreReference as FirebaseFirestoreTypes.CollectionReference).path !== "string") {
+    return false;
+  }
+
+  return true;
+};
+
+export const isDocumentReference = (firestoreReference?: unknown): firestoreReference is FirebaseFirestoreTypes.DocumentReference => {
+  if (typeof firestoreReference !== "object" || firestoreReference == null) {
+    return false;
+  }
+  if (typeof (firestoreReference as FirebaseFirestoreTypes.DocumentReference).id !== "string") {
+    return false;
+  }
+  if (typeof (firestoreReference as FirebaseFirestoreTypes.DocumentReference).path !== "string") {
+    return false;
+  }
+  if (typeof (firestoreReference as FirebaseFirestoreTypes.DocumentReference).parent !== "object") {
+    return false;
+  }
+
+  return true;
+};

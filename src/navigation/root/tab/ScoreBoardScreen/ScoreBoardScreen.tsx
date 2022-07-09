@@ -4,8 +4,9 @@ import { RefreshControl, SafeAreaView, ScrollView } from "react-native";
 
 import { useAppSelector } from "../../../../common/CustomHooks";
 import Standings from "../../../../common/components/Standings";
+import { FirestoreTeam } from "../../../../common/firestore/teams";
 import { showMessage } from "../../../../common/util/AlertUtils";
-import { FirestoreMoraleTeam, FirestoreTeam } from "../../../../types/FirebaseTypes";
+import { FirestoreMoraleTeam } from "../../../../types/FirebaseTypes";
 import { StandingType } from "../../../../types/StandingType";
 
 /**

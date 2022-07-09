@@ -1,7 +1,9 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { FirestoreNotification, FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints, FirestoreUser } from "../types/FirebaseTypes";
+import { FirestoreNotification } from "../common/firestore/pastNotifications";
+import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints } from "../common/firestore/teams";
+import { isFirestoreUser } from "../common/firestore/users";
 
 import { startLoading, stopLoading } from "./globalLoadingSlice";
 
@@ -46,25 +48,21 @@ export const loadUserData = createAsyncThunk(
       throw new Error("User data not found");
     }
 
-    const rawUserData = userDataSnapshot.data() as FirestoreUser;
+    const rawUserData = userDataSnapshot.data();
+
+    if (!isFirestoreUser(rawUserData)) {
+      throw new Error("User data is not valid");
+    }
 
     const loadUserData = { ...initialState, loginType: payload.loginType };
 
     // Check for a user's own data
-    if (rawUserData.firstName != null) {
-      loadUserData.firstName = rawUserData.firstName;
-    }
-    if (rawUserData.lastName != null) {
-      loadUserData.lastName = rawUserData.lastName;
-    }
-    if (rawUserData.email != null) {
-      loadUserData.email = rawUserData.email;
-    }
+    loadUserData.firstName = rawUserData.firstName;
+    loadUserData.lastName = rawUserData.lastName;
+    loadUserData.email = rawUserData.email;
+    loadUserData.attributes = rawUserData.attributes;
     if (rawUserData.linkblue != null) {
       loadUserData.linkblue = rawUserData.linkblue;
-    }
-    if (rawUserData.attributes != null) {
-      loadUserData.attributes = rawUserData.attributes;
     }
 
     // Check for past notifications
