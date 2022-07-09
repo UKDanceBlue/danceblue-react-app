@@ -1,0 +1,17 @@
+name: Test codebase
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: ~/.yarn
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install modules
+        run: yarn install --frozen-lockfile --production=false --non-interactive
+      - name: Run eslint
+        run: yarn lint

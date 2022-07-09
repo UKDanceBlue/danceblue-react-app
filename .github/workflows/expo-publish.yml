@@ -1,5 +1,8 @@
-name: Expo Review (pr-#)
-on: [pull_request]
+name: Expo Publish (preview)
+on:
+  push:
+    branches:
+      - main
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -22,10 +25,5 @@ jobs:
       - name: 📦 Install dependencies
         run: yarn install
 
-      - name: 🚀 Publish preview
-        run: expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
-
-      - name: 💬 Comment preview
-        uses: expo/expo-github-action/preview-comment@v7
-        with:
-          channel: pr-${{ github.event.number }}
+      - name: 🚀 Publish app
+        run: expo publish --non-interactive --release-channel preview
