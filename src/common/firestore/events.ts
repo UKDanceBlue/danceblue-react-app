@@ -18,7 +18,7 @@ export interface ParsedEvent {
   description: string;
   image?: DownloadableImage;
   address?: string;
-  interval?: Interval;
+  interval?: ReturnType<Interval["toISO"]>;
 }
 
 export const parseFirestoreEvent = async (event: FirestoreEvent, storage: FirebaseStorageTypes.Module): Promise<ParsedEvent> => ({
@@ -26,5 +26,5 @@ export const parseFirestoreEvent = async (event: FirestoreEvent, storage: Fireba
   description: event.description,
   image: event.image != null ? await parseFirestoreImage(event.image, storage) : undefined,
   address: event.address,
-  interval: Interval.fromDateTimes(DateTime.fromMillis(event.startTime?.toMillis() ?? 0), DateTime.fromMillis(event.endTime?.toMillis() ?? 0))
+  interval: Interval.fromDateTimes(DateTime.fromMillis(event.startTime?.toMillis() ?? 0), DateTime.fromMillis(event.endTime?.toMillis() ?? 0)).toISO()
 });

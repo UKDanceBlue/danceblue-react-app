@@ -1,6 +1,7 @@
 import { useRoute } from "@react-navigation/native";
-import { DateTime } from "luxon";
-import { Heading, Image, Text, VStack } from "native-base";
+import { DateTime, Interval } from "luxon";
+import { Box, Heading, Image, Pressable, Text, VStack } from "native-base";
+import openMap from "react-native-open-maps";
 
 import { RootStackScreenProps } from "../../../types/NavigationTypes";
 
@@ -8,10 +9,12 @@ const EventScreen = () => {
   const {
     params: {
       event: {
-        title, description, address, image, interval
+        title, description, address, image, interval: intervalString
       }
     }
   } = useRoute<RootStackScreenProps<"Event">["route"]>();
+
+  const interval = intervalString ? Interval.fromISO(intervalString) : undefined;
 
   let whenString = "";
   if (interval != null) {
@@ -34,15 +37,33 @@ const EventScreen = () => {
     }
   }
 
-  return (<VStack>
-    <Image
-      source={{ uri: image?.url, width: image?.width, height: image?.width }}
-    />
-    <Heading>{title}</Heading>
-    <Text>{whenString}</Text>
-    <Text>{description}</Text>
-    <Map
-  </VStack>);
+  return (
+    <VStack safeArea>
+      <Image
+        source={{ uri: image?.url, width: image?.width, height: image?.width }}
+        alt={title}
+        style={{ width: "100%", maxHeight: 200 }}
+        resizeMode="contain"
+      />
+      <Heading>{title}</Heading>
+      <Text>{whenString}</Text>
+      <Text>{description}</Text>
+      {address && <Pressable
+        onPress={() => openMap({ query: address })}
+        _pressed={{ opacity: 0.6 }}>
+        <Box
+          width={"4/5"}
+          height={200}
+          borderRadius={10}
+          backgroundColor={"#fff"}
+          p={3}
+          alignSelf={"center"}
+        >
+          <Text>{address}</Text>
+        </Box>
+      </Pressable>}
+    </VStack>
+  );
 };
 
 export default EventScreen;

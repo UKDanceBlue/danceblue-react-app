@@ -54,7 +54,7 @@ const EventListScreen = () => {
     const upcomingFromEvents: ParsedEvent[] = [];
     events.forEach((event) => {
       if (event.interval != null) {
-        if (event.interval.overlaps(Interval.fromDateTimes(DateTime.local().startOf("day"), DateTime.local().endOf("day")))) {
+        if (Interval.fromISO(event.interval).overlaps(Interval.fromDateTimes(DateTime.local().startOf("day"), DateTime.local().endOf("day")))) {
           todayFromEvents.push(event);
         } else {
           upcomingFromEvents.push(event);

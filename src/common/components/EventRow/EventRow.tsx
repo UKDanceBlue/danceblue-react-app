@@ -11,17 +11,19 @@ import { useColorModeValue } from "../../CustomHooks";
 const EventRow = ({
   imageSource,
   title,
-  interval,
+  interval: intervalString,
   blurb,
 }: {
   imageSource?: ImageSourcePropType;
   title: string;
-  interval?: Interval;
+  interval?: ReturnType<Interval["toISO"]>;
   blurb?: string;
 }) => {
   const { width: windowWidth } = useWindowDimensions();
   const { colors } = useTheme();
   const backgroundColor = useColorModeValue(colors.gray[300], colors.gray[600]);
+
+  const interval = intervalString ? Interval.fromISO(intervalString) : undefined;
 
   /**
    * Called to generate a React Native component
