@@ -1,4 +1,4 @@
-name: Expo Publish (preview)
+name: Expo Publish (production)
 on:
   push:
     branches:

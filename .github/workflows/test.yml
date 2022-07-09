@@ -1,4 +1,4 @@
-name: Test codebase
+name: Test Codebase
 on: [push, pull_request]
 jobs:
   build:

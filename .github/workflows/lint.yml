@@ -1,4 +1,4 @@
-name: Test codebase
+name: Lint Codebase
 on: [push, pull_request]
 jobs:
   build:

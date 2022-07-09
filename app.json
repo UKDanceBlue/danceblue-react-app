@@ -12,10 +12,6 @@
       "ios",
       "android"
     ],
-    "version": "1.4.3",
-    "runtimeVersion": {
-      "policy": "nativeVersion"
-    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -61,7 +57,6 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.danceblue.app",
-      "buildNumber": "1.4.3",
       "config": {
         "usesNonExemptEncryption": false
       },
@@ -75,7 +70,6 @@
     },
     "android": {
       "package": "org.danceblue.app",
-      "versionCode": 23,
       "permissions": [
         "WRITE_CALENDAR",
         "READ_CALENDAR",
