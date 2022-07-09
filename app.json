@@ -39,12 +39,8 @@
       [
         "expo-notifications",
         {
-          "icon": "./local/assets/notification-icon.png",
-          "color": "#ffffff",
-          "sounds": [
-            "./local/assets/notification-sound.wav",
-            "./local/assets/notification-sound-other.wav"
-          ]
+          "icon": "./assets/icon.png",
+          "color": "#ffffff"
         }
       ],
       "./config-plugins/rnf-disable-ai-id-support.plugin"
