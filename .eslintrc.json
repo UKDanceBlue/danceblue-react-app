@@ -159,6 +159,20 @@
       "smart"
     ],
     // Style
+    "react/jsx-wrap-multilines": "warn",
+    "react/jsx-first-prop-new-line": [
+      1,
+      "multiline-multiprop"
+    ],
+    "react/jsx-max-props-per-line": [
+      1,
+      {
+        "maximum": {
+          "single": 3,
+          "multi": 1
+        }
+      }
+    ],
     "arrow-parens": [
       "error",
       "always"

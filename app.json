@@ -58,7 +58,10 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "NSRemindersUsageDescription": "Users may add DanceBlue events to their calendar."
+        "NSRemindersUsageDescription": "Users may add DanceBlue events to their calendar.",
+        "UIBackgroundModes": [
+          "audio"
+        ]
       },
       "associatedDomains": [
         "https://www.danceblue.org"

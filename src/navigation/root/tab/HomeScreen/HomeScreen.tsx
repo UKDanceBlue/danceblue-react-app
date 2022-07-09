@@ -2,6 +2,8 @@ import { Box, Button, VStack, useTheme } from "native-base";
 import { Linking } from "react-native";
 
 import { useColorModeValue } from "../../../../common/CustomHooks";
+import PodcastPlayer from "../../../../common/components/PodcastPlayer";
+
 
 import HeaderImage from "./HeaderImage";
 import SponsorCarousel from "./SponsorCarousel";
@@ -15,12 +17,13 @@ const HomeScreen = () => {
 
   return (
     <VStack flexDirection="column" bgColor={bgColor}>
-      <Box height="40%" tintColor={bgColor}>
+      <Box height="35%" tintColor={bgColor}>
         <HeaderImage />
       </Box>
-      <Box height="15%">
+      <Box height="7.5%">
         <Button
-          m={ 5 }
+          borderRadius={0}
+          margin={0}
           onPress={() => {
             void (async () => {
               if (
@@ -38,7 +41,10 @@ const HomeScreen = () => {
       Donate!
         </Button>
       </Box>
-      <Box height="45%">
+      <Box height="15%">
+        <PodcastPlayer />
+      </Box>
+      <Box height="40%">
         <SponsorCarousel />
       </Box>
     </VStack>

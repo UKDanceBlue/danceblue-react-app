@@ -2,5 +2,13 @@
   "compilerOptions": {
     "strict": true
   },
-  "extends": "expo/tsconfig.base"
+  "extends": "expo/tsconfig.base",
+  "include": [
+    ".eslintrc.js",
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./src/**/*.js",
+    "./app.tsx",
+    "./index.ts"
+  ]
 }
