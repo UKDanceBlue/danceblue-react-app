@@ -5,6 +5,7 @@
     "privacy": "unlisted",
     "owner": "university-of-kentucky-danceblue",
     "scheme": "danceblue",
+    "jsEngine": "hermes",
     "notification": {
       "icon": "./assets/icon.png"
     },
