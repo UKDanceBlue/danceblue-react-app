@@ -14,7 +14,8 @@ const inset = {
  */
 export const renderWithNativeBase = (element: ReactElement, nativeBaseProps: NativeBaseProviderProps = {}) => {
   return render(
-    <NativeBaseProvider initialWindowMetrics={inset}
+    <NativeBaseProvider
+      initialWindowMetrics={inset}
       colorModeManager={nativeBaseProps.colorModeManager}
       disableContrastText={nativeBaseProps.disableContrastText}
       theme={nativeBaseProps.theme}

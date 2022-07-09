@@ -14,10 +14,12 @@ const HeaderImage = () => (
       resizeMode="cover"
       blurRadius={10}
       alt="Picture of DB Marathon" />
-    <Box style={{ backgroundColor: "#ffffff55" }}
+    <Box
+      style={{ backgroundColor: "#ffffff55" }}
       width="full"
       height="full" />
-    <Image source={dbLogo}
+    <Image
+      source={dbLogo}
       size="full"
       resizeMode="contain"
       alt="DanceBlue Logo" />

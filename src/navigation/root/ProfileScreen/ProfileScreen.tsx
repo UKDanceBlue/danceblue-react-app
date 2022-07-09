@@ -54,12 +54,13 @@ const ProfileScreen = () => {
           )}
         </VStack>
         <VStack flex={3} justifyContent="flex-end">
-          <Button onPress={() => {
-            fbAuth.signOut().catch((error) => {
-              showMessage(error);
-            });
-          }}
-          backgroundColor={colors.danger[700]}
+          <Button
+            onPress={() => {
+              fbAuth.signOut().catch((error) => {
+                showMessage(error);
+              });
+            }}
+            backgroundColor={colors.danger[700]}
           >
             Sign out
           </Button>

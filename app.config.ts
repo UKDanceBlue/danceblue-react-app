@@ -1,4 +1,3 @@
-
 // WARNING THIS ISN'T VERSIONED
 import { ConfigContext, ExpoConfig } from "@expo/config";
 

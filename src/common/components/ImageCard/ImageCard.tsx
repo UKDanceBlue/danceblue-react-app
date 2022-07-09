@@ -23,7 +23,14 @@ const SponsorCard = ({
       onPress={sponsorLink ? () => WebBrowser.openBrowserAsync(sponsorLink) : undefined}
       underlayColor="#dddddd"
     >
-      <Box shadow="6" flex={1} backgroundColor="white" p="1" m="2" borderRadius={6} justifyContent="center">
+      <Box
+        shadow="6"
+        flex={1}
+        backgroundColor="white"
+        p="1"
+        m="2"
+        borderRadius={6}
+        justifyContent="center">
         <Image
           source={{ uri: url ?? undefined, width: PixelRatio.getPixelSizeForLayoutSize(75), height: PixelRatio.getPixelSizeForLayoutSize(50) }}
           alt={name}

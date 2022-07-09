@@ -155,7 +155,8 @@ const HoursListScreen = () => {
               <Divider width={2} />
               <Image
                 source={{ uri: `data:image/png;base64,${mapOfMemorial}` }}
-                width={screenWidth} height={screenWidth * (1194 / 1598)}
+                width={screenWidth}
+                height={screenWidth * (1194 / 1598)}
               />
               <Divider width={2} />
             </>

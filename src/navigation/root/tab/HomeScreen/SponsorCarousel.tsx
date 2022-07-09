@@ -44,7 +44,12 @@ const SponsorCarousel = () => {
         <Heading> SPONSORS </Heading>
       </View>
       <Box flexDirection="row" flex={1} alignItems="center">
-        <ScrollView scrollEventThrottle={16} horizontal flex={1} height="4/5" p="2">
+        <ScrollView
+          scrollEventThrottle={16}
+          horizontal
+          flex={1}
+          height="4/5"
+          p="2">
           {cards}
         </ScrollView>
       </Box>
