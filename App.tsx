@@ -1,3 +1,7 @@
+// Polyfill
+import "intl";
+import "intl/locale-data/jsonp/en";
+
 // Import third-party dependencies
 import NetInfo from "@react-native-community/netinfo";
 import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
