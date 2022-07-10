@@ -1,6 +1,12 @@
-[![Test codebase](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/jest-review.yml/badge.svg)](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/jest-review.yml)
-[![Publish to expo](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/main.yml/badge.svg?branch=main)](https://expo.dev/@university-of-kentucky-danceblue/danceblue-mobile?release-channel=dev-main)
+[![Lint Codebase](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/lint.yml/badge.svg)](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/lint.yml)
+[![Test Codebase](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/test.yml/badge.svg)](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/test.yml)
+[![Expo Publish (preview)](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/expo-publish.yml/badge.svg)](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/expo-publish.yml)
 <div id="top"></div>
+
+<a href="exp+danceblue://expo-development-client/?url=https%3A%2F%2Fexp.host%2F%40university-of-kentucky-danceblue%2Fdanceblue-mobile%2Findex.exp%3Frelease-channel%3Dpreview%26runtimeVersion%3D2.0.0">
+<img src="https://qr.expo.dev/development-client?appScheme=exp%2Bdanceblue&url=https%3A%2F%2Fexp.host%2F%40university-of-kentucky-danceblue%2Fdanceblue-mobile%2Findex.exp%3Frelease-channel%3Dpreview%26runtimeVersion%3D2.0.0" alt="Expo Preview QR Code" width="300" height="300">
+  Expo Preview
+</a>
 
 <!-- PROJECT LOGO -->
 <br />
