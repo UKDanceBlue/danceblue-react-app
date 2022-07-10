@@ -3,8 +3,9 @@
 [![Expo Publish (preview)](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/expo-publish.yml/badge.svg)](https://github.com/UKDanceBlue/danceblue-react-app/actions/workflows/expo-publish.yml)
 <div id="top"></div>
 
-<a href="exp+danceblue://expo-development-client/?url=https%3A%2F%2Fexp.host%2F%40university-of-kentucky-danceblue%2Fdanceblue-mobile%2Findex.exp%3Frelease-channel%3Dpreview%26runtimeVersion%3D2.0.0">
-<img src="https://qr.expo.dev/development-client?appScheme=exp%2Bdanceblue&url=https%3A%2F%2Fexp.host%2F%40university-of-kentucky-danceblue%2Fdanceblue-mobile%2Findex.exp%3Frelease-channel%3Dpreview%26runtimeVersion%3D2.0.0" alt="Expo Preview QR Code" width="300" height="300">
+<a href="https://expo.dev/%40university-of-kentucky-danceblue/danceblue-mobile?serviceType=classic&distribution=expo-dev-client&releaseChannel=preview&scheme=exp%2Bdanceblue-mobile">
+<img src="https://qr.expo.dev/development-client?appScheme=exp%2Bdanceblue-mobile&url=https%3A%2F%2Fexp.host%2F%40university-of-kentucky-danceblue%2Fdanceblue-mobile%3Frelease-channel%3Dpreview" alt="Expo Preview QR Code" width="300" height="300">
+  
   Expo Preview
 </a>
 
