@@ -27,11 +27,11 @@ const AudioPlayer = ({
     setSeekTime(value);
   }
 
-  function applySeek() {
-    seeking.current = false;
+  function applySeek(value: number) {
+    setSeekTime(value);
     if (sound) {
-      sound.setPositionAsync(seekTime, { toleranceMillisAfter: 300, toleranceMillisBefore: 300 }).then((status) => {
-        setSeekTime(status.isLoaded ? status.positionMillis : currentTime);
+      sound.setPositionAsync(value, { toleranceMillisAfter: 300, toleranceMillisBefore: 300 }).then(() => {
+        seeking.current = false;
       }).catch(showMessage);
     }
   }
@@ -155,11 +155,13 @@ const AudioPlayer = ({
           step={300}
           onChange={seekTo}
           onChangeEnd={applySeek}
-          isDisabled={duration == null}>
+          isDisabled={duration == null}
+          size="sm"
+          colorScheme={currentTime === 0 ? "cyan": "primary"}>
           <Slider.Track>
             <Slider.FilledTrack />
           </Slider.Track>
-          <Slider.Thumb />
+          <Slider.Thumb/>
         </Slider>
         <Text
           width="20%"
