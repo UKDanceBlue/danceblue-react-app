@@ -3,7 +3,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { canOpenURL, openURL } from "expo-linking";
 import { AspectRatio, Box, HStack, IconButton, Link, Slider, Spinner, Text, VStack, useTheme } from "native-base";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { showMessage } from "../../util/AlertUtils";
 
@@ -17,24 +17,23 @@ const AudioPlayer = ({
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ duration, setDuration ] = useState<number | undefined>();
   const [ currentTime, setCurrentTime ] = useState(0);
-  const [ displayedCurrentTime, setDisplayedCurrentTime ] = useState(0);
-  const [ seeking, setSeeking ] = useState(false);
+  const [ seekTime, setSeekTime ] = useState(0);
+  const seeking = useRef(false);
 
   function seekTo(value: number) {
-    if (!seeking) {
-      setSeeking(true);
+    if (!seeking.current) {
+      seeking.current = true;
     }
-    setDisplayedCurrentTime(value);
-    if (sound) {
-      void sound.playFromPositionAsync(value, { toleranceMillisAfter: 300, toleranceMillisBefore: 300 });
-    }
+    setSeekTime(value);
   }
+
   function applySeek() {
+    seeking.current = false;
     if (sound) {
-      void sound.playFromPositionAsync(displayedCurrentTime, { toleranceMillisAfter: 300, toleranceMillisBefore: 300 });
+      sound.setPositionAsync(seekTime, { toleranceMillisAfter: 300, toleranceMillisBefore: 300 }).then((status) => {
+        setSeekTime(status.isLoaded ? status.positionMillis : currentTime);
+      }).catch(showMessage);
     }
-    setDisplayedCurrentTime(currentTime);
-    setSeeking(false);
   }
 
   useEffect(() => {
@@ -44,33 +43,31 @@ const AudioPlayer = ({
         if (status.isLoaded) {
           setDuration(status.durationMillis);
           setCurrentTime(status.positionMillis);
-          if (!seeking) {
-            setDisplayedCurrentTime(status.positionMillis);
+          if (!seeking.current) {
+            setSeekTime(status.positionMillis);
           }
         }
       });
     }
     return sound ? () => sound.setOnPlaybackStatusUpdate(null) : undefined;
-  }, [ seeking, sound ]);
+  }, [sound]);
 
   useEffect(() => {
     if (sound) {
       if (isPlaying) {
-        void sound.playFromPositionAsync(currentTime, { toleranceMillisAfter: 300, toleranceMillisBefore: 300 });
+        void sound.playAsync();
       } else {
         void sound.pauseAsync();
       }
     }
-  }, [
-    currentTime, duration, isPlaying, sound
-  ]);
+  }, [ isPlaying, sound ]);
 
   let currentTimeString;
   if (duration != null) {
     if (duration >= 60000) {
-      currentTimeString = `${Math.floor(displayedCurrentTime / 60000).toString().padStart(2, "0")}:${Math.floor((displayedCurrentTime % 60000) / 1000).toString().padStart(2, "0")}`;
+      currentTimeString = `${Math.floor((seeking.current ? seekTime : currentTime) / 60000).toString().padStart(2, "0")}:${Math.floor(((seeking.current ? seekTime : currentTime) % 60000) / 1000).toString().padStart(2, "0")}`;
     } else {
-      currentTimeString = `${Math.floor(displayedCurrentTime / 1000).toString().padStart(2, "0")}`;
+      currentTimeString = `${Math.floor((seeking.current ? seekTime : currentTime) / 1000).toString().padStart(2, "0")}`;
     }
   } else {
     currentTimeString = "--:--";
@@ -151,13 +148,13 @@ const AudioPlayer = ({
         <Slider
           width="68%"
           defaultValue={0}
-          value={displayedCurrentTime}
+          value={(seekTime)}
           minValue={0}
           maxValue={duration ?? 0}
           accessibilityLabel="Progress of the podcast"
           step={300}
           onChange={seekTo}
-          onTouchEnd={applySeek}
+          onChangeEnd={applySeek}
           isDisabled={duration == null}>
           <Slider.Track>
             <Slider.FilledTrack />

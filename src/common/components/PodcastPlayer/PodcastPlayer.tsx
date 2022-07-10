@@ -33,7 +33,7 @@ const PodcastPlayer = () => {
         const podcastUrl = mostRecentPodcast.enclosures.find((enclosure) => enclosure.mimeType === "audio/mpeg")?.url;
         if (podcastUrl != null) {
           const sound = new Audio.Sound();
-          await sound.loadAsync({ uri: podcastUrl }, { shouldPlay: false }, false);
+          await sound.loadAsync({ uri: podcastUrl });
           setPodcastAudio(sound);
           setPodcastTitle(mostRecentPodcast.title);
           setPodcastTitleLink(mostRecentPodcast.links.find((link) => (link as { url: unknown }).url !== null && link.url !== "")?.url);
@@ -46,12 +46,13 @@ const PodcastPlayer = () => {
 
   useEffect(() => {
     if (isNetStatusLoaded && isConnected && podcastAudio == null) {
+      Audio.setAudioModeAsync({ staysActiveInBackground: true, playsInSilentModeIOS: true }).catch(showMessage);
       loadPodcastUrl().catch(showMessage);
     }
 
     return () => {
       if (podcastAudio) {
-        void podcastAudio.unloadAsync();
+        podcastAudio.unloadAsync().catch(showMessage);
       }
       void Audio.setAudioModeAsync({ staysActiveInBackground: false });
     };
