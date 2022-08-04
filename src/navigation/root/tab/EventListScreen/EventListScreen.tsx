@@ -1,7 +1,7 @@
 import firebaseFirestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { DateTime, Interval } from "luxon";
-import { Center, Heading, SectionList, useTheme } from "native-base";
+import { Center, Heading, SectionList, Text, useTheme } from "native-base";
 import { useCallback, useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 
@@ -10,6 +10,7 @@ import { useColorModeValue } from "../../../../common/CustomHooks";
 import { useFirebase } from "../../../../common/FirebaseApp";
 import EventRow from "../../../../common/components/EventRow";
 import { FirestoreEvent, ParsedEvent, parseFirestoreEvent } from "../../../../common/firestore/events";
+import { handleFirebaseError } from "../../../../common/util/AlertUtils";
 import { TabNavigatorProps } from "../../../../types/NavigationTypes";
 
 const EventListScreen = () => {
@@ -41,6 +42,7 @@ const EventListScreen = () => {
           setEvents(firestoreEvents);
         }
       )
+      .catch(handleFirebaseError)
       .finally(() => setRefreshing(false));
   }, [ fbFirestore, fbStorage ]);
 
@@ -73,50 +75,56 @@ const EventListScreen = () => {
    * Called by React Native when rendering the screen
    */
   return (
-    <SectionList
-      backgroundColor={screenBackgroundColor}
-      height="100%"
-      onRefresh={refresh}
-      refreshing={refreshing}
-      sections={
-        [
-          {
-            title: "Today",
-            data: today
-          }, {
-            title: "Upcoming",
-            data: upcoming
-          }
-        ]
-      }
-      renderSectionHeader={({
-        section: {
-          title, data
+    <>
+      <SectionList
+        backgroundColor={screenBackgroundColor}
+        height="100%"
+        onRefresh={refresh}
+        refreshing={refreshing}
+        sections={
+          [
+            {
+              title: "Today",
+              data: today
+            }, {
+              title: "Upcoming",
+              data: upcoming
+            }
+          ]
         }
-      }) => data.length > 0 ? (
-        <Center
-          backgroundColor={screenBackgroundColor}
-          borderBottomWidth={"1"}
-          borderBottomRadius={"xl"}
-          shadow={"1"}>
-          <Heading fontSize="xl" my={"2"}>
-            {title}
-          </Heading>
-        </Center>
-      ) : <></>}
-      renderItem={({ item: row }) => (
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Event", { event: row })}
-        >
-          <EventRow
-            title={row.title}
-            blurb={`${row.description.substring(0, 100) }...`}
-            interval={row.interval}
-            imageSource={{ uri: row.image?.url, width: row.image?.width, height: row.image?.height }}
-          />
-        </TouchableOpacity>
-      )}
-    />
+        renderSectionHeader={({
+          section: {
+            title, data
+          }
+        }) => data.length > 0 ? (
+          <Center
+            backgroundColor={screenBackgroundColor}
+            borderBottomWidth={"1"}
+            borderBottomRadius={"xl"}
+            shadow={"1"}>
+            <Heading fontSize="xl" my={"2"}>
+              {title}
+            </Heading>
+          </Center>
+        ) : <></>}
+        renderItem={({ item: row }) => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Event", { event: row })}
+          >
+            <EventRow
+              title={row.title}
+              blurb={`${row.description.substring(0, 100) }...`}
+              interval={row.interval}
+              imageSource={row.image == null ? undefined : { uri: row.image.url, width: row.image.width, height: row.image.height }}
+            />
+          </TouchableOpacity>
+        )}
+      />
+      {
+        events.length === 0 &&
+        <Text>No Events</Text>
+      }
+    </>
   );
 };
 

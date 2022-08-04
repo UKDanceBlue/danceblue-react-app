@@ -13,7 +13,7 @@ export interface DownloadableImage {
 }
 
 export const parseFirestoreImage = async (firestoreImage: FirestoreImage, fbStorage: FirebaseStorageTypes.Module): Promise<DownloadableImage> => ({
-  url: await fbStorage.refFromURL(firestoreImage.uri).getDownloadURL().catch(() => undefined),
+  url: firestoreImage.uri.startsWith("gs://") ? await fbStorage.refFromURL(firestoreImage.uri).getDownloadURL().catch(() => undefined) : firestoreImage.uri,
   width: firestoreImage.width,
   height: firestoreImage.height,
 });

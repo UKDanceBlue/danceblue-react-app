@@ -71,7 +71,7 @@ const EventRow = ({
           resizeMode="contain"
           flex={2}/>
       }
-      <Box flexDirection="column" ml={imageSource ? 3 : 0} flex={5}>
+      <Box flexDirection="column" ml={3} flex={5}>
         <Heading testID="event-title" fontSize="xl">{title}</Heading>
         <Text testID="event-time-interval" italic fontSize="2xs">{whenString}</Text>
         {blurb && <Text testID="event-blurb">{blurb}</Text>}

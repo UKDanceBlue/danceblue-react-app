@@ -1,6 +1,7 @@
 import { useRoute } from "@react-navigation/native";
 import { DateTime, Interval } from "luxon";
-import { Box, Heading, Image, Pressable, Text, VStack } from "native-base";
+import { Box, Heading, Image, Pressable, ScrollView, Text, VStack } from "native-base";
+import { useWindowDimensions } from "react-native";
 import openMap from "react-native-open-maps";
 
 import { RootStackScreenProps } from "../../../types/NavigationTypes";
@@ -13,6 +14,8 @@ const EventScreen = () => {
       }
     }
   } = useRoute<RootStackScreenProps<"Event">["route"]>();
+
+  const { width: screenWidth } = useWindowDimensions();
 
   const interval = intervalString ? Interval.fromISO(intervalString) : undefined;
 
@@ -39,29 +42,34 @@ const EventScreen = () => {
 
   return (
     <VStack safeArea>
-      <Image
-        source={{ uri: image?.url, width: image?.width, height: image?.width }}
-        alt={title}
-        style={{ width: "100%", maxHeight: 200 }}
-        resizeMode="contain"
-      />
-      <Heading>{title}</Heading>
-      <Text>{whenString}</Text>
-      <Text>{description}</Text>
-      {address && <Pressable
-        onPress={() => openMap({ query: address })}
-        _pressed={{ opacity: 0.6 }}>
-        <Box
-          width={"4/5"}
-          height={200}
-          borderRadius={10}
-          backgroundColor={"#fff"}
-          p={3}
-          alignSelf={"center"}
-        >
-          <Text>{address}</Text>
-        </Box>
-      </Pressable>}
+      <ScrollView>
+        {image != null &&
+          <Image
+            source={{ uri: image.url, width: image.width, height: image.width }}
+            alt={title}
+            style={{ width: "100%", height: Math.min(image.height, (screenWidth * (image.height / image.width))) }}
+            resizeMode="contain"
+          />
+        }
+        <Heading mx={2}>{title}</Heading>
+        <Text mx={2}>{whenString}</Text>
+        <Text mx={2}>{description}</Text>
+        {address && <Pressable
+          onPress={() => openMap({ query: address })}
+          _pressed={{ opacity: 0.6 }}>
+          <Box
+            width={"4/5"}
+            height={200}
+            borderRadius={10}
+            backgroundColor={"#fff"}
+            p={3}
+            my={5}
+            alignSelf={"center"}
+          >
+            <Text>{address}</Text>
+          </Box>
+        </Pressable>}
+      </ScrollView>
     </VStack>
   );
 };
