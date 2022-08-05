@@ -44,7 +44,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     throw new Error(`Patch version mismatch: ${version.patch} > ${bundleVersion.patch}. Bundle cannot be labeled as older than the runtime version.`);
   }
   const baseBuildCount = 24;
-  const buildsThisVersion = 0; // THIS MUST BE INCREMENTED BEFORE ANY NEW BUILD IS CREATED
+  const buildsThisVersion = 1; // THIS MUST BE INCREMENTED BEFORE ANY NEW BUILD IS CREATED
   const bundleVersionString: SemVer = `${bundleVersion.major}.${bundleVersion.minor}.${bundleVersion.patch}`;
   const runtimeVersion: SemVer = `${version.major}.${version.minor}.${version.patch}`;
   const versionCode = baseBuildCount + buildsThisVersion;
