@@ -1,7 +1,8 @@
 import { useRoute } from "@react-navigation/native";
 import { DateTime, Interval } from "luxon";
-import { Box, Heading, Image, Pressable, ScrollView, Text, VStack } from "native-base";
+import { Heading, Image, Pressable, ScrollView, Text, VStack } from "native-base";
 import { useWindowDimensions } from "react-native";
+import MapView, { Geojson, PROVIDER_GOOGLE } from "react-native-maps";
 import openMap from "react-native-open-maps";
 
 import { RootStackScreenProps } from "../../../types/NavigationTypes";
@@ -10,7 +11,7 @@ const EventScreen = () => {
   const {
     params: {
       event: {
-        title, description, address, image, interval: intervalString
+        title, description, address, image, interval: intervalString, addressGeoJson
       }
     }
   } = useRoute<RootStackScreenProps<"Event">["route"]>();
@@ -41,7 +42,7 @@ const EventScreen = () => {
   }
 
   return (
-    <VStack safeArea>
+    <VStack safeArea h="full">
       <ScrollView>
         {image != null &&
           <Image
@@ -54,20 +55,18 @@ const EventScreen = () => {
         <Heading mx={2}>{title}</Heading>
         <Text mx={2}>{whenString}</Text>
         <Text mx={2}>{description}</Text>
-        {address && <Pressable
+        {address && addressGeoJson && <Pressable
           onPress={() => openMap({ query: address })}
           _pressed={{ opacity: 0.6 }}>
-          <Box
-            width={"4/5"}
-            height={200}
-            borderRadius={10}
-            backgroundColor={"#fff"}
-            p={3}
-            my={5}
-            alignSelf={"center"}
-          >
-            <Text>{address}</Text>
-          </Box>
+          <MapView provider={PROVIDER_GOOGLE} >
+            <Geojson
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              geojson={JSON.parse(addressGeoJson)}
+              strokeColor="red"
+              fillColor="green"
+              strokeWidth={2}
+            />
+          </MapView>
         </Pressable>}
       </ScrollView>
     </VStack>
