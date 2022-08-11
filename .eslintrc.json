@@ -143,7 +143,16 @@
     "prefer-const": "error",
     "object-shorthand": "error",
     "prefer-arrow-callback": "error",
-    "prefer-destructuring": "error",
+    "prefer-destructuring": [
+      "error",
+      {
+        "array": false,
+        "object": true
+      },
+      {
+        "enforceForRenamedProperties": false
+      }
+    ],
     "no-useless-concat": "error",
     "prefer-numeric-literals": "error",
     "prefer-object-spread": "error",
