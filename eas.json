@@ -7,18 +7,27 @@
     "dev-client": {
       "distribution": "internal",
       "releaseChannel": "development",
-      "developmentClient": true
+      "developmentClient": true,
+      "cache": {
+        "key": "0"
+      }
     },
     "development": {
       "distribution": "internal",
       "releaseChannel": "development",
       "ios": {
         "simulator": true
+      },
+      "cache": {
+        "key": "0"
       }
     },
     "preview": {
       "distribution": "internal",
-      "releaseChannel": "preview"
+      "releaseChannel": "preview",
+      "cache": {
+        "key": "0"
+      }
     },
     "production": {
       "distribution": "store",
@@ -28,6 +37,9 @@
       },
       "android": {
         "autoIncrement": "versionCode"
+      },
+      "cache": {
+        "key": "0"
       }
     }
   },

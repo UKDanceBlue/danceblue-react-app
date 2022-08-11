@@ -3075,7 +3075,7 @@
     hermes-profile-transformer "^0.0.6"
     ip "^1.1.5"
 
-"@react-native-community/cli-platform-android@^8.0.2", "@react-native-community/cli-platform-android@^8.0.5":
+"@react-native-community/cli-platform-android@^8.0.4", "@react-native-community/cli-platform-android@^8.0.5":
   version "8.0.5"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-platform-android/-/cli-platform-android-8.0.5.tgz#da11d2678adeca98e83494d68de80e50571b4af4"
   integrity sha512-z1YNE4T1lG5o9acoQR1GBvf7mq6Tzayqo/za5sHVSOJAC9SZOuVN/gg/nkBa9a8n5U7qOMFXfwhTMNqA474gXA==
@@ -3090,7 +3090,7 @@
     logkitty "^0.7.1"
     slash "^3.0.0"
 
-"@react-native-community/cli-platform-ios@^8.0.2", "@react-native-community/cli-platform-ios@^8.0.4":
+"@react-native-community/cli-platform-ios@^8.0.4":
   version "8.0.4"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-platform-ios/-/cli-platform-ios-8.0.4.tgz#15225c09a1218a046f11165a54bf14b59dad7020"
   integrity sha512-7Jdptedfg/J0Xo2rQbJ4jmo+PMYOiIiRcNDCSI5dBcNkQfSq4MMYUnKQx5DdZHgrfxE0O1vE4iNmJdd4wePz8w==
@@ -3158,7 +3158,7 @@
   dependencies:
     joi "^17.2.1"
 
-"@react-native-community/cli@^8.0.3":
+"@react-native-community/cli@^8.0.4":
   version "8.0.5"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli/-/cli-8.0.5.tgz#902a13b5336508f7989fddf39e6bf85b63a66de9"
   integrity sha512-X0AMNK+sKDJQX8eQRkqgddJsZPWlHgLryX7O9usj78UFEK8VqVYtpv08piWecfAhC2mZU4/Lww4bKu9uJ1rdyQ==
@@ -6253,10 +6253,10 @@ expo-auth-session@~3.7.1:
     invariant "^2.2.4"
     qs "6.9.1"
 
-expo-av@~12.0.3:
-  version "12.0.3"
-  resolved "https://registry.yarnpkg.com/expo-av/-/expo-av-12.0.3.tgz#f242215c992f03299236f902e0938cfd2b2fa5f4"
-  integrity sha512-iY3AAJFJHBRtCrCziC9n6+Cb/uls3MzCB1Svs906BE8rxQ94yyOW2Nds7T+9CfCFNUAOlGvWjf/OXgHljzLXqQ==
+expo-av@~12.0.4:
+  version "12.0.4"
+  resolved "https://registry.yarnpkg.com/expo-av/-/expo-av-12.0.4.tgz#00cf2da76c0c718a1d316f188247dee85ce512c2"
+  integrity sha512-wq3wx6J1aacZEPZce9TK1+o4YTAOWyb5cJ4CqfsgHcXeUdHyO3qbva/5uecigpEYlCxOlWYFhAz2T0dQ7nWSpQ==
   dependencies:
     "@expo/config-plugins" "~5.0.0"
 
@@ -8019,7 +8019,7 @@ jest-environment-node@^26.6.2:
     jest-mock "^26.6.2"
     jest-util "^26.6.2"
 
-jest-expo@^46.0.1:
+jest-expo@^46.0.0:
   version "46.0.1"
   resolved "https://registry.yarnpkg.com/jest-expo/-/jest-expo-46.0.1.tgz#7864556bcf6db237f25bd2efb477ffa4c970cdee"
   integrity sha512-wKC/WfA4xAOWqXQwS3WyIWqNeVdKA5RjUqvYaWCM/M8lNbuYoMuixlbxEG+ielKV3LaLaxA/aCvfgouPBISxYA==
@@ -10510,15 +10510,15 @@ react-native-webview@11.23.0:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native@0.69.3:
-  version "0.69.3"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.69.3.tgz#8fc7afe0a302294262a6b49ba2089483db734c05"
-  integrity sha512-SyGkcoEUa/BkO+wKVnv4OsnLSNfUM5zLNXS3iT/3eXjKX91/FKBH/nfR9BE1c60X5LQe/P5QYqr6WPX3TRSQkA==
+react-native@0.69.4:
+  version "0.69.4"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.69.4.tgz#d66f2a117442a9398b065876afdc568b209dc4da"
+  integrity sha512-rqNMialM/T4pHRKWqTIpOxA65B/9kUjtnepxwJqvsdCeMP9Q2YdSx4VASFR9RoEFYcPRU41yGf6EKrChNfns3g==
   dependencies:
     "@jest/create-cache-key-function" "^27.0.1"
-    "@react-native-community/cli" "^8.0.3"
-    "@react-native-community/cli-platform-android" "^8.0.2"
-    "@react-native-community/cli-platform-ios" "^8.0.2"
+    "@react-native-community/cli" "^8.0.4"
+    "@react-native-community/cli-platform-android" "^8.0.4"
+    "@react-native-community/cli-platform-ios" "^8.0.4"
     "@react-native/assets" "1.0.0"
     "@react-native/normalize-color" "2.0.0"
     "@react-native/polyfills" "2.0.0"
