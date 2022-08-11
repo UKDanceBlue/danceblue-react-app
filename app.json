@@ -55,8 +55,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "org.danceblue.app",
       "config": {
-        "usesNonExemptEncryption": false,
-        "googleMapsApiKey": "AIzaSyA57BGLJzwyfytyGJLGwWR3EUbZ_S81t6U"
+        "usesNonExemptEncryption": false
       },
       "infoPlist": {
         "NSRemindersUsageDescription": "Users may add DanceBlue events to their calendar.",
@@ -76,11 +75,6 @@
         "READ_CALENDAR",
         "CAMERA"
       ],
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyCV-ldtrj3pkk67MDcBAOAndaf2tpvsSyg"
-        }
-      },
       "googleServicesFile": "./google-services.json",
       "intentFilters": [
         {

@@ -1,17 +1,18 @@
 import { useRoute } from "@react-navigation/native";
+import { setStringAsync } from "expo-clipboard";
 import { DateTime, Interval } from "luxon";
-import { Heading, Image, Pressable, ScrollView, Text, VStack } from "native-base";
+import { Box, Heading, Image, Pressable, ScrollView, Text, VStack } from "native-base";
 import { useWindowDimensions } from "react-native";
-import MapView, { Geojson, PROVIDER_GOOGLE } from "react-native-maps";
-import openMap from "react-native-open-maps";
+import { WebView } from "react-native-webview";
 
+import { showMessage } from "../../../common/util/AlertUtils";
 import { RootStackScreenProps } from "../../../types/NavigationTypes";
 
 const EventScreen = () => {
   const {
     params: {
       event: {
-        title, description, address, image, interval: intervalString, addressGeoJson
+        title, description, address, image, interval: intervalString
       }
     }
   } = useRoute<RootStackScreenProps<"Event">["route"]>();
@@ -53,21 +54,41 @@ const EventScreen = () => {
           />
         }
         <Heading mx={2}>{title}</Heading>
+        {address != null &&
+          <Pressable
+            onPress={() => {
+              setStringAsync(address).then(() => {
+                showMessage(undefined, "Address copied to clipboard");
+              }).catch(showMessage);
+            }}
+            _pressed={{ opacity: 0.6 }}
+          >
+            <Text mx={2} color="blue.900">{address}</Text>
+          </Pressable>
+        }
         <Text mx={2}>{whenString}</Text>
         <Text mx={2}>{description}</Text>
-        {address && addressGeoJson && <Pressable
-          onPress={() => openMap({ query: address })}
-          _pressed={{ opacity: 0.6 }}>
-          <MapView provider={PROVIDER_GOOGLE} >
-            <Geojson
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              geojson={JSON.parse(addressGeoJson)}
-              strokeColor="red"
-              fillColor="green"
-              strokeWidth={2}
-            />
-          </MapView>
-        </Pressable>}
+        {address &&
+          <Box
+            width="100%"
+            height="40%"
+            p={3}
+          >
+            <WebView
+              style={{ width: "100%", height: "100%" }}
+              scrollEnabled={false}
+              source={{
+                html: `<iframe
+                      width="100%"
+                      height="100%"
+                      frameborder="0" style="border:0"
+                      referrerpolicy="no-referrer-when-downgrade"
+                      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDGsPvQP-A9jgYnY5yxl3J9hRYJelsle9w&q=${address}&zoom=17&region=us"
+                      >
+                    </iframe>`
+              }} />
+          </Box>
+        }
       </ScrollView>
     </VStack>
   );
