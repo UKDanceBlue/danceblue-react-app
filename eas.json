@@ -45,13 +45,22 @@
   },
   "submit": {
     "dev-client": {
-      "extends": "preview"
+      "ios": {
+        "appleId": "app@danceblue.org",
+        "appleTeamId": "622DXM8F44"
+      }
     },
     "development": {
-      "extends": "preview"
+      "ios": {
+        "appleId": "app@danceblue.org",
+        "appleTeamId": "622DXM8F44"
+      }
     },
     "preview": {
-      "extends": "production"
+      "ios": {
+        "appleId": "app@danceblue.org",
+        "appleTeamId": "622DXM8F44"
+      }
     },
     "production": {
       "ios": {
