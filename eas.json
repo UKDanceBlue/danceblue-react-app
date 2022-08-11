@@ -9,7 +9,7 @@
       "releaseChannel": "development",
       "developmentClient": true,
       "cache": {
-        "key": "0"
+        "key": "1"
       }
     },
     "development": {
