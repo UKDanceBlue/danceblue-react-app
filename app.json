@@ -23,14 +23,20 @@
     "plugins": [
       "@react-native-firebase/app",
       "@react-native-firebase/crashlytics",
-      "expo-calendar",
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "You can add events to your calendar from the events tab"
+        }
+      ],
       "expo-camera",
+      "expo-av",
       "expo-file-system",
       [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to allow you to submit images for various DanceBlue activities.",
-          "cameraPermission": "The app accesses your camera to allow you to submit images for various DanceBlue activities."
+          "cameraPermission": "The app accesses your camera to allow you to submit images for various DanceBlue activities.",
         }
       ],
       "expo-splash-screen",
