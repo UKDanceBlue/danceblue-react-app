@@ -68,6 +68,7 @@
             "allowSingleLine": true
           }
         ],
+        "@typescript-eslint/prefer-for-of": "off",
         "@typescript-eslint/lines-between-class-members": [
           "error",
           "always",

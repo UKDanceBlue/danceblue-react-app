@@ -21,6 +21,10 @@ export interface ParsedEvent {
   address?: string;
   addressGeoJson?: string;
   interval?: ReturnType<Interval["toISO"]>;
+  link?: {
+    text: string;
+    url: string;
+  };
 }
 
 export const parseFirestoreEvent = async (event: FirestoreEvent, storage: FirebaseStorageTypes.Module): Promise<ParsedEvent> => ({
