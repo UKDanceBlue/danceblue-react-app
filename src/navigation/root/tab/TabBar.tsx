@@ -19,7 +19,7 @@ import TeamScreen from "./TeamScreen";
 
 const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
 
-const possibleTabs = {
+export const possibleTabs = {
   Events: <Tabs.Screen key="Events" name="Events" component={EventListScreen} />,
   Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
   Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,

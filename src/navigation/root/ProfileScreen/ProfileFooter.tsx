@@ -4,10 +4,12 @@ import { Button, HStack, Text, VStack, useColorMode } from "native-base";
 import { useState } from "react";
 import { TextInput } from "react-native";
 
-import { useAppSelector, useColorModeValue } from "../../../common/CustomHooks";
+import { useAppDispatch, useAppSelector, useColorModeValue } from "../../../common/CustomHooks";
+import { enterDemoMode } from "../../../redux/appConfigSlice";
 
 export const ProfileFooter = () => {
   const demoModeKey = useAppSelector((state) => state.appConfig.demoModeKey);
+  const dispatch = useAppDispatch();
   const [ reportLongPressed, setReportLongPressed ] = useState(false);
   const [ suggestLongPressed, setSuggestLongPressed ] = useState(false);
 
@@ -23,7 +25,7 @@ export const ProfileFooter = () => {
           secureTextEntry
           onSubmitEditing={(event) => {
             if (event.nativeEvent.text === demoModeKey) {
-            // store.dispatch(authSlice.actions.enterDemoMode());
+              dispatch(enterDemoMode());
               setReportLongPressed(false);
               setSuggestLongPressed(false);
             }

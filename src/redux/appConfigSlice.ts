@@ -2,6 +2,7 @@ import firebaseRemoteConfig from "@react-native-firebase/remote-config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { showMessage } from "../common/util/AlertUtils";
+import { possibleTabs } from "../navigation/root/tab/TabBar";
 
 import { UserLoginType } from "./userDataSlice";
 
@@ -51,11 +52,10 @@ export const appConfigSlice = createSlice({
     },
     enterDemoMode(state) {
       Object.assign(state, {
-        isConfigLoaded: false,
-        enabledScreens: [],
-        scoreboardMode: {},
+        isConfigLoaded: true,
+        enabledScreens: Object.keys(possibleTabs),
+        scoreboardMode: initialState.scoreboardMode,
         allowedLoginTypes: [],
-        demoModeKey: Math.random().toString(), // Start the demo key as junk for safety's sake
       });
     },
   },
@@ -80,3 +80,6 @@ export const appConfigSlice = createSlice({
 });
 
 export default appConfigSlice.reducer;
+export const {
+  resetConfig, enterDemoMode
+} = appConfigSlice.actions;
