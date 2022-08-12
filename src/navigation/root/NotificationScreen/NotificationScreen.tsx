@@ -70,11 +70,11 @@ const NotificationScreen = () => {
           />
         ) : <View>
           <View>
-            <Text>No notifications</Text>
+            <Text textAlign="center" fontSize="lg">No notifications</Text>
           </View>
         </View>) : (
           <View>
-            <Text>
+            <Text textAlign="center">
             You have not enabled notifications for this device, enable them in the settings app
             </Text>
             {Device.manufacturer === "Apple" && (
