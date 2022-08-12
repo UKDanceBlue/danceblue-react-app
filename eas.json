@@ -32,12 +32,6 @@
     "production": {
       "distribution": "store",
       "releaseChannel": "prod-v1",
-      "ios": {
-        "autoIncrement": "buildNumber"
-      },
-      "android": {
-        "autoIncrement": "versionCode"
-      },
       "cache": {
         "key": "0"
       }
