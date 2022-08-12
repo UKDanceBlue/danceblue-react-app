@@ -113,7 +113,7 @@ const EventListScreen = () => {
           >
             <EventRow
               title={row.title}
-              blurb={`${row.description.substring(0, 100) }...`}
+              blurb={row.description.length > 99 ? `${row.description.substring(0, 100) }...` : row.description}
               interval={row.interval}
               imageSource={row.image == null ? undefined : { uri: row.image.url, width: row.image.width, height: row.image.height }}
             />

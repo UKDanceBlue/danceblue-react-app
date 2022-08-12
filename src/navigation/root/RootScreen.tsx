@@ -39,7 +39,6 @@ const RootScreen = () => {
       {!isAuthLoaded && (
         <ActivityIndicator
           size="large"
-
           style={{
             alignItems: "center",
             justifyContent: "center",
@@ -69,7 +68,6 @@ const RootScreen = () => {
                 component={EventScreen}
                 options={({ route }) => ({
                   title: route.params.event.title,
-                  headerTransparent: true,
                   headerMode: "screen",
                   headerBackground: () => (
                     <BlurView tint="light" intensity={100} style={StyleSheet.absoluteFill} />
