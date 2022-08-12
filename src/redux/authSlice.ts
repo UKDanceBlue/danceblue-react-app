@@ -54,6 +54,11 @@ const authSlice = createSlice({
       state.authClaims = null;
       state.isAuthLoaded = true;
     },
+    enterDemoMode(state) {
+      state.isAuthLoaded = true;
+      state.isLoggedIn = true;
+      state.uid = "demo";
+    }
   },
   extraReducers: (builder) => {
     // Login reducer
@@ -73,6 +78,8 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const {
+  logout, enterDemoMode
+} = authSlice.actions;
 
 export default authSlice.reducer;

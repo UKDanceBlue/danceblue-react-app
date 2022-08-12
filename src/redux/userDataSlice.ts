@@ -122,6 +122,14 @@ const userDataSlice = createSlice({
     loginAnonymously: (state) => {
       Object.assign(state, initialState);
       state.userLoginType = "anonymous";
+    },
+    enterDemoMode: (state) => {
+      Object.assign(state, initialState);
+      state.userLoginType = "ms-oath-linkblue";
+      state.firstName = "Demo";
+      state.lastName = "User";
+      state.email = "test@example.com";
+      state.linkblue = "abcd123";
     }
   },
   initialState,
@@ -142,3 +150,6 @@ const userDataSlice = createSlice({
 });
 
 export default userDataSlice.reducer;
+export const {
+  loginAnonymously, enterDemoMode
+} = userDataSlice.actions;
