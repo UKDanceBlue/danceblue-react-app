@@ -1,4 +1,4 @@
-import { Box, Button, VStack, useTheme } from "native-base";
+import { Box, Button, Text, VStack, useTheme } from "native-base";
 import { Linking } from "react-native";
 
 import { useColorModeValue } from "../../../../common/CustomHooks";
@@ -20,10 +20,12 @@ const HomeScreen = () => {
       <Box height="35%" tintColor={bgColor}>
         <HeaderImage />
       </Box>
-      <Box height="7.5%">
+      <Box height="10%">
         <Button
           borderRadius={0}
           margin={0}
+          backgroundColor={colors.blue[700]}
+          _pressed={{ opacity: 0.5 }}
           onPress={() => {
             void (async () => {
               if (
@@ -38,7 +40,11 @@ const HomeScreen = () => {
             })();
           }}
         >
-      Donate!
+          <Text
+            bold
+            fontSize={30}
+            color="light.100"
+            shadow="1">Donate Now!</Text>
         </Button>
       </Box>
       <Box height="15%">
