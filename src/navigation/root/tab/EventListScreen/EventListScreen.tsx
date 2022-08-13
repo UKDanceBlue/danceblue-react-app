@@ -78,7 +78,7 @@ const EventListScreen = () => {
     <>
       <SectionList
         backgroundColor={screenBackgroundColor}
-        height="100%"
+        height={!refreshing && events.length === 0 ? 0 : "100%"}
         onRefresh={refresh}
         refreshing={refreshing}
         sections={
@@ -121,7 +121,7 @@ const EventListScreen = () => {
         )}
       />
       {
-        events.length === 0 &&
+        !refreshing && events.length === 0 &&
         <Text>No Events</Text>
       }
     </>
