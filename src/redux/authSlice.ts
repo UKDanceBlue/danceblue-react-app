@@ -1,4 +1,5 @@
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import crashlytics from "@react-native-firebase/crashlytics";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { startLoading, stopLoading } from "./globalLoadingSlice";
@@ -53,11 +54,15 @@ const authSlice = createSlice({
       state.uid = null;
       state.authClaims = null;
       state.isAuthLoaded = true;
+
+      void crashlytics().setUserId("");
     },
     enterDemoMode(state) {
       state.isAuthLoaded = true;
       state.isLoggedIn = true;
       state.uid = "demo";
+
+      void crashlytics().setUserId("demo");
     }
   },
   extraReducers: (builder) => {
@@ -71,9 +76,13 @@ const authSlice = createSlice({
       state.uid = action.payload.uid ?? initialState.uid;
       state.authClaims = action.payload.authClaims ?? initialState.authClaims;
       state.isAuthLoaded = true;
+
+      void crashlytics().setUserId(state.uid ?? "");
     });
     builder.addCase(syncAuth.rejected, (state) => {
       Object.assign(state, initialState);
+
+      void crashlytics().setUserId("");
     });
   },
 });

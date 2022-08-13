@@ -6,7 +6,7 @@ import { FlatList, useWindowDimensions } from "react-native";
 
 import { useCachedFiles } from "../../../../common/CacheUtils";
 import { useAppSelector, useCurrentDate } from "../../../../common/CustomHooks";
-import { appConfigSlice, updateConfig } from "../../../../redux/appConfigSlice";
+import { resetConfig, updateConfig } from "../../../../redux/appConfigSlice";
 import store from "../../../../redux/store";
 import { FirestoreHour } from "../../../../types/FirebaseTypes";
 import { TabNavigatorProps } from "../../../../types/NavigationTypes";
@@ -181,7 +181,7 @@ const HoursListScreen = () => {
             )}
             refreshing={!isConfigLoaded}
             onRefresh={() => {
-              store.dispatch(appConfigSlice.actions.resetConfig());
+              store.dispatch(resetConfig());
               void store.dispatch(updateConfig());
             }}
           />

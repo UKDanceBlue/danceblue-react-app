@@ -2,7 +2,6 @@ import firebaseRemoteConfig from "@react-native-firebase/remote-config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { showMessage } from "../common/util/AlertUtils";
-import { possibleTabs } from "../navigation/root/tab/TabBar";
 
 import { UserLoginType } from "./userDataSlice";
 
@@ -27,7 +26,7 @@ export const updateConfig = createAsyncThunk(
   async (): Promise<Partial<AppConfigSliceType>> => {
     const remoteConfigInstance = firebaseRemoteConfig();
     await remoteConfigInstance.fetchAndActivate();
-    const remoteConfig = {} as Partial<AppConfigSliceType>;
+    const remoteConfig: Partial<AppConfigSliceType> = {};
 
     remoteConfig.enabledScreens = (JSON.parse(remoteConfigInstance.getString("rn_shown_tabs")) ?? undefined) as string[] | undefined;
     remoteConfig.allowedLoginTypes = ((JSON.parse(remoteConfigInstance.getString("login_mode")) as { rn?: UserLoginType[] }).rn ?? undefined);
@@ -42,7 +41,7 @@ export const updateConfig = createAsyncThunk(
   }
 );
 
-export const appConfigSlice = createSlice({
+const appConfigSlice = createSlice({
   name: "appConfig",
   initialState,
   reducers: {
@@ -53,7 +52,9 @@ export const appConfigSlice = createSlice({
     enterDemoMode(state) {
       Object.assign(state, {
         isConfigLoaded: true,
-        enabledScreens: Object.keys(possibleTabs),
+        enabledScreens: [
+          "Events", "Scoreboard", "Team", "MarathonHours"
+        ],
         scoreboardMode: initialState.scoreboardMode,
         allowedLoginTypes: [],
       });
@@ -74,7 +75,7 @@ export const appConfigSlice = createSlice({
       })
       .addCase(updateConfig.rejected, (state, action) => {
         state.isConfigLoaded = true;
-        showMessage(action.error.message ?? "", action.error.code, undefined, true, action.error.stack);
+        showMessage(action.error.message ?? "", action.error.code, undefined);
       });
   },
 });

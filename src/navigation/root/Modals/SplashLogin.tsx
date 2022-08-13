@@ -8,10 +8,6 @@ import { useFirebase } from "../../../common/FirebaseApp";
 import { useLinkBlueLogin } from "../../../common/auth";
 import { showMessage } from "../../../common/util/AlertUtils";
 
-/**
- * A simplified sign in page shown when the user first opens the app
- * @class
- */
 const SplashLoginScreen = () => {
   const allowedLoginTypes = useAppSelector((state) => state.appConfig.allowedLoginTypes);
   const {
@@ -54,7 +50,6 @@ const SplashLoginScreen = () => {
               </Text>
               <TouchableOpacity
                 onPress={() => trigger()}
-
               >
                 <Text>SSO Login!</Text>
               </TouchableOpacity>
@@ -68,7 +63,6 @@ const SplashLoginScreen = () => {
               </Text>
               <TouchableOpacity
                 onPress={() => void fbAuth.signInAnonymously()}
-
               >
                 <Text>Continue as a Guest</Text>
               </TouchableOpacity>

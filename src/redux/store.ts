@@ -1,5 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
+import { crashReportingMiddleware, loggerMiddleware } from "../common/reduxLogMiddleware";
+
 import appConfigReducer from "./appConfigSlice";
 import authReducer from "./authSlice";
 import deviceDataReducer from "./deviceDataSlice";
@@ -18,6 +20,7 @@ const store = configureStore({
     notification: notificationReducer,
     userData: userDataReducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(loggerMiddleware).concat(crashReportingMiddleware),
 });
 export default store;
 

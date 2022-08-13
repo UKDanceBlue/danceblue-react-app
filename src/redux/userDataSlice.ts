@@ -40,74 +40,86 @@ export const loadUserData = createAsyncThunk(
   "userData/loadUserData",
   async (payload: { userId: string; loginType: UserLoginType; firestore: FirebaseFirestoreTypes.Module }, { dispatch }): Promise<UserDataType> => {
     dispatch(startLoading("userData/loadUserData"));
-    // Get the user's base document
-    const userDataDoc = payload.firestore.collection("users").doc(payload.userId);
-    const userDataSnapshot = await userDataDoc.get();
-
-    if (!userDataSnapshot.exists) {
-      throw new Error("User data not found");
-    }
-
-    const rawUserData = userDataSnapshot.data();
-
-    if (!isFirestoreUser(rawUserData)) {
-      throw new Error("User data is not valid");
-    }
 
     const loadUserData = { ...initialState, loginType: payload.loginType };
 
-    // Check for a user's own data
-    loadUserData.firstName = rawUserData.firstName;
-    loadUserData.lastName = rawUserData.lastName;
-    loadUserData.email = rawUserData.email;
-    loadUserData.attributes = rawUserData.attributes;
-    if (rawUserData.linkblue != null) {
-      loadUserData.linkblue = rawUserData.linkblue;
+    switch (payload.loginType) {
+    case "anonymous": {
+      break;
     }
+    case "ms-oath-linkblue": {
+      // Get the user's base document
+      const userDataDoc = payload.firestore.collection("users").doc(payload.userId);
+      const userDataSnapshot = await userDataDoc.get();
 
-    // Check for past notifications
-    if (rawUserData.pastNotifications != null) {
-      const pastNotificationRefs = rawUserData.pastNotifications;
-      const pastNotifications: FirestoreNotification[] = [];
+      if (!userDataSnapshot.exists) {
+        throw new Error("User data not found");
+      }
 
-      const promises: Promise<void>[] = [];
+      const rawUserData = userDataSnapshot.data();
 
-      for (const pastNotificationRef of pastNotificationRefs) {
-        promises.push((async () => {
-          const pastNotificationSnapshot = await pastNotificationRef.get();
-          if (pastNotificationSnapshot.exists) {
-            pastNotifications.push(pastNotificationSnapshot.data() as FirestoreNotification);
+      if (!isFirestoreUser(rawUserData)) {
+        throw new Error("User data is not valid");
+      }
+      // Check for a user's own data
+      loadUserData.firstName = rawUserData.firstName;
+      loadUserData.lastName = rawUserData.lastName;
+      loadUserData.email = rawUserData.email;
+      loadUserData.attributes = rawUserData.attributes;
+      if (rawUserData.linkblue != null) {
+        loadUserData.linkblue = rawUserData.linkblue;
+      }
+
+      // Check for past notifications
+      if (rawUserData.pastNotifications != null) {
+        const pastNotificationRefs = rawUserData.pastNotifications;
+        const pastNotifications: FirestoreNotification[] = [];
+
+        const promises: Promise<void>[] = [];
+
+        for (const pastNotificationRef of pastNotificationRefs) {
+          promises.push((async () => {
+            const pastNotificationSnapshot = await pastNotificationRef.get();
+            if (pastNotificationSnapshot.exists) {
+              pastNotifications.push(pastNotificationSnapshot.data() as FirestoreNotification);
+            }
+          })());
+        }
+
+        await Promise.all(promises);
+      }
+
+
+      // Check for a user's team data
+      if (rawUserData.team?.id != null) {
+        const userTeamDoc = payload.firestore.collection("teams").doc(rawUserData.team.id);
+        const userTeamSnapshot = await userTeamDoc.get();
+
+        if (userTeamSnapshot.exists) {
+          loadUserData.team = userTeamSnapshot.data() as FirestoreTeam;
+          loadUserData.teamId = rawUserData.team.id;
+
+          const userTeamIndividualPointsDoc = payload.firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("individualSpiritPoints");
+          const userTeamIndividualPointsSnapshot = await userTeamIndividualPointsDoc.get();
+
+          if (userTeamIndividualPointsSnapshot.exists) {
+            loadUserData.teamIndividualSpiritPoints = userTeamIndividualPointsSnapshot.data() as FirestoreTeamIndividualSpiritPoints;
           }
-        })());
-      }
 
-      await Promise.all(promises);
+          const userTeamFundraisingDoc = payload.firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("fundraising");
+          const userTeamFundraisingSnapshot = await userTeamFundraisingDoc.get();
+
+          if (userTeamFundraisingSnapshot.exists) {
+            loadUserData.teamFundraisingTotal = userTeamFundraisingSnapshot.data() as FirestoreTeamFundraising;
+          }
+        }
+      }
+      break;
     }
-
-
-    // Check for a user's team data
-    if (rawUserData.team?.id != null) {
-      const userTeamDoc = payload.firestore.collection("teams").doc(rawUserData.team.id);
-      const userTeamSnapshot = await userTeamDoc.get();
-
-      if (userTeamSnapshot.exists) {
-        loadUserData.team = userTeamSnapshot.data() as FirestoreTeam;
-        loadUserData.teamId = rawUserData.team.id;
-
-        const userTeamIndividualPointsDoc = payload.firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("individualSpiritPoints");
-        const userTeamIndividualPointsSnapshot = await userTeamIndividualPointsDoc.get();
-
-        if (userTeamIndividualPointsSnapshot.exists) {
-          loadUserData.teamIndividualSpiritPoints = userTeamIndividualPointsSnapshot.data() as FirestoreTeamIndividualSpiritPoints;
-        }
-
-        const userTeamFundraisingDoc = payload.firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("fundraising");
-        const userTeamFundraisingSnapshot = await userTeamFundraisingDoc.get();
-
-        if (userTeamFundraisingSnapshot.exists) {
-          loadUserData.teamFundraisingTotal = userTeamFundraisingSnapshot.data() as FirestoreTeamFundraising;
-        }
-      }
+    default: {
+      dispatch(stopLoading("userData/loadUserData"));
+      throw new Error("Invalid login type");
+    }
     }
 
     dispatch(stopLoading("userData/loadUserData"));
