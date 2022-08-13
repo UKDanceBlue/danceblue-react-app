@@ -7,7 +7,8 @@ import { useTheme } from "native-base";
 import { ReactElement, useEffect, useState } from "react";
 
 // Import first-party dependencies
-import { useAppSelector, useColorModeValue } from "../../../common/CustomHooks";
+import { useAppDispatch, useAppSelector, useColorModeValue } from "../../../common/CustomHooks";
+import { registerPushNotifications } from "../../../redux/notificationSlice";
 import { RootStackParamList, TabNavigatorParamList } from "../../../types/NavigationTypes";
 import HeaderIcons from "../../HeaderIcons";
 
@@ -34,6 +35,8 @@ const TabBar = () => {
   const headerBgColor = useColorModeValue(colors.white, colors.gray[800]);
   const headerFgColor = useColorModeValue(colors.gray[800], colors.light[400]);
 
+  const dispatch = useAppDispatch();
+
   const [ currentTabs, setCurrentTabs ] = useState<ReactElement[]>([]);
 
   useEffect(() => {
@@ -45,6 +48,10 @@ const TabBar = () => {
       setCurrentTabs(tempCurrentTabs);
     }
   }, [ configuredTabs, isConfigLoaded ]);
+
+  useEffect(() => {
+    void dispatch(registerPushNotifications());
+  }, [dispatch]);
 
   return (
     <>

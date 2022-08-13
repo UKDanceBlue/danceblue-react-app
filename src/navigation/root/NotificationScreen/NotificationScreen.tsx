@@ -21,7 +21,6 @@ const NotificationScreen = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    let shouldUpdateState = true;
     void Notifications.getPermissionsAsync().then((settings) => {
       if (
         (settings.granted ||
@@ -29,14 +28,9 @@ const NotificationScreen = () => {
           settings.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED) !==
         notificationPermissionsGranted
       ) {
-        if (shouldUpdateState) {
-          void dispatch(registerPushNotifications());
-        }
+        void dispatch(registerPushNotifications());
       }
     });
-    return () => {
-      shouldUpdateState = false;
-    };
   }, [ dispatch, notificationPermissionsGranted ]);
 
   if (notificationPermissionsGranted === null) {

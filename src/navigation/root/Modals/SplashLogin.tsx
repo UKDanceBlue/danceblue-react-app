@@ -69,7 +69,7 @@ const SplashLoginScreen = () => {
                   width="2/3"
                   alignSelf="center"
                 >
-                  <Text color="light.200" textAlign="center">SSO Login!</Text>
+                  <Text color="light.300" textAlign="center">SSO Login!</Text>
                 </Button>
               </View>
             )}
@@ -87,7 +87,7 @@ const SplashLoginScreen = () => {
                   width="2/3"
                   alignSelf="center"
                 >
-                  <Text color="light.200" textAlign="center">Continue as a Guest</Text>
+                  <Text color="light.300" textAlign="center">Continue as a Guest</Text>
                 </Button>
               </View>
             )}
