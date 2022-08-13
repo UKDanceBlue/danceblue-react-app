@@ -11,7 +11,7 @@ import * as Notifications from "expo-notifications";
 import * as SplashScreen from "expo-splash-screen";
 import { ICustomTheme, NativeBaseProvider } from "native-base";
 import { useEffect, useRef } from "react";
-import { StatusBar } from "react-native";
+import { LogBox, StatusBar } from "react-native";
 import { Provider } from "react-redux";
 
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
@@ -23,6 +23,11 @@ import { logout } from "./src/redux/authSlice";
 import { registerPushNotifications } from "./src/redux/notificationSlice";
 import store from "./src/redux/store";
 import { customTheme } from "./src/theme";
+
+LogBox.ignoreLogs([
+  "EventEmitter.removeListener('url', ...): Method has been deprecated. Please instead use `remove()` on the subscription returned by `EventEmitter.addListener`.",
+  "'SplashScreen.show' has already been called for given view controller."
+]);
 
 if (isDevelopmentBuild()) {
   // eslint-disable-next-line
