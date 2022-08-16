@@ -9,9 +9,12 @@ export interface FirestoreEvent {
   description: string;
   image?: FirestoreImage;
   address?: string;
-  addressGeoJson?: string;
   startTime?: FirebaseFirestoreTypes.Timestamp;
   endTime?: FirebaseFirestoreTypes.Timestamp;
+  link?: {
+    text: string;
+    url: string;
+  };
 }
 
 export interface ParsedEvent {
@@ -19,7 +22,6 @@ export interface ParsedEvent {
   description: string;
   image?: DownloadableImage;
   address?: string;
-  addressGeoJson?: string;
   interval?: ReturnType<Interval["toISO"]>;
   link?: {
     text: string;
@@ -32,6 +34,6 @@ export const parseFirestoreEvent = async (event: FirestoreEvent, storage: Fireba
   description: event.description,
   image: event.image != null ? await parseFirestoreImage(event.image, storage) : undefined,
   address: event.address,
-  addressGeoJson: event.addressGeoJson,
-  interval: Interval.fromDateTimes(DateTime.fromMillis(event.startTime?.toMillis() ?? 0), DateTime.fromMillis(event.endTime?.toMillis() ?? 0)).toISO()
+  interval: Interval.fromDateTimes(DateTime.fromMillis(event.startTime?.toMillis() ?? 0), DateTime.fromMillis(event.endTime?.toMillis() ?? 0)).toISO(),
+  link: event.link,
 });

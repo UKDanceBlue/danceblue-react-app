@@ -30,11 +30,11 @@ const HomeScreen = () => {
             void (async () => {
               if (
                 await Linking.canOpenURL(
-                  "https://danceblue.networkforgood.com/causes/4789-danceblue-golden-matrix-fund-dance-teams?utm_source=website&utm_medium=unit_website"
+                  "https://danceblue.networkforgood.com/"
                 )
               ) {
                 void Linking.openURL(
-                  "https://danceblue.networkforgood.com/causes/4789-danceblue-golden-matrix-fund-dance-teams?utm_source=website&utm_medium=unit_website"
+                  "https://danceblue.networkforgood.com/"
                 );
               }
             })();
