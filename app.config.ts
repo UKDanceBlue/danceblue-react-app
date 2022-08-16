@@ -9,6 +9,8 @@ interface Version {
 type SemVer = `${Version["major"]}.${Version["minor"]}.${Version["patch"]}`;
 
 export default ({ config }: ConfigContext): ExpoConfig => {
+  const IS_DEV = process.env.APP_VARIANT === "development";
+
   /*
   Version info:
   - `bundleVersion` holds the major.minor.patch version of the app's javascript and asset bundle.
@@ -51,7 +53,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const buildNumber: SemVer = `${version.major}.${version.minor}.${version.patch + buildsThisVersion}`;
 
   // App info
-  const name = "UK DanceBlue";
+  const name = IS_DEV ? "DB DEV CLIENT" : "UK DanceBlue";
+  const qualifiedName = IS_DEV ? "org.danceblue.dev.app" : "org.danceblue.app";
+  const androidGoogleServicesFile = IS_DEV ? "./google-services.dev.json" : "./google-services.json";
+  const iosGoogleServicesFile = IS_DEV ? "./GoogleService-Info.dev.plist" : "./GoogleService-Info.plist";
 
   // DO NOT CHANGE ANYTHING BELOW THIS LINE
   return {
@@ -60,7 +65,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     slug: "danceblue-mobile",
     version: bundleVersionString,
     runtimeVersion,
-    ios: { ...(config.ios ?? {}), buildNumber },
-    android: { ...(config.android ?? {}), versionCode }
+    ios: { ...(config.ios ?? {}), buildNumber, googleServicesFile: iosGoogleServicesFile, bundleIdentifier: qualifiedName },
+    android: { ...(config.android ?? {}), versionCode, googleServicesFile: androidGoogleServicesFile, package: qualifiedName },
   };
 };

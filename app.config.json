@@ -59,7 +59,6 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "org.danceblue.app",
       "config": {
         "usesNonExemptEncryption": false
       },
@@ -71,17 +70,14 @@
       },
       "associatedDomains": [
         "https://www.danceblue.org"
-      ],
-      "googleServicesFile": "./GoogleService-Info.plist"
+      ]
     },
     "android": {
-      "package": "org.danceblue.app",
       "permissions": [
         "WRITE_CALENDAR",
         "READ_CALENDAR",
         "CAMERA"
       ],
-      "googleServicesFile": "./google-services.json",
       "intentFilters": [
         {
           "action": "VIEW",

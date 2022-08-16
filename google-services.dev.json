@@ -1,0 +1,97 @@
+{
+  "project_info": {
+    "project_number": "480114538491",
+    "firebase_url": "https://react-danceblue.firebaseio.com",
+    "project_id": "react-danceblue",
+    "storage_bucket": "react-danceblue.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480114538491:android:9de5653bf82099f5a2bd5e",
+        "android_client_info": {
+          "package_name": "org.danceblue.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480114538491-jlbgspfo5o91eupicfksnv6lo2je4i48.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.danceblue.app",
+            "certificate_hash": "83a1ab32d27c8a450bb42815494d476cf5db3b1e"
+          }
+        },
+        {
+          "client_id": "480114538491-r9an8egfet593cem0fl0p9q7aege6v7j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCV-ldtrj3pkk67MDcBAOAndaf2tpvsSyg"
+        },
+        {
+          "current_key": "AIzaSyCGD4HBSb-T6PQU8lv5RyyeHmAm5ePg0Ac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480114538491-oaq6vvimtjlanjr8jvano2jdme6q1k5p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "480114538491-875g7gcvehn3pqvc3dq27s354p9ieuda.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.danceblue.dev.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480114538491:android:71c12d647e7bf897a2bd5e",
+        "android_client_info": {
+          "package_name": "org.danceblue.dev.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480114538491-r9an8egfet593cem0fl0p9q7aege6v7j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCV-ldtrj3pkk67MDcBAOAndaf2tpvsSyg"
+        },
+        {
+          "current_key": "AIzaSyCGD4HBSb-T6PQU8lv5RyyeHmAm5ePg0Ac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480114538491-oaq6vvimtjlanjr8jvano2jdme6q1k5p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "480114538491-875g7gcvehn3pqvc3dq27s354p9ieuda.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.danceblue.dev.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
