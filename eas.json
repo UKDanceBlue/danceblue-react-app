@@ -10,6 +10,9 @@
       "developmentClient": true,
       "cache": {
         "key": "1"
+      },
+      "env": {
+        "APP_VARIANT": "development"
       }
     },
     "development": {
@@ -20,6 +23,9 @@
       },
       "cache": {
         "key": "0"
+      },
+      "env": {
+        "APP_VARIANT": "development"
       }
     },
     "preview": {
@@ -31,7 +37,7 @@
     },
     "production": {
       "distribution": "store",
-      "releaseChannel": "prod-v1",
+      "releaseChannel": "prod-v2",
       "cache": {
         "key": "0"
       }
@@ -59,7 +65,8 @@
     "production": {
       "ios": {
         "appleId": "app@danceblue.org",
-        "appleTeamId": "622DXM8F44"
+        "appleTeamId": "622DXM8F44",
+        "ascAppId": "1602033154"
       }
     }
   }

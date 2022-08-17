@@ -62,6 +62,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "480114538491-1hrjkep7n9srf7u1dn2jg4c6rornriud.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.danceblue.dev.app",
+            "certificate_hash": "83a1ab32d27c8a450bb42815494d476cf5db3b1e"
+          }
+        },
+        {
           "client_id": "480114538491-r9an8egfet593cem0fl0p9q7aege6v7j.apps.googleusercontent.com",
           "client_type": 3
         }
