@@ -23,7 +23,7 @@ const ScoreBoardScreen = () => {
   // const refresh = useCallback(() => {
   //   switch (pointType) {
   //   case "spirit":
-  //     void firebaseFirestore().collection("teams").get()
+  //     firebaseFirestore().collection("teams").get()
   //       .then((querySnapshot) => {
   //         const tempStandingData: StandingType[] = [];
   //         querySnapshot.forEach((document) => {
@@ -39,11 +39,11 @@ const ScoreBoardScreen = () => {
   //           }
   //         });
   //         setStandingData(tempStandingData);
-  //       });
+  //       }).catch(universalCatch);
   //     break;
 
   //   case "morale":
-  //     void firebaseFirestore().collection("marathon/2022/morale-teams").get()
+  //     firebaseFirestore().collection("marathon/2022/morale-teams").get()
   //       .then(
   //         (querySnapshot) => {
   //           const tempStandingData: StandingType[] = [];
@@ -58,7 +58,7 @@ const ScoreBoardScreen = () => {
   //           });
   //           setStandingData(tempStandingData);
   //         }
-  //       );
+  //       ).catch(universalCatch);
   //     break;
 
   //   case undefined:

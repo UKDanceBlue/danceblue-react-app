@@ -12,6 +12,7 @@ import { logout, syncAuth } from "../redux/authSlice";
 import { loadUserData } from "../redux/userDataSlice";
 
 import { useAppDispatch } from "./CustomHooks";
+import { log, universalCatch } from "./logging";
 
 const FirebaseContext = createContext<{
   fbAnalytics: FirebaseAnalyticsTypes.Module;
@@ -39,15 +40,20 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => value.fbAuth.onAuthStateChanged((user) => {
+    log("Auth ");
     if (user) {
-      void dispatch(syncAuth({ user })).then(() => {
-        void dispatch(loadUserData({ firestore: value.fbFirestore, loginType: user.isAnonymous? "anonymous" : "ms-oath-linkblue", userId: user.uid }));
-      });
+      dispatch(syncAuth({ user }))
+        .then(() => dispatch(loadUserData({ firestore: value.fbFirestore, loginType: user.isAnonymous? "anonymous" : "ms-oath-linkblue", userId: user.uid })))
+        .catch(universalCatch);
+      value.fbAnalytics.setUserId(user.uid).catch(universalCatch);
+      value.fbCrashlytics.setUserId(user.uid).catch(universalCatch);
     } else {
       dispatch(logout());
+      value.fbAnalytics.setUserId(null).catch(universalCatch);
+      value.fbCrashlytics.setUserId("[LOGGED_OUT]").catch(universalCatch);
     }
   }), [
-    dispatch, value.fbAuth, value.fbFirestore
+    dispatch, value.fbAuth, value.fbFirestore, value.fbAnalytics, value.fbCrashlytics
   ]);
 
   return (

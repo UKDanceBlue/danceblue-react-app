@@ -4,7 +4,8 @@ import "intl/locale-data/jsonp/en";
 
 // Import third-party dependencies
 import NetInfo from "@react-native-community/netinfo";
-import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
+import analytics from "@react-native-firebase/analytics";
+import { LinkingOptions, NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { DevMenu, isDevelopmentBuild } from "expo-dev-client";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
@@ -17,12 +18,14 @@ import { Provider } from "react-redux";
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
 import "./src/common/util/AndroidTimerFix";
 import { FirebaseProvider } from "./src/common/FirebaseApp";
+import { universalCatch } from "./src/common/logging";
 import { showMessage } from "./src/common/util/AlertUtils";
 import RootScreen from "./src/navigation/root/RootScreen";
 import { logout } from "./src/redux/authSlice";
 import { registerPushNotifications } from "./src/redux/notificationSlice";
 import store from "./src/redux/store";
 import { customTheme } from "./src/theme";
+import { RootStackParamList } from "./src/types/NavigationTypes";
 
 LogBox.ignoreLogs([
   "EventEmitter.removeListener('url', ...): Method has been deprecated. Please instead use `remove()` on the subscription returned by `EventEmitter.addListener`.",
@@ -30,8 +33,8 @@ LogBox.ignoreLogs([
 ]);
 
 if (isDevelopmentBuild()) {
-  // eslint-disable-next-line
-  void DevMenu.registerDevMenuItems([{ name: "Print Redux State", callback: () => console.log(JSON.stringify(store.getState(), null, 2)) }]);
+  // eslint-disable-next-line no-console
+  DevMenu.registerDevMenuItems([{ name: "Print Redux State", callback: () => console.log(JSON.stringify(store.getState(), null, 2)) }]).catch(universalCatch);
 }
 
 // All assets that should be preloaded:
@@ -47,22 +50,14 @@ Notifications.setNotificationHandler({
 });
 
 // Don't hide the splash screen until it is dismissed automatically
-void SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync().catch(universalCatch);
 
 let hasPushRegistrationObserverFired = false;
 const pushRegistrationObserver = store.subscribe(() => {
   // This will run on every redux state update until a uuid is set when it will try to register for push notifications
   if (!hasPushRegistrationObserverFired && store.getState().notification.uuid) {
-    void Notifications.scheduleNotificationAsync({
-      content: {
-        title: "DanceBlue",
-        body: "You have a new message!",
-        data: { url: "exp://192.168.1.101:19000/--/" },
-      },
-      trigger: { seconds: 1 },
-    });
     hasPushRegistrationObserverFired = true;
-    void store.dispatch(registerPushNotifications());
+    store.dispatch(registerPushNotifications()).catch(universalCatch);
     pushRegistrationObserver();
   }
 });
@@ -129,6 +124,9 @@ const navLinking: LinkingOptions<ReactNavigation.RootParamList> = {
  */
 const App = () => {
   const isOfflineInternal = useRef(false);
+  const routeNameRef = useRef<string>();
+  const navigationRef = useRef<NavigationContainerRef<RootStackParamList>>(null);
+
   useEffect(
     () => NetInfo.addEventListener((state) => {
       if (!state.isConnected && !isOfflineInternal.current) {
@@ -149,14 +147,36 @@ const App = () => {
     []
   );
 
-  void SplashScreen.hideAsync();
+  SplashScreen.hideAsync().catch(universalCatch);
 
   return (
     <Provider store={store}>
       <NativeBaseProvider config={{ strictMode: __DEV__ ? "error" : "off" }} theme={customTheme as ICustomTheme}>
         <FirebaseProvider>
           <StatusBar backgroundColor="white" barStyle="dark-content" />
-          <NavigationContainer linking={navLinking}>
+          <NavigationContainer
+            ref={navigationRef}
+            onReady={() => {
+              routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
+            }}
+            onStateChange={() => {
+              (async () => {
+                const previousRouteName = routeNameRef.current;
+                const currentRouteName = navigationRef.current?.getCurrentRoute()?.name;
+
+                if (previousRouteName !== currentRouteName) {
+                  await analytics().logScreenView({
+                    screen_name: currentRouteName,
+                    screen_class: currentRouteName,
+                  });
+                }
+                return currentRouteName;
+              })().then((currentRouteName) => {
+                routeNameRef.current = currentRouteName;
+              }).catch(universalCatch);
+            }}
+            linking={navLinking}
+          >
             <RootScreen />
           </NavigationContainer>
         </FirebaseProvider>

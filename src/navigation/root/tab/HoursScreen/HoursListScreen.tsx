@@ -6,6 +6,7 @@ import { FlatList, useWindowDimensions } from "react-native";
 
 import { useCachedFiles } from "../../../../common/CacheUtils";
 import { useAppSelector, useCurrentDate } from "../../../../common/CustomHooks";
+import { universalCatch } from "../../../../common/logging";
 import { resetConfig, updateConfig } from "../../../../redux/appConfigSlice";
 import store from "../../../../redux/store";
 import { FirestoreHour } from "../../../../types/FirebaseTypes";
@@ -182,7 +183,7 @@ const HoursListScreen = () => {
             refreshing={!isConfigLoaded}
             onRefresh={() => {
               store.dispatch(resetConfig());
-              void store.dispatch(updateConfig());
+              store.dispatch(updateConfig()).catch(universalCatch);
             }}
           />
         </>

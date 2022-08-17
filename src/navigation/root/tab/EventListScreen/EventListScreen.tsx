@@ -10,7 +10,7 @@ import { useColorModeValue } from "../../../../common/CustomHooks";
 import { useFirebase } from "../../../../common/FirebaseApp";
 import EventRow from "../../../../common/components/EventRow";
 import { FirestoreEvent, ParsedEvent, parseFirestoreEvent } from "../../../../common/firestore/events";
-import { handleFirebaseError } from "../../../../common/util/AlertUtils";
+import { log, universalCatch } from "../../../../common/logging";
 import { TabNavigatorProps } from "../../../../types/NavigationTypes";
 
 const EventListScreen = () => {
@@ -27,27 +27,29 @@ const EventListScreen = () => {
 
   const navigation = useNavigation<TabNavigatorProps<"Events">["navigation"]>();
 
-  const refresh = useCallback(() => {
+  const refresh = useCallback(async () => {
     setRefreshing(true);
-    const firestoreEvents: ParsedEvent[] = [];
-    void fbFirestore.collection("events").where("endTime", ">", firebaseFirestore.Timestamp.now())
-      .get()
-      .then(
-        async (snapshot) => {
-          await Promise.all(snapshot.docs.map(async (doc) => {
-            const data = doc.data() as FirestoreEvent;
-            firestoreEvents.push(await parseFirestoreEvent(data, fbStorage));
-          }));
+    try {
+      log("Loading event list screen from firestore");
+      const firestoreEvents: ParsedEvent[] = [];
+      const snapshot = await fbFirestore.collection("events").where("endTime", ">", firebaseFirestore.Timestamp.now())
+        .get();
+      await Promise.all(snapshot.docs.map(async (doc) => {
+        const data = doc.data() as FirestoreEvent;
+        firestoreEvents.push(await parseFirestoreEvent(data, fbStorage));
+      }));
 
-          setEvents(firestoreEvents);
-        }
-      )
-      .catch(handleFirebaseError)
-      .finally(() => setRefreshing(false));
+      log(`Loaded event list screen from firestore: ${ JSON.stringify(firestoreEvents)}`);
+      setEvents(firestoreEvents);
+    } catch (error) {
+      universalCatch(error);
+    } finally {
+      setRefreshing(false);
+    }
   }, [ fbFirestore, fbStorage ]);
 
   useEffect(() => {
-    refresh();
+    refresh().catch(universalCatch);
   }, [
     fbFirestore, fbStorage, refresh
   ]);
@@ -67,6 +69,7 @@ const EventListScreen = () => {
         }
       }
     });
+    log(`Split events into today and upcoming: ${ JSON.stringify(todayFromEvents)} ${ JSON.stringify(upcomingFromEvents)}`);
     setToday(todayFromEvents);
     setUpcoming(upcomingFromEvents);
   }, [events]);
@@ -79,7 +82,7 @@ const EventListScreen = () => {
       <SectionList
         backgroundColor={screenBackgroundColor}
         height={!refreshing && events.length === 0 ? 0 : "100%"}
-        onRefresh={refresh}
+        onRefresh={() => refresh().catch(universalCatch)}
         refreshing={refreshing}
         sections={
           [

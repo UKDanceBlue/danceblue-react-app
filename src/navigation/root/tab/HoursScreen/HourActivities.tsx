@@ -13,6 +13,7 @@ import { showMessage } from "../../../../common/util/AlertUtils";
 import generateUuid from "../../../../common/util/GenerateUuid";
 import store from "../../../../redux/store";
 import { StandingType } from "../../../../types/StandingType";
+import { universalCatch } from "../../../../common/logging";
 
 const guessInput = createRef<typeof Input>();
 const dadInput = createRef<typeof Input>();
@@ -66,7 +67,7 @@ async function uploadImageAsync(uri: string, hour: string) {
     })
       .then(() => {
         showMessage("Photo uploaded", "Success");
-      });
+      }).catch(universalCatch);
   }
 
   return success;

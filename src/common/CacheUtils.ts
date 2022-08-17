@@ -5,10 +5,12 @@ import { SetStateAction, useEffect, useState } from "react";
 import { Image } from "react-native";
 
 import { useDeepEffect } from "./CustomHooks";
+import { universalCatch } from "./logging";
 import { showMessage } from "./util/AlertUtils";
 
 // TODO replace all of this with a better implementation
 
+/** @deprecated */
 export interface UseCachedFilesType {
   assetId: string;
   freshnessTime: number;
@@ -17,6 +19,7 @@ export interface UseCachedFilesType {
   base64?: boolean;
 }
 
+/** @deprecated */
 async function getFile(
   localUri: string,
   cacheOption: UseCachedFilesType
@@ -70,6 +73,7 @@ async function getFile(
   }
 }
 
+/** @deprecated */
 export function useCachedFiles(
   options: [UseCachedFilesType],
   alwaysReturnArray?: false
@@ -98,7 +102,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
   }, [options]);
 
   useDeepEffect(() => {
-    void (async () => {
+    (async () => {
       let allNeededVariablesSet = true;
       for (let i = 0; i < options.length; i++) {
         if (options[i]) {
@@ -135,7 +139,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
           })
           .catch(showMessage);
       }
-    })();
+    })().catch(universalCatch);
   }, [
     alwaysReturnArray, localUris, options
   ]);
@@ -143,6 +147,7 @@ export function useCachedFiles(options: UseCachedFilesType[], alwaysReturnArray?
   return hookState;
 }
 
+/** @deprecated */
 export interface UseCachedImagesReturnType {
   imageBase64: string;
   imageWidth: number;
@@ -150,6 +155,7 @@ export interface UseCachedImagesReturnType {
   imageRatio: number;
 }
 
+/** @deprecated */
 export function useCachedImages(options: UseCachedFilesType[]) {
   const [ hookState, setHookState ] = useState<[UseCachedImagesReturnType | null, Error | null][]>(
     Array(options.length).fill([ null, null ])
@@ -176,7 +182,7 @@ export function useCachedImages(options: UseCachedFilesType[]) {
     const dontUpdateState = () => {
       shouldUpdateState = false;
     };
-    void Promise.allSettled(imageSizePromises).then((resolutions) => {
+    Promise.allSettled(imageSizePromises).then((resolutions) => {
       const tempImageSizes: SetStateAction<[number, number][]> = [];
       resolutions.forEach((resolution, index) => {
         if (resolution.status === "fulfilled") {
@@ -188,7 +194,7 @@ export function useCachedImages(options: UseCachedFilesType[]) {
       if (shouldUpdateState) {
         setImageSizes(tempImageSizes);
       }
-    });
+    }).catch(universalCatch);
     return dontUpdateState;
   }, [cachedFiles]);
 

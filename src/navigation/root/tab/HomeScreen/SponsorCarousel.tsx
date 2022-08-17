@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import SponsorCard from "../../../../common/components/ImageCard";
 import { LegacyFirestoreSponsor } from "../../../../common/firestore/sponsors";
+import { universalCatch } from "../../../../common/logging";
 
 /**
  * A horizontally scrolling carousel of SponsorCards
@@ -23,7 +24,7 @@ const SponsorCarousel = () => {
         setSponsors(dbSponsors);
       }
     }
-    void getSnapshot();
+    getSnapshot().catch(universalCatch);
     return () => {
       shouldUpdateState = false;
     };

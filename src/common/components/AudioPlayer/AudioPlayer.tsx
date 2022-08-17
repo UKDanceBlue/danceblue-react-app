@@ -5,6 +5,7 @@ import { canOpenURL, openURL } from "expo-linking";
 import { AspectRatio, Box, HStack, IconButton, Link, Slider, Spinner, Text, VStack, useTheme } from "native-base";
 import { useEffect, useRef, useState } from "react";
 
+import { universalCatch } from "../../logging";
 import { showMessage } from "../../util/AlertUtils";
 
 /**
@@ -38,7 +39,7 @@ const AudioPlayer = ({
 
   useEffect(() => {
     if (sound) {
-      void sound.setProgressUpdateIntervalAsync(300);
+      sound.setProgressUpdateIntervalAsync(300).catch(universalCatch);
       sound.setOnPlaybackStatusUpdate((status) => {
         if (status.isLoaded) {
           setDuration(status.durationMillis);
@@ -55,9 +56,9 @@ const AudioPlayer = ({
   useEffect(() => {
     if (sound) {
       if (isPlaying) {
-        void sound.playAsync();
+        sound.playAsync().catch(universalCatch);
       } else {
-        void sound.pauseAsync();
+        sound.pauseAsync().catch(universalCatch);
       }
     }
   }, [ isPlaying, sound ]);

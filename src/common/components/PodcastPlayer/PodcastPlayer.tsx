@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { parse } from "react-native-rss-parser";
 
 import { useNetworkStatus } from "../../CustomHooks";
+import { universalCatch } from "../../logging";
 import { showMessage } from "../../util/AlertUtils";
 import AudioPlayer from "../AudioPlayer";
 
@@ -54,7 +55,7 @@ const PodcastPlayer = () => {
       if (podcastAudio) {
         podcastAudio.unloadAsync().catch(showMessage);
       }
-      void Audio.setAudioModeAsync({ staysActiveInBackground: false });
+      Audio.setAudioModeAsync({ staysActiveInBackground: false }).catch(universalCatch);
     };
   }, [
     isConnected, isNetStatusLoaded, podcastAudio

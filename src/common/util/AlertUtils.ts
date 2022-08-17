@@ -43,3 +43,29 @@ export function handleFirebaseError(error: NativeFirebaseError) {
   logError(error);
   return error;
 }
+
+export function isFirebaseError(error: unknown): error is NativeFirebaseError {
+  if (typeof error !== "object" || error == null) {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).code !== "string") {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).message !== "string") {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).name !== "string") {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).namespace !== "string") {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).stack !== "string" && (error as NativeFirebaseError).stack != null) {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).cause !== "string" && (error as NativeFirebaseError).cause != null) {
+    return false;
+  }
+
+  return true;
+}

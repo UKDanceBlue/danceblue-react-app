@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 
 import { useAppDispatch, useAppSelector, useColorModeValue } from "../../common/CustomHooks";
+import { universalCatch } from "../../common/logging";
 import { updateConfig } from "../../redux/appConfigSlice";
 import { RootStackParamList } from "../../types/NavigationTypes";
 import HeaderIcons from "../HeaderIcons";
@@ -30,7 +31,7 @@ const RootScreen = () => {
 
   useEffect(() => {
     if (isAuthLoaded) {
-      void dispatch(updateConfig());
+      dispatch(updateConfig()).catch(universalCatch);
     }
   }, [ dispatch, isAuthLoaded ]);
 

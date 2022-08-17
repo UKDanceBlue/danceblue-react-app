@@ -4,6 +4,7 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import * as SecureStore from "expo-secure-store";
 
+import { log, universalCatch } from "../common/logging";
 import { showMessage } from "../common/util/AlertUtils";
 import generateUuid from "../common/util/GenerateUuid";
 
@@ -73,13 +74,13 @@ export const registerPushNotifications = createAsyncThunk("notification/register
       settings.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED
     ) {
       if (Device.osName === "Android") {
-        void Notifications.setNotificationChannelAsync("default", {
+        Notifications.setNotificationChannelAsync("default", {
           name: "default",
           importance: Notifications.AndroidImportance.MAX,
           vibrationPattern: [
             0, 250, 250, 250
           ],
-        });
+        }).catch(universalCatch);
       }
 
       return Notifications.getExpoPushTokenAsync(
@@ -121,13 +122,16 @@ export const notificationSlice = createSlice({
         state.uuid = action.payload;
       })
       .addCase(obtainUuid.rejected, (state, action) => {
-        showMessage(action.error.message ?? "Undefined Error", action.error.code, undefined, true, action.error.stack);
+        showMessage(action.error.message ?? "Undefined Error", action.error.code, undefined);
       })
 
       .addCase(registerPushNotifications.fulfilled, (state, action) => {
         state.notificationPermissionsGranted = action.payload.notificationPermissionsGranted;
         if (action.payload.notificationPermissionsGranted) {
           state.pushToken = action.payload.token?.data ?? null;
+          log("Notification permissions granted");
+        } else {
+          log("Notification permissions denied");
         }
       })
       .addCase(registerPushNotifications.rejected, (state, action) => {
@@ -140,13 +144,11 @@ export const notificationSlice = createSlice({
             showMessage(
               "DanceBlue Mobile ran into an unexpected issue with the notification server. This is a bug, please report it to the DanceBlue committee.",
               "Notification Error",
-              () => undefined,
-              true,
-              action
+              () => undefined
             );
           }
         } else {
-          showMessage(action.error.message ?? "Undefined Error", action.error.code, undefined, true, action.error.stack);
+          showMessage(action.error.message ?? "Undefined Error", action.error.code, undefined);
         }
       });
   },

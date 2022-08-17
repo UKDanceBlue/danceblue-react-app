@@ -3,7 +3,7 @@ import { Linking } from "react-native";
 
 import { useColorModeValue } from "../../../../common/CustomHooks";
 import PodcastPlayer from "../../../../common/components/PodcastPlayer";
-
+import { universalCatch } from "../../../../common/logging";
 
 import HeaderImage from "./HeaderImage";
 import SponsorCarousel from "./SponsorCarousel";
@@ -26,18 +26,16 @@ const HomeScreen = () => {
           margin={0}
           backgroundColor={colors.blue[700]}
           _pressed={{ opacity: 0.5 }}
-          onPress={() => {
-            void (async () => {
-              if (
-                await Linking.canOpenURL(
-                  "https://danceblue.networkforgood.com/"
-                )
-              ) {
-                void Linking.openURL(
-                  "https://danceblue.networkforgood.com/"
-                );
-              }
-            })();
+          onPress={async () => {
+            if (
+              await Linking.canOpenURL(
+                "https://danceblue.networkforgood.com/"
+              ).catch(universalCatch)
+            ) {
+              Linking.openURL(
+                "https://danceblue.networkforgood.com/"
+              ).catch(universalCatch);
+            }
           }}
         >
           <Text

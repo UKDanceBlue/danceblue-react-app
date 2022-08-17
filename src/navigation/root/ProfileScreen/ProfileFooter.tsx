@@ -5,6 +5,7 @@ import { useState } from "react";
 import { TextInput } from "react-native";
 
 import { useAppDispatch, useAppSelector, useColorModeValue } from "../../../common/CustomHooks";
+import { universalCatch } from "../../../common/logging";
 import { enterDemoMode as enterDemoModeConfig } from "../../../redux/appConfigSlice";
 import { enterDemoMode as enterDemoModeAuth } from "../../../redux/authSlice";
 import { enterDemoMode as enterDemoModeUser } from "../../../redux/userDataSlice";
@@ -50,9 +51,9 @@ export const ProfileFooter = () => {
         <Button
           width="2/5"
           onPress={() => {
-            void openURL(
+            openURL(
               "mailto:app@danceblue.org?subject=DanceBlue%20App%20Issue%20Report&body=What%20happened%3A%0A%3Ctype%20here%3E%0A%0AWhat%20I%20was%20doing%3A%0A%3Ctype%20here%3E%0A%0AOther%20information%3A%0A%3Ctype%20here%3E"
-            );
+            ).catch(universalCatch);
           }}
           onLongPress={() => {
             setReportLongPressed(true);
@@ -62,9 +63,9 @@ export const ProfileFooter = () => {
         <Button
           width="2/5"
           onPress={() => {
-            void openURL(
+            openURL(
               "mailto:app@danceblue.org?subject=DanceBlue%20App%20Suggestion&body=%3Ctype%20here%3E"
-            );
+            ).catch(universalCatch);
           }}
           onLongPress={() => {
             setSuggestLongPressed(!!reportLongPressed);

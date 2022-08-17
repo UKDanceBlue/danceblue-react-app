@@ -6,6 +6,7 @@ import splashBackground from "../../../../assets/home/Dancing-min.jpg";
 import { useAppSelector } from "../../../common/CustomHooks";
 import { useFirebase } from "../../../common/FirebaseApp";
 import { useLinkBlueLogin } from "../../../common/auth";
+import { universalCatch } from "../../../common/logging";
 import { showMessage } from "../../../common/util/AlertUtils";
 
 const SplashLoginScreen = () => {
@@ -80,7 +81,7 @@ const SplashLoginScreen = () => {
             Want to look around first? You can always sign in later on the profile page
                 </Text>
                 <Button
-                  onPress={() => void fbAuth.signInAnonymously()}
+                  onPress={() => fbAuth.signInAnonymously().catch(universalCatch)}
                   variant="ghost"
                   backgroundColor="#ffffff22"
                   _pressed={{ backgroundColor: "#ffffff55" }}

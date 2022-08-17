@@ -1,4 +1,4 @@
-import { log, logError } from "./logging";
+import { log, logError, universalCatch } from "./logging";
 
 export const loggerMiddleware = (store) => (next) => (action) => {
   log(`dispatching ${action.type}`);
@@ -15,7 +15,7 @@ export const crashReportingMiddleware = (store) => (next) => (action) => {
   try {
     return next(action);
   } catch (err) {
-    logError(err);
+    universalCatch(err);
 
     throw err;
   }

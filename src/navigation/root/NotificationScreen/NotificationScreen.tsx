@@ -1,11 +1,12 @@
-import * as Device from "expo-device";
-import * as Linking from "expo-linking";
-import * as Notifications from "expo-notifications";
+import { manufacturer as deviceManufacturer } from "expo-device";
+import { openSettings } from "expo-linking";
+import { IosAuthorizationStatus, getPermissionsAsync } from "expo-notifications";
 import { Box, Button, FlatList, Heading, Text, View } from "native-base";
 import { useEffect } from "react";
 import { ActivityIndicator, RefreshControl } from "react-native";
 
 import { useAppDispatch, useAppSelector } from "../../../common/CustomHooks";
+import { universalCatch } from "../../../common/logging";
 import { registerPushNotifications } from "../../../redux/notificationSlice";
 
 /**
@@ -21,16 +22,16 @@ const NotificationScreen = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    void Notifications.getPermissionsAsync().then((settings) => {
+    getPermissionsAsync().then((settings) => {
       if (
         (settings.granted ||
-          settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL ||
-          settings.ios?.status === Notifications.IosAuthorizationStatus.AUTHORIZED) !==
+          settings.ios?.status === IosAuthorizationStatus.PROVISIONAL ||
+          settings.ios?.status === IosAuthorizationStatus.AUTHORIZED) !==
         notificationPermissionsGranted
       ) {
-        void dispatch(registerPushNotifications());
+        dispatch(registerPushNotifications()).catch(universalCatch);
       }
-    });
+    }).catch(universalCatch);
   }, [ dispatch, notificationPermissionsGranted ]);
 
   if (notificationPermissionsGranted === null) {
@@ -41,8 +42,8 @@ const NotificationScreen = () => {
         <Text textAlign="center">
         You have not enabled notifications for this device, enable them in the settings app
         </Text>
-        {Device.manufacturer === "Apple" && (
-          <Button onPress={() => void Linking.openSettings()} title="Open Settings" />
+        {deviceManufacturer === "Apple" && (
+          <Button onPress={() => openSettings().catch(universalCatch)} title="Open Settings" />
         )}
       </View>
     );

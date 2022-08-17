@@ -8,6 +8,7 @@ import { ReactElement, useEffect, useState } from "react";
 
 // Import first-party dependencies
 import { useAppDispatch, useAppSelector, useColorModeValue } from "../../../common/CustomHooks";
+import { log, universalCatch } from "../../../common/logging";
 import { registerPushNotifications } from "../../../redux/notificationSlice";
 import { RootStackParamList, TabNavigatorParamList } from "../../../types/NavigationTypes";
 import HeaderIcons from "../../HeaderIcons";
@@ -46,11 +47,12 @@ const TabBar = () => {
         tempCurrentTabs.push(possibleTabs[configuredTab]);
       }
       setCurrentTabs(tempCurrentTabs);
+      log(`Config loaded, setting current tabs to ${JSON.stringify({ currentTabs: tempCurrentTabs })}`);
     }
   }, [ configuredTabs, isConfigLoaded ]);
 
   useEffect(() => {
-    void dispatch(registerPushNotifications());
+    dispatch(registerPushNotifications()).catch(universalCatch);
   }, [dispatch]);
 
   return (

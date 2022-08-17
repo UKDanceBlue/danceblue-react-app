@@ -1,13 +1,14 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 import type { StackScreenProps } from "@react-navigation/stack";
-import * as Clipboard from "expo-clipboard";
+import { setStringAsync as setClipboardStringAsync } from "expo-clipboard";
 import { openBrowserAsync } from "expo-web-browser";
 import { Button, Image, Text, View, useTheme } from "native-base";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, useWindowDimensions } from "react-native";
 
 import { UseCachedFilesType, useCachedImages } from "../../../../common/CacheUtils";
+import { universalCatch } from "../../../../common/logging";
 import { showPrompt } from "../../../../common/util/AlertUtils";
 import { HourInstructionsType } from "../../../../types/HourScreenTypes";
 import { RootStackParamList } from "../../../../types/NavigationTypes";
@@ -246,11 +247,11 @@ const HourScreen = ({ route: { params: { firestoreHour } } }: { route: Props["ro
                 buttonStyle={{ marginHorizontal: 15, marginVertical: 5 }}
                 title={buttonText}
                 onPress={() => {
-                  void openBrowserAsync(buttonUrl);
+                  openBrowserAsync(buttonUrl).catch(universalCatch);
                 }}
                 onLongPress={() => {
                   showPrompt("Would you like to copy the link?", "Copy link", undefined, () => {
-                    void Clipboard.setStringAsync(buttonUrl);
+                    setClipboardStringAsync(buttonUrl).catch(universalCatch);
                   });
                 }}
               />
@@ -265,7 +266,7 @@ const HourScreen = ({ route: { params: { firestoreHour } } }: { route: Props["ro
                 buttonStyle={{ marginHorizontal: 15, marginVertical: 5 }}
                 title={buttonText}
                 onPress={() => {
-                  void openBrowserAsync(buttonUrl);
+                  openBrowserAsync(buttonUrl).catch(universalCatch);
                 }}
               />
             </View>

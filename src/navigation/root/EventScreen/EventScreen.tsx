@@ -8,6 +8,7 @@ import { useWindowDimensions } from "react-native";
 import openMaps from "react-native-open-maps";
 import { WebView } from "react-native-webview";
 
+import { log, universalCatch } from "../../../common/logging";
 import { showMessage } from "../../../common/util/AlertUtils";
 import { discoverDefaultCalendar } from "../../../common/util/calendar";
 import { RootStackScreenProps } from "../../../types/NavigationTypes";
@@ -86,35 +87,39 @@ const EventScreen = () => {
         }
         <Text textAlign="center" mx={2} mb={2}>{whenString}</Text>
 
-        <Button onPress={() => void (async () => {
-          const permissionResponse = (await getCalendarPermissionsAsync());
-          let permissionStatus = permissionResponse.status;
-          const { canAskAgain } = permissionResponse;
+        <Button onPress={async () => {
+          try {
+            const permissionResponse = (await getCalendarPermissionsAsync());
+            let permissionStatus = permissionResponse.status;
+            const { canAskAgain } = permissionResponse;
 
-          if (permissionStatus === PermissionStatus.DENIED) {
-            showMessage("Go to your device settings to enable calendar access", "Calendar access denied");
-          } else if (permissionStatus === PermissionStatus.UNDETERMINED || canAskAgain) {
-            permissionStatus = (await requestCalendarPermissionsAsync()).status;
-          }
-
-          if (permissionStatus === PermissionStatus.GRANTED) {
-            const defaultCalendar = await discoverDefaultCalendar();
-            if (defaultCalendar == null) {
-              showMessage(undefined, "No calendar found");
-            } else {
-              createEventAsync(defaultCalendar.id, {
-                title,
-                allDay,
-                notes: description,
-                startDate: interval?.start.toJSDate(),
-                endDate: interval?.end.toJSDate(),
-                location: address
-              }).then(() => {
-                showMessage(undefined, "Event created");
-              }).catch(showMessage);
+            if (permissionStatus === PermissionStatus.DENIED) {
+              showMessage("Go to your device settings to enable calendar access", "Calendar access denied");
+            } else if (permissionStatus === PermissionStatus.UNDETERMINED || canAskAgain) {
+              permissionStatus = (await requestCalendarPermissionsAsync()).status;
             }
+
+            if (permissionStatus === PermissionStatus.GRANTED) {
+              const defaultCalendar = await discoverDefaultCalendar();
+              if (defaultCalendar == null) {
+                showMessage(undefined, "No calendar found");
+              } else {
+                await createEventAsync(defaultCalendar.id, {
+                  title,
+                  allDay,
+                  notes: description,
+                  startDate: interval?.start.toJSDate(),
+                  endDate: interval?.end.toJSDate(),
+                  location: address
+                });
+                showMessage(undefined, "Event created");
+              }
+            }
+          } catch (error) {
+            universalCatch(error);
           }
-        })()}>
+        }
+        }>
           Add to my calendar
         </Button>
 
@@ -124,9 +129,8 @@ const EventScreen = () => {
           width="full"
           mx={2}
           mb={2}
-          onPress={() => {
-            void openBrowserAsync(link.url);
-          }}
+          onPress={() => openBrowserAsync(link.url).catch(universalCatch)
+          }
         >
           <Text
             textAlign="center"
@@ -146,6 +150,7 @@ const EventScreen = () => {
               onPress={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                log(`Opening ${address} in os-default maps app`);
                 openMaps({
                   query: address,
                   mapType: "standard"
