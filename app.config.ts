@@ -54,7 +54,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
 
   // App info
   const name = IS_DEV ? "DB DEV CLIENT" : "UK DanceBlue";
-  const qualifiedName = IS_DEV ? "org.danceblue.dev.app" : "org.danceblue.app";
+  const qualifiedName = IS_DEV ? "org.danceblue.app.dev" : "org.danceblue.app";
   const androidGoogleServicesFile = IS_DEV ? "./google-services.dev.json" : "./google-services.json";
   const iosGoogleServicesFile = IS_DEV ? "./GoogleService-Info.dev.plist" : "./GoogleService-Info.plist";
 
