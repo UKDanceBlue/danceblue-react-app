@@ -1,6 +1,7 @@
 import firebaseRemoteConfig from "@react-native-firebase/remote-config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+import { log, logError } from "../common/logging";
 import { showMessage } from "../common/util/AlertUtils";
 
 import { UserLoginType } from "./userDataSlice";
@@ -23,21 +24,50 @@ const initialState: AppConfigSliceType = {
 
 export const updateConfig = createAsyncThunk(
   "appConfig/updateConfig",
-  async (): Promise<Partial<AppConfigSliceType>> => {
-    const remoteConfigInstance = firebaseRemoteConfig();
-    await remoteConfigInstance.fetchAndActivate();
-    const remoteConfig: Partial<AppConfigSliceType> = {};
+  (): Partial<AppConfigSliceType> => {
+    const remoteConfigData = firebaseRemoteConfig().getAll();
+    const parsedRemoteConfig: Partial<AppConfigSliceType> = {};
 
-    remoteConfig.enabledScreens = (JSON.parse(remoteConfigInstance.getString("rn_shown_tabs")) ?? undefined) as string[] | undefined;
-    remoteConfig.allowedLoginTypes = ((JSON.parse(remoteConfigInstance.getString("login_mode")) as { rn?: UserLoginType[] }).rn ?? undefined);
-    remoteConfig.demoModeKey = remoteConfigInstance.getString("demo_mode_key");
-    remoteConfig.scoreboardMode = (JSON.parse(remoteConfigInstance.getString("rn_scoreboard_mode")) ?? undefined) as {
-      pointType: string;
-      showIcons: boolean;
-      showTrophies: boolean;
-  } | undefined;
+    try {
+      parsedRemoteConfig.enabledScreens = (JSON.parse(remoteConfigData.shown_tabs.asString()) ?? undefined) as string[];
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        log("Error parsing 'shown_tabs'");
+        logError(e);
+        parsedRemoteConfig.enabledScreens = undefined;
+      } else {
+        throw e;
+      }
+    }
+    try {
+      parsedRemoteConfig.allowedLoginTypes = (JSON.parse(remoteConfigData.login_mode.asString()) as (UserLoginType[] | undefined) ?? undefined);
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        log("Error while parsing 'login_mode' config");
+        logError(e);
+        parsedRemoteConfig.allowedLoginTypes = undefined;
+      } else {
+        throw e;
+      }
+    }
+    parsedRemoteConfig.demoModeKey = remoteConfigData.demo_mode_key.asString();
+    try {
+      parsedRemoteConfig.scoreboardMode = (JSON.parse(remoteConfigData.rn_scoreboard_mode.asString()) ?? undefined) as {
+        pointType: string;
+        showIcons: boolean;
+        showTrophies: boolean;
+    } | undefined;
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        log("Error while parsing 'rn_scoreboard_mode' config");
+        logError(e);
+        parsedRemoteConfig.scoreboardMode = undefined;
+      } else {
+        throw e;
+      }
+    }
 
-    return remoteConfig;
+    return parsedRemoteConfig;
   }
 );
 
