@@ -43,10 +43,10 @@
               "client_type": 3
             },
             {
-              "client_id": "480114538491-875g7gcvehn3pqvc3dq27s354p9ieuda.apps.googleusercontent.com",
+              "client_id": "480114538491-3u39m2h4beemia171mtn90pucqhuet89.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "org.danceblue.dev.app"
+                "bundle_id": "org.danceblue.app.dev"
               }
             }
           ]
@@ -55,17 +55,17 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:480114538491:android:71c12d647e7bf897a2bd5e",
+        "mobilesdk_app_id": "1:480114538491:android:7a47d7af9764c8dca2bd5e",
         "android_client_info": {
-          "package_name": "org.danceblue.dev.app"
+          "package_name": "org.danceblue.app.dev"
         }
       },
       "oauth_client": [
         {
-          "client_id": "480114538491-1hrjkep7n9srf7u1dn2jg4c6rornriud.apps.googleusercontent.com",
+          "client_id": "480114538491-24ohuc869b32khgjemninl9oqboe1kmq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "org.danceblue.dev.app",
+            "package_name": "org.danceblue.app.dev",
             "certificate_hash": "83a1ab32d27c8a450bb42815494d476cf5db3b1e"
           }
         },
@@ -90,10 +90,10 @@
               "client_type": 3
             },
             {
-              "client_id": "480114538491-875g7gcvehn3pqvc3dq27s354p9ieuda.apps.googleusercontent.com",
+              "client_id": "480114538491-3u39m2h4beemia171mtn90pucqhuet89.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "org.danceblue.dev.app"
+                "bundle_id": "org.danceblue.app.dev"
               }
             }
           ]

@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>480114538491-875g7gcvehn3pqvc3dq27s354p9ieuda.apps.googleusercontent.com</string>
+	<string>480114538491-3u39m2h4beemia171mtn90pucqhuet89.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.480114538491-875g7gcvehn3pqvc3dq27s354p9ieuda</string>
+	<string>com.googleusercontent.apps.480114538491-3u39m2h4beemia171mtn90pucqhuet89</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>480114538491-1hrjkep7n9srf7u1dn2jg4c6rornriud.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.danceblue.dev.app</string>
+	<string>org.danceblue.app.dev</string>
 	<key>PROJECT_ID</key>
 	<string>react-danceblue</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:480114538491:ios:e42cded7f666ab90a2bd5e</string>
+	<string>1:480114538491:ios:4477df1ea2e41e19a2bd5e</string>
 	<key>DATABASE_URL</key>
 	<string>https://react-danceblue.firebaseio.com</string>
 </dict>
