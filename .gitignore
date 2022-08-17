@@ -449,3 +449,7 @@ web-build/
 dist/
 
 # @end expo-cli
+
+# Ignore expo credentials
+credentials.json
+credentials
