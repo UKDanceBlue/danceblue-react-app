@@ -1,4 +1,4 @@
-import { nativeApplicationVersion } from "expo-application";
+import { nativeApplicationVersion, nativeBuildVersion } from "expo-application";
 import { openURL } from "expo-linking";
 import { Button, HStack, Text, VStack, useColorMode } from "native-base";
 import { useState } from "react";
@@ -75,7 +75,7 @@ export const ProfileFooter = () => {
       </HStack>
       <Text
         style={{ textAlign: "center" }}
-      >{`Version: ${nativeApplicationVersion ?? ""}`}</Text>
+      >{`Version: ${nativeApplicationVersion ?? ""} (${nativeBuildVersion ?? ""})`}</Text>
     </VStack>
   );
 };
