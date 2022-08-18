@@ -13,8 +13,7 @@
       },
       "env": {
         "APP_VARIANT": "development"
-      },
-      "credentialsSource": "local"
+      }
     },
     "development": {
       "distribution": "internal",

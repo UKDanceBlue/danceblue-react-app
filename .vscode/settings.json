@@ -11,5 +11,8 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "[xml]": {
+    "editor.defaultFormatter": "DotJoshJohnson.xml"
+  }
 }
