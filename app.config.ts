@@ -53,7 +53,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const buildNumber: SemVer = `${version.major}.${version.minor}.${version.patch + buildsThisVersion}`;
 
   // App info
-  const name = IS_DEV ? "DB DEV CLIENT" : "UK DanceBlue";
+  const name = IS_DEV ? "DB DEV CLIENT" : "DanceBlue";
   const qualifiedName = IS_DEV ? "org.danceblue.app.dev" : "org.danceblue.app";
   const androidGoogleServicesFile = IS_DEV ? "./google-services.dev.json" : "./google-services.json";
   const iosGoogleServicesFile = IS_DEV ? "./GoogleService-Info.dev.plist" : "./GoogleService-Info.plist";

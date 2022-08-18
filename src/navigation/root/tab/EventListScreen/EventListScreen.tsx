@@ -5,7 +5,6 @@ import { Center, Heading, SectionList, Text, useTheme } from "native-base";
 import { useCallback, useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 
-
 import { useColorModeValue } from "../../../../common/CustomHooks";
 import { useFirebase } from "../../../../common/FirebaseApp";
 import EventRow from "../../../../common/components/EventRow";

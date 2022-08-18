@@ -159,21 +159,22 @@ const App = () => {
             onReady={() => {
               routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
             }}
-            onStateChange={() => {
-              (async () => {
-                const previousRouteName = routeNameRef.current;
+            onStateChange={async () => {
+              try {
+                const lastRouteName = routeNameRef.current;
                 const currentRouteName = navigationRef.current?.getCurrentRoute()?.name;
 
-                if (previousRouteName !== currentRouteName) {
+                routeNameRef.current = currentRouteName;
+
+                if (lastRouteName !== currentRouteName) {
                   await analytics().logScreenView({
                     screen_name: currentRouteName,
                     screen_class: currentRouteName,
                   });
                 }
-                return currentRouteName;
-              })().then((currentRouteName) => {
-                routeNameRef.current = currentRouteName;
-              }).catch(universalCatch);
+              } catch (error) {
+                universalCatch(error);
+              }
             }}
             linking={navLinking}
           >

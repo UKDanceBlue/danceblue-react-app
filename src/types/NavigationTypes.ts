@@ -13,6 +13,7 @@ export type TabNavigatorParamList = {
   Scoreboard: undefined;
   Team: undefined;
   Marathon: undefined;
+  "Scavenger Hunt": undefined;
 };
 
 export type TabNavigatorProps<T extends keyof TabNavigatorParamList> =

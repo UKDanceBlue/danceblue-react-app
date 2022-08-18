@@ -40,7 +40,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => value.fbAuth.onAuthStateChanged((user) => {
-    log("Auth ");
+    log("Auth state changed");
     if (user) {
       dispatch(syncAuth({ user }))
         .then(() => dispatch(loadUserData({ firestore: value.fbFirestore, loginType: user.isAnonymous? "anonymous" : "ms-oath-linkblue", userId: user.uid })))
@@ -52,10 +52,6 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
       value.fbAnalytics.setUserId(null).catch(universalCatch);
       value.fbCrashlytics.setUserId("[LOGGED_OUT]").catch(universalCatch);
     }
-
-    value.fbRemoteConfig.setDefaultsFromResource("remote_config_defaults")
-      .then(() => value.fbRemoteConfig.fetchAndActivate())
-      .catch(universalCatch);
   }), [
     dispatch, value.fbAuth, value.fbFirestore, value.fbAnalytics, value.fbCrashlytics, value.fbRemoteConfig
   ]);

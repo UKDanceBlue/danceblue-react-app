@@ -1,9 +1,9 @@
 import crashlytics from "@react-native-firebase/crashlytics";
 import { isError } from "lodash";
 
-import { handleFirebaseError, isFirebaseError } from "./util/AlertUtils";
+import { NativeFirebaseError } from "../types/FirebaseTypes";
 
-export function log(message: string | boolean | number | object, level: "info" | "log" | "warn" | "error" = "log") {
+export function log(message: string | boolean | number | object, level: "trace" | "debug" | "log" | "info" | "warn" | "error" = "log") {
   try {
   // eslint-disable-next-line no-console
     const consoleMethod = console[level];
@@ -38,10 +38,37 @@ export function logError(error: Error) {
   }
 }
 
+export function isFirebaseError(error: unknown): error is NativeFirebaseError {
+  if (typeof error !== "object" || error == null) {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).code !== "string") {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).message !== "string") {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).name !== "string") {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).namespace !== "string") {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).stack !== "string" && (error as NativeFirebaseError).stack != null) {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).cause !== "string" && (error as NativeFirebaseError).cause != null) {
+    return false;
+  }
+
+  return true;
+}
+
 export function universalCatch(error: unknown) {
   try {
     if (isFirebaseError(error)) {
-      handleFirebaseError(error);
+      log(`Error ${error.name}: ${error.code}\n${error.message}`, "error");
+      logError(error);
     } else if (isError(error)) {
       logError(error);
     } else if (typeof error === "string" || typeof error === "number" || typeof error === "boolean" || (typeof error === "object" && error !== null)) {

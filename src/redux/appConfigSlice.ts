@@ -24,7 +24,24 @@ const initialState: AppConfigSliceType = {
 
 export const updateConfig = createAsyncThunk(
   "appConfig/updateConfig",
-  (): Partial<AppConfigSliceType> => {
+  async (): Promise<Partial<AppConfigSliceType>> => {
+    await firebaseRemoteConfig().setDefaults({
+      "shown_tabs": "[]",
+      "rn_scoreboard_mode": "{\"pointType\":\"spirit\",\"showIcons\":false,\"showTrophies\":true}",
+      "login_mode": "[\"ms-oath-linkblue\",\"anonymous\"]",
+      "countdowns": "[{\"title\":\"Test Countdown\",\"endTime\":1661153698}]",
+      "notifications_debug_mode": "false",
+      "dbfunds_sync_config": "{\"currentFiscalYears\":[\"2023\"]}",
+      "valid_attributes": "{\"spiritTeamId\":{\"type\":\"string\"},\"spiritCaptain\":[{\"value\":true},{\"value\":false}],\"marathonAccess\":[{\"value\":true},{\"value\":false}],\"committeeRank\":[{\"value\":\"advisor\"},{\"value\":\"overall-chair\"},{\"value\":\"chair\"},{\"value\":\"coordinator\"},{\"value\":\"committee-member\"}],\"dbRole\":[{\"value\":\"public\"},{\"value\":\"team-member\"},{\"value\":\"committee\"}],\"committee\":[{\"value\":\"tech-committee\"},{\"value\":\"corporate-committee\"},{\"value\":\"community-relations-committee\"},{\"value\":\"dancer-relations-committee\"},{\"value\":\"family-relations-committee\"},{\"value\":\"fundraising-committee\"},{\"value\":\"marketing-committee\"},{\"value\":\"mini-marathons-committee\"},{\"value\":\"morale-committee\"},{\"value\":\"operations-committee\"},{\"value\":\"overall-committee\"},{\"value\":\"programming-committee\"}]}",
+      "demo_mode_key": "Test Key 8748"
+    });
+    if (firebaseRemoteConfig().fetchTimeMillis > 5 * 60 * 60) {
+      await firebaseRemoteConfig().fetchAndActivate();
+    } else {
+      await firebaseRemoteConfig().activate();
+    }
+    log("Remote config fetched and activated");
+
     const remoteConfigData = firebaseRemoteConfig().getAll();
     const parsedRemoteConfig: Partial<AppConfigSliceType> = {};
 

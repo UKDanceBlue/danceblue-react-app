@@ -1,7 +1,6 @@
 import { Alert } from "react-native";
 
-import { NativeFirebaseError } from "../../types/FirebaseTypes";
-import { log, logError } from "../logging";
+import { log } from "../logging";
 
 /**
  * Show a one button prompt
@@ -33,39 +32,4 @@ export function showPrompt(
   ]);
 
   log(`${title}:\n${typeof message === "string" ? message : JSON.stringify(message, undefined, 2)}`);
-}
-
-/**
- * Use showMessage to show a Firebase error code to the user and log the associated error message to stderr
- */
-export function handleFirebaseError(error: NativeFirebaseError) {
-  showMessage(`Error Code: ${error.code}\n${error.message}`, error.name);
-  logError(error);
-  return error;
-}
-
-export function isFirebaseError(error: unknown): error is NativeFirebaseError {
-  if (typeof error !== "object" || error == null) {
-    return false;
-  }
-  if (typeof (error as NativeFirebaseError).code !== "string") {
-    return false;
-  }
-  if (typeof (error as NativeFirebaseError).message !== "string") {
-    return false;
-  }
-  if (typeof (error as NativeFirebaseError).name !== "string") {
-    return false;
-  }
-  if (typeof (error as NativeFirebaseError).namespace !== "string") {
-    return false;
-  }
-  if (typeof (error as NativeFirebaseError).stack !== "string" && (error as NativeFirebaseError).stack != null) {
-    return false;
-  }
-  if (typeof (error as NativeFirebaseError).cause !== "string" && (error as NativeFirebaseError).cause != null) {
-    return false;
-  }
-
-  return true;
 }

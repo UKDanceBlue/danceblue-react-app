@@ -65,7 +65,7 @@ const PodcastPlayer = () => {
     <AudioPlayer
       sound={ podcastAudio }
       loading={ !podcastAudio }
-      title={ podcastTitle }
+      title={`Podcast - ${podcastTitle ?? ""}`}
       titleLink={podcastTitleLink}
     />
   );

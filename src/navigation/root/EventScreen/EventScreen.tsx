@@ -3,8 +3,8 @@ import { PermissionStatus, createEventAsync, getCalendarPermissionsAsync, reques
 import { setStringAsync } from "expo-clipboard";
 import { openBrowserAsync } from "expo-web-browser";
 import { DateTime, Interval } from "luxon";
-import { Box, Button, Heading, Image, Pressable, ScrollView, Text, VStack, useTheme } from "native-base";
-import { useWindowDimensions } from "react-native";
+import { Box, Button, Center, Heading, Image, Pressable, ScrollView, Text, VStack, useTheme } from "native-base";
+import { ActivityIndicator, useWindowDimensions } from "react-native";
 import openMaps from "react-native-open-maps";
 import { WebView } from "react-native-webview";
 
@@ -165,6 +165,8 @@ const EventScreen = () => {
                 focusable={false}
                 pointerEvents="none"
                 containerStyle={{ borderRadius: 5, borderWidth: 2, borderColor: colors.secondary[800] }}
+                renderLoading={() => <Center width="full" height="full"><ActivityIndicator size="large" /></Center>}
+                startInLoadingState
                 source={{
                   html: `<iframe
                       width="100%"
