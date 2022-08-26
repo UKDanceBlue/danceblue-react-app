@@ -9,6 +9,7 @@ import storage, { FirebaseStorageTypes } from "@react-native-firebase/storage";
 import { ReactNode, createContext, useContext, useEffect } from "react";
 
 import { logout, syncAuth } from "../redux/authSlice";
+import store from "../redux/store";
 import { loadUserData } from "../redux/userDataSlice";
 
 import { useAppDispatch } from "./CustomHooks";
@@ -51,6 +52,15 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
       dispatch(logout());
       value.fbAnalytics.setUserId(null).catch(universalCatch);
       value.fbCrashlytics.setUserId("[LOGGED_OUT]").catch(universalCatch);
+    }
+
+    const { uuid } = store.getState().notification;
+    if (uuid != null) {
+      // Update the user's uid in firestore when auth state changes so long as the uuid has ben initialized
+      firestore()
+        .doc(`devices/${uuid}`)
+        .update({ latestUserId: user?.uid ?? null })
+        .catch(universalCatch);
     }
   }), [
     dispatch, value.fbAuth, value.fbFirestore, value.fbAnalytics, value.fbCrashlytics, value.fbRemoteConfig

@@ -82,13 +82,6 @@ through giving them and their parent’s comfort.
 
 To get a local copy up and running follow these simple steps.
 
-### Prerequisites
-
-You will need expo-cli and yarn to run the project, install them as follows:
-
-```sh
-npm i -g yarn expo-cli
-```
 
 ### Getting up and running
 

@@ -41,7 +41,7 @@ export const loadUserData = createAsyncThunk(
   async (payload: { userId: string; loginType: UserLoginType; firestore: FirebaseFirestoreTypes.Module }, { dispatch }): Promise<UserDataType> => {
     dispatch(startLoading("userData/loadUserData"));
 
-    const loadUserData = { ...initialState, loginType: payload.loginType };
+    const loadedUserData = { ...initialState, loginType: payload.loginType };
 
     switch (payload.loginType) {
     case "anonymous": {
@@ -62,12 +62,12 @@ export const loadUserData = createAsyncThunk(
         throw new Error("User data is not valid");
       }
       // Check for a user's own data
-      loadUserData.firstName = rawUserData.firstName;
-      loadUserData.lastName = rawUserData.lastName;
-      loadUserData.email = rawUserData.email;
-      loadUserData.attributes = rawUserData.attributes;
+      loadedUserData.firstName = rawUserData.firstName;
+      loadedUserData.lastName = rawUserData.lastName;
+      loadedUserData.email = rawUserData.email;
+      loadedUserData.attributes = rawUserData.attributes;
       if (rawUserData.linkblue != null) {
-        loadUserData.linkblue = rawUserData.linkblue;
+        loadedUserData.linkblue = rawUserData.linkblue;
       }
 
       // Check for past notifications
@@ -96,21 +96,21 @@ export const loadUserData = createAsyncThunk(
         const userTeamSnapshot = await userTeamDoc.get();
 
         if (userTeamSnapshot.exists) {
-          loadUserData.team = userTeamSnapshot.data() as FirestoreTeam;
-          loadUserData.teamId = rawUserData.team.id;
+          loadedUserData.team = userTeamSnapshot.data() as FirestoreTeam;
+          loadedUserData.teamId = rawUserData.team.id;
 
           const userTeamIndividualPointsDoc = payload.firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("individualSpiritPoints");
           const userTeamIndividualPointsSnapshot = await userTeamIndividualPointsDoc.get();
 
           if (userTeamIndividualPointsSnapshot.exists) {
-            loadUserData.teamIndividualSpiritPoints = userTeamIndividualPointsSnapshot.data() as FirestoreTeamIndividualSpiritPoints;
+            loadedUserData.teamIndividualSpiritPoints = userTeamIndividualPointsSnapshot.data() as FirestoreTeamIndividualSpiritPoints;
           }
 
           const userTeamFundraisingDoc = payload.firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("fundraising");
           const userTeamFundraisingSnapshot = await userTeamFundraisingDoc.get();
 
           if (userTeamFundraisingSnapshot.exists) {
-            loadUserData.teamFundraisingTotal = userTeamFundraisingSnapshot.data() as FirestoreTeamFundraising;
+            loadedUserData.teamFundraisingTotal = userTeamFundraisingSnapshot.data() as FirestoreTeamFundraising;
           }
         }
       }
@@ -124,7 +124,7 @@ export const loadUserData = createAsyncThunk(
 
     dispatch(stopLoading("userData/loadUserData"));
 
-    return loadUserData;
+    return loadedUserData;
   }
 );
 

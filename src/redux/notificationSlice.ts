@@ -3,10 +3,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import * as SecureStore from "expo-secure-store";
+import { v4 } from "uuid";
+import type { V4Options } from "uuid";
 
 import { log, universalCatch } from "../common/logging";
 import { showMessage } from "../common/util/AlertUtils";
-import generateUuid from "../common/util/GenerateUuid";
 
 import { RootState } from "./store";
 
@@ -33,7 +34,7 @@ export const obtainUuid = createAsyncThunk("notification/obtainUuid", async () =
     return uuid;
   }
 
-  uuid = generateUuid() as string;
+  uuid = (v4 as (options?: V4Options | undefined) => string)();
 
   await SecureStore.setItemAsync(uuidStoreKey, uuid, { keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY });
   return uuid;
@@ -89,9 +90,7 @@ export const registerPushNotifications = createAsyncThunk("notification/register
         const { uuid } = (thunkApi.getState() as RootState).notification;
         if (uuid) {
           // Store the push notification token in firebase
-          await firestore().doc(`devices/${uuid}`).set({ expoPushToken: token.data || null },
-            { mergeFields: ["expoPushToken"] }
-          );
+          await firestore().doc(`devices/${uuid}`).update({ expoPushToken: token.data || null });
         }
         return { token, notificationPermissionsGranted: true };
       });

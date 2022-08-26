@@ -5,6 +5,7 @@ import "intl/locale-data/jsonp/en";
 // Import third-party dependencies
 import NetInfo from "@react-native-community/netinfo";
 import analytics from "@react-native-firebase/analytics";
+import firestore from "@react-native-firebase/firestore";
 import { LinkingOptions, NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { DevMenu, isDevelopmentBuild } from "expo-dev-client";
 import * as Linking from "expo-linking";
@@ -54,11 +55,18 @@ SplashScreen.preventAutoHideAsync().catch(universalCatch);
 
 let hasPushRegistrationObserverFired = false;
 const pushRegistrationObserver = store.subscribe(() => {
+  const { uuid } = store.getState().notification;
   // This will run on every redux state update until a uuid is set when it will try to register for push notifications
-  if (!hasPushRegistrationObserverFired && store.getState().notification.uuid) {
+  if (!hasPushRegistrationObserverFired && uuid != null) {
     hasPushRegistrationObserverFired = true;
     store.dispatch(registerPushNotifications()).catch(universalCatch);
     pushRegistrationObserver();
+
+    // Update the user's uid in firestore once the push registration is complete since uuid might have been uninitialized when the auth state first loads
+    firestore()
+      .doc(`devices/${uuid}`)
+      .update({ latestUserId: store.getState().auth.uid })
+      .catch(universalCatch);
   }
 });
 
