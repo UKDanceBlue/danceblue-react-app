@@ -1,8 +1,9 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { FirestoreNotification } from "../types/pastNotifications";
-import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints } from "../types/teams";
+import { log } from "../common/logging";
+import { FirestoreNotification, isFirestoreNotification } from "../types/pastNotifications";
+import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints, isFirestoreTeam, isFirestoreTeamFundraising, isFirestoreTeamIndividualSpiritPoints } from "../types/teams";
 import { isFirestoreUser } from "../types/users";
 
 import { startLoading, stopLoading } from "./globalLoadingSlice";
@@ -81,7 +82,12 @@ export const loadUserData = createAsyncThunk(
           promises.push((async () => {
             const pastNotificationSnapshot = await pastNotificationRef.get();
             if (pastNotificationSnapshot.exists) {
-              pastNotifications.push(pastNotificationSnapshot.data() as FirestoreNotification);
+              const pastNotificationSnapshotData = pastNotificationSnapshot.data();
+              if (isFirestoreNotification(pastNotificationSnapshotData)) {
+                pastNotifications.push(pastNotificationSnapshotData);
+              } else {
+                log(`Past notification "${pastNotificationSnapshot.ref.path}" is not valid`, "warn");
+              }
             }
           })());
         }
@@ -96,21 +102,36 @@ export const loadUserData = createAsyncThunk(
         const userTeamSnapshot = await userTeamDoc.get();
 
         if (userTeamSnapshot.exists) {
-          loadedUserData.team = userTeamSnapshot.data() as FirestoreTeam;
-          loadedUserData.teamId = rawUserData.team.id;
+          const userTeamSnapshotData = userTeamSnapshot.data();
+          if (isFirestoreTeam(userTeamSnapshotData)) {
+            loadedUserData.team = userTeamSnapshotData;
+            loadedUserData.teamId = rawUserData.team.id;
 
-          const userTeamIndividualPointsDoc = payload.firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("individualSpiritPoints");
-          const userTeamIndividualPointsSnapshot = await userTeamIndividualPointsDoc.get();
+            const userTeamIndividualPointsDoc = payload.firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("individualSpiritPoints");
+            const userTeamIndividualPointsSnapshot = await userTeamIndividualPointsDoc.get();
 
-          if (userTeamIndividualPointsSnapshot.exists) {
-            loadedUserData.teamIndividualSpiritPoints = userTeamIndividualPointsSnapshot.data() as FirestoreTeamIndividualSpiritPoints;
-          }
+            if (userTeamIndividualPointsSnapshot.exists) {
+              const userTeamIndividualPointsSnapshotData = userTeamIndividualPointsSnapshot.data();
+              if (isFirestoreTeamIndividualSpiritPoints(userTeamIndividualPointsSnapshotData)) {
+                loadedUserData.teamIndividualSpiritPoints = userTeamIndividualPointsSnapshotData;
+              } else {
+                log(`Team individual spirit points "${userTeamIndividualPointsSnapshot.ref.path}" is not valid`, "warn");
+              }
+            }
 
-          const userTeamFundraisingDoc = payload.firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("fundraising");
-          const userTeamFundraisingSnapshot = await userTeamFundraisingDoc.get();
+            const userTeamFundraisingDoc = payload.firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("fundraising");
+            const userTeamFundraisingSnapshot = await userTeamFundraisingDoc.get();
 
-          if (userTeamFundraisingSnapshot.exists) {
-            loadedUserData.teamFundraisingTotal = userTeamFundraisingSnapshot.data() as FirestoreTeamFundraising;
+            if (userTeamFundraisingSnapshot.exists) {
+              const userTeamFundraisingSnapshotData = userTeamFundraisingSnapshot.data();
+              if (isFirestoreTeamFundraising(userTeamFundraisingSnapshotData)) {
+                loadedUserData.teamFundraisingTotal = userTeamFundraisingSnapshotData;
+              } else {
+                log(`Team fundraising "${userTeamFundraisingSnapshot.ref.path}" is not valid`, "warn");
+              }
+            }
+          } else {
+            log(`Team "${userTeamSnapshot.ref.path}" is not valid`, "warn");
           }
         }
       }
