@@ -7,7 +7,7 @@ import { v4 } from "uuid";
 import type { V4Options } from "uuid";
 
 import { log, universalCatch } from "../common/logging";
-import { showMessage } from "../common/util/AlertUtils";
+import { showMessage } from "../common/util/alertUtils";
 
 import { RootState } from "./store";
 

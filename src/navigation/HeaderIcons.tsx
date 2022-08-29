@@ -3,7 +3,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { View } from "native-base";
 import { PixelRatio, TouchableOpacity } from "react-native";
 
-import { RootStackParamList } from "../types/NavigationTypes";
+import { RootStackParamList } from "../types/navigationTypes";
 
 const HeaderIcons = ({
   navigation, color

@@ -1,6 +1,6 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 
-import { isDocumentReference } from "./FirebaseTypes";
+import { isDocumentReference } from "./firebaseTypes";
 
 export interface FirestoreUser {
   attributes: Record<string, string>;

@@ -1,6 +1,6 @@
 import { Theme, extendTheme } from "native-base";
 
-import { RecursivePartial } from "./types/TsUtils";
+import { RecursivePartial } from "./types/typeUtils";
 
 /*
  * Useful links for extending the theme:

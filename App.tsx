@@ -16,14 +16,14 @@ import { Provider } from "react-redux";
 
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
 import "./src/common/util/AndroidTimerFix";
-import { FirebaseProvider } from "./src/common/FirebaseApp";
+import { FirebaseProvider } from "./src/common/FirebaseContext";
 import { universalCatch } from "./src/common/logging";
-import { showMessage } from "./src/common/util/AlertUtils";
+import { showMessage } from "./src/common/util/alertUtils";
 import RootScreen from "./src/navigation/root/RootScreen";
 import { logout } from "./src/redux/authSlice";
 import store from "./src/redux/store";
 import { customTheme } from "./src/theme";
-import { RootStackParamList } from "./src/types/NavigationTypes";
+import { RootStackParamList } from "./src/types/navigationTypes";
 
 // Import and run the fistLaunch file
 import "./src/firstLaunch";

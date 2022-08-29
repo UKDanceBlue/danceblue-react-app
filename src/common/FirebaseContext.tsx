@@ -12,7 +12,7 @@ import { logout, syncAuth } from "../redux/authSlice";
 import store from "../redux/store";
 import { loadUserData } from "../redux/userDataSlice";
 
-import { useAppDispatch } from "./CustomHooks";
+import { useAppDispatch } from "./customHooks";
 import { log, universalCatch } from "./logging";
 
 const FirebaseContext = createContext<{

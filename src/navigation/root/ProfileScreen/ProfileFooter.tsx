@@ -4,7 +4,7 @@ import { Button, HStack, Text, VStack, useColorMode } from "native-base";
 import { useState } from "react";
 import { TextInput } from "react-native";
 
-import { useAppDispatch, useAppSelector, useColorModeValue } from "../../../common/CustomHooks";
+import { useAppDispatch, useAppSelector, useColorModeValue } from "../../../common/customHooks";
 import { universalCatch } from "../../../common/logging";
 import { enterDemoMode as enterDemoModeConfig } from "../../../redux/appConfigSlice";
 import { enterDemoMode as enterDemoModeAuth } from "../../../redux/authSlice";

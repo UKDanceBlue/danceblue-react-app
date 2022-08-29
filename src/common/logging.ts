@@ -1,7 +1,7 @@
 import crashlytics from "@react-native-firebase/crashlytics";
 import { isError } from "lodash";
 
-import { NativeFirebaseError } from "../types/FirebaseTypes";
+import { NativeFirebaseError } from "../types/firebaseTypes";
 
 export function log(message: string | boolean | number | object, level: "trace" | "debug" | "log" | "info" | "warn" | "error" = "log") {
   try {

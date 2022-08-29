@@ -5,7 +5,7 @@ import { Box, Button, FlatList, Heading, Text, View } from "native-base";
 import { useEffect } from "react";
 import { ActivityIndicator, RefreshControl } from "react-native";
 
-import { useAppDispatch, useAppSelector } from "../../../common/CustomHooks";
+import { useAppDispatch, useAppSelector } from "../../../common/customHooks";
 import { log, universalCatch } from "../../../common/logging";
 import { registerPushNotifications } from "../../../redux/notificationSlice";
 

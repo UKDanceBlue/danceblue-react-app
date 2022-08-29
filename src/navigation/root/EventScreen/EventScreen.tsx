@@ -9,9 +9,9 @@ import openMaps from "react-native-open-maps";
 import { WebView } from "react-native-webview";
 
 import { log, universalCatch } from "../../../common/logging";
-import { showMessage } from "../../../common/util/AlertUtils";
+import { showMessage } from "../../../common/util/alertUtils";
 import { discoverDefaultCalendar } from "../../../common/util/calendar";
-import { RootStackScreenProps } from "../../../types/NavigationTypes";
+import { RootStackScreenProps } from "../../../types/navigationTypes";
 
 const EventScreen = () => {
   const {

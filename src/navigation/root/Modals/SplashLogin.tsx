@@ -3,11 +3,11 @@ import { useEffect } from "react";
 import { ActivityIndicator, Dimensions, ImageBackground } from "react-native";
 
 import splashBackground from "../../../../assets/screens/login-modal/dancing.jpg";
-import { useAppSelector } from "../../../common/CustomHooks";
-import { useFirebase } from "../../../common/FirebaseApp";
+import { useFirebase } from "../../../common/FirebaseContext";
 import { useLinkBlueLogin } from "../../../common/auth";
+import { useAppSelector } from "../../../common/customHooks";
 import { universalCatch } from "../../../common/logging";
-import { showMessage } from "../../../common/util/AlertUtils";
+import { showMessage } from "../../../common/util/alertUtils";
 
 const SplashLoginScreen = () => {
   const allowedLoginTypes = useAppSelector((state) => state.appConfig.allowedLoginTypes);

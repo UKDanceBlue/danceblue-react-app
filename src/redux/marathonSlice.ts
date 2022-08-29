@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { FirestoreHour } from "../types/FirebaseTypes";
+import { FirestoreHour } from "../types/firebaseTypes";
 
 interface MarathonSliceType {
   marathonHours: FirestoreHour[];

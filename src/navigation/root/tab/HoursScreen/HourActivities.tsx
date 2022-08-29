@@ -9,7 +9,7 @@ import { ActionSheetIOS, Platform } from "react-native";
 import { Button, Divider, Input, Text, View } from "native-base";
 
 import Standings from "../../../../common/components/Standings";
-import { showMessage } from "../../../../common/util/AlertUtils";
+import { showMessage } from "../../../../common/util/alertUtils";
 import generateUuid from "../../../../common/util/GenerateUuid";
 import store from "../../../../redux/store";
 import { StandingType } from "../../../../types/StandingType";

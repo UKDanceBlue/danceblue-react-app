@@ -1,8 +1,8 @@
 import { Box, Button, Text, VStack, useTheme } from "native-base";
 import { Linking } from "react-native";
 
-import { useColorModeValue } from "../../../../common/CustomHooks";
 import PodcastPlayer from "../../../../common/components/PodcastPlayer";
+import { useColorModeValue } from "../../../../common/customHooks";
 import { universalCatch } from "../../../../common/logging";
 
 import HeaderImage from "./HeaderImage";

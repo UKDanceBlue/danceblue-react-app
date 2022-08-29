@@ -3,10 +3,10 @@ import { Center, useTheme } from "native-base";
 import { useEffect } from "react";
 import { ActivityIndicator } from "react-native";
 
-import { useAppDispatch, useAppSelector, useColorModeValue } from "../../common/CustomHooks";
+import { useAppDispatch, useAppSelector, useColorModeValue } from "../../common/customHooks";
 import { universalCatch } from "../../common/logging";
 import { updateConfig } from "../../redux/appConfigSlice";
-import { RootStackParamList } from "../../types/NavigationTypes";
+import { RootStackParamList } from "../../types/navigationTypes";
 import HeaderIcons from "../HeaderIcons";
 
 import EventScreen from "./EventScreen";

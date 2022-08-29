@@ -2,7 +2,7 @@ import firebaseRemoteConfig from "@react-native-firebase/remote-config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { log, logError } from "../common/logging";
-import { showMessage } from "../common/util/AlertUtils";
+import { showMessage } from "../common/util/alertUtils";
 
 import { UserLoginType } from "./userDataSlice";
 

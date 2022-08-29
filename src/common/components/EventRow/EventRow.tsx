@@ -2,7 +2,7 @@ import { DateTime, Interval } from "luxon";
 import { Box, Heading, Image, Text, useTheme } from "native-base";
 import { ImageSourcePropType, useWindowDimensions } from "react-native";
 
-import { useColorModeValue } from "../../CustomHooks";
+import { useColorModeValue } from "../../customHooks";
 
 
 /**

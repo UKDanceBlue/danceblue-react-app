@@ -1,7 +1,7 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { FirebaseStorageTypes } from "@react-native-firebase/storage";
 
-import { HourInstructionsType, SpecialComponentType } from "./HourScreenTypes";
+import { HourInstructionsType, SpecialComponentType } from "./hourScreenTypes";
 
 export type NativeFirebaseError = Parameters<FirebaseStorageTypes.TaskSnapshotObserver["error"]>[0];
 

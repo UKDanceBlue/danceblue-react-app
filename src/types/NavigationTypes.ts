@@ -3,8 +3,8 @@ import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 
-import { FirestoreHour } from "./FirebaseTypes";
-import { ParsedFirestoreEvent } from "./events";
+import { ParsedFirestoreEvent } from "./FirestoreEvent";
+import { FirestoreHour } from "./firebaseTypes";
 
 
 export type TabNavigatorParamList = {

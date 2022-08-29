@@ -5,12 +5,12 @@ import { Center, Heading, SectionList, Text, useTheme } from "native-base";
 import { useCallback, useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 
-import { useColorModeValue } from "../../../../common/CustomHooks";
-import { useFirebase } from "../../../../common/FirebaseApp";
+import { useFirebase } from "../../../../common/FirebaseContext";
 import EventRow from "../../../../common/components/EventRow";
+import { useColorModeValue } from "../../../../common/customHooks";
 import { log, universalCatch } from "../../../../common/logging";
-import { TabNavigatorProps } from "../../../../types/NavigationTypes";
-import { ParsedFirestoreEvent, RawFirestoreEvent, parseFirestoreEvent } from "../../../../types/events";
+import { ParsedFirestoreEvent, RawFirestoreEvent, parseFirestoreEvent } from "../../../../types/FirestoreEvent";
+import { TabNavigatorProps } from "../../../../types/navigationTypes";
 
 const EventListScreen = () => {
   const {

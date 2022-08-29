@@ -10,10 +10,10 @@ import { ActivityIndicator } from "react-native";
 import WebView from "react-native-webview";
 
 // Import first-party dependencies
-import { useAppDispatch, useAppSelector, useColorModeValue } from "../../../common/CustomHooks";
+import { useAppDispatch, useAppSelector, useColorModeValue } from "../../../common/customHooks";
 import { log, universalCatch } from "../../../common/logging";
 import { registerPushNotifications } from "../../../redux/notificationSlice";
-import { RootStackParamList, TabNavigatorParamList } from "../../../types/NavigationTypes";
+import { RootStackParamList, TabNavigatorParamList } from "../../../types/navigationTypes";
 import HeaderIcons from "../../HeaderIcons";
 
 import EventListScreen from "./EventListScreen";

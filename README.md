@@ -90,7 +90,7 @@ To get a local copy up and running follow these simple steps.
 3. Run `yarn start` (or ctrl+shift+b in VSCode) to start Expo's testing environment
 4. Scan the QR code Expo generates with your phone's camera
 5. You should now be able to work on the code and hot reload the app on expo go as you work
-6. In VSCode you can also activate the "attach to packager" debug  configuration to interactively debug the ap
+6. In VSCode you can also activate the "attach to packager" debug  configuration to interactively debug the app using VSCode's built-in debugger
 
 ### Building
 
@@ -114,6 +114,15 @@ Don't forget to give the project a star! Thanks again!
 5. Open a Pull Request
 
 If you are interested in joining DanceBlue, send me a message (see my contact info)!
+
+### Some notes for contributors
+
+- Naming convention for files is:
+  - PascalCase for files that represent a single entity (i.e. a type or component) unless it is a plain function
+  - camelCase for files that represent a collection of entities (i.e. an index file, a collection of values, multiple unrelated exports) or a plain function
+  - Folders that are intended to be imported directly should match the case of their subject (i.e. PascalCase for a folder with a component)
+  - kebab-case for other folders
+- ESlint has rules for most other cases, it is *highly* recommended to install the eslint plugin for your editor or keep `eslint --watch` running in the background
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

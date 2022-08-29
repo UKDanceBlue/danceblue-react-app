@@ -2,9 +2,9 @@ import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { log } from "../common/logging";
-import { FirestoreNotification, isFirestoreNotification } from "../types/pastNotifications";
-import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints, isFirestoreTeam, isFirestoreTeamFundraising, isFirestoreTeamIndividualSpiritPoints } from "../types/teams";
-import { isFirestoreUser } from "../types/users";
+import { FirestoreNotification, isFirestoreNotification } from "../types/FirestoreNotification";
+import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints, isFirestoreTeam, isFirestoreTeamFundraising, isFirestoreTeamIndividualSpiritPoints } from "../types/FirestoreTeam";
+import { isFirestoreUser } from "../types/FirestoreUser";
 
 import { startLoading, stopLoading } from "./globalLoadingSlice";
 

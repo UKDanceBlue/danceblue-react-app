@@ -4,9 +4,9 @@ import * as FileSystem from "expo-file-system";
 import { SetStateAction, useEffect, useState } from "react";
 import { Image } from "react-native";
 
-import { useDeepEffect } from "./CustomHooks";
+import { useDeepEffect } from "./customHooks";
 import { universalCatch } from "./logging";
-import { showMessage } from "./util/AlertUtils";
+import { showMessage } from "./util/alertUtils";
 
 // TODO replace all of this with a better implementation
 

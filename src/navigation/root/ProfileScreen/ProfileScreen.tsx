@@ -2,10 +2,10 @@ import { startCase } from "lodash";
 import { Button, Center, Image, Spinner, Text, VStack, useTheme } from "native-base";
 
 import avatar from "../../../../assets/logo/monogram.png";
-import { useAppSelector } from "../../../common/CustomHooks";
-import { useFirebase } from "../../../common/FirebaseApp";
+import { useFirebase } from "../../../common/FirebaseContext";
 import { useLinkBlueLogin } from "../../../common/auth";
-import { showMessage } from "../../../common/util/AlertUtils";
+import { useAppSelector } from "../../../common/customHooks";
+import { showMessage } from "../../../common/util/alertUtils";
 
 import { ProfileFooter } from "./ProfileFooter";
 

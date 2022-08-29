@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import SponsorCard from "../../../../common/components/ImageCard";
 import { universalCatch } from "../../../../common/logging";
-import { LegacyFirestoreSponsor } from "../../../../types/sponsors";
+import { LegacyFirestoreSponsor } from "../../../../types/FirestoreSponsor";
 
 /**
  * A horizontally scrolling carousel of SponsorCards
