@@ -1,7 +1,7 @@
 import { Box, Image, ZStack } from "native-base";
 
-import dbLogo from "../../../../../assets/home/DB_Primary_Logo-01.png";
-import backgroundImg from "../../../../../assets/home/db20_ribbon.jpg";
+import dbLogo from "../../../../../assets/logo/big-words.png";
+import ribbon from "../../../../../assets/screens/home/2020-ribbon.png";
 
 /**
  * A header image container used on the home screen
@@ -9,7 +9,7 @@ import backgroundImg from "../../../../../assets/home/db20_ribbon.jpg";
 const HeaderImage = () => (
   <ZStack height="100%" width="full" m={0}>
     <Image
-      source={backgroundImg}
+      source={ribbon}
       size="full"
       resizeMode="cover"
       blurRadius={10}

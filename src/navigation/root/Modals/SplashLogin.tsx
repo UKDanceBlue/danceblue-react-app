@@ -1,8 +1,8 @@
-import { Button, Text, View } from "native-base";
+import { Button, Center, Text, View } from "native-base";
 import { useEffect } from "react";
 import { ActivityIndicator, Dimensions, ImageBackground } from "react-native";
 
-import splashBackground from "../../../../assets/home/Dancing-min.jpg";
+import splashBackground from "../../../../assets/screens/login-modal/dancing.jpg";
 import { useAppSelector } from "../../../common/CustomHooks";
 import { useFirebase } from "../../../common/FirebaseApp";
 import { useLinkBlueLogin } from "../../../common/auth";
@@ -96,7 +96,9 @@ const SplashLoginScreen = () => {
         </View>
       </ImageBackground>
       { loading && (
-        <ActivityIndicator style={{ position: "absolute", top: "50%" }} />
+        <Center position="absolute" width="full" height="full">
+          <ActivityIndicator size="large" />
+        </Center>
       )}
     </View>
   );

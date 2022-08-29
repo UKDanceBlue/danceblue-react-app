@@ -1,12 +1,12 @@
 import { manufacturer as deviceManufacturer } from "expo-device";
 import { openSettings } from "expo-linking";
-import { IosAuthorizationStatus, getPermissionsAsync } from "expo-notifications";
+import { IosAuthorizationStatus, getPermissionsAsync, setBadgeCountAsync } from "expo-notifications";
 import { Box, Button, FlatList, Heading, Text, View } from "native-base";
 import { useEffect } from "react";
 import { ActivityIndicator, RefreshControl } from "react-native";
 
 import { useAppDispatch, useAppSelector } from "../../../common/CustomHooks";
-import { universalCatch } from "../../../common/logging";
+import { log, universalCatch } from "../../../common/logging";
 import { registerPushNotifications } from "../../../redux/notificationSlice";
 
 /**
@@ -33,6 +33,17 @@ const NotificationScreen = () => {
       }
     }).catch(universalCatch);
   }, [ dispatch, notificationPermissionsGranted ]);
+
+  // Clear badge count when navigating to this screen
+  useEffect(() => {
+    (async () => {
+      const success = await setBadgeCountAsync(0);
+
+      if (!success) {
+        log("Failed to clear badge count", "warn");
+      }
+    })().catch(universalCatch);
+  }, []);
 
   if (notificationPermissionsGranted === null) {
     return <ActivityIndicator />;

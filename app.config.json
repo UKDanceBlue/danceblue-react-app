@@ -7,16 +7,16 @@
     "scheme": "danceblue",
     "jsEngine": "hermes",
     "notification": {
-      "icon": "./assets/icon.png"
+      "icon": "./assets/app/icon.png"
     },
     "platforms": [
       "ios",
       "android"
     ],
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/app/icon.png",
     "splash": {
-      "image": "./assets/splash2.png",
+      "image": "./assets/app/splash2.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
@@ -36,7 +36,7 @@
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to allow you to submit images for various DanceBlue activities.",
-          "cameraPermission": "The app accesses your camera to allow you to submit images for various DanceBlue activities.",
+          "cameraPermission": "The app accesses your camera to allow you to submit images for various DanceBlue activities."
         }
       ],
       "expo-splash-screen",
@@ -45,7 +45,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/icon.png",
+          "icon": "./assets/app/icon.png",
           "color": "#ffffff"
         }
       ],

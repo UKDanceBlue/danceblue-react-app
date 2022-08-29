@@ -1,8 +1,7 @@
 import { StackNavigationProp, createStackNavigator } from "@react-navigation/stack";
-import { BlurView } from "expo-blur";
-import { useTheme } from "native-base";
+import { Center, useTheme } from "native-base";
 import { useEffect } from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator } from "react-native";
 
 import { useAppDispatch, useAppSelector, useColorModeValue } from "../../common/CustomHooks";
 import { universalCatch } from "../../common/logging";
@@ -38,14 +37,7 @@ const RootScreen = () => {
   return (
     <>
       {!isAuthLoaded && (
-        <ActivityIndicator
-          size="large"
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 20,
-          }}
-        />
+        <Center position="absolute" width="full" height="full"><ActivityIndicator size="large" /></Center>
       )}
       {isAuthLoaded && (
         <RootStack.Navigator
@@ -70,9 +62,6 @@ const RootScreen = () => {
                 options={({ route }) => ({
                   title: route.params.event.title,
                   headerMode: "screen",
-                  headerBackground: () => (
-                    <BlurView tint="light" intensity={100} style={StyleSheet.absoluteFill} />
-                  ),
                 })}
               />
               <RootStack.Screen name="Hour Details" component={HourScreen} />
