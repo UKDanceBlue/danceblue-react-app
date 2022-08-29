@@ -10,7 +10,7 @@ import { useFirebase } from "../../../../common/FirebaseApp";
 import EventRow from "../../../../common/components/EventRow";
 import { log, universalCatch } from "../../../../common/logging";
 import { TabNavigatorProps } from "../../../../types/NavigationTypes";
-import { FirestoreEvent, ParsedEvent, parseFirestoreEvent } from "../../../../types/events";
+import { ParsedFirestoreEvent, RawFirestoreEvent, parseFirestoreEvent } from "../../../../types/events";
 
 const EventListScreen = () => {
   const {
@@ -19,9 +19,9 @@ const EventListScreen = () => {
   const { colors } = useTheme();
   const screenBackgroundColor = useColorModeValue(colors.white, colors.gray[900]);
 
-  const [ events, setEvents ] = useState<ParsedEvent[]>([]);
-  const [ today, setToday ] = useState<ParsedEvent[]>([]);
-  const [ upcoming, setUpcoming ] = useState<ParsedEvent[]>([]);
+  const [ events, setEvents ] = useState<ParsedFirestoreEvent[]>([]);
+  const [ today, setToday ] = useState<ParsedFirestoreEvent[]>([]);
+  const [ upcoming, setUpcoming ] = useState<ParsedFirestoreEvent[]>([]);
   const [ refreshing, setRefreshing ] = useState(false);
 
   const navigation = useNavigation<TabNavigatorProps<"Events">["navigation"]>();
@@ -30,11 +30,11 @@ const EventListScreen = () => {
     setRefreshing(true);
     try {
       log("Loading event list screen from firestore");
-      const firestoreEvents: ParsedEvent[] = [];
+      const firestoreEvents: ParsedFirestoreEvent[] = [];
       const snapshot = await fbFirestore.collection("events").where("endTime", ">", firebaseFirestore.Timestamp.now())
         .get();
       await Promise.all(snapshot.docs.map(async (doc) => {
-        const data = doc.data() as FirestoreEvent;
+        const data = doc.data() as RawFirestoreEvent;
         firestoreEvents.push(await parseFirestoreEvent(data, fbStorage));
       }));
 
@@ -57,8 +57,8 @@ const EventListScreen = () => {
    * Splits *events* into *today* and *upcoming* based on the events' start day
    */
   useEffect(() => {
-    const todayFromEvents: ParsedEvent[] = [];
-    const upcomingFromEvents: ParsedEvent[] = [];
+    const todayFromEvents: ParsedFirestoreEvent[] = [];
+    const upcomingFromEvents: ParsedFirestoreEvent[] = [];
     events.forEach((event) => {
       if (event.interval != null) {
         if (Interval.fromISO(event.interval).overlaps(Interval.fromDateTimes(DateTime.local().startOf("day"), DateTime.local().endOf("day")))) {

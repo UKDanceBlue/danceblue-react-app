@@ -6,13 +6,13 @@ export interface LegacyFirestoreSponsor {
   logo?: string;
   name?: string;
 }
-export interface FirestoreSponsor{
+export interface RawFirestoreSponsor{
   link?: string;
   logo?: FirestoreImage;
   name?: string;
 }
 
-export interface ParsedSponsor {
+export interface ParsedFirestoreSponsor {
   logo?: DownloadableImage;
   link?: string;
   name?: string;
