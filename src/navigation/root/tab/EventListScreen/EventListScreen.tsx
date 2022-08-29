@@ -8,9 +8,9 @@ import { TouchableOpacity } from "react-native";
 import { useColorModeValue } from "../../../../common/CustomHooks";
 import { useFirebase } from "../../../../common/FirebaseApp";
 import EventRow from "../../../../common/components/EventRow";
-import { FirestoreEvent, ParsedEvent, parseFirestoreEvent } from "../../../../common/firestore/events";
 import { log, universalCatch } from "../../../../common/logging";
 import { TabNavigatorProps } from "../../../../types/NavigationTypes";
+import { FirestoreEvent, ParsedEvent, parseFirestoreEvent } from "../../../../types/events";
 
 const EventListScreen = () => {
   const {

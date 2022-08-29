@@ -3,8 +3,8 @@ import { Box, Heading, ScrollView, View } from "native-base";
 import { useEffect, useState } from "react";
 
 import SponsorCard from "../../../../common/components/ImageCard";
-import { LegacyFirestoreSponsor } from "../../../../common/firestore/sponsors";
 import { universalCatch } from "../../../../common/logging";
+import { LegacyFirestoreSponsor } from "../../../../types/sponsors";
 
 /**
  * A horizontally scrolling carousel of SponsorCards

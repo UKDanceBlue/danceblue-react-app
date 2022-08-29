@@ -1,9 +1,9 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { FirestoreNotification } from "../common/firestore/pastNotifications";
-import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints } from "../common/firestore/teams";
-import { isFirestoreUser } from "../common/firestore/users";
+import { FirestoreNotification } from "../types/pastNotifications";
+import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints } from "../types/teams";
+import { isFirestoreUser } from "../types/users";
 
 import { startLoading, stopLoading } from "./globalLoadingSlice";
 
