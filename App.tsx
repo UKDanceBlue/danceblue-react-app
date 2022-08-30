@@ -9,9 +9,10 @@ import { NavigationContainer, NavigationContainerRef } from "@react-navigation/n
 import { addEventListener as addLinkingEventListener, canOpenURL, createURL as createLinkingURL, getInitialURL as getInitialLinkingURL, openURL } from "expo-linking";
 import { addNotificationResponseReceivedListener } from "expo-notifications";
 import { hideAsync as hideSplashScreenAsync } from "expo-splash-screen";
+import { UpdateEventType, addListener as addUpdateListener, checkForUpdateAsync, fetchUpdateAsync, reloadAsync } from "expo-updates";
 import { ICustomTheme, NativeBaseProvider, useDisclose } from "native-base";
 import { useEffect, useRef, useState } from "react";
-import { StatusBar } from "react-native";
+import { EventSubscription, StatusBar } from "react-native";
 import { WebViewSource } from "react-native-webview/lib/WebViewTypes";
 import { Provider } from "react-redux";
 
@@ -19,8 +20,8 @@ import "./src/common/util/AndroidTimerFix"; // https://github.com/firebase/fireb
 import { FirebaseProvider } from "./src/common/FirebaseContext";
 import NotificationInfoModal from "./src/common/components/NotificationInfoModal";
 import WebpageModal from "./src/common/components/WebpageModal";
-import { universalCatch } from "./src/common/logging";
-import { showMessage } from "./src/common/util/alertUtils";
+import { log, universalCatch } from "./src/common/logging";
+import { showMessage, showPrompt } from "./src/common/util/alertUtils";
 import RootScreen from "./src/navigation/root/RootScreen";
 import { logout } from "./src/redux/authSlice";
 import store from "./src/redux/store";
@@ -83,6 +84,41 @@ const App = () => {
       }).catch(universalCatch);
     }
   }, []);
+
+  useEffect(() => {
+    if (!__DEV__) {
+      checkForUpdateAsync().then(({ isAvailable }) => {
+        if (isAvailable) {
+          return fetchUpdateAsync();
+        }
+      }).catch(universalCatch);
+
+      const updatesSubscription = addUpdateListener(({
+        type, message
+      }) => {
+        if (type === UpdateEventType.UPDATE_AVAILABLE) {
+          showPrompt(
+            "Restart app now?",
+            "Update Available",
+            undefined,
+            () => {
+              reloadAsync()
+                .catch(universalCatch);
+            },
+            "Later",
+            "Yes"
+          );
+        } else if (type === UpdateEventType.ERROR) {
+          log(`Expo-Updates error: ${message ?? "[UNKNOWN]"}`, "warn");
+        }
+      }) as EventSubscription;
+
+      return () => {
+        updatesSubscription.remove();
+      };
+    }
+  }, []);
+
 
   return (
     <Provider store={store}>
