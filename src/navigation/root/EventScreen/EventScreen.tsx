@@ -3,7 +3,7 @@ import { PermissionStatus, createEventAsync, getCalendarPermissionsAsync, reques
 import { setStringAsync } from "expo-clipboard";
 import { openBrowserAsync } from "expo-web-browser";
 import { DateTime, Interval } from "luxon";
-import { Box, Button, Center, Heading, Image, Pressable, ScrollView, Text, VStack, useTheme } from "native-base";
+import { Badge, Box, Button, Center, Heading, Image, Pressable, ScrollView, Text, VStack, ZStack, useTheme } from "native-base";
 import { ActivityIndicator, useWindowDimensions } from "react-native";
 import openMaps from "react-native-open-maps";
 import { WebView } from "react-native-webview";
@@ -58,17 +58,52 @@ const EventScreen = () => {
   return (
     <VStack h="full">
       <ScrollView>
-        {image != null &&
-          <Image
-            source={{ uri: image.url, width: image.width, height: image.width }}
+        {image != null && (Array.isArray(image)
+          ? (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={true}
+              horizontal
+              style={{
+                height: Math.max(...(
+                  image.map(
+                    (
+                      (image) => Math.min(
+                        image.height,
+                        (screenWidth * (image.height / image.width))
+                      )
+                    )
+                  )
+                ), 0)
+              }}>
+              {image.map((pageImage, index) => (
+                <ZStack key={index} style={{ width: Math.min(pageImage.width, screenWidth), height: Math.min(pageImage.height, (screenWidth * (pageImage.height / pageImage.width))), marginRight: index < image.length - 1 ? 6 : 0 }}>
+                  {image.length > 1 && <Badge
+                    position="relative"
+                    rounded="full"
+                    bottom={2}
+                    right={2}
+                    zIndex={1}
+                    variant="solid"><Text color="white">{index+1}/{image.length}</Text></Badge>}
+                  <Image
+                    source={{ uri: pageImage.url, width: pageImage.width, height: pageImage.width }}
+                    alt={title}
+                    style={{ width: "100%", height: "100%" }}
+                    resizeMode="contain"
+                  />
+                </ZStack>
+              ))}
+            </ScrollView>)
+          : (<Image
+            source={{ uri: image.url, width: image.width, height: image.height }}
             alt={title}
             style={{ width: "100%", height: Math.min(image.height, (screenWidth * (image.height / image.width))) }}
             resizeMode="contain"
-          />
+          />))
         }
         <Heading my={1} mx={2} textAlign="center">{title}</Heading>
         {address != null &&
-          <Pressable
+          (<Pressable
             onPress={() => {
               setStringAsync(address).then(() => {
                 showMessage(undefined, "Address copied to clipboard");
@@ -83,7 +118,7 @@ const EventScreen = () => {
             >
               {address}
             </Text>
-          </Pressable>
+          </Pressable>)
         }
         <Text textAlign="center" mx={2} mb={2}>{whenString}</Text>
 
@@ -124,21 +159,44 @@ const EventScreen = () => {
         </Button>
 
         <Text mt={2} mx={2}>{description}</Text>
-        {link && <Pressable
-          _pressed={{ opacity: 0.6 }}
-          width="full"
-          mx={2}
-          mb={2}
-          onPress={() => openBrowserAsync(link.url).catch(universalCatch)
-          }
-        >
-          <Text
-            textAlign="center"
-            color="blue.600"
-            underline>
-            {link.text}
-          </Text>
-        </Pressable>}
+        {link && (
+          Array.isArray(link)
+            ? (
+              <>
+                {link.map((pageLink, index) => (
+                  <Pressable
+                    _pressed={{ opacity: 0.6 }}
+                    width="full"
+                    mx={2}
+                    mb={2}
+                    onPress={() => openBrowserAsync(pageLink.url).catch(universalCatch)}
+                    key={index}
+                  >
+                    <Text
+                      textAlign="center"
+                      color="blue.600"
+                      underline>
+                      {pageLink.text}
+                    </Text>
+                  </Pressable>
+                ))}
+              </>
+            )
+            : (<Pressable
+              _pressed={{ opacity: 0.6 }}
+              width="full"
+              mx={2}
+              mb={2}
+              onPress={() => openBrowserAsync(link.url).catch(universalCatch)
+              }
+            >
+              <Text
+                textAlign="center"
+                color="blue.600"
+                underline>
+                {link.text}
+              </Text>
+            </Pressable>))}
 
         {address &&
           <Box

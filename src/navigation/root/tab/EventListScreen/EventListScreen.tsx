@@ -117,7 +117,7 @@ const EventListScreen = () => {
               title={row.title}
               blurb={row.description.length > 99 ? `${row.description.substring(0, 100) }...` : row.description}
               interval={row.interval}
-              imageSource={row.image == null ? undefined : { uri: row.image.url, width: row.image.width, height: row.image.height }}
+              imageSource={row.image == null ? undefined : (Array.isArray(row.image) ? { uri: row.image[0].url, width: row.image[0].width, height: row.image[0].height } : { uri: row.image.url, width: row.image.width, height: row.image.height })}
             />
           </TouchableOpacity>
         )}
