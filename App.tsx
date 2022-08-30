@@ -6,28 +6,36 @@ import "intl/locale-data/jsonp/en";
 import NetInfo from "@react-native-community/netinfo";
 import analytics from "@react-native-firebase/analytics";
 import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
-import { addEventListener as addLinkingEventListener, createURL as createLinkingURL, getInitialURL as getInitialLinkingURL } from "expo-linking";
+import { addEventListener as addLinkingEventListener, canOpenURL, createURL as createLinkingURL, getInitialURL as getInitialLinkingURL, openURL } from "expo-linking";
 import { addNotificationResponseReceivedListener } from "expo-notifications";
 import { hideAsync as hideSplashScreenAsync } from "expo-splash-screen";
-import { ICustomTheme, NativeBaseProvider } from "native-base";
-import { useEffect, useRef } from "react";
+import { ICustomTheme, NativeBaseProvider, useDisclose } from "native-base";
+import { useEffect, useRef, useState } from "react";
 import { StatusBar } from "react-native";
+import { WebViewSource } from "react-native-webview/lib/WebViewTypes";
 import { Provider } from "react-redux";
 
-// https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
-import "./src/common/util/AndroidTimerFix";
+import "./src/common/util/AndroidTimerFix"; // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
 import { FirebaseProvider } from "./src/common/FirebaseContext";
+import NotificationInfoModal from "./src/common/components/NotificationInfoModal";
+import WebpageModal from "./src/common/components/WebpageModal";
 import { universalCatch } from "./src/common/logging";
 import { showMessage } from "./src/common/util/alertUtils";
 import RootScreen from "./src/navigation/root/RootScreen";
 import { logout } from "./src/redux/authSlice";
 import store from "./src/redux/store";
 import { customTheme } from "./src/theme";
+import { NotificationInfoPopup } from "./src/types/NotificationPayload";
 import { RootStackParamList } from "./src/types/navigationTypes";
 
 // Import and run the fistLaunch file
 import "./src/firstLaunch";
 
+const linkingPrefixes = [
+  createLinkingURL("/"),
+  "https://*.danceblue.org",
+  "https://danceblue.org"
+];
 
 /**
  * Main app container
@@ -37,6 +45,20 @@ const App = () => {
   const splashScreenHidden = useRef(false);
   const routeNameRef = useRef<string>();
   const navigationRef = useRef<NavigationContainerRef<RootStackParamList>>(null);
+
+  const {
+    isOpen: isNotificationInfoOpen,
+    onClose: onNotificationInfoClose,
+    onOpen: onNotificationInfoOpen,
+  } = useDisclose(false);
+  const [ notificationInfoPopupContent, setNotificationInfoPopupContent ] = useState<NotificationInfoPopup | null>(null);
+
+  const {
+    isOpen: isNotificationWebviewPopupSourceOpen,
+    onClose: onNotificationWebviewPopupSourceClose,
+    onOpen: onNotificationWebviewPopupSourceOpen,
+  } = useDisclose(false);
+  const [ notificationWebviewPopupSource, setNotificationWebviewPopupSourcePopupUrl ] = useState<WebViewSource | null>(null);
 
   useEffect(
     () => NetInfo.addEventListener((state) => {
@@ -90,11 +112,7 @@ const App = () => {
               }
             }}
             linking={{
-              prefixes: [
-                createLinkingURL("/"),
-                "https://*.danceblue.org",
-                "https://danceblue.org"
-              ],
+              prefixes: linkingPrefixes,
               getInitialURL: getInitialLinkingURL,
               // Filter out URLs used by expo-auth-session
               filter: (url) => !url.includes("+expo-auth-session"),
@@ -107,18 +125,32 @@ const App = () => {
                 // THIS IS THE NOTIFICATION ENTRY POINT
                 const notificationSubscription = addNotificationResponseReceivedListener((response) => {
                   const {
-                    url, message
+                    url, message, webviewSource
                   } = response.notification.request.content.data as {
                     url?: string;
-                    message?: string;
+                    message?: NotificationInfoPopup;
+                    webviewSource?: WebViewSource;
                   };
 
                   if (message != null) {
-                    showMessage(message, response.notification.request.content.title ?? "Notification");
+                    setNotificationInfoPopupContent(message);
+                    onNotificationInfoOpen();
+                  }
+
+                  if (webviewSource != null) {
+                    setNotificationWebviewPopupSourcePopupUrl(webviewSource);
+                    onNotificationWebviewPopupSourceOpen();
                   }
 
                   if (url != null) {
-                  // Let React Navigation handle the URL
+                    if (linkingPrefixes.every((prefix) => !url.includes(prefix))) {
+                      canOpenURL(url).then((canOpen) => {
+                        if (canOpen) {
+                          return openURL(url);
+                        }
+                      }).catch(universalCatch);
+                    }
+                    // Let React Navigation handle the URL
                     listener(url);
                   }
                 });
@@ -128,9 +160,25 @@ const App = () => {
                   linkingSubscription.remove();
                   notificationSubscription.remove();
                 };
+              },
+              config: {
+                initialRouteName: "Tab",
+                screens: {
+                  Tab: {
+                    path: "/",
+                    screens: {
+                      Home: { path: "/" },
+                      Events: { path: "/events" },
+                      Team: { path: "/my-team" },
+                      Scoreboard: { path: "/scoreboard" },
+                    },
+                  }
+                }
               }
             }}
           >
+            <NotificationInfoModal isNotificationInfoOpen={isNotificationInfoOpen} onNotificationInfoClose={onNotificationInfoClose} notificationInfoPopupContent={notificationInfoPopupContent} />
+            <WebpageModal isOpen={isNotificationWebviewPopupSourceOpen} onClose={onNotificationWebviewPopupSourceClose} source={notificationWebviewPopupSource} />
             <RootScreen />
           </NavigationContainer>
         </FirebaseProvider>
@@ -140,3 +188,4 @@ const App = () => {
 };
 
 export default App;
+

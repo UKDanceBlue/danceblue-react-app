@@ -6,7 +6,9 @@ export const loggerMiddleware = (store) => (next) => (action) => {
     logError(action.error);
   }
   const result = next(action);
-  log(`next state:\n${JSON.stringify(store.getState())}`, "debug");
+  if (__DEV__) {
+    log(`next state:\n${JSON.stringify(store.getState())}`, "debug");
+  }
   return result;
 };
 

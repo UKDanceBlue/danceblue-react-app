@@ -90,7 +90,7 @@ export const registerPushNotifications = createAsyncThunk("notification/register
         const { uuid } = (thunkApi.getState() as RootState).notification;
         if (uuid) {
           // Store the push notification token in firebase
-          await firestore().doc(`devices/${uuid}`).update({ expoPushToken: token.data || null });
+          await firestore().doc(`devices/${uuid}`).set({ expoPushToken: token.data || null }, { merge: true });
         }
         return { token, notificationPermissionsGranted: true };
       });

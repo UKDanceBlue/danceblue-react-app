@@ -10,7 +10,7 @@ import { Button, Divider, Input, Text, View } from "native-base";
 
 import Standings from "../../../../common/components/Standings";
 import { showMessage } from "../../../../common/util/alertUtils";
-import generateUuid from "../../../../common/util/GenerateUuid";
+import generateUuid from "../../../../common/util/generateUuid";
 import store from "../../../../redux/store";
 import { StandingType } from "../../../../types/StandingType";
 import { universalCatch } from "../../../../common/logging";
