@@ -1,5 +1,4 @@
-// WARNING THIS ISN'T VERSIONED
-import { ConfigContext, ExpoConfig } from "@expo/config";
+import { ConfigContext, ExpoConfig } from "@expo/config"; // WARNING - @expo/config types aren't versioned
 
 interface Version {
   major: number;
@@ -29,28 +28,32 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const bundleVersion: Version = {
     major: 2,
     minor: 0,
-    patch: 1
-  };
-  const version: Version = {
+    patch: 2
+  } as const;
+  const nativeVersion: Version = {
     major: 2,
     minor: 0,
-    patch: 1
-  };
+    patch: 2
+  } as const;
 
-  if (version.major !== bundleVersion.major) {
-    throw new Error(`Major version mismatch: ${version.major} !== ${bundleVersion.major}. Avoid bumping the bundle version without making a new build.`);
+  // Both the sum of version.patch + buildsThisVersion and the sum of baseBuildCount + buildsThisVersion must increase each time a native build is submitted.
+  const baseBuildCount = 30;
+  const buildsThisVersion = 0;
+
+  // DO NOT CHANGE ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU'RE DOING
+
+  if (nativeVersion.major !== bundleVersion.major) {
+    throw new Error(`Major version mismatch: ${nativeVersion.major} !== ${bundleVersion.major}. Avoid bumping the bundle version without making a new build.`);
   }
-  if (version.minor > bundleVersion.minor) {
-    throw new Error(`Minor version mismatch: ${version.minor} > ${bundleVersion.minor}. Bundle cannot be labeled as older than the runtime version.`);
-  } else if (version.minor === bundleVersion.minor && version.patch > bundleVersion.patch) {
-    throw new Error(`Patch version mismatch: ${version.patch} > ${bundleVersion.patch}. Bundle cannot be labeled as older than the runtime version.`);
+  if (nativeVersion.minor > bundleVersion.minor) {
+    throw new Error(`Minor version mismatch: ${nativeVersion.minor} > ${bundleVersion.minor}. Bundle cannot be labeled as older than the runtime version.`);
+  } else if (nativeVersion.minor === bundleVersion.minor && nativeVersion.patch > bundleVersion.patch) {
+    throw new Error(`Patch version mismatch: ${nativeVersion.patch} > ${bundleVersion.patch}. Bundle cannot be labeled as older than the runtime version.`);
   }
-  const baseBuildCount = 28;
-  const buildsThisVersion = 1; // THIS MUST BE INCREMENTED BEFORE ANY NEW BUILD IS CREATED
   const bundleVersionString: SemVer = `${bundleVersion.major}.${bundleVersion.minor}.${bundleVersion.patch}`;
-  const runtimeVersion: SemVer = `${version.major}.${version.minor}.${version.patch}`;
+  const runtimeVersion: SemVer = `${nativeVersion.major}.${nativeVersion.minor}.${nativeVersion.patch}`;
   const versionCode = baseBuildCount + buildsThisVersion;
-  const buildNumber: SemVer = `${version.major}.${version.minor}.${version.patch + buildsThisVersion}`;
+  const buildNumber: SemVer = `${nativeVersion.major}.${nativeVersion.minor}.${nativeVersion.patch + buildsThisVersion}`;
 
   // App info
   const name = IS_DEV ? "DB DEV CLIENT" : "DanceBlue";
@@ -58,7 +61,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const androidGoogleServicesFile = IS_DEV ? "./google-services.dev.json" : "./google-services.json";
   const iosGoogleServicesFile = IS_DEV ? "./GoogleService-Info.dev.plist" : "./GoogleService-Info.plist";
 
-  // DO NOT CHANGE ANYTHING BELOW THIS LINE
   return {
     ...config,
     name,

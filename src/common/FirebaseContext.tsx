@@ -50,12 +50,30 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
       dispatch(syncAuth({ user }))
         .then(() => dispatch(loadUserData({ firestore: value.fbFirestore, loginType: user.isAnonymous? "anonymous" : "ms-oath-linkblue", userId: user.uid })))
         .catch(universalCatch);
-      value.fbAnalytics.setUserId(user.uid).catch(universalCatch);
-      value.fbCrashlytics.setUserId(user.uid).catch(universalCatch);
+
+      Promise.all(
+        [
+          value.fbAnalytics.setUserId(user.uid),
+          value.fbCrashlytics.setUserId(user.uid)
+        ]
+      )
+        .then(() => {
+          log("Updated userId for analytics and crashlytics");
+        })
+        .catch(universalCatch);
     } else {
       dispatch(logout());
-      value.fbAnalytics.setUserId(null).catch(universalCatch);
-      value.fbCrashlytics.setUserId("[LOGGED_OUT]").catch(universalCatch);
+
+      Promise.all(
+        [
+          value.fbAnalytics.setUserId(null),
+          value.fbCrashlytics.setUserId("[LOGGED_OUT]")
+        ]
+      )
+        .then(() => {
+          log("Updated userId for analytics and crashlytics");
+        })
+        .catch(universalCatch);
     }
 
     const { uuid } = store.getState().notification;
@@ -64,6 +82,9 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
       firestore()
         .doc(`devices/${uuid}`)
         .set({ latestUserId: store.getState().auth.uid }, { merge: true })
+        .then(() => {
+          log("Updated latestUserId for device in firestore");
+        })
         .catch(universalCatch);
     }
   }), [

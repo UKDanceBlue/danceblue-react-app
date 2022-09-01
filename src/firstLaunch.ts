@@ -14,8 +14,6 @@ if (isDevelopmentBuild()) {
   DevMenu.registerDevMenuItems([{ name: "Print Redux State", callback: () => console.log(JSON.stringify(store.getState(), null, 2)) }]).catch(universalCatch);
 }
 
-// All assets that should be preloaded:
-
 // Configure the notifications handler to decide what to do when a notification is received if the app is open
 setNotificationHandler({
   // eslint-disable-next-line @typescript-eslint/require-await
