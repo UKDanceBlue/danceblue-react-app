@@ -9,7 +9,7 @@
       "releaseChannel": "development",
       "developmentClient": true,
       "cache": {
-        "key": "1"
+        "key": "2"
       },
       "env": {
         "APP_VARIANT": "development",
@@ -23,7 +23,7 @@
         "simulator": true
       },
       "cache": {
-        "key": "0"
+        "key": "2"
       },
       "env": {
         "APP_VARIANT": "development"
@@ -33,14 +33,14 @@
       "distribution": "internal",
       "releaseChannel": "preview",
       "cache": {
-        "key": "0"
+        "key": "2"
       }
     },
     "production": {
       "distribution": "store",
       "releaseChannel": "prod-v2",
       "cache": {
-        "key": "0"
+        "key": "2"
       }
     }
   },
