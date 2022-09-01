@@ -119,7 +119,6 @@ const App = () => {
     }
   }, []);
 
-
   return (
     <Provider store={store}>
       <NativeBaseProvider config={{ strictMode: __DEV__ ? "error" : "off" }} theme={customTheme as ICustomTheme}>
