@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "UK DanceBlue",
+    "description": "University of Kentucky DanceBlue Mobile Application",
     "slug": "danceblue-mobile",
     "privacy": "unlisted",
     "owner": "university-of-kentucky-danceblue",
@@ -95,6 +96,10 @@
         }
       ]
     },
-    "description": "University of Kentucky DanceBlue Mobile Application"
+    "extra": {
+      "eas": {
+        "projectId": "86042d7a-cd35-415c-87ed-f53c008b3827"
+      }
+    }
   }
 }
