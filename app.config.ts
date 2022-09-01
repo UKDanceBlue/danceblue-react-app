@@ -23,18 +23,18 @@ export default ({ config }: ConfigContext): ExpoConfig => {
 
   To bump the app's version:
   1. Change whatever you want in `version`
-  2. Increment `baseBuildCount` by `buildsThisVersion` plus one.
-  3. Set `buildsThisVersion` to 0.
+  2. Increment `baseBuildCount` by `buildsThisVersion`.
+  3. Set `buildsThisVersion` to 1.
   */
   const bundleVersion: Version = {
     major: 2,
     minor: 0,
-    patch: 0
+    patch: 1
   };
   const version: Version = {
     major: 2,
     minor: 0,
-    patch: 0
+    patch: 1
   };
 
   if (version.major !== bundleVersion.major) {
@@ -45,8 +45,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   } else if (version.minor === bundleVersion.minor && version.patch > bundleVersion.patch) {
     throw new Error(`Patch version mismatch: ${version.patch} > ${bundleVersion.patch}. Bundle cannot be labeled as older than the runtime version.`);
   }
-  const baseBuildCount = 24;
-  const buildsThisVersion = 4; // THIS MUST BE INCREMENTED BEFORE ANY NEW BUILD IS CREATED
+  const baseBuildCount = 28;
+  const buildsThisVersion = 1; // THIS MUST BE INCREMENTED BEFORE ANY NEW BUILD IS CREATED
   const bundleVersionString: SemVer = `${bundleVersion.major}.${bundleVersion.minor}.${bundleVersion.patch}`;
   const runtimeVersion: SemVer = `${version.major}.${version.minor}.${version.patch}`;
   const versionCode = baseBuildCount + buildsThisVersion;
