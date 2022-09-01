@@ -40,6 +40,10 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
 
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    value.fbAppCheck.activate("THIS STRING IS IGNORED").catch(universalCatch);
+  }, [value.fbAppCheck]);
+
   useEffect(() => value.fbAuth.onAuthStateChanged((user) => {
     log("Auth state changed");
     if (user) {

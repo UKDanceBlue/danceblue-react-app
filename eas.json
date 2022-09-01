@@ -12,7 +12,8 @@
         "key": "1"
       },
       "env": {
-        "APP_VARIANT": "development"
+        "APP_VARIANT": "development",
+        "FIREBASE_APP_CHECK_DEBUG_TOKEN": "3B7C4299-3FEA-47CA-80C5-953A6AC54D54"
       }
     },
     "development": {
