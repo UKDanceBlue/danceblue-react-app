@@ -28,7 +28,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const bundleVersion: Version = {
     major: 2,
     minor: 0,
-    patch: 2
+    patch: 3
   } as const;
   const nativeVersion: Version = {
     major: 2,
