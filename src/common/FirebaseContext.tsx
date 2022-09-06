@@ -81,7 +81,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
       // Update the user's uid in firestore when auth state changes so long as the uuid has ben initialized
       firestore()
         .doc(`devices/${uuid}`)
-        .set({ latestUserId: store.getState().auth.uid }, { merge: true })
+        .set({ latestUserId: user?.uid ?? null }, { merge: true })
         .then(() => {
           log("Updated latestUserId for device in firestore");
         })

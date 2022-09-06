@@ -34,8 +34,8 @@ import "./src/firstLaunch";
 
 const linkingPrefixes = [
   createLinkingURL("/"),
-  "https://*.danceblue.org",
-  "https://danceblue.org"
+  // "https://*.danceblue.org",
+  // "https://danceblue.org"
 ];
 
 /**
@@ -59,7 +59,7 @@ const App = () => {
     onClose: onNotificationWebviewPopupSourceClose,
     onOpen: onNotificationWebviewPopupSourceOpen,
   } = useDisclose(false);
-  const [ notificationWebviewPopupSource, setNotificationWebviewPopupSourcePopupUrl ] = useState<WebViewSource | null>(null);
+  const [ notificationWebviewPopupSource, setNotificationWebviewPopupSource ] = useState<WebViewSource | null>(null);
 
   useEffect(
     () => NetInfo.addEventListener((state) => {
@@ -160,33 +160,34 @@ const App = () => {
                 // THIS IS THE NOTIFICATION ENTRY POINT
                 const notificationSubscription = addNotificationResponseReceivedListener((response) => {
                   const {
-                    url, message, webviewSource
+                    url: notificationUrl, textPopup, webviewPopup
                   } = response.notification.request.content.data as {
                     url?: string;
-                    message?: NotificationInfoPopup;
-                    webviewSource?: WebViewSource;
+                    textPopup?: NotificationInfoPopup;
+                    webviewPopup?: WebViewSource;
                   };
 
-                  if (message != null) {
-                    setNotificationInfoPopupContent(message);
+                  if (textPopup != null) {
+                    setNotificationInfoPopupContent(textPopup);
                     onNotificationInfoOpen();
                   }
 
-                  if (webviewSource != null) {
-                    setNotificationWebviewPopupSourcePopupUrl(webviewSource);
+                  if (webviewPopup != null) {
+                    setNotificationWebviewPopupSource(webviewPopup);
                     onNotificationWebviewPopupSourceOpen();
                   }
 
-                  if (url != null) {
-                    if (linkingPrefixes.every((prefix) => !url.includes(prefix))) {
-                      canOpenURL(url).then((canOpen) => {
+                  if (notificationUrl != null) {
+                    const decodedUrl = decodeURI(notificationUrl);
+                    if (linkingPrefixes.every((prefix) => !decodedUrl.includes(prefix))) {
+                      canOpenURL(decodedUrl).then((canOpen) => {
                         if (canOpen) {
-                          return openURL(url);
+                          return openURL(decodedUrl);
                         }
                       }).catch(universalCatch);
                     }
                     // Let React Navigation handle the URL
-                    listener(url);
+                    listener(decodedUrl);
                   }
                 });
 

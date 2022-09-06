@@ -13,9 +13,9 @@
     "eas-android-preview": "eas build --no-wait --platform=android --auto-submit --profile=preview",
     "eas-ios-production": "eas build --no-wait --platform=ios --auto-submit --profile=production",
     "eas-android-production": "eas build --no-wait --platform=android --auto-submit --profile=production",
-    "make-dev-update": "npx expo-cli publish --release-channel development",
-    "make-preview-update": "npx expo-cli publish --release-channel preview",
-    "make-prod-update": "npx expo-cli publish --release-channel prod-v2",
+    "make-dev-update": "expo-cli publish --release-channel development",
+    "make-preview-update": "expo-cli publish --release-channel preview",
+    "make-prod-update": "expo-cli publish --release-channel prod-v2",
     "eas-build-pre-install": "bash -c \"[ ! -z \\\"$EAS_BUILD_NPM_CACHE_URL\\\" ] && sed -i -e \\\"s#https://registry.yarnpkg.com#$EAS_BUILD_NPM_CACHE_URL#g\\\" yarn.lock\" || true"
   },
   "dependencies": {
