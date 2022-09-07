@@ -21,6 +21,7 @@ on:
         description: Build profile to use
         required: true
         options:
+          - dev-client
           - development
           - preview
           - production
