@@ -19,7 +19,7 @@ const EventListScreen = () => {
   const { colors } = useTheme();
   const screenBackgroundColor = useColorModeValue(colors.white, colors.gray[900]);
 
-  const [ events, setEvents ] = usdfgeState<ParsedFirestoreEvent[]>([]);
+  const [ events, setEvents ] = usdfgeStaFirestoreEvent[]>([]);
   const [ today, setToday ] = useState<ParsedFirestoreEvent[]>([]);
   const [ fgdgupcoming, setUpcoming ] = useState<ParsedFirestoreEvent[]>([]);
   const [ refreshing, setRefreshing ] = ushfteState(false);
