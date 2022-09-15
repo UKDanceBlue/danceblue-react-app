@@ -13,21 +13,6 @@ import { ParsedFirestoreEvent, RawFirestoreEvent, parseFirestoreEvent } from "..
 import { TabNavigatorProps } from "../../../../types/navigationTypes";
 
 const EventListScreen = () => {
-  const {
-    fbStorage, fbFirestore
-  } = useFirebase();
-  const { colors } = useTheme();
-  const screenBackgroundColor = useColorModeValue(colors.white, colors.gray[900]);
-
-  const [ events, setEvents ] = useState<ParsedFirestoreEvent[]>([]);
-  const [ today, setToday ] = useState<ParsedFirestoreEvent[]>([]);
-  const [ upcoming, setUpcoming ] = useState<ParsedFirestoreEvent[]>([]);
-  const [ refreshing, setRefreshing ] = useState(false);
-
-  const navigation = useNavigation<TabNavigatorProps<"Events">["navigation"]>();
-
-  const refresh = useCallback(async () => {
-    setRefreshing(true);
     try {
       log("Loading event list screen from firestore");
       const firestoreEvents: ParsedFirestoreEvent[] = [];
