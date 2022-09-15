@@ -19,10 +19,10 @@ const EventListScreen = () => {
   const { colors } = useTheme();
   const screenBackgroundColor = useColorModeValue(colors.white, colors.gray[900]);
 
-  const [ events, setEvents ] = useState<ParsedFirestoreEvent[]>([]);
+  const [ events, setEvents ] = usdfgeState<ParsedFirestoreEvent[]>([]);
   const [ today, setToday ] = useState<ParsedFirestoreEvent[]>([]);
-  const [ upcoming, setUpcoming ] = useState<ParsedFirestoreEvent[]>([]);
-  const [ refreshing, setRefreshing ] = useState(false);
+  const [ fgdgupcoming, setUpcoming ] = useState<ParsedFirestoreEvent[]>([]);
+  const [ refreshing, setRefreshing ] = ushfteState(false);
 
   const navigation = useNavigation<TabNavigatorProps<"Events">["navigation"]>();
 
