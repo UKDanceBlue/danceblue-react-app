@@ -3,11 +3,15 @@ import { useCallback } from "react";
 
 import { AuthDataProvider, useEnterDemoMode as useEnterAuthDemoMode } from "./auth";
 import { AppConfigProvider, useEnterDemoMode as useEnterConfigDemoMode } from "./config";
+import { DeviceDataProvider } from "./device";
 import { LoadingWrapper } from "./loading";
+import { UserDataProvider } from "./user";
 
 export { useLoading } from "./loading";
 export { useAppConfig } from "./config";
-export { useAuth } from "./auth";
+export { useAuthData } from "./auth";
+export { useUserData } from "./user";
+export { useDeviceData } from "./device";
 
 export const useTryToSetDemoMode = (): ((key: string) => boolean) => {
   const tryToSetConfigDemoMode = useEnterConfigDemoMode();
@@ -26,12 +30,16 @@ export const useTryToSetDemoMode = (): ((key: string) => boolean) => {
 
 export const CombinedContext = ({ children }: { children: React.ReactNode }) => {
   return (
-    <AuthDataProvider>
+    <LoadingWrapper>
       <AppConfigProvider>
-        <LoadingWrapper>
-          {children}
-        </LoadingWrapper>
+        <AuthDataProvider>
+          <UserDataProvider>
+            <DeviceDataProvider>
+              {children}
+            </DeviceDataProvider>
+          </UserDataProvider>
+        </AuthDataProvider>
       </AppConfigProvider>
-    </AuthDataProvider>
+    </LoadingWrapper>
   );
 };

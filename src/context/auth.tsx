@@ -3,13 +3,23 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useFirebase } from "../common/FirebaseContext";
 import { universalCatch } from "../common/logging";
 
-interface AuthData {
-  isAuthLoaded: boolean;
+interface UnloadedAuthData {
+  isAuthLoaded: false;
+  isLoggedIn: false;
+  isAnonymous: false;
+  uid: null;
+  authClaims: null;
+}
+
+interface LoadedAuthData {
+  isAuthLoaded: true;
   isLoggedIn: boolean;
   isAnonymous: boolean;
   uid: string | null;
   authClaims: { [key: string]: string | unknown } | null;
 }
+
+type AuthData = UnloadedAuthData | LoadedAuthData;
 
 const initialAuthState: AuthData = {
   isAuthLoaded: false,
@@ -77,7 +87,7 @@ export const AuthDataProvider = ({ children }: { children: React.ReactNode }) =>
   );
 };
 
-export const useAuth = () => {
+export const useAuthData = () => {
   return useContext(AuthDataContext)[0];
 };
 
