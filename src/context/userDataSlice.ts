@@ -6,9 +6,16 @@ import { FirestoreNotification, isFirestoreNotification } from "../types/Firesto
 import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints, isFirestoreTeam, isFirestoreTeamFundraising, isFirestoreTeamIndividualSpiritPoints } from "../types/FirestoreTeam";
 import { isFirestoreUser } from "../types/FirestoreUser";
 
-import { startLoading, stopLoading } from "./globalLoadingSlice";
+const startLoading = () => undefined;
+const stopLoading = () => undefined;
 
+/**
+ * @deprecated
+ */
 export type UserLoginType = "anonymous" | "ms-oath-linkblue";
+/**
+ * @deprecated
+ */
 interface UserDataType {
   firstName: string | null;
   lastName: string | null;
@@ -23,6 +30,9 @@ interface UserDataType {
   pastNotifications: FirestoreNotification[];
 }
 
+/**
+ * @deprecated
+ */
 const initialState: UserDataType = {
   firstName: null,
   lastName: null,
@@ -37,6 +47,9 @@ const initialState: UserDataType = {
   pastNotifications: [],
 };
 
+/**
+ * @deprecated
+ */
 export const loadUserData = createAsyncThunk(
   "userData/loadUserData",
   async (payload: { userId: string; loginType: UserLoginType; firestore: FirebaseFirestoreTypes.Module }, { dispatch }): Promise<UserDataType> => {
@@ -149,6 +162,9 @@ export const loadUserData = createAsyncThunk(
   }
 );
 
+/**
+ * @deprecated
+ */
 const userDataSlice = createSlice({
   name: "userData",
   reducers: {
@@ -182,7 +198,13 @@ const userDataSlice = createSlice({
   }
 });
 
+/**
+ * @deprecated
+ */
 export default userDataSlice.reducer;
+/**
+ * @deprecated
+ */
 export const {
   loginAnonymously, enterDemoMode
 } = userDataSlice.actions;

@@ -1,5 +1,8 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
+/**
+ * @deprecated
+ */
 interface DeviceDataSliceType {
   deviceId: string | null;
   demoModeEnabled: boolean;
@@ -8,6 +11,9 @@ interface DeviceDataSliceType {
 }
 
 // Initial state
+/**
+ * @deprecated
+ */
 const initialState: DeviceDataSliceType = {
   deviceId: null,
   demoModeEnabled: false,
@@ -15,6 +21,9 @@ const initialState: DeviceDataSliceType = {
   getsNotifications: false,
 };
 
+/**
+ * @deprecated
+ */
 const deviceDataSlice = createSlice({
   initialState,
   name: "deviceData",
@@ -34,8 +43,14 @@ const deviceDataSlice = createSlice({
   },
 });
 
+/**
+ * @deprecated
+ */
 export const {
   setDemoModeEnabled, setGetsNotifications, setPushToken
 } = deviceDataSlice.actions;
 
+/**
+ * @deprecated
+ */
 export default deviceDataSlice.reducer;
