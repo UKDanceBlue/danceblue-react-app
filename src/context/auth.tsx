@@ -27,7 +27,7 @@ const loggedOutAuthState: AuthData = {
   authClaims: null,
 };
 
-const AuthDataContext = createContext<AuthData>(initialAuthState);
+const AuthDataContext = createContext<[AuthData, () => void]>([ initialAuthState, () => undefined ]);
 
 export const AuthDataProvider = ({ children }: { children: React.ReactNode }) => {
   const [ authData, setAuthData ] = useState<AuthData>(initialAuthState);
@@ -61,13 +61,26 @@ export const AuthDataProvider = ({ children }: { children: React.ReactNode }) =>
     return unsubscribe;
   }, [fbAuth]);
 
+  const setDemoMode = () => {
+    setAuthData({
+      ...initialAuthState,
+      isAuthLoaded: true,
+      isLoggedIn: true,
+      uid: "demo"
+    });
+  };
+
   return (
-    <AuthDataContext.Provider value={authData}>
+    <AuthDataContext.Provider value={[ authData, setDemoMode ]}>
       {children}
     </AuthDataContext.Provider>
   );
 };
 
 export const useAuth = () => {
-  return useContext(AuthDataContext);
+  return useContext(AuthDataContext)[0];
+};
+
+export const useEnterDemoMode = () => {
+  return useContext(AuthDataContext)[1];
 };
