@@ -68,8 +68,6 @@ export const AuthDataProvider = ({ children }: { children: React.ReactNode }) =>
   );
 };
 
-const useAuth = () => {
+export const useAuth = () => {
   return useContext(AuthDataContext);
 };
-
-export default useAuth;
