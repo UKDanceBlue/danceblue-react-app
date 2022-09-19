@@ -9,6 +9,8 @@ import { useFirebase } from "../common/FirebaseContext";
 import { universalCatch } from "../common/logging";
 import { showMessage } from "../common/util/alertUtils";
 
+import { useLoading } from "./loading";
+
 const uuidStoreKey = __DEV__ ? "danceblue.device-uuid.dev" : "danceblue.device-uuid";
 
 interface DeviceData {
@@ -99,6 +101,8 @@ const registerPushNotifications = async (firestore: FirebaseFirestoreTypes.Modul
 const DeviceDataContext = createContext<DeviceData>(initialDeviceDataState);
 
 export const DeviceDataProvider = ({ children }: { children: React.ReactNode }) => {
+  const [ , setLoading ] = useLoading();
+
   const [ deviceId, setDeviceId ] = useState<string | null>(null);
   const [ pushToken, setPushToken ] = useState<string | null>(null);
   const [ getsNotifications, setGetsNotifications ] = useState<boolean>(false);
@@ -106,9 +110,11 @@ export const DeviceDataProvider = ({ children }: { children: React.ReactNode }) 
   const { fbFirestore } = useFirebase();
 
   useEffect(() => {
+    setLoading(true);
+
     obtainUuid().then((uuid) => {
       setDeviceId(uuid);
-      registerPushNotifications(fbFirestore, uuid).then(({
+      return registerPushNotifications(fbFirestore, uuid).then(({
         token, notificationPermissionsGranted
       }) => {
         setPushToken(token?.data ?? null);
@@ -123,8 +129,9 @@ export const DeviceDataProvider = ({ children }: { children: React.ReactNode }) 
           universalCatch(e);
         }
       });
-    }).catch(universalCatch);
-  }, [fbFirestore]);
+    }).catch(universalCatch)
+      .finally(() => setLoading(false));
+  }, [ fbFirestore, setLoading ]);
 
   return (
     <DeviceDataContext.Provider value={{ deviceId, pushToken, getsNotifications }}>

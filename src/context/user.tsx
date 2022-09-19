@@ -8,6 +8,7 @@ import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritP
 import { isFirestoreUser } from "../types/FirestoreUser";
 
 import { useAuthData } from "./auth";
+import { useLoading } from "./loading";
 
 export type UserLoginType = "anonymous" | "ms-oath-linkblue";
 interface UserData {
@@ -144,6 +145,8 @@ const loadUserData = async (userId: string, loginType: UserLoginType, firestore:
 const UserDataContext = createContext<UserData>(initialUserDataState);
 
 export const UserDataProvider = ({ children }: { children: React.ReactNode }) => {
+  const [ , setLoading ] = useLoading();
+
   const [ userData, setUserData ] = useState<UserData>(initialUserDataState);
 
   const {
@@ -154,12 +157,16 @@ export const UserDataProvider = ({ children }: { children: React.ReactNode }) =>
 
   useEffect(() => {
     if (isAuthLoaded && isLoggedIn && uid != null) {
-      loadUserData(uid, isAnonymous ? "anonymous" : "ms-oath-linkblue", fbFirestore).then(setUserData).catch(universalCatch);
+      setLoading(true);
+      loadUserData(uid, isAnonymous ? "anonymous" : "ms-oath-linkblue", fbFirestore)
+        .then(setUserData)
+        .catch(universalCatch)
+        .finally(() => setLoading(false));
     } else {
       setUserData(initialUserDataState);
     }
   }, [
-    isAuthLoaded, isLoggedIn, uid, isAnonymous, fbFirestore
+    isAuthLoaded, isLoggedIn, uid, isAnonymous, fbFirestore, setLoading
   ]);
 
   return (
