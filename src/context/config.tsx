@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 import { log, logError, universalCatch } from "../common/logging";
-import { useFirebase } from "../context";
+import { useFirebase } from "../context/firebase";
 
 import { useLoading } from "./loading";
 import { UserLoginType } from "./user";

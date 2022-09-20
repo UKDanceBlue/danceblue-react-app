@@ -2,7 +2,7 @@ import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 import { log, universalCatch } from "../common/logging";
-import { useFirebase } from "../context";
+import { useFirebase } from "../context/firebase";
 import { FirestoreNotification, isFirestoreNotification } from "../types/FirestoreNotification";
 import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints, isFirestoreTeam, isFirestoreTeamFundraising, isFirestoreTeamIndividualSpiritPoints } from "../types/FirestoreTeam";
 import { isFirestoreUser } from "../types/FirestoreUser";

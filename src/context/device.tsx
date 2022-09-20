@@ -7,7 +7,7 @@ import { V4Options, v4 } from "uuid";
 
 import { universalCatch } from "../common/logging";
 import { showMessage } from "../common/util/alertUtils";
-import { useFirebase } from "../context";
+import { useFirebase } from "../context/firebase";
 
 import { useLoading } from "./loading";
 

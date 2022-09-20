@@ -117,8 +117,8 @@ const App = () => {
   }, []);
 
   return (
-    <CombinedContext>
-      <NativeBaseProvider config={{ strictMode: __DEV__ ? "error" : "off" }} theme={customTheme as ICustomTheme}>
+    <NativeBaseProvider config={{ strictMode: __DEV__ ? "error" : "off" }} theme={customTheme as ICustomTheme}>
+      <CombinedContext>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
         <NavigationContainer
           ref={navigationRef}
@@ -213,8 +213,8 @@ const App = () => {
           <WebpageModal isOpen={isNotificationWebviewPopupSourceOpen} onClose={onNotificationWebviewPopupSourceClose} source={notificationWebviewPopupSource} />
           <RootScreen />
         </NavigationContainer>
-      </NativeBaseProvider>
-    </CombinedContext>
+      </CombinedContext>
+    </NativeBaseProvider>
   );
 };
 
