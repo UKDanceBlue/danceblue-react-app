@@ -4,15 +4,16 @@ import { Button, HStack, Text, VStack, useColorMode } from "native-base";
 import { useState } from "react";
 import { TextInput } from "react-native";
 
-import { useAppDispatch, useAppSelector, useColorModeValue } from "../../../common/customHooks";
+import { useColorModeValue } from "../../../common/customHooks";
 import { universalCatch } from "../../../common/logging";
-import { enterDemoMode as enterDemoModeConfig } from "../../../redux/appConfigSlice";
-import { enterDemoMode as enterDemoModeAuth } from "../../../redux/authSlice";
-import { enterDemoMode as enterDemoModeUser } from "../../../redux/userDataSlice";
+import { useTryToSetDemoMode } from "../../../context";
+
+
+
 
 export const ProfileFooter = () => {
-  const demoModeKey = useAppSelector((state) => state.appConfig.demoModeKey);
-  const dispatch = useAppDispatch();
+  const tryToEnterDemoMode = useTryToSetDemoMode();
+
   const [ reportLongPressed, setReportLongPressed ] = useState(false);
   const [ suggestLongPressed, setSuggestLongPressed ] = useState(false);
 
@@ -27,10 +28,7 @@ export const ProfileFooter = () => {
           returnKeyType="go"
           secureTextEntry
           onSubmitEditing={(event) => {
-            if (event.nativeEvent.text === demoModeKey) {
-              dispatch(enterDemoModeConfig());
-              dispatch(enterDemoModeAuth());
-              dispatch(enterDemoModeUser());
+            if (tryToEnterDemoMode(event.nativeEvent.text)) {
               setReportLongPressed(false);
               setSuggestLongPressed(false);
             }

@@ -5,9 +5,9 @@ import { AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY, getItemAsync, setItemAsync } from 
 import { createContext, useContext, useEffect, useState } from "react";
 import { V4Options, v4 } from "uuid";
 
-import { useFirebase } from "../common/FirebaseContext";
 import { universalCatch } from "../common/logging";
 import { showMessage } from "../common/util/alertUtils";
+import { useFirebase } from "../context";
 
 import { useLoading } from "./loading";
 
@@ -112,14 +112,15 @@ export const DeviceDataProvider = ({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     setLoading(true);
 
-    obtainUuid().then((uuid) => {
+    obtainUuid().then(async (uuid) => {
       setDeviceId(uuid);
-      return registerPushNotifications(fbFirestore, uuid).then(({
-        token, notificationPermissionsGranted
-      }) => {
+      try {
+        const {
+          token, notificationPermissionsGranted
+        } = await registerPushNotifications(fbFirestore, uuid);
         setPushToken(token?.data ?? null);
         setGetsNotifications(notificationPermissionsGranted);
-      }).catch((e) => {
+      } catch (e) {
         if ((e as Error | undefined)?.message === "DEVICE_IS_EMULATOR") {
           setPushToken(null);
           setGetsNotifications(false);
@@ -128,7 +129,7 @@ export const DeviceDataProvider = ({ children }: { children: React.ReactNode }) 
         } else {
           universalCatch(e);
         }
-      });
+      }
     }).catch(universalCatch)
       .finally(() => setLoading(false));
   }, [ fbFirestore, setLoading ]);
@@ -140,4 +141,4 @@ export const DeviceDataProvider = ({ children }: { children: React.ReactNode }) 
   );
 };
 
-export const useDeviceData: () => DeviceData = () => useContext(DeviceDataContext);
+export const useDeviceData = () => useContext(DeviceDataContext);

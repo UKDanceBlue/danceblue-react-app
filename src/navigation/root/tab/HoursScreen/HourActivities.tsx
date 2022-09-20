@@ -1,4 +1,5 @@
 /* eslint-disable */
+/*
 import firebaseAuth from "@react-native-firebase/auth";
 import firebaseFirestore from "@react-native-firebase/firestore";
 import firebaseStorage from "@react-native-firebase/storage";
@@ -11,7 +12,7 @@ import { Button, Divider, Input, Text, View } from "native-base";
 import Standings from "../../../../common/components/Standings";
 import { showMessage } from "../../../../common/util/alertUtils";
 import generateUuid from "../../../../common/util/generateUuid";
-import store from "../../../../redux/store";
+
 import { StandingType } from "../../../../types/StandingType";
 import { universalCatch } from "../../../../common/logging";
 
@@ -366,3 +367,4 @@ const activities = {
 } as Record<string, JSX.Element>;
 
 export default activities;
+*/

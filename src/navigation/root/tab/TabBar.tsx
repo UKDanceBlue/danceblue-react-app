@@ -10,9 +10,9 @@ import { ActivityIndicator } from "react-native";
 import WebView from "react-native-webview";
 
 // Import first-party dependencies
-import { useAppDispatch, useAppSelector, useColorModeValue } from "../../../common/customHooks";
-import { log, universalCatch } from "../../../common/logging";
-import { registerPushNotifications } from "../../../redux/notificationSlice";
+import { useColorModeValue } from "../../../common/customHooks";
+import { log } from "../../../common/logging";
+import { useAppConfig } from "../../../context";
 import { RootStackParamList, TabNavigatorParamList } from "../../../types/navigationTypes";
 import HeaderIcons from "../../HeaderIcons";
 
@@ -35,14 +35,13 @@ export const possibleTabs = {
 } as { [name: string]: ReactElement };
 
 const TabBar = () => {
-  const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
-  const configuredTabs = useAppSelector((state) => state.appConfig.enabledScreens);
+  const {
+    isConfigLoaded, enabledScreens: configuredTabs
+  } = useAppConfig();
 
   const { colors } = useTheme();
   const headerBgColor = useColorModeValue(colors.white, colors.gray[800]);
   const headerFgColor = useColorModeValue(colors.gray[800], colors.light[400]);
-
-  const dispatch = useAppDispatch();
 
   const [ currentTabs, setCurrentTabs ] = useState<ReactElement[]>([]);
 
@@ -70,10 +69,6 @@ const TabBar = () => {
       log(`Config loaded, setting current tabs to ${JSON.stringify({ currentTabs: tempCurrentTabs })}`);
     }
   }, [ configuredTabs, isConfigLoaded ]);
-
-  useEffect(() => {
-    dispatch(registerPushNotifications()).catch(universalCatch);
-  }, [dispatch]);
 
   return (
     <>

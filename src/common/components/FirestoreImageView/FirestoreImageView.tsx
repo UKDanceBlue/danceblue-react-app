@@ -1,8 +1,8 @@
 import { Center, Image, Spinner } from "native-base";
 import { useEffect, useState } from "react";
 
+import { useFirebase } from "../../../context";
 import { DownloadableImage, FirestoreImage, isFirestoreImage, parseFirestoreImage } from "../../../types/commonStructs";
-import { useFirebase } from "../../FirebaseContext";
 import { universalCatch } from "../../logging";
 
 export const FirestoreImageView = (

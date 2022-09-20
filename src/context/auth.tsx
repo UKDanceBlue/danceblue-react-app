@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { useFirebase } from "../common/FirebaseContext";
-import { universalCatch } from "../common/logging";
+import { log, universalCatch } from "../common/logging";
+import { useDeviceData } from "../context/device";
+import { useFirebase } from "../context/firebase";
 
 interface UnloadedAuthData {
   isAuthLoaded: false;
@@ -42,7 +43,11 @@ const AuthDataContext = createContext<[AuthData, () => void]>([ initialAuthState
 export const AuthDataProvider = ({ children }: { children: React.ReactNode }) => {
   const [ authData, setAuthData ] = useState<AuthData>(initialAuthState);
 
-  const { fbAuth } = useFirebase();
+  const {
+    fbAuth, fbAnalytics, fbCrashlytics, fbFirestore
+  } = useFirebase();
+
+  const { deviceId } = useDeviceData();
 
   useEffect(() => {
     const unsubscribe = fbAuth.onAuthStateChanged((user) => {
@@ -58,18 +63,53 @@ export const AuthDataProvider = ({ children }: { children: React.ReactNode }) =>
               uid: user.uid,
               authClaims: idTokenResult.claims,
             });
+
+            await Promise.all(
+              [
+                fbAnalytics.setUserId(user.uid),
+                fbCrashlytics.setUserId(user.uid)
+              ]
+            )
+              .then(() => {
+                log("Updated userId for analytics and crashlytics");
+              })
+              .catch(universalCatch);
           } else {
             setAuthData(loggedOutAuthState);
           }
         } catch (error) {
           universalCatch(error);
           setAuthData(initialAuthState);
+
+          Promise.all(
+            [
+              fbAnalytics.setUserId(null),
+              fbCrashlytics.setUserId("[LOGGED_OUT]")
+            ]
+          )
+            .then(() => {
+              log("Updated userId for analytics and crashlytics");
+            })
+            .catch(universalCatch);
+        }
+
+        if (deviceId != null) {
+        // Update the user's uid in firestore when auth state changes so long as the uuid has ben initialized
+          await fbFirestore
+            .doc(`devices/${deviceId}`)
+            .set({ latestUserId: user?.uid ?? null }, { merge: true })
+            .then(() => {
+              log("Updated latestUserId for device in firestore");
+            })
+            .catch(universalCatch);
         }
       })().catch(universalCatch);
     });
 
     return unsubscribe;
-  }, [fbAuth]);
+  }, [
+    deviceId, fbAnalytics, fbAuth, fbCrashlytics, fbFirestore
+  ]);
 
   const setDemoMode = () => {
     setAuthData({

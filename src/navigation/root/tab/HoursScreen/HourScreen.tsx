@@ -1,3 +1,4 @@
+/*
 import { MaterialIcons } from "@expo/vector-icons";
 import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
 import type { StackScreenProps } from "@react-navigation/stack";
@@ -300,3 +301,4 @@ const HourScreen = ({ route: { params: { firestoreHour } } }: { route: Props["ro
 };
 
 export default HourScreen;
+*/

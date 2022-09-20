@@ -1,8 +1,8 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
-import { useFirebase } from "../common/FirebaseContext";
 import { log, universalCatch } from "../common/logging";
+import { useFirebase } from "../context";
 import { FirestoreNotification, isFirestoreNotification } from "../types/FirestoreNotification";
 import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints, isFirestoreTeam, isFirestoreTeamFundraising, isFirestoreTeamIndividualSpiritPoints } from "../types/FirestoreTeam";
 import { isFirestoreUser } from "../types/FirestoreUser";
@@ -142,10 +142,11 @@ const loadUserData = async (userId: string, loginType: UserLoginType, firestore:
   return loadedUserData;
 };
 
-const UserDataContext = createContext<UserData>(initialUserDataState);
+// eslint-disable-next-line @typescript-eslint/require-await
+const UserDataContext = createContext<[UserData, (() => Promise<void>)]>([ initialUserDataState, async () => undefined ]);
 
 export const UserDataProvider = ({ children }: { children: React.ReactNode }) => {
-  const [ , setLoading ] = useLoading();
+  const [ , setLoading ] = useLoading("UserDataProvider");
 
   const [ userData, setUserData ] = useState<UserData>(initialUserDataState);
 
@@ -155,25 +156,36 @@ export const UserDataProvider = ({ children }: { children: React.ReactNode }) =>
 
   const { fbFirestore } = useFirebase();
 
-  useEffect(() => {
+
+  const refresh = useCallback(() => {
     if (isAuthLoaded && isLoggedIn && uid != null) {
       setLoading(true);
-      loadUserData(uid, isAnonymous ? "anonymous" : "ms-oath-linkblue", fbFirestore)
+      return loadUserData(uid, isAnonymous ? "anonymous" : "ms-oath-linkblue", fbFirestore)
         .then(setUserData)
-        .catch(universalCatch)
         .finally(() => setLoading(false));
     } else {
       setUserData(initialUserDataState);
+
+      return new Promise<void>((resolve) => {
+        resolve();
+      });
     }
   }, [
-    isAuthLoaded, isLoggedIn, uid, isAnonymous, fbFirestore, setLoading
+    fbFirestore, isAnonymous, isAuthLoaded, isLoggedIn, setLoading, uid
+  ]);
+
+  useEffect(() => {
+    refresh().catch(universalCatch);
+  }, [
+    isAuthLoaded, isLoggedIn, uid, isAnonymous, fbFirestore, setLoading, refresh
   ]);
 
   return (
-    <UserDataContext.Provider value={userData}>
+    <UserDataContext.Provider value={[ userData, refresh ]}>
       {children}
     </UserDataContext.Provider>
   );
 };
 
-export const useUserData = (): UserData => useContext(UserDataContext);
+export const useUserData = (): UserData => useContext(UserDataContext)[0];
+export const useRefreshUserData = () => useContext(UserDataContext)[1];

@@ -5,7 +5,6 @@ import { ActivityIndicator } from "react-native";
 
 import { useAppDispatch, useAppSelector, useColorModeValue } from "../../common/customHooks";
 import { universalCatch } from "../../common/logging";
-import { updateConfig } from "../../redux/appConfigSlice";
 import { RootStackParamList } from "../../types/navigationTypes";
 import HeaderIcons from "../HeaderIcons";
 
