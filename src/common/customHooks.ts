@@ -3,9 +3,6 @@ import firebaseStorage from "@react-native-firebase/storage";
 import { isEqual } from "lodash";
 import { useColorModeValue as useColorModeValueNativeBase } from "native-base";
 import { DependencyList, useDebugValue, useEffect, useRef, useState } from "react";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-
-import { AppDispatch, RootState } from "../redux/store";
 
 export function useFirebaseStorageUrl(googleUri?: string) {
   useDebugValue(`Storage for ${googleUri ?? "undefined"}`);
@@ -79,7 +76,3 @@ export function useCurrentDate(refreshInterval?: number) {
 }
 
 export const useColorModeValue = <A, B>(lightValue: A, darkValue: B): A | B => useColorModeValueNativeBase(lightValue, darkValue) as A | B;
-
-// Use throughout your app instead of plain `useDispatch` and `useSelector`
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

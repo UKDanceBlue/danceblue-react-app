@@ -10,9 +10,9 @@ import { ActivityIndicator } from "react-native";
 import WebView from "react-native-webview";
 
 // Import first-party dependencies
-import { useAppDispatch, useAppSelector, useColorModeValue } from "../../../common/customHooks";
-import { log, universalCatch } from "../../../common/logging";
-import { registerPushNotifications } from "../../../redux/notificationSlice";
+import { useColorModeValue } from "../../../common/customHooks";
+import { log } from "../../../common/logging";
+import { useAppConfig } from "../../../context";
 import { RootStackParamList, TabNavigatorParamList } from "../../../types/navigationTypes";
 import HeaderIcons from "../../HeaderIcons";
 
@@ -35,14 +35,13 @@ export const possibleTabs = {
 } as { [name: string]: ReactElement };
 
 const TabBar = () => {
-  const isConfigLoaded = useAppSelector((state) => state.appConfig.isConfigLoaded);
-  const configuredTabs = useAppSelector((state) => state.appConfig.enabledScreens);
+  const {
+    isConfigLoaded, enabledScreens: configuredTabs
+  } = useAppConfig();
 
   const { colors } = useTheme();
   const headerBgColor = useColorModeValue(colors.white, colors.gray[800]);
   const headerFgColor = useColorModeValue(colors.gray[800], colors.light[400]);
-
-  const dispatch = useAppDispatch();
 
   const [ currentTabs, setCurrentTabs ] = useState<ReactElement[]>([]);
 
@@ -71,65 +70,57 @@ const TabBar = () => {
     }
   }, [ configuredTabs, isConfigLoaded ]);
 
-  useEffect(() => {
-    dispatch(registerPushNotifications()).catch(universalCatch);
-  }, [dispatch]);
-
   return (
-    <>
-      {isConfigLoaded && (
-        <Tabs.Navigator
-          screenOptions={({
-            route, navigation
-          }: {
+    <Tabs.Navigator
+      screenOptions={({
+        route, navigation
+      }: {
             navigation: StackNavigationProp<RootStackParamList>;
             route: RouteProp<TabNavigatorParamList>;
         }) => ({
-            headerStyle: { backgroundColor: headerBgColor },
-            headerTitleStyle: { color: headerFgColor },
-            tabBarIcon: ({
-              color, size
-            }) => {
-              const iconMap = {
-                // https://icons.expo.fyi/
-                // Key: Screen   Value: Icon ID
-                Home: "home",
-                Events: "calendar",
-                Store: "store",
-                More: "ellipsis-h",
-                Scoreboard: "list-ol",
-                Team: "users",
-                Donate: "hand-holding-heart",
-                Marathon: "people-arrows",
-                "Scavenger Hunt": "search"
-              };
+        headerStyle: { backgroundColor: headerBgColor },
+        headerTitleStyle: { color: headerFgColor },
+        tabBarIcon: ({
+          color, size
+        }) => {
+          const iconMap = {
+            // https://icons.expo.fyi/
+            // Key: Screen   Value: Icon ID
+            Home: "home",
+            Events: "calendar",
+            Store: "store",
+            More: "ellipsis-h",
+            Scoreboard: "list-ol",
+            Team: "users",
+            Donate: "hand-holding-heart",
+            Marathon: "people-arrows",
+            "Scavenger Hunt": "search"
+          };
 
-              // You can return any component that you like here!
-              return (
-                <FontAwesome5
-                  name={iconMap[route.name]}
-                  size={size}
-                  color={color}
-                  style={{ textAlignVertical: "center" }}
-                />
-              );
-            },
-            headerRight: () => (
-              <HeaderIcons navigation={navigation} color={headerFgColor} />
-            ),
-            tabBarActiveTintColor: "white",
-            tabBarActiveBackgroundColor: "#3248a8",
-            tabBarStyle: [
-              { display: "flex" },
-              null,
-            ],
-          })}
-        >
-          <Tabs.Screen name="Home" component={HomeScreen} />
-          {currentTabs}
-        </Tabs.Navigator>
-      )}
-    </>
+          // You can return any component that you like here!
+          return (
+            <FontAwesome5
+              name={iconMap[route.name]}
+              size={size}
+              color={color}
+              style={{ textAlignVertical: "center" }}
+            />
+          );
+        },
+        headerRight: () => (
+          <HeaderIcons navigation={navigation} color={headerFgColor} />
+        ),
+        tabBarActiveTintColor: "white",
+        tabBarActiveBackgroundColor: "#3248a8",
+        tabBarStyle: [
+          { display: "flex" },
+          null,
+        ],
+      })}
+    >
+      <Tabs.Screen name="Home" component={HomeScreen} />
+      {isConfigLoaded && currentTabs}
+    </Tabs.Navigator>
   );
 };
 

@@ -2,10 +2,9 @@ import { startCase } from "lodash";
 import { Button, Center, Image, Spinner, Text, VStack, useTheme } from "native-base";
 
 import avatar from "../../../../assets/logo/monogram.png";
-import { useFirebase } from "../../../common/FirebaseContext";
 import { useLinkBlueLogin } from "../../../common/auth";
-import { useAppSelector } from "../../../common/customHooks";
 import { showMessage } from "../../../common/util/alertUtils";
+import { useAuthData, useFirebase, useUserData } from "../../../context";
 
 import { ProfileFooter } from "./ProfileFooter";
 
@@ -15,8 +14,8 @@ import { ProfileFooter } from "./ProfileFooter";
 const ProfileScreen = () => {
   const { colors } = useTheme();
 
-  const authData = useAppSelector((state) => state.auth);
-  const userData = useAppSelector((state) => state.userData);
+  const authData = useAuthData();
+  const userData = useUserData();
   const {
     fbAuth, fbFunctions
   } = useFirebase();

@@ -2,7 +2,6 @@
 // import { useCallback, useState } from "react";
 // import { RefreshControl, SafeAreaView, ScrollView } from "react-native";
 
-// import { useAppSelector } from "../../../../common/CustomHooks";
 // import Standings from "../../../../common/components/Standings";
 // import { FirestoreTeam } from "../../../../common/firestore/teams";
 // import { showMessage } from "../../../../common/util/AlertUtils";
