@@ -158,10 +158,10 @@ const App = () => {
                 const {
                   url: notificationUrl, textPopup, webviewPopup
                 } = response.notification.request.content.data as {
-                    url?: string;
-                    textPopup?: NotificationInfoPopup;
-                    webviewPopup?: WebViewSource;
-                  };
+                  url?: string;
+                  textPopup?: NotificationInfoPopup;
+                  webviewPopup?: WebViewSource;
+                };
 
                 if (textPopup != null) {
                   setNotificationInfoPopupContent(textPopup);

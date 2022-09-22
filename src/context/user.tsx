@@ -176,9 +176,7 @@ export const UserDataProvider = ({ children }: { children: React.ReactNode }) =>
 
   useEffect(() => {
     refresh().catch(universalCatch);
-  }, [
-    isAuthLoaded, isLoggedIn, uid, isAnonymous, fbFirestore, setLoading, refresh
-  ]);
+  }, [refresh]);
 
   return (
     <UserDataContext.Provider value={[ userData, refresh ]}>

@@ -1,4 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { FirebaseRemoteConfigTypes } from "@react-native-firebase/remote-config";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import { log, logError, universalCatch } from "../common/logging";
 import { useFirebase } from "../context/firebase";
@@ -34,97 +35,99 @@ const demoModeState: AppConfiguration = {
 
 const AppConfigContext = createContext<[AppConfiguration, ((key: string) => boolean)]>([ initialState, () => false ]);
 
+const updateState = async (setLoading: (isLoading: boolean) => void, fbRemoteConfig: FirebaseRemoteConfigTypes.Module): Promise<AppConfiguration> => {
+  setLoading(true);
+  try {
+    await fbRemoteConfig.setDefaults({
+      "shown_tabs": "[]",
+      "rn_scoreboard_mode": "{\"pointType\":\"spirit\",\"showIcons\":false,\"showTrophies\":true}",
+      "login_mode": "[\"ms-oath-linkblue\",\"anonymous\"]",
+      "countdowns": "[]",
+      "demo_mode_key": "Test Key 8748"
+    });
+    try {
+      await fbRemoteConfig.fetchAndActivate();
+    } catch (e) {
+      logError(e as Error);
+    }
+    log("Remote config fetched and activated");
+
+    const remoteConfigData = fbRemoteConfig.getAll();
+    const parsedRemoteConfig: Partial<AppConfiguration> = {};
+
+    try {
+      parsedRemoteConfig.enabledScreens = (JSON.parse(remoteConfigData.shown_tabs.asString()) ?? undefined) as string[];
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        log("Error parsing 'shown_tabs'");
+        logError(e);
+        parsedRemoteConfig.enabledScreens = undefined;
+      } else {
+        throw e;
+      }
+    }
+    try {
+      parsedRemoteConfig.allowedLoginTypes = (JSON.parse(remoteConfigData.login_mode.asString()) as (UserLoginType[] | undefined) ?? undefined);
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        log("Error while parsing 'login_mode' config");
+        logError(e);
+        parsedRemoteConfig.allowedLoginTypes = undefined;
+      } else {
+        throw e;
+      }
+    }
+    parsedRemoteConfig.demoModeKey = remoteConfigData.demo_mode_key.asString() as string | undefined;
+    try {
+      parsedRemoteConfig.scoreboardMode = (JSON.parse(remoteConfigData.rn_scoreboard_mode.asString()) ?? undefined) as {
+      pointType: string;
+      showIcons: boolean;
+      showTrophies: boolean;
+  } | undefined;
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        log("Error while parsing 'rn_scoreboard_mode' config");
+        logError(e);
+        parsedRemoteConfig.scoreboardMode = undefined;
+      } else {
+        throw e;
+      }
+    }
+
+    return {
+      isConfigLoaded: true,
+      allowedLoginTypes: parsedRemoteConfig.allowedLoginTypes ?? initialState.allowedLoginTypes,
+      enabledScreens: parsedRemoteConfig.enabledScreens ?? initialState.enabledScreens,
+      demoModeKey: parsedRemoteConfig.demoModeKey ?? initialState.demoModeKey,
+      scoreboardMode: parsedRemoteConfig.scoreboardMode ?? initialState.scoreboardMode,
+    };
+  } finally {
+    setLoading(false);
+  }
+};
+
 export const AppConfigProvider = ({ children }: { children: React.ReactNode }) => {
   const [ configData, setConfigData ] = useState<AppConfiguration>(initialState);
+  const demoModeKey = useMemo(() => configData.demoModeKey, [configData.demoModeKey]);
   const [ , setLoading ] = useLoading();
 
   const { fbRemoteConfig } = useFirebase();
 
-  const updateState = useCallback(async (): Promise<AppConfiguration> => {
-    setLoading(true);
-    try {
-      await fbRemoteConfig.setDefaults({
-        "shown_tabs": "[]",
-        "rn_scoreboard_mode": "{\"pointType\":\"spirit\",\"showIcons\":false,\"showTrophies\":true}",
-        "login_mode": "[\"ms-oath-linkblue\",\"anonymous\"]",
-        "countdowns": "[]",
-        "demo_mode_key": "Test Key 8748"
-      });
-      try {
-        await fbRemoteConfig.fetchAndActivate();
-      } catch (e) {
-        logError(e as Error);
-      }
-      log("Remote config fetched and activated");
-
-      const remoteConfigData = fbRemoteConfig.getAll();
-      const parsedRemoteConfig: Partial<AppConfiguration> = {};
-
-      try {
-        parsedRemoteConfig.enabledScreens = (JSON.parse(remoteConfigData.shown_tabs.asString()) ?? undefined) as string[];
-      } catch (e) {
-        if (e instanceof SyntaxError) {
-          log("Error parsing 'shown_tabs'");
-          logError(e);
-          parsedRemoteConfig.enabledScreens = undefined;
-        } else {
-          throw e;
-        }
-      }
-      try {
-        parsedRemoteConfig.allowedLoginTypes = (JSON.parse(remoteConfigData.login_mode.asString()) as (UserLoginType[] | undefined) ?? undefined);
-      } catch (e) {
-        if (e instanceof SyntaxError) {
-          log("Error while parsing 'login_mode' config");
-          logError(e);
-          parsedRemoteConfig.allowedLoginTypes = undefined;
-        } else {
-          throw e;
-        }
-      }
-      parsedRemoteConfig.demoModeKey = remoteConfigData.demo_mode_key.asString() as string | undefined;
-      try {
-        parsedRemoteConfig.scoreboardMode = (JSON.parse(remoteConfigData.rn_scoreboard_mode.asString()) ?? undefined) as {
-        pointType: string;
-        showIcons: boolean;
-        showTrophies: boolean;
-    } | undefined;
-      } catch (e) {
-        if (e instanceof SyntaxError) {
-          log("Error while parsing 'rn_scoreboard_mode' config");
-          logError(e);
-          parsedRemoteConfig.scoreboardMode = undefined;
-        } else {
-          throw e;
-        }
-      }
-
-      return {
-        isConfigLoaded: true,
-        allowedLoginTypes: parsedRemoteConfig.allowedLoginTypes ?? initialState.allowedLoginTypes,
-        enabledScreens: parsedRemoteConfig.enabledScreens ?? initialState.enabledScreens,
-        demoModeKey: parsedRemoteConfig.demoModeKey ?? initialState.demoModeKey,
-        scoreboardMode: parsedRemoteConfig.scoreboardMode ?? initialState.scoreboardMode,
-      };
-    } finally {
-      setLoading(false);
-    }
+  useEffect(() => {
+    updateState(setLoading, fbRemoteConfig).then(setConfigData).catch(universalCatch);
   }, [ fbRemoteConfig, setLoading ]);
 
-  useEffect(() => {
-    updateState().then(setConfigData).catch(universalCatch);
-  }, [updateState]);
-
-  const tryToSetDemoMode = useCallback((key: string): boolean => {
-    if (key === configData.demoModeKey) {
+  const tryToSetDemoMode = useCallback((key: string, demoModeKey: string): boolean => {
+    log(`Trying to set demo mode with key ${key}`);
+    if (key === demoModeKey) {
       setConfigData(demoModeState);
       return true;
     }
     return false;
-  }, [configData.demoModeKey]);
+  }, []);
 
   return (
-    <AppConfigContext.Provider value={[ configData, tryToSetDemoMode ]}>
+    <AppConfigContext.Provider value={[ configData, (key:string) => tryToSetDemoMode(key, demoModeKey) ]}>
       {children}
     </AppConfigContext.Provider>
   );

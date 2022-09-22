@@ -1,7 +1,7 @@
 import { Center, Spinner, ZStack } from "native-base";
-import { ReactNode, createContext, useContext, useId, useState } from "react";
+import { ReactNode, createContext, useCallback, useContext, useId, useReducer } from "react";
 
-const LoadingContext = createContext<[Record<string, boolean | undefined>, (state: boolean, id: string) => void]>([ {}, () => undefined ]);
+const LoadingContext = createContext<[Partial<Record<string, boolean>>, (state: boolean, id: string) => void]>([ {}, () => undefined ]);
 
 /**
  * Provides a loading context for the app, accessed via the useLoading hook. If any loading state is true, a spinner will be displayed.
@@ -10,11 +10,19 @@ const LoadingContext = createContext<[Record<string, boolean | undefined>, (stat
  * @returns The app's content wrapped in a loading context
  */
 export const LoadingWrapper = ({ children }: { children: ReactNode }) => {
-  const [ loadingReasons, setLoadingReasons ] = useState<Record<string, boolean>>({});
+  const [ loadingReasons, updateLoadingReasons ] = useReducer(
+    (state: Partial<Record<string, boolean>>, [ id, stateChange ]: [string, boolean]) => {
+      return {
+        ...state,
+        [id]: stateChange,
+      };
+    },
+    {}
+  );
 
-  const setLoading = (state: boolean, id: string) => {
-    setLoadingReasons({ ...loadingReasons, [id]: state });
-  };
+  const setLoading = useCallback((state: boolean, id: string) => {
+    updateLoadingReasons([ id, state ]);
+  }, []);
 
   return (
     <LoadingContext.Provider value={[ loadingReasons, setLoading ]}>
@@ -37,18 +45,18 @@ export const LoadingWrapper = ({ children }: { children: ReactNode }) => {
  * For local purposes this is identical to useState<boolean>(false), but it also sets the loading state in the global LoadingContext.
  * @returns A two element array. The first element is whether this loading hook is set to true, and the second is a function to change that value.
  */
-export const useLoading = (id?: string): [boolean, (state: boolean) => void, Record<string, boolean | undefined>] => {
+export const useLoading = (id?: string): [boolean, (state: boolean) => void, Partial<Record<string, boolean>>] => {
   const randomId = useId();
   const loadingId = id ?? randomId;
 
-  const [ loadingReasons, setLoadingReasons ] = useContext(LoadingContext);
+  const [ loadingReasons, setLoadingForId ] = useContext(LoadingContext);
 
   const isLoading = (loadingReasons[loadingId]) ?? false;
-  const setIsLoading = (state: boolean) => {
+  const setIsLoading = useCallback((state: boolean) => {
     // This will eventually be used to allow for making the spinner block all input behind it
     // Maybe use an object rather than an array to make it more readable, or a string? dunno
-    setLoadingReasons(state, loadingId);
-  };
+    setLoadingForId(state, loadingId);
+  }, [ loadingId, setLoadingForId ]);
 
   return [
     isLoading, setIsLoading, loadingReasons

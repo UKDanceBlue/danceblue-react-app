@@ -1,5 +1,5 @@
-
 import { useCallback } from "react";
+import { View } from "react-native";
 
 import { AuthDataProvider, useEnterDemoMode as useEnterAuthDemoMode } from "./auth";
 import { AppConfigProvider, useEnterDemoMode as useEnterConfigDemoMode } from "./config";
@@ -29,21 +29,20 @@ export const useTryToSetDemoMode = (): ((key: string) => boolean) => {
   }, [ tryToSetConfigDemoMode, setAuthDemoMode ]);
 };
 
-
-export const CombinedContext = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <LoadingWrapper>
-      <FirebaseProvider>
-        <DeviceDataProvider>
-          <AppConfigProvider>
-            <AuthDataProvider>
-              <UserDataProvider>
+export const CombinedContext = ({ children }: { children: React.ReactNode }) => (
+  <LoadingWrapper>
+    <FirebaseProvider>
+      <DeviceDataProvider>
+        <AppConfigProvider>
+          <AuthDataProvider>
+            <UserDataProvider>
+              <View style={{ minHeight: "100%", minWidth: "100%" }}>
                 {children}
-              </UserDataProvider>
-            </AuthDataProvider>
-          </AppConfigProvider>
-        </DeviceDataProvider>
-      </FirebaseProvider>
-    </LoadingWrapper>
-  );
-};
+              </View>
+            </UserDataProvider>
+          </AuthDataProvider>
+        </AppConfigProvider>
+      </DeviceDataProvider>
+    </FirebaseProvider>
+  </LoadingWrapper>
+);

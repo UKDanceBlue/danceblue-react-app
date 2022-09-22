@@ -1,10 +1,9 @@
 import { StackNavigationProp, createStackNavigator } from "@react-navigation/stack";
 import { Center, useTheme } from "native-base";
-import { useEffect } from "react";
 import { ActivityIndicator } from "react-native";
 
-import { useAppDispatch, useAppSelector, useColorModeValue } from "../../common/customHooks";
-import { universalCatch } from "../../common/logging";
+import { useColorModeValue } from "../../common/customHooks";
+import { useAuthData } from "../../context";
 import { RootStackParamList } from "../../types/navigationTypes";
 import HeaderIcons from "../HeaderIcons";
 
@@ -12,26 +11,20 @@ import EventScreen from "./EventScreen";
 import SplashLogin from "./Modals/SplashLogin";
 import NotificationScreen from "./NotificationScreen";
 import ProfileScreen from "./ProfileScreen";
-import HourScreen from "./tab/HoursScreen/HourScreen";
+// import HourScreen from "./tab/HoursScreen/HourScreen";
 import TabBar from "./tab/TabBar";
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
 const RootScreen = () => {
-  const isAuthLoaded = useAppSelector((state) => state.auth.isAuthLoaded);
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const {
+    isAuthLoaded, isLoggedIn
+  } = useAuthData();
+
 
   const { colors } = useTheme();
   const headerBgColor = useColorModeValue(colors.white, colors.gray[800]);
   const headerFgColor = useColorModeValue(colors.gray[800], colors.light[600]);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (isAuthLoaded) {
-      dispatch(updateConfig()).catch(universalCatch);
-    }
-  }, [ dispatch, isAuthLoaded ]);
 
   return (
     <>
@@ -63,7 +56,7 @@ const RootScreen = () => {
                   headerMode: "screen",
                 })}
               />
-              <RootStack.Screen name="Hour Details" component={HourScreen} />
+              {/* <RootStack.Screen name="Hour Details" component={HourScreen} /> */}
             </>
           ) : (
             <RootStack.Screen
