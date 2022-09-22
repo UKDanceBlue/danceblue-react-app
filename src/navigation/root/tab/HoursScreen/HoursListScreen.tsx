@@ -1,3 +1,4 @@
+/*
 import { useNavigation } from "@react-navigation/native";
 import { DateTime, Interval } from "luxon";
 import { Button, Divider, Image, Text, View } from "native-base";
@@ -7,8 +8,6 @@ import { FlatList, useWindowDimensions } from "react-native";
 import { useCachedFiles } from "../../../../common/cacheUtils";
 import { useAppSelector, useCurrentDate } from "../../../../common/customHooks";
 import { universalCatch } from "../../../../common/logging";
-import { resetConfig, updateConfig } from "../../../../redux/appConfigSlice";
-import store from "../../../../redux/store";
 import { FirestoreHour } from "../../../../types/firebaseTypes";
 import { TabNavigatorProps } from "../../../../types/navigationTypes";
 
@@ -101,7 +100,7 @@ const HourRow = ({
           {displayedName}
         </Text>
       </View>
-      {/* {clickable && <ListItem.Chevron tvParallaxProperties={undefined} />} */}
+      {/* {clickable && <ListItem.Chevron tvParallaxProperties={undefined} />} /}
     </Button>
   );
 };
@@ -148,7 +147,7 @@ const HoursListScreen = () => {
           </View>
           <View style={{ flexGrow: 2, height: 0 }} />
         </>
-      )*/}
+      )/}
       {marathonHour >= 0 && (
         <>
           {mapOfMemorial && (
@@ -193,3 +192,4 @@ const HoursListScreen = () => {
 };
 
 export default HoursListScreen;
+*/
