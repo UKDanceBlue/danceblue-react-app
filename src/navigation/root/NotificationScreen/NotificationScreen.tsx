@@ -1,38 +1,27 @@
 import { manufacturer as deviceManufacturer } from "expo-device";
 import { openSettings } from "expo-linking";
-import { IosAuthorizationStatus, getPermissionsAsync, setBadgeCountAsync } from "expo-notifications";
+import { setBadgeCountAsync } from "expo-notifications";
 import { Box, Button, FlatList, Heading, Text, View } from "native-base";
 import { useEffect } from "react";
-import { ActivityIndicator, RefreshControl } from "react-native";
+import { RefreshControl } from "react-native";
 
-import { useAppDispatch, useAppSelector } from "../../../common/customHooks";
+
 import { log, universalCatch } from "../../../common/logging";
-import { registerPushNotifications } from "../../../redux/notificationSlice";
+import { useDeviceData, useLoading, useUserData } from "../../../context";
+import { useRefreshUserData } from "../../../context/user";
+
 
 /**
  * Component for "Profile" screen in main navigation
  */
 const NotificationScreen = () => {
-  const notificationPermissionsGranted = useAppSelector(
-    (state) => state.notification.notificationPermissionsGranted
-  );
-  const notifications = useAppSelector((state) => state.userData.pastNotifications);
-  const userDataLoading = useAppSelector((state) => state.globalLoading.loadingTokens["userData/loadUserData"]);
+  const { getsNotifications: notificationPermissionsGranted } = useDeviceData();
+  const { pastNotifications: notifications } = useUserData();
+  const refreshUserData = useRefreshUserData();
 
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    getPermissionsAsync().then((settings) => {
-      if (
-        (settings.granted ||
-          settings.ios?.status === IosAuthorizationStatus.PROVISIONAL ||
-          settings.ios?.status === IosAuthorizationStatus.AUTHORIZED) !==
-        notificationPermissionsGranted
-      ) {
-        dispatch(registerPushNotifications()).catch(universalCatch);
-      }
-    }).catch(universalCatch);
-  }, [ dispatch, notificationPermissionsGranted ]);
+  const [
+    ,, { UserDataProvider: isUserDataLoading }
+  ] = useLoading();
 
   // Clear badge count when navigating to this screen
   useEffect(() => {
@@ -45,16 +34,16 @@ const NotificationScreen = () => {
     })().catch(universalCatch);
   }, []);
 
-  if (notificationPermissionsGranted === null) {
-    return <ActivityIndicator />;
-  } else if (!notificationPermissionsGranted) {
+  if (!notificationPermissionsGranted) {
     return (
       <View>
         <Text textAlign="center">
         You have not enabled notifications for this device, enable them in the settings app
         </Text>
         {deviceManufacturer === "Apple" && (
-          <Button onPress={() => openSettings().catch(universalCatch)} title="Open Settings" />
+          <Button onPress={() => openSettings().catch(universalCatch)} >
+            Open Settings
+          </Button>
         )}
       </View>
     );
@@ -67,7 +56,8 @@ const NotificationScreen = () => {
   } else {
     return (
       <FlatList
-        refreshControl={<RefreshControl refreshing={userDataLoading} />}
+        refreshControl={<RefreshControl refreshing={isUserDataLoading ?? false} />}
+        onRefresh={() => refreshUserData().catch(universalCatch)}
         data={notifications}
         renderItem={({ item: notification }) => (
           <Box>

@@ -7,10 +7,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { Agenda, Calendar, CalendarList } from "react-native-calendars";
 
-import { useFirebase } from "../../../../common/FirebaseContext";
 import EventRow from "../../../../common/components/EventRow";
 import { useColorModeValue } from "../../../../common/customHooks";
 import { log, universalCatch } from "../../../../common/logging";
+import { useFirebase } from "../../../../context";
 import { ParsedFirestoreEvent, RawFirestoreEvent, parseFirestoreEvent } from "../../../../types/FirestoreEvent";
 import { TabNavigatorProps } from "../../../../types/navigationTypes";
 
