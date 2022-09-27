@@ -1,9 +1,11 @@
 import firebaseFirestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { DateTime, Interval } from "luxon";
-import { Center, Heading, SectionList, Text, useTheme } from "native-base";
-import { useCallback, useEffect, useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { Center, Container, Heading, SectionList, Text, useTheme } from "native-base";
+import { background } from "native-base/lib/typescript/theme/styled-system";
+import React, { useCallback, useEffect, useState } from "react";
+import { TouchableOpacity, View } from "react-native";
+import { Agenda, Calendar, CalendarList } from "react-native-calendars";
 
 import { useFirebase } from "../../../../common/FirebaseContext";
 import EventRow from "../../../../common/components/EventRow";
@@ -78,55 +80,41 @@ const EventListScreen = () => {
    */
   return (
     <>
-      <SectionList
-        backgroundColor={screenBackgroundColor}
-        height={!refreshing && events.length === 0 ? 0 : "100%"}
-        onRefresh={() => refresh().catch(universalCatch)}
-        refreshing={refreshing}
-        sections={
-          [
-            {
-              title: "Today",
-              data: today
-            }, {
-              title: "Upcoming",
-              data: upcoming
-            }
-          ]
-        }
-        renderSectionHeader={({
-          section: {
-            title, data
-          }
-        }) => data.length > 0 ? (
-          <Center
-            backgroundColor={screenBackgroundColor}
-            borderBottomWidth={"1"}
-            borderBottomRadius={"xl"}
-            shadow={"1"}>
-            <Heading fontSize="xl" my={"2"}>
-              {title}
-            </Heading>
-          </Center>
-        ) : <></>}
-        renderItem={({ item: row }) => (
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Event", { event: row })}
-          >
-            <EventRow
-              title={row.title}
-              blurb={row.description.length > 99 ? `${row.description.substring(0, 100) }...` : row.description}
-              interval={row.interval}
-              imageSource={row.image == null ? undefined : (Array.isArray(row.image) ? { uri: row.image[0].url, width: row.image[0].width, height: row.image[0].height } : { uri: row.image.url, width: row.image.width, height: row.image.height })}
-            />
-          </TouchableOpacity>
-        )}
-      />
-      {
-        !refreshing && events.length === 0 &&
-        <Text>No Events</Text>
-      }
+      <View
+        style =
+          {{
+            backgroundColor: "#0032a0",
+            height: "50%",
+            width: "100%",
+            paddingTop: "8%"
+          }}
+      >
+        <CalendarList
+          horizontal = { true }
+          pagingEnabled = { true }
+          onDayPress = { (day) => {
+            
+          }}
+          theme =
+            {{
+              calendarBackground: "#0032a0",
+              monthTextColor: "white",
+              textMonthFontWeight: "900",
+              textMonthFontSize: 20,
+              textDayFontWeight: "bold",
+              dayTextColor: "white",
+              textDayFontSize: 20,
+              textDayHeaderFontSize: 15,
+              selectedDotColor: "white",
+              selectedDayTextColor: "black",
+              selectedDayBackgroundColor: "white",
+
+            }}
+        >
+        </CalendarList>
+      </View>
     </>
+    
   );
 };
 

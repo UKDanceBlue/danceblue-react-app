@@ -27,7 +27,11 @@ const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
 const ScavengerHuntComponent = () => <WebView renderLoading={() => <Center width="full" height="full"><ActivityIndicator size="large" /></Center>} startInLoadingState source={{ uri: "https://forms.gle/PV91KZunWW7c7aMAA" }} />;
 
 export const possibleTabs = {
-  Events: <Tabs.Screen key="Events" name="Events" component={EventListScreen} />,
+  Events: <Tabs.Screen
+    key="Events"
+    name="Events"
+    component={EventListScreen}
+    options = {{ headerShown: false }}/>,
   Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
   Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,
   MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
