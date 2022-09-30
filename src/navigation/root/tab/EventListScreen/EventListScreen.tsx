@@ -4,7 +4,7 @@ import { DateTime, Interval } from "luxon";
 import { Center, Container, Heading, SectionList, Text, useTheme } from "native-base";
 import { background } from "native-base/lib/typescript/theme/styled-system";
 import React, { useCallback, useEffect, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { StatusBar, TouchableOpacity, View } from "react-native";
 import { Agenda, Calendar, CalendarList } from "react-native-calendars";
 
 import EventRow from "../../../../common/components/EventRow";
@@ -25,6 +25,8 @@ const EventListScreen = () => {
   const [ today, setToday ] = useState<ParsedFirestoreEvent[]>([]);
   const [ upcoming, setUpcoming ] = useState<ParsedFirestoreEvent[]>([]);
   const [ refreshing, setRefreshing ] = useState(false);
+
+  const [ selectedDay, setSelectedDay ] = useState("");
 
   const navigation = useNavigation<TabNavigatorProps<"Events">["navigation"]>();
 
@@ -86,29 +88,42 @@ const EventListScreen = () => {
             backgroundColor: "#0032a0",
             height: "50%",
             width: "100%",
-            paddingTop: "8%"
+            paddingTop: "8%",
+            shadowColor: "black",
+            shadowOffset: { width: 0, height: 5 },
+            shadowOpacity: 0.5,
+            shadowRadius: 5
           }}
       >
         <CalendarList
           horizontal = { true }
           pagingEnabled = { true }
           onDayPress = { (day) => {
-            
+            // TODO: set calendars selcted day to (day)
           }}
+          // TODO: figure out custom style
+          markingType = { "custom" }
+          markedDates =
+            {{
+              "2022-09-24":
+              {
+                customStyles:
+                {
+                  container:
+                  { backgroundColor: "white" }
+                }
+              }
+            }}
           theme =
             {{
-              calendarBackground: "#0032a0",
+              calendarBackground: "transparent",
               monthTextColor: "white",
               textMonthFontWeight: "900",
               textMonthFontSize: 20,
               textDayFontWeight: "bold",
               dayTextColor: "white",
               textDayFontSize: 20,
-              textDayHeaderFontSize: 15,
-              selectedDotColor: "white",
-              selectedDayTextColor: "black",
-              selectedDayBackgroundColor: "white",
-
+              textDayHeaderFontSize: 15
             }}
         >
         </CalendarList>
