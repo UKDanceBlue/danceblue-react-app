@@ -1,11 +1,13 @@
 import firebaseFirestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
+import { format } from "date-fns";
 import { DateTime, Interval } from "luxon";
 import { Center, Container, Heading, SectionList, Text, useTheme } from "native-base";
 import { background } from "native-base/lib/typescript/theme/styled-system";
 import React, { useCallback, useEffect, useState } from "react";
 import { StatusBar, TouchableOpacity, View } from "react-native";
 import { Agenda, Calendar, CalendarList } from "react-native-calendars";
+import { MarkedDates } from "react-native-calendars/src/types";
 
 import EventRow from "../../../../common/components/EventRow";
 import { useColorModeValue } from "../../../../common/customHooks";
@@ -56,7 +58,7 @@ const EventListScreen = () => {
   }, [
     fbFirestore, fbStorage, refresh
   ]);
-
+  
   /**
    * Splits *events* into *today* and *upcoming* based on the events' start day
    */
@@ -76,6 +78,29 @@ const EventListScreen = () => {
     setToday(todayFromEvents);
     setUpcoming(upcomingFromEvents);
   }, [events]);
+
+  /**
+   *  Initialize Marked Dates
+   */
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const todaysDate = format(new Date(), "yyyy-MM-dd");
+
+  /* const getMarkedDates = (date: Date) => {
+    let markedDates: MarkedDates = {{
+      todaysDate: { selected: true },
+    }};
+
+    markedDates[date.toDateString] = { selected: true };
+    events.forEach((event) => {
+      const formattedDate = event.interval?.substring(0, 10);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      markedDates[formattedDate] = {
+        ...markedDates[formattedDate],
+        marked: true,
+      };
+    });
+  }; */
 
   /**
    * Called by React Native when rendering the screen
@@ -100,30 +125,48 @@ const EventListScreen = () => {
           pagingEnabled = { true }
           onDayPress = { (day) => {
             // TODO: set calendars selcted day to (day)
+            console.log(day);
+            console.log(today);
+            console.log(events);
           }}
           // TODO: figure out custom style
           markingType = { "custom" }
           markedDates =
             {{
+              [todaysDate]:
+              {
+                customStyles:
+                {
+                  container: { backgroundColor: "white" },
+                  text: {
+                    color: "#0032a0",
+                    fontWeight: "bold"
+                  }
+                }
+              },
               "2022-09-24":
               {
                 customStyles:
                 {
-                  container:
-                  { backgroundColor: "white" }
+                  container: { backgroundColor: "white" },
+                  text: {
+                    color: "#0032a0",
+                    fontWeight: "bold"
+                  }
                 }
               }
             }}
           theme =
             {{
               calendarBackground: "transparent",
-              monthTextColor: "white",
+              monthTextColor: "#FFC72C",
               textMonthFontWeight: "900",
               textMonthFontSize: 20,
               textDayFontWeight: "bold",
               dayTextColor: "white",
               textDayFontSize: 20,
-              textDayHeaderFontSize: 15
+              textDayHeaderFontSize: 15,
+              todayTextColor: "#FFC72C"
             }}
         >
         </CalendarList>
