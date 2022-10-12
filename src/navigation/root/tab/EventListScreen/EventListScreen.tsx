@@ -1,6 +1,5 @@
 import firebaseFirestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
-import { format } from "date-fns";
 import { DateTime, Interval } from "luxon";
 import { Center, Container, Heading, SectionList, Text, useTheme } from "native-base";
 import { background } from "native-base/lib/typescript/theme/styled-system";
@@ -58,7 +57,7 @@ const EventListScreen = () => {
   }, [
     fbFirestore, fbStorage, refresh
   ]);
-  
+
   /**
    * Splits *events* into *today* and *upcoming* based on the events' start day
    */
@@ -83,8 +82,7 @@ const EventListScreen = () => {
    *  Initialize Marked Dates
    */
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const todaysDate = format(new Date(), "yyyy-MM-dd");
+  const todaysDate = DateTime.now().toFormat("yyyy-MM-dd");
 
   /* const getMarkedDates = (date: Date) => {
     let markedDates: MarkedDates = {{
@@ -172,7 +170,7 @@ const EventListScreen = () => {
         </CalendarList>
       </View>
     </>
-    
+
   );
 };
 
