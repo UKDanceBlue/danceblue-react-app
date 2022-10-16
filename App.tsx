@@ -95,7 +95,7 @@ const App = () => {
       }) => {
         if (type === UpdateEventType.UPDATE_AVAILABLE) {
           showPrompt(
-            "The DanceBlue app needs to quickly restart to load updated information, restart app now?",
+            "Updated data for the DanceBlue app is available, reload the app now?",
             "New Content Available",
             undefined,
             () => {

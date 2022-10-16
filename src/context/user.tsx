@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import { log, universalCatch } from "../common/logging";
 import { useFirebase } from "../context/firebase";
 import { FirestoreNotification, isFirestoreNotification } from "../types/FirestoreNotification";
-import { FirestoreTeam, FirestoreTeamFundraising, FirestoreTeamIndividualSpiritPoints, isFirestoreTeam, isFirestoreTeamFundraising, isFirestoreTeamIndividualSpiritPoints } from "../types/FirestoreTeam";
+import { FirestoreTeam, isFirestoreTeam } from "../types/FirestoreTeam";
 import { isFirestoreUser } from "../types/FirestoreUser";
 
 import { useAuthData } from "./auth";
@@ -19,8 +19,6 @@ interface UserData {
   attributes: Record<string, string>;
   team: FirestoreTeam | null;
   teamId: string | null;
-  teamIndividualSpiritPoints: FirestoreTeamIndividualSpiritPoints | null;
-  teamFundraisingTotal: FirestoreTeamFundraising | null;
   userLoginType: UserLoginType | null;
   pastNotifications: FirestoreNotification[];
 }
@@ -32,8 +30,6 @@ const initialUserDataState: UserData = {
   attributes: {},
   team: null,
   teamId: null,
-  teamIndividualSpiritPoints: null,
-  teamFundraisingTotal: null,
   userLoginType: null,
   pastNotifications: [],
 };
@@ -95,38 +91,13 @@ const loadUserData = async (userId: string, loginType: UserLoginType, firestore:
 
     // Check for a user's team data
     if (rawUserData.team?.id != null) {
-      const userTeamDoc = firestore.collection("teams").doc(rawUserData.team.id);
-      const userTeamSnapshot = await userTeamDoc.get();
+      const userTeamSnapshot = await rawUserData.team.get();
 
       if (userTeamSnapshot.exists) {
         const userTeamSnapshotData = userTeamSnapshot.data();
         if (isFirestoreTeam(userTeamSnapshotData)) {
           loadedUserData.team = userTeamSnapshotData;
           loadedUserData.teamId = rawUserData.team.id;
-
-          const userTeamIndividualPointsDoc = firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("individualSpiritPoints");
-          const userTeamIndividualPointsSnapshot = await userTeamIndividualPointsDoc.get();
-
-          if (userTeamIndividualPointsSnapshot.exists) {
-            const userTeamIndividualPointsSnapshotData = userTeamIndividualPointsSnapshot.data();
-            if (isFirestoreTeamIndividualSpiritPoints(userTeamIndividualPointsSnapshotData)) {
-              loadedUserData.teamIndividualSpiritPoints = userTeamIndividualPointsSnapshotData;
-            } else {
-              log(`Team individual spirit points "${userTeamIndividualPointsSnapshot.ref.path}" is not valid`, "warn");
-            }
-          }
-
-          const userTeamFundraisingDoc = firestore.collection(`teams/${rawUserData.team.id}/confidential`).doc("fundraising");
-          const userTeamFundraisingSnapshot = await userTeamFundraisingDoc.get();
-
-          if (userTeamFundraisingSnapshot.exists) {
-            const userTeamFundraisingSnapshotData = userTeamFundraisingSnapshot.data();
-            if (isFirestoreTeamFundraising(userTeamFundraisingSnapshotData)) {
-              loadedUserData.teamFundraisingTotal = userTeamFundraisingSnapshotData;
-            } else {
-              log(`Team fundraising "${userTeamFundraisingSnapshot.ref.path}" is not valid`, "warn");
-            }
-          }
         } else {
           log(`Team "${userTeamSnapshot.ref.path}" is not valid`, "warn");
         }
