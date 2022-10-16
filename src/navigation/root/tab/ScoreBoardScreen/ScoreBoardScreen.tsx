@@ -19,6 +19,7 @@ const ScoreBoardScreen = () => {
   const [ loading, setLoading ] = useState(true);
 
   const refresh = useCallback(() => {
+    setLoading(true);
     // switch (pointType) {
     // case "spirit":
     firebaseFirestore().doc("spirit/teams").get()
