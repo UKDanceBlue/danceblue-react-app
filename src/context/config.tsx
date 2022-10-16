@@ -46,11 +46,16 @@ const updateState = async (setLoading: (isLoading: boolean) => void, fbRemoteCon
       "demo_mode_key": "Test Key 8748"
     });
     try {
-      await fbRemoteConfig.fetchAndActivate();
+      await fbRemoteConfig.fetch(300);
+      const activated = await fbRemoteConfig.activate();
+      if (!activated) {
+        log(`Remote config not activated, last fetch status was ${fbRemoteConfig.lastFetchStatus}`);
+      } else {
+        log("Remote config activated");
+      }
     } catch (e) {
       logError(e as Error);
     }
-    log("Remote config fetched and activated");
 
     const remoteConfigData = fbRemoteConfig.getAll();
     const parsedRemoteConfig: Partial<AppConfiguration> = {};

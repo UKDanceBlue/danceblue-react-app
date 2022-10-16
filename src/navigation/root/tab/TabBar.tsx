@@ -26,11 +26,11 @@ export const possibleTabs = {
   Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} /> as ReactElement,
   Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} /> as ReactElement,
   MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} /> as ReactElement,
-} as const;
+} as Record<string, ReactElement>;
 
 const TabBar = () => {
   const {
-    isConfigLoaded, enabledScreens: configuredTabs
+    isConfigLoaded, enabledScreens
   } = useAppConfig();
 
   const { colors } = useTheme();
@@ -42,16 +42,14 @@ const TabBar = () => {
   useEffect(() => {
     if (isConfigLoaded) {
       const tempCurrentTabs = [];
-      for (const [ tabName, tabElement ] of Object.entries(possibleTabs)) {
-        if (configuredTabs.includes(tabName)) {
-          tempCurrentTabs.push(tabElement);
-        }
+      for (const tabName of enabledScreens) {
+        tempCurrentTabs.push(possibleTabs[tabName]);
       }
 
       setCurrentTabs(tempCurrentTabs);
       log(`Config loaded, setting current tabs to ${JSON.stringify({ currentTabs: tempCurrentTabs })}`);
     }
-  }, [ configuredTabs, isConfigLoaded ]);
+  }, [ enabledScreens, isConfigLoaded ]);
 
   return (
     <Tabs.Navigator
