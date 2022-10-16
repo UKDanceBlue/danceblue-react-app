@@ -41,7 +41,7 @@ const TabBar = () => {
 
   useEffect(() => {
     if (isConfigLoaded) {
-      const tempCurrentTabs = [ possibleTabs.Team, possibleTabs.Scoreboard ];
+      const tempCurrentTabs = [];
       for (const [ tabName, tabElement ] of Object.entries(possibleTabs)) {
         if (configuredTabs.includes(tabName)) {
           tempCurrentTabs.push(tabElement);
