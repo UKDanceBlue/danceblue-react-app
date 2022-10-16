@@ -3,11 +3,8 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { DateTime, Interval } from "luxon";
-import { Center, useTheme } from "native-base";
+import { useTheme } from "native-base";
 import { ReactElement, useEffect, useState } from "react";
-import { ActivityIndicator } from "react-native";
-import WebView from "react-native-webview";
 
 // Import first-party dependencies
 import { useColorModeValue } from "../../../common/customHooks";
@@ -24,15 +21,12 @@ import TeamScreen from "./TeamScreen";
 
 const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
 
-const ScavengerHuntComponent = () => <WebView renderLoading={() => <Center width="full" height="full"><ActivityIndicator size="large" /></Center>} startInLoadingState source={{ uri: "https://forms.gle/PV91KZunWW7c7aMAA" }} />;
-
 export const possibleTabs = {
-  Events: <Tabs.Screen key="Events" name="Events" component={EventListScreen} />,
-  Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
-  Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,
-  MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
-  ScavengerHunt: <Tabs.Screen key="ScavengerHunt" name="Scavenger Hunt" component={ScavengerHuntComponent} />,
-} as { [name: string]: ReactElement };
+  Events: <Tabs.Screen key="Events" name="Events" component={EventListScreen} /> as ReactElement,
+  Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} /> as ReactElement,
+  Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} /> as ReactElement,
+  MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} /> as ReactElement,
+} as const;
 
 const TabBar = () => {
   const {
@@ -47,23 +41,12 @@ const TabBar = () => {
 
   useEffect(() => {
     if (isConfigLoaded) {
-      const tempCurrentTabs = [];
-      for (const configuredTab of configuredTabs) {
-        if (configuredTab === "ScavengerHunt") {
-          continue;
+      const tempCurrentTabs = [ possibleTabs.Team, possibleTabs.Scoreboard ];
+      for (const [ tabName, tabElement ] of Object.entries(possibleTabs)) {
+        if (configuredTabs.includes(tabName)) {
+          tempCurrentTabs.push(tabElement);
         }
-        tempCurrentTabs.push(possibleTabs[configuredTab]);
       }
-
-      // BEGIN SCAVENGER HUNT CODE
-      const firstScavengerHuntInterval = Interval.fromDateTimes(DateTime.fromISO("2022-08-20T19:00:00.000"), DateTime.fromISO("2022-08-20T22:00:00.000"));
-      const secondScavengerHuntInterval = Interval.fromDateTimes(DateTime.fromISO("2022-09-05T14:00:00.000"), DateTime.fromISO("2022-09-05T16:00:00.000"));
-      const now = DateTime.local();
-
-      if (firstScavengerHuntInterval.contains(now) || secondScavengerHuntInterval.contains(now) || configuredTabs.includes("ScavengerHunt")) {
-        tempCurrentTabs.push(possibleTabs.ScavengerHunt);
-      }
-      // END SCAVENGER HUNT CODE
 
       setCurrentTabs(tempCurrentTabs);
       log(`Config loaded, setting current tabs to ${JSON.stringify({ currentTabs: tempCurrentTabs })}`);

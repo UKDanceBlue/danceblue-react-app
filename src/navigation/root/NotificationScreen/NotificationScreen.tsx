@@ -5,11 +5,9 @@ import { Box, Button, FlatList, Heading, Text, View } from "native-base";
 import { useEffect } from "react";
 import { RefreshControl } from "react-native";
 
-
 import { log, universalCatch } from "../../../common/logging";
 import { useDeviceData, useLoading, useUserData } from "../../../context";
 import { useRefreshUserData } from "../../../context/user";
-
 
 /**
  * Component for "Profile" screen in main navigation
