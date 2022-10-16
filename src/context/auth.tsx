@@ -54,7 +54,7 @@ export const AuthDataProvider = ({ children }: { children: React.ReactNode }) =>
       (async () => {
         try {
           if (user) {
-            const idTokenResult = await user.getIdTokenResult();
+            const idTokenResult = await user.getIdTokenResult(true);
 
             setAuthData({
               isAuthLoaded: true,

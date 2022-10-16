@@ -1,82 +1,57 @@
 export interface FirestoreTeam {
-  members?: Record<string, string>;
   name: string;
-  spiritSpreadsheetId?: string;
+  teamClass?: "public" | "committee";
+  members: string[];
+  memberNames: Record<string, string | null>;
+  memberAccounts: Record<string, string | null>;
+  fundraisingTotal?: number;
+  totalPoints?: number;
   networkForGoodId?: string;
-  totalSpiritPoints?: number;
+  individualTotals?: Record<string, number>;
 }
 
-export function isFirestoreTeam(team?: object): team is FirestoreTeam {
-  // If team is nullish, return false
-  if (team == null) {
+export function isFirestoreTeam(
+  data: unknown
+): data is FirestoreTeam {
+  if (data == null) {
     return false;
   }
 
-  // If name is not defined, return false
-  const { name } = team as Partial<FirestoreTeam>;
-  if (name == null) {
-    return false;
-  } else if (typeof name !== "string") {
-    return false;
-  } else if (name.length === 0) {
+  if (typeof (data as Partial<FirestoreTeam>).name !== "string") {
     return false;
   }
 
-  // If spiritSpreadsheetId is defined, check that it's a string, if not return false
-  const { spiritSpreadsheetId } = team as FirestoreTeam;
-  if (spiritSpreadsheetId != null && typeof spiritSpreadsheetId !== "string") {
+  if ((data as Partial<FirestoreTeam>).teamClass != null && typeof (data as Partial<FirestoreTeam>).teamClass !== "string") {
     return false;
   }
 
-  // If networkForGoodId is defined, check that it's a string, if not return false
-  const { networkForGoodId } = team as FirestoreTeam;
-  if (networkForGoodId != null && typeof networkForGoodId !== "string") {
+  if (!Array.isArray((data as Partial<FirestoreTeam>).members) || (data as Partial<FirestoreTeam>).members?.some((m: unknown) => typeof m !== "string")) {
     return false;
   }
 
-  // If totalSpiritPoints is defined, check that it's a number, if not return false
-  const { totalSpiritPoints } = team as FirestoreTeam;
-  if (totalSpiritPoints != null && typeof totalSpiritPoints !== "number") {
+  if (typeof (data as Partial<FirestoreTeam>).memberAccounts !== "object" || (data as Partial<FirestoreTeam>).memberAccounts == null) {
     return false;
   }
 
-  // If all checks pass, return true
-  return true;
-}
-
-export interface FirestoreTeamFundraising {
-  total?: number;
-}
-
-export function isFirestoreTeamFundraising(fundraising?: object): fundraising is FirestoreTeamFundraising {
-  // If fundraising is nullish, return false
-  if (fundraising == null) {
+  if (typeof (data as Partial<FirestoreTeam>).memberNames !== "object" || (data as Partial<FirestoreTeam>).memberNames == null) {
     return false;
   }
 
-  // If total is defined, check that it's a number, if not return false
-  const { total } = fundraising as FirestoreTeamFundraising;
-  if (total != null && typeof total !== "number") {
+  if ((data as Partial<FirestoreTeam>).fundraisingTotal != null && typeof (data as Partial<FirestoreTeam>).fundraisingTotal !== "number") {
     return false;
   }
 
-  // If all checks pass, return true
-  return true;
-}
-
-export type FirestoreTeamIndividualSpiritPoints = Record<string, number>;
-
-export function isFirestoreTeamIndividualSpiritPoints(spiritPoints?: object): spiritPoints is FirestoreTeamIndividualSpiritPoints {
-  // If spiritPoints is nullish, return false
-  if (spiritPoints == null) {
+  if ((data as Partial<FirestoreTeam>).totalPoints != null && typeof (data as Partial<FirestoreTeam>).totalPoints !== "number") {
     return false;
   }
 
-  // If spiritPoints is not an object, return false (We are assuming that the key and value types match)
-  if (typeof spiritPoints !== "object") {
+  if ((data as Partial<FirestoreTeam>).networkForGoodId != null && typeof (data as Partial<FirestoreTeam>).networkForGoodId !== "string") {
     return false;
   }
 
-  // If all checks pass, return true
+  if (typeof (data as Partial<FirestoreTeam>).individualTotals !== "object" || (data as Partial<FirestoreTeam>).individualTotals == null) {
+    return false;
+  }
+
   return true;
 }
