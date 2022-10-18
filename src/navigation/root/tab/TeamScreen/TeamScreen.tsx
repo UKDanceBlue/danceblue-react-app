@@ -1,15 +1,32 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Center, Column, Divider, FlatList, Heading, Text } from "native-base";
-import { useWindowDimensions } from "react-native";
+import { Center, Divider, Heading, ScrollView, Text } from "native-base";
+import { useMemo } from "react";
+import { RefreshControl, useWindowDimensions } from "react-native";
 
 import Place from "../../../../common/components/Place";
-import { useUserData } from "../../../../context";
+import { useLoading, useUserData } from "../../../../context";
+import { useRefreshUserData } from "../../../../context/user";
 
 const TeamScreen = () => {
   const {
     team, linkblue: userLinkblue
   } = useUserData();
   const { width: screenWidth } = useWindowDimensions();
+  const reload = useRefreshUserData();
+  const [isLoading] = useLoading("UserDataProvider");
+  const individualTotals = useMemo(
+    () => {
+      if (team?.individualTotals == null) {
+        return null;
+      } else {
+        return Object.entries(team.individualTotals)
+          .filter(([linkblue]) => !(linkblue.startsWith("%") && linkblue.endsWith("%")))
+          .map(([ linkblue, points ]) => ([ linkblue.toLowerCase(), points ] as [string, number]))
+          .sort(([ , a ], [ , b ]) => b - a);
+      }
+    },
+    [team?.individualTotals]
+  );
 
   if (team == null) {
     return (
@@ -34,7 +51,7 @@ const TeamScreen = () => {
     );
   } else {
     const {
-      name, memberNames, individualTotals, fundraisingTotal, totalPoints
+      name, memberNames, fundraisingTotal, totalPoints
     } = team;
 
     const column = [];
@@ -94,29 +111,30 @@ const TeamScreen = () => {
           key="individual-title">
             Individual Totals
         </Heading>,
-        <FlatList
-          key="individual-points"
-          data={Object.entries(individualTotals).sort(([ , a ], [ , b ]) => b - a)}
-          renderItem={({
-            item: [ linkblue, points ], index
-          }) => (
-            <Place
-              key={linkblue}
-              rank={index + 1}
-              name={memberNames[linkblue] ?? linkblue}
-              points={points}
-              isHighlighted={linkblue === userLinkblue}
-              lastRow={index === Object.entries(individualTotals).length - 1}
-            />
-          )}
-        />
+        ...(individualTotals.map(([ linkblue, points ], index) => (
+          <Place
+            key={linkblue}
+            rank={index + 1}
+            name={memberNames[linkblue] ?? linkblue}
+            points={points}
+            isHighlighted={linkblue === userLinkblue}
+            lastRow={index === Object.entries(individualTotals).length - 1}
+          />
+        )))
       );
     }
 
     return (
-      <Column height="100%">
+      <ScrollView
+        height="100%"
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={reload}
+          />
+        }>
         {column}
-      </Column>
+      </ScrollView>
     );
   }
 };
