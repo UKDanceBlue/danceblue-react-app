@@ -31,7 +31,7 @@ export const possibleTabs = {
     key="Events"
     name="Events"
     component={EventListScreen}
-    options = {{ headerShown: false }}/>,
+    options = {{ headerShown: true }}/>,
   Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
   Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,
   MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
