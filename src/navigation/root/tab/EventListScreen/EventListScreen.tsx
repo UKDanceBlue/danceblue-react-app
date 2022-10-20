@@ -102,7 +102,7 @@ const EventListScreen = () => {
   }, [
     fbFirestore, fbStorage, refresh
   ]);
-
+  
   /**
    * Splits *events* into *today* and *upcoming* based on the events' start day
    */
@@ -138,39 +138,74 @@ const EventListScreen = () => {
    * Called by React Native when rendering the screen
    */
   return (
-    <SafeAreaView style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
-      <CalendarList
-        current={TODAY}
-        onDayPress={onDayPress}
-        markedDates={marked}
-        horizontal
-        pagingEnabled
-        hideArrows = {false}
-        theme = {{ arrowColor: "#0033A0" }}
-        onMonthChange={onMonthChange}
-      />
-      <View style = {{ height: 1, width: "100%", backgroundColor: "gray" }}></View>
-      <FlatList
-        data={monthEvents}
-        style = {{ backgroundColor: "white" }}
-        renderItem = { ({ item }) => (
-          <View style= {{ flexDirection: "row", flex: 1, height: 80 }}>
-            <View style = {{ flexDirection: "row", height: 80, width: 80 }}>
-              <View style = {{ width: 78, height: 80, top: 10 }}>
-                {/* *** This requires interval member that begins with date format yyyy-MM-dd *** */}
-                <Text style = {{ alignSelf: "center", fontSize: 12, color: "#101223" }}> { displayWeekDay(DateTime.fromFormat(item.interval?.substring(0, 10), "yyyy-MM-dd").weekdayShort ) } </Text>
-                <Text style = {{ alignSelf: "center", fontSize: 32, color: "#101223", fontWeight: "bold", paddingTop: 10 }}> { displayDayNum(item.interval?.substring(8, 10)) } </Text>
-              </View>
-              <View style = {{ width: 2, backgroundColor: "#0033A0", alignSelf: "flex-start", height: 70, top: 5 }}/>
-            </View>
-            <View style = {{ backgroundColor: "#D6DBE6", height: 70, top: 5, borderBottomRightRadius: 10, borderTopRightRadius: 10, width: 320 }}>
-              <Text style= {{ fontSize: 16, fontWeight: "bold" }}> {item.title} </Text>
-            </View>
-          </View>
-        )}
-      />
-
-    </SafeAreaView> );
+    <>
+      <View
+        style =
+          {{
+            backgroundColor: "#0032a0",
+            height: "50%",
+            width: "100%",
+            paddingTop: "8%",
+            shadowColor: "black",
+            shadowOffset: { width: 0, height: 5 },
+            shadowOpacity: 0.5,
+            shadowRadius: 5
+          }}
+      >
+        <CalendarList
+          horizontal = { true }
+          pagingEnabled = { true }
+          onDayPress = { (day) => {
+            // TODO: set calendars selcted day to (day)
+            console.log(day);
+            console.log(today);
+            console.log(events);
+          }}
+          // TODO: figure out custom style
+          markingType = { "custom" }
+          markedDates =
+            {{
+              [todaysDate]:
+              {
+                customStyles:
+                {
+                  container: { backgroundColor: "white" },
+                  text: {
+                    color: "#0032a0",
+                    fontWeight: "bold"
+                  }
+                }
+              },
+              "2022-09-24":
+              {
+                customStyles:
+                {
+                  container: { backgroundColor: "white" },
+                  text: {
+                    color: "#0032a0",
+                    fontWeight: "bold"
+                  }
+                }
+              }
+            }}
+          theme =
+            {{
+              calendarBackground: "transparent",
+              monthTextColor: "#FFC72C",
+              textMonthFontWeight: "900",
+              textMonthFontSize: 20,
+              textDayFontWeight: "bold",
+              dayTextColor: "white",
+              textDayFontSize: 20,
+              textDayHeaderFontSize: 15,
+              todayTextColor: "#FFC72C"
+            }}
+        >
+        </CalendarList>
+      </View>
+    </>
+    
+  );
 };
 
 
