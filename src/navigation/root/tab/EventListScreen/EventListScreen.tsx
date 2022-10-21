@@ -157,49 +157,11 @@ const EventListScreen = () => {
           pagingEnabled = { true }
           onDayPress = { (day) => {
             // TODO: set calendars selcted day to (day)
-            console.log(day);
-            console.log(today);
             console.log(events);
           }}
           // TODO: figure out custom style
           markingType = { "custom" }
-          markedDates =
-            {{
-              [todaysDate]:
-              {
-                customStyles:
-                {
-                  container: { backgroundColor: "white" },
-                  text: {
-                    color: "#0032a0",
-                    fontWeight: "bold"
-                  }
-                }
-              },
-              "2022-09-24":
-              {
-                customStyles:
-                {
-                  container: { backgroundColor: "white" },
-                  text: {
-                    color: "#0032a0",
-                    fontWeight: "bold"
-                  }
-                }
-              }
-            }}
-          theme =
-            {{
-              calendarBackground: "transparent",
-              monthTextColor: "#FFC72C",
-              textMonthFontWeight: "900",
-              textMonthFontSize: 20,
-              textDayFontWeight: "bold",
-              dayTextColor: "white",
-              textDayFontSize: 20,
-              textDayHeaderFontSize: 15,
-              todayTextColor: "#FFC72C"
-            }}
+          markedDates = {marked}
         >
         </CalendarList>
       </View>
