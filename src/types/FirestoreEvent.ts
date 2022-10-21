@@ -25,7 +25,7 @@ export interface ParsedFirestoreEvent {
   description: string;
   image?: DownloadableImage | DownloadableImage[];
   address?: string;
-  interval?: ReturnType<Interval["toISO"]>;
+  interval?: Interval;
   link?: {
     text: string;
     url: string;
@@ -34,6 +34,10 @@ export interface ParsedFirestoreEvent {
     url: string;
   }[];
 }
+
+export type ParsedFirestoreEventWithInterval = ParsedFirestoreEvent & {
+  interval: Interval;
+};
 
 export function validateLink(link: unknown): link is {
   text: string;
@@ -124,11 +128,15 @@ export function isRawFirestoreEvent(documentData?: object): documentData is RawF
   return true;
 }
 
+export function doesEventHaveInterval(event: ParsedFirestoreEvent): event is ParsedFirestoreEventWithInterval {
+  return event.interval != null;
+}
+
 export const parseFirestoreEvent = async (event: RawFirestoreEvent, storage: FirebaseStorageTypes.Module): Promise<ParsedFirestoreEvent> => ({
   title: event.title,
   description: event.description,
   image: event.image != null ? (Array.isArray(event.image) ? await Promise.all(event.image.map((image) => parseFirestoreImage(image, storage))) : await parseFirestoreImage(event.image, storage)) : undefined,
   address: event.address,
-  interval: Interval.fromDateTimes(DateTime.fromMillis(event.startTime?.toMillis() ?? 0), DateTime.fromMillis(event.endTime?.toMillis() ?? 0)).toISO(),
+  interval: Interval.fromDateTimes(DateTime.fromMillis(event.startTime?.toMillis() ?? 0), DateTime.fromMillis(event.endTime?.toMillis() ?? 0)),
   link: event.link,
 });
