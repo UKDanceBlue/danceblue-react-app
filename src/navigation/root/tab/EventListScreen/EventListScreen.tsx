@@ -1,7 +1,7 @@
 // I removed some unnecessary imports up here
 import { DateTime, Interval } from "luxon";
 import { Text } from "native-base";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, SafeAreaView, View } from "react-native";
 import { CalendarList, CalendarUtils, DateData } from "react-native-calendars";
 
@@ -21,6 +21,8 @@ const EventListScreen = () => {
 
   // This is where I moved the current date check, I set it to startOf("minute") just so it doesn't change super frequently (shouldn't matter though)
   const now = DateTime.local().startOf("minute");
+
+  const firstLoadNow = useRef(DateTime.local().startOf("minute"));
 
   const {
     fbStorage, fbFirestore
@@ -45,6 +47,7 @@ const EventListScreen = () => {
   }, []);
 
   const onMonthChange = useCallback((month: DateData) => {
+    log(`month changed: ${ month.dateString}`);
     const newEvents: ParsedFirestoreEventWithInterval[] = [];
     // I didn't change it, but why not use month.month and month.year instead of parsing the date string?
     const newMonth = new Date(month.dateString);
@@ -104,7 +107,7 @@ const EventListScreen = () => {
         }
       }));
 
-      log(`Loaded event list screen from firestore: ${ JSON.stringify(firestoreEvents)}`);
+      log(`Loaded event list screen from firestore: ${ JSON.stringify(firestoreEvents, null, 2)}`);
       setEvents(firestoreEvents);
     } catch (error) {
       universalCatch(error);
@@ -117,9 +120,17 @@ const EventListScreen = () => {
 
   useEffect(() => {
     refresh().catch(universalCatch);
-  }, [
-    fbFirestore, fbStorage, refresh
-  ]);
+  }, [refresh]);
+
+  useEffect(() => {
+    onMonthChange({
+      dateString: firstLoadNow.current.toFormat(dateFormat),
+      month: firstLoadNow.current.month,
+      year: firstLoadNow.current.year,
+      day: firstLoadNow.current.day,
+      timestamp: firstLoadNow.current.toMillis()
+    });
+  }, [onMonthChange]);
 
   /**
    * Splits *events* into *today* and *upcoming* based on the events' start day
@@ -135,7 +146,6 @@ const EventListScreen = () => {
         upcomingFromEvents.push(event);
       }
     });
-    log(`Split events into today and upcoming: ${ JSON.stringify(todayFromEvents)}/n ${ JSON.stringify(upcomingFromEvents)}`);
   }, [events]);
 
   /**

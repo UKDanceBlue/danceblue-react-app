@@ -1,4 +1,4 @@
-import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+import firestore, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { FirebaseStorageTypes } from "@react-native-firebase/storage";
 import { DateTime, Interval } from "luxon";
 
@@ -109,11 +109,11 @@ export function isRawFirestoreEvent(documentData?: object): documentData is RawF
     return false;
   }
 
-  if (startTime != null && !(startTime instanceof FirebaseFirestoreTypes.Timestamp)) {
+  if (startTime != null && !(startTime instanceof firestore.Timestamp)) {
     return false;
   }
 
-  if (endTime != null && !(endTime instanceof FirebaseFirestoreTypes.Timestamp)) {
+  if (endTime != null && !(endTime instanceof firestore.Timestamp)) {
     return false;
   }
 
