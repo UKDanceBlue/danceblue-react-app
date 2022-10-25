@@ -104,12 +104,6 @@ const App = () => {
         }
       });
 
-      checkForUpdateAsync().then(({ isAvailable }) => {
-        if (isAvailable) {
-          return fetchUpdateAsync();
-        }
-      }).catch(universalCatch);
-
       return () => {
         updatesSubscription.remove();
         listener.remove();
