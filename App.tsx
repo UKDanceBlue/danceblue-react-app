@@ -21,7 +21,7 @@ import NotificationInfoModal from "./src/common/components/NotificationInfoModal
 import WebpageModal from "./src/common/components/WebpageModal";
 import { log, universalCatch } from "./src/common/logging";
 import { showMessage, showPrompt } from "./src/common/util/alertUtils";
-import { CombinedContext } from "./src/context";
+import { CombinedContext, useAuthData } from "./src/context";
 import RootScreen from "./src/navigation/root/RootScreen";
 import { customTheme } from "./src/theme";
 import { NotificationInfoPopup } from "./src/types/NotificationPayload";
@@ -44,6 +44,8 @@ const App = () => {
   const splashScreenHidden = useRef(false);
   const routeNameRef = useRef<string>();
   const navigationRef = useRef<NavigationContainerRef<RootStackParamList>>(null);
+
+  const { isAuthLoaded } = useAuthData();
 
   const {
     isOpen: isNotificationInfoOpen,
@@ -75,12 +77,12 @@ const App = () => {
   );
 
   useEffect(() => {
-    if (!splashScreenHidden.current) {
+    if (!splashScreenHidden.current && isAuthLoaded) {
       hideSplashScreenAsync().then(() => {
         splashScreenHidden.current = true;
       }).catch(universalCatch);
     }
-  }, []);
+  }, [isAuthLoaded]);
 
   useEffect(() => {
     if (!__DEV__) {

@@ -28,9 +28,6 @@ const RootScreen = () => {
 
   return (
     <>
-      {!isAuthLoaded && (
-        <Center position="absolute" width="full" height="full"><ActivityIndicator size="large" /></Center>
-      )}
       {isAuthLoaded && (
         <RootStack.Navigator
           screenOptions={({ navigation }: { navigation: StackNavigationProp<RootStackParamList> }) => ({
