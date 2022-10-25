@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 
 import { log, universalCatch } from "../common/logging";
 import { useFirebase } from "../context/firebase";
-import { FirestoreNotification, isFirestoreNotification } from "../types/FirestoreNotification";
+import { FirestoreNotification } from "../types/FirestoreNotification";
 import { FirestoreTeam, isFirestoreTeam } from "../types/FirestoreTeam";
 import { isFirestoreUser } from "../types/FirestoreUser";
 
@@ -20,7 +20,7 @@ interface UserData {
   team: FirestoreTeam | null;
   teamId: string | null;
   userLoginType: UserLoginType | null;
-  pastNotifications: FirestoreNotification[];
+  notificationReferences: FirebaseFirestoreTypes.DocumentReference<FirestoreNotification>[];
 }
 const initialUserDataState: UserData = {
   firstName: null,
@@ -31,7 +31,7 @@ const initialUserDataState: UserData = {
   team: null,
   teamId: null,
   userLoginType: null,
-  pastNotifications: [],
+  notificationReferences: [],
 };
 
 const loadUserData = async (userId: string, loginType: UserLoginType, firestore: FirebaseFirestoreTypes.Module): Promise<UserData> => {
@@ -63,31 +63,7 @@ const loadUserData = async (userId: string, loginType: UserLoginType, firestore:
     if (rawUserData.linkblue != null) {
       loadedUserData.linkblue = rawUserData.linkblue;
     }
-
-    // Check for past notifications
-    if (rawUserData.pastNotifications != null) {
-      const pastNotificationRefs = rawUserData.pastNotifications;
-      const pastNotifications: FirestoreNotification[] = [];
-
-      const promises: Promise<void>[] = [];
-
-      for (const pastNotificationRef of pastNotificationRefs) {
-        promises.push((async () => {
-          const pastNotificationSnapshot = await pastNotificationRef.get();
-          if (pastNotificationSnapshot.exists) {
-            const pastNotificationSnapshotData = pastNotificationSnapshot.data();
-            if (isFirestoreNotification(pastNotificationSnapshotData)) {
-              pastNotifications.push(pastNotificationSnapshotData);
-            } else {
-              log(`Past notification "${pastNotificationSnapshot.ref.path}" is not valid`, "warn");
-            }
-          }
-        })());
-      }
-
-      await Promise.all(promises);
-    }
-
+    loadedUserData.notificationReferences = rawUserData.notificationReferences ?? [];
 
     // Check for a user's team data
     if (rawUserData.team?.id != null) {
@@ -113,8 +89,7 @@ const loadUserData = async (userId: string, loginType: UserLoginType, firestore:
   return loadedUserData;
 };
 
-// eslint-disable-next-line @typescript-eslint/require-await
-const UserDataContext = createContext<[UserData, (() => Promise<void>)]>([ initialUserDataState, async () => undefined ]);
+const UserDataContext = createContext<[UserData, (() => Promise<void>)]>([ initialUserDataState, async () => Promise.resolve() ]);
 
 export const UserDataProvider = ({ children }: { children: React.ReactNode }) => {
   const [ , setLoading ] = useLoading("UserDataProvider");
@@ -127,7 +102,6 @@ export const UserDataProvider = ({ children }: { children: React.ReactNode }) =>
 
   const { fbFirestore } = useFirebase();
 
-
   const refresh = useCallback(() => {
     if (isAuthLoaded && isLoggedIn && uid != null) {
       setLoading(true);
@@ -137,12 +111,10 @@ export const UserDataProvider = ({ children }: { children: React.ReactNode }) =>
     } else {
       setUserData(initialUserDataState);
 
-      return new Promise<void>((resolve) => {
-        resolve();
-      });
+      return Promise.resolve();
     }
   }, [
-    fbFirestore, isAnonymous, isAuthLoaded, isLoggedIn, setLoading, uid
+    fbFirestore, isAnonymous, isAuthLoaded, isLoggedIn, uid, setLoading
   ]);
 
   useEffect(() => {
