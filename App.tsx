@@ -8,7 +8,6 @@ import analytics from "@react-native-firebase/analytics";
 import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { addEventListener as addLinkingEventListener, canOpenURL, createURL as createLinkingURL, getInitialURL as getInitialLinkingURL, openURL } from "expo-linking";
 import { addNotificationResponseReceivedListener } from "expo-notifications";
-import { hideAsync as hideSplashScreenAsync } from "expo-splash-screen";
 import { UpdateEventType, addListener as addUpdateListener, checkForUpdateAsync, fetchUpdateAsync, reloadAsync } from "expo-updates";
 import { ICustomTheme, NativeBaseProvider, useDisclose } from "native-base";
 import { useEffect, useRef, useState } from "react";
@@ -21,7 +20,7 @@ import NotificationInfoModal from "./src/common/components/NotificationInfoModal
 import WebpageModal from "./src/common/components/WebpageModal";
 import { log, universalCatch } from "./src/common/logging";
 import { showMessage, showPrompt } from "./src/common/util/alertUtils";
-import { CombinedContext, useAuthData } from "./src/context";
+import { CombinedContext } from "./src/context";
 import RootScreen from "./src/navigation/root/RootScreen";
 import { customTheme } from "./src/theme";
 import { NotificationInfoPopup } from "./src/types/NotificationPayload";
@@ -41,11 +40,8 @@ const linkingPrefixes = [
  */
 const App = () => {
   const isOfflineInternal = useRef(false);
-  const splashScreenHidden = useRef(false);
   const routeNameRef = useRef<string>();
   const navigationRef = useRef<NavigationContainerRef<RootStackParamList>>(null);
-
-  const { isAuthLoaded } = useAuthData();
 
   const {
     isOpen: isNotificationInfoOpen,
@@ -75,14 +71,6 @@ const App = () => {
     }),
     []
   );
-
-  useEffect(() => {
-    if (!splashScreenHidden.current && isAuthLoaded) {
-      hideSplashScreenAsync().then(() => {
-        splashScreenHidden.current = true;
-      }).catch(universalCatch);
-    }
-  }, [isAuthLoaded]);
 
   useEffect(() => {
     if (!__DEV__) {
