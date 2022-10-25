@@ -12,7 +12,7 @@ import { hideAsync as hideSplashScreenAsync } from "expo-splash-screen";
 import { UpdateEventType, addListener as addUpdateListener, checkForUpdateAsync, fetchUpdateAsync, reloadAsync } from "expo-updates";
 import { ICustomTheme, NativeBaseProvider, useDisclose } from "native-base";
 import { useEffect, useRef, useState } from "react";
-import { EventSubscription, StatusBar } from "react-native";
+import { AppState, EventSubscription, StatusBar } from "react-native";
 import { WebViewSource } from "react-native-webview/lib/WebViewTypes";
 
 
@@ -86,12 +86,6 @@ const App = () => {
 
   useEffect(() => {
     if (!__DEV__) {
-      checkForUpdateAsync().then(({ isAvailable }) => {
-        if (isAvailable) {
-          return fetchUpdateAsync();
-        }
-      }).catch(universalCatch);
-
       const updatesSubscription = addUpdateListener(({
         type, message
       }) => {
@@ -112,8 +106,25 @@ const App = () => {
         }
       }) as EventSubscription;
 
+      const listener = AppState.addEventListener("change", (nextAppState) => {
+        if (nextAppState === "active") {
+          checkForUpdateAsync().then(({ isAvailable }) => {
+            if (isAvailable) {
+              return fetchUpdateAsync();
+            }
+          }).catch(universalCatch);
+        }
+      });
+
+      checkForUpdateAsync().then(({ isAvailable }) => {
+        if (isAvailable) {
+          return fetchUpdateAsync();
+        }
+      }).catch(universalCatch);
+
       return () => {
         updatesSubscription.remove();
+        listener.remove();
       };
     }
   }, []);
