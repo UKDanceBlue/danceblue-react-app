@@ -1,5 +1,6 @@
-import Markdown, { MarkdownProps } from "@jonasmerlin/react-native-markdown-display";
+import Markdown, { MarkdownIt, MarkdownProps } from "@jonasmerlin/react-native-markdown-display";
 import { canOpenURL, openURL } from "expo-linking";
+import type MarkdownItType from "markdown-it";
 
 import { log } from "../../logging";
 import { rules as defaultRules } from "../../markdownRules";
@@ -16,7 +17,7 @@ const NativeBaseMarkdown = ({
   // TODO use nativebase theme to replace the colors that are hardcoded in the default rules
   return (<Markdown
     debugPrintTree={debugPrintTree}
-    mergeStyle={mergeStyle ?? true}
+    mergeStyle={mergeStyle}
     onLinkPress={
       onLinkPress ??
       ((url) => {
@@ -31,6 +32,9 @@ const NativeBaseMarkdown = ({
     renderer={renderer}
     rules={rules ?? defaultRules}
     style={style}
+    markdownit={
+      (MarkdownIt as typeof MarkdownItType)({ linkify: true, typographer: true })
+    }
   >
     {children}
   </Markdown>);

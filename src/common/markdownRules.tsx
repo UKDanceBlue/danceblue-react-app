@@ -154,32 +154,56 @@ export const rules: RenderRules = {
 
   // Headings
   heading1: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Heading size="2xl" key={node.key} style={styles.heading1}>
+    <Heading
+      size="2xl"
+      key={node.key}
+      style={styles.heading1}
+      selectable>
       {children}
     </Heading>
   ),
   heading2: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Heading size="xl" key={node.key} style={styles.heading2}>
+    <Heading
+      size="xl"
+      key={node.key}
+      style={styles.heading2}
+      selectable>
       {children}
     </Heading>
   ),
   heading3: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Heading size="lg" key={node.key} style={styles.heading3}>
+    <Heading
+      size="lg"
+      key={node.key}
+      style={styles.heading3}
+      selectable>
       {children}
     </Heading>
   ),
   heading4: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Heading size="md" key={node.key} style={styles.heading4}>
+    <Heading
+      size="md"
+      key={node.key}
+      style={styles.heading4}
+      selectable>
       {children}
     </Heading>
   ),
   heading5: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Heading size="sm" key={node.key} style={styles.heading5}>
+    <Heading
+      size="sm"
+      key={node.key}
+      style={styles.heading5}
+      selectable>
       {children}
     </Heading>
   ),
   heading6: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Heading size="xs" key={node.key} style={styles.heading6}>
+    <Heading
+      size="xs"
+      key={node.key}
+      style={styles.heading6}
+      selectable>
       {children}
     </Heading>
   ),
@@ -191,17 +215,17 @@ export const rules: RenderRules = {
 
   // Emphasis
   strong: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Text key={node.key} style={styles.strong}>
+    <Text key={node.key} style={styles.strong} selectable>
       {children}
     </Text>
   ),
   em: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Text key={node.key} style={styles.em}>
+    <Text key={node.key} style={styles.em} selectable>
       {children}
     </Text>
   ),
   s: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Text key={node.key} style={styles.s}>
+    <Text key={node.key} style={styles.s} selectable>
       {children}
     </Text>
   ),
@@ -254,7 +278,8 @@ export const rules: RenderRules = {
         <Box key={node.key} style={styles._VIEW_SAFE_list_item}>
           <Text
             style={[ modifiedInheritedStylesObj, styles.bullet_list_icon ]}
-            accessible={false}>
+            accessible={false}
+            selectable>
             {Platform.select({
               android: "\u2022",
               ios: "\u00B7",
@@ -283,7 +308,7 @@ export const rules: RenderRules = {
 
       return (
         <Box key={node.key} style={styles._VIEW_SAFE_list_item}>
-          <Text style={[ modifiedInheritedStylesObj, styles.ordered_list_icon ]}>
+          <Text style={[ modifiedInheritedStylesObj, styles.ordered_list_icon ]} selectable>
             {listItemNumber}
             {node.markup}
           </Text>
@@ -302,7 +327,7 @@ export const rules: RenderRules = {
 
   // Code
   code_inline: (node, children, parent, styles: MarkdownRuleStyles, inheritedStyles = {}) => (
-    <Text key={node.key} style={[ inheritedStyles, styles.code_block ]}>
+    <Text key={node.key} style={[ inheritedStyles, styles.code_block ]} selectable>
       {children}
     </Text>
   ),
@@ -318,7 +343,7 @@ export const rules: RenderRules = {
     }
 
     return (
-      <Text key={node.key} style={[ inheritedStyles, styles.code_block ]}>
+      <Text key={node.key} style={[ inheritedStyles, styles.code_block ]} selectable>
         {content}
       </Text>
     );
@@ -335,7 +360,7 @@ export const rules: RenderRules = {
     }
 
     return (
-      <Text key={node.key} style={[ inheritedStyles, styles.fence ]}>
+      <Text key={node.key} style={[ inheritedStyles, styles.fence ]} selectable>
         {content}
       </Text>
     );
@@ -418,12 +443,12 @@ export const rules: RenderRules = {
 
   // Text Output
   text: (node, children, parent, styles: MarkdownRuleStyles, inheritedStyles = {}) => (
-    <Text key={node.key} style={[ inheritedStyles, styles.text ]}>
+    <Text key={node.key} style={[ inheritedStyles, styles.text ]} selectable>
       {node.content}
     </Text>
   ),
   textgroup: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Text key={node.key} style={styles.textgroup}>
+    <Text key={node.key} style={styles.textgroup} selectable>
       {children}
     </Text>
   ),
@@ -433,12 +458,12 @@ export const rules: RenderRules = {
     </Box>
   ),
   hardbreak: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Text key={node.key} style={styles.hardbreak}>
+    <Text key={node.key} style={styles.hardbreak} selectable>
       {"\n"}
     </Text>
   ),
   softbreak: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Text key={node.key} style={styles.softbreak}>
+    <Text key={node.key} style={styles.softbreak} selectable>
       {"\n"}
     </Text>
   ),
@@ -450,12 +475,12 @@ export const rules: RenderRules = {
     </Box>
   ),
   inline: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Text key={node.key} style={styles.inline}>
+    <Text key={node.key} style={styles.inline} selectable>
       {children}
     </Text>
   ),
   span: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Text key={node.key} style={styles.span}>
+    <Text key={node.key} style={styles.span} selectable>
       {children}
     </Text>
   ),
