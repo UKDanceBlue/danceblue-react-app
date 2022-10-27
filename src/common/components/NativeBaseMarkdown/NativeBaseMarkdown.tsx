@@ -1,6 +1,5 @@
 import Markdown, { MarkdownIt, MarkdownProps } from "@jonasmerlin/react-native-markdown-display";
 import { canOpenURL, openURL } from "expo-linking";
-import type MarkdownItType from "markdown-it";
 
 import { log } from "../../logging";
 import { rules as defaultRules } from "../../markdownRules";
@@ -33,7 +32,9 @@ const NativeBaseMarkdown = ({
     rules={rules ?? defaultRules}
     style={style}
     markdownit={
-      (MarkdownIt as typeof MarkdownItType)({ linkify: true, typographer: true })
+      // This is caused by using a reexport
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+      MarkdownIt({ linkify: true, typographer: true })
     }
   >
     {children}
