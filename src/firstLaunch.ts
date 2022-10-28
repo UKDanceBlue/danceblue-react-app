@@ -1,9 +1,6 @@
 import { isDevelopmentBuild } from "expo-dev-client";
 import { setNotificationHandler } from "expo-notifications";
-import { preventAutoHideAsync as preventSplashAutoHideAsync } from "expo-splash-screen";
 import { LogBox } from "react-native";
-
-import { universalCatch } from "./common/logging";
 
 
 
@@ -22,6 +19,3 @@ setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-
-// Don't hide the splash screen until it is dismissed
-preventSplashAutoHideAsync().catch(universalCatch);
