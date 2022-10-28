@@ -6,6 +6,7 @@ import { DownloadableImage, FirestoreImage, isFirestoreImage, parseFirestoreImag
 
 export interface RawFirestoreEvent {
   title: string;
+  shortDescription?: string;
   description: string;
   image?: FirestoreImage | FirestoreImage[];
   address?: string;
@@ -22,6 +23,7 @@ export interface RawFirestoreEvent {
 
 export interface ParsedFirestoreEvent {
   title: string;
+  shortDescription?: string;
   description: string;
   image?: DownloadableImage | DownloadableImage[];
   address?: string;
@@ -75,13 +77,17 @@ export function isRawFirestoreEvent(documentData?: object): documentData is RawF
   }
 
   const {
-    title, description, image, address, startTime, endTime, link
+    title, shortDescription, description, image, address, startTime, endTime, link
   } = documentData as Partial<RawFirestoreEvent>;
 
   // Check that all required fields are present and of the correct type
   if (title == null) {
     return false;
   } else if (typeof title !== "string") {
+    return false;
+  }
+
+  if (shortDescription != null && typeof shortDescription !== "string") {
     return false;
   }
 
@@ -126,6 +132,7 @@ export function isRawFirestoreEvent(documentData?: object): documentData is RawF
 
 export const parseFirestoreEvent = async (event: RawFirestoreEvent, storage: FirebaseStorageTypes.Module): Promise<ParsedFirestoreEvent> => ({
   title: event.title,
+  shortDescription: event.shortDescription,
   description: event.description,
   image: event.image != null ? (Array.isArray(event.image) ? await Promise.all(event.image.map((image) => parseFirestoreImage(image, storage))) : await parseFirestoreImage(event.image, storage)) : undefined,
   address: event.address,

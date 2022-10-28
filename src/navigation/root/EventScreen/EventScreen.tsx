@@ -8,6 +8,7 @@ import { ActivityIndicator, useWindowDimensions } from "react-native";
 import openMaps from "react-native-open-maps";
 import { WebView } from "react-native-webview";
 
+import NativeBaseMarkdown from "../../../common/components/NativeBaseMarkdown";
 import { log, universalCatch } from "../../../common/logging";
 import { showMessage } from "../../../common/util/alertUtils";
 import { discoverDefaultCalendar } from "../../../common/util/calendar";
@@ -158,7 +159,12 @@ const EventScreen = () => {
           Add to my calendar
         </Button>
 
-        <Text mt={2} mx={2}>{description}</Text>
+        <Box mx={2}>
+          <NativeBaseMarkdown>
+            {description}
+          </NativeBaseMarkdown>
+        </Box>
+        {/* Maybe consider removing the link option in favor of just using markdown links? Or keep it so centered links are a thing?? */}
         {link && (
           Array.isArray(link)
             ? (
