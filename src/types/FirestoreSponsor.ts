@@ -6,12 +6,14 @@ export interface LegacyFirestoreSponsor {
   logo?: string;
   name?: string;
 }
+/** @deprecated Use types from @ukdanceblue/db-app-common instead */
 export interface RawFirestoreSponsor{
   link?: string;
   logo?: FirestoreImage;
   name?: string;
 }
 
+/** @deprecated Use types from @ukdanceblue/db-app-common instead */
 export interface ParsedFirestoreSponsor {
   logo?: DownloadableImage;
   link?: string;
