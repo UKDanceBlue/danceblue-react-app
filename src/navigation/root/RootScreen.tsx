@@ -1,6 +1,5 @@
 import { StackNavigationProp, createStackNavigator } from "@react-navigation/stack";
-import { Center, useTheme } from "native-base";
-import { ActivityIndicator } from "react-native";
+import { useTheme } from "native-base";
 
 import { useColorModeValue } from "../../common/customHooks";
 import { useAuthData } from "../../context";
@@ -49,7 +48,7 @@ const RootScreen = () => {
                 name="Event"
                 component={EventScreen}
                 options={({ route }) => ({
-                  title: route.params.event.title,
+                  title: route.params.event.name,
                   headerMode: "screen",
                 })}
               />

@@ -1,3 +1,4 @@
+/** @deprecated Use types from @ukdanceblue/db-app-common instead */
 export interface FirestoreNotification {
   body: string;
   sendTime: string;
@@ -6,6 +7,7 @@ export interface FirestoreNotification {
   payload?: Record<string, unknown>;
 }
 
+/** @deprecated Use types from @ukdanceblue/db-app-common instead */
 export function isFirestoreNotification(notification?: object): notification is FirestoreNotification {
   if (notification == null) {
     return false;
