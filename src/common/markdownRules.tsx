@@ -415,8 +415,14 @@ export const rules: RenderRules = {
 
   // Links
   link: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Link key={node.key} style={styles._VIEW_SAFE_link} href={String(node.attributes.href)}>
-      {children}
+    <Link
+      key={node.key}
+      style={styles._VIEW_SAFE_link}
+      href={String(node.attributes.href)}>
+      <Text
+        color={"blue.600"}>
+        {children}
+      </Text>
     </Link>
   ),
   blocklink: (node, children, parent, styles: MarkdownRuleStyles, onLinkPress) => (
