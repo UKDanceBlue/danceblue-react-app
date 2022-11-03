@@ -1493,29 +1493,8 @@
     slash "^3.0.0"
     xcode "^3.0.1"
     xml2js "0.4.23"
-    
-"@expo/config-plugins@5.0.1", "@expo/config-plugins@^5.0.1", "@expo/config-plugins@~5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-5.0.1.tgz#66bc8d15785bdcd3598e466344f8c0518390179d"
-  integrity sha512-1OfnsOrfeSkB0VZfT01UjQ5Uq6p+yYbq8yNkj0e99K/6NLHpyvIxj+5tZIV0nQXgkOcqBIABL2uA7lwB8CkaBQ==
-  dependencies:
-    "@expo/config-types" "^46.0.0"
-    "@expo/json-file" "8.2.36"
-    "@expo/plist" "0.0.18"
-    "@expo/sdk-runtime-versions" "^1.0.0"
-    "@react-native/normalize-color" "^2.0.0"
-    chalk "^4.1.2"
-    debug "^4.3.1"
-    find-up "~5.0.0"
-    getenv "^1.0.0"
-    glob "7.1.6"
-    resolve-from "^5.0.0"
-    semver "^7.3.5"
-    slash "^3.0.0"
-    xcode "^3.0.1"
-    xml2js "0.4.23"
 
-"@expo/config-plugins@~5.0.1":
+"@expo/config-plugins@5.0.1", "@expo/config-plugins@~5.0.0", "@expo/config-plugins@~5.0.1":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-5.0.1.tgz#66bc8d15785bdcd3598e466344f8c0518390179d"
   integrity sha512-1OfnsOrfeSkB0VZfT01UjQ5Uq6p+yYbq8yNkj0e99K/6NLHpyvIxj+5tZIV0nQXgkOcqBIABL2uA7lwB8CkaBQ==
@@ -3911,10 +3890,10 @@
     "@typescript-eslint/types" "5.29.0"
     eslint-visitor-keys "^3.3.0"
 
-"@ukdanceblue/db-app-common@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@ukdanceblue/db-app-common/-/db-app-common-1.0.1.tgz#6b53a66b2c2db521c8720500d0905e0077239311"
-  integrity sha512-9HaZfGRHz8ZvSijs7uFohfza/sjF3TK8Ebh2xwzE18C13Mx0dair3y4SqoyNCuswr80lHJryHsbGdW9FV+VSEg==
+"@ukdanceblue/db-app-common@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@ukdanceblue/db-app-common/-/db-app-common-1.0.5.tgz#3e2093eaa08e99e98ff106fc98658992601344ab"
+  integrity sha512-vyScnV+3lRBMD6YraP1iz4hL06UnlQvacsnWSs1HgQhWdvJEC6MyyaQlQdMbxP0/FK2CBvt+TQE3Hst8+QJDIQ==
 
 "@urql/core@2.3.6":
   version "2.3.6"

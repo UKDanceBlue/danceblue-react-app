@@ -32,7 +32,7 @@ const EventListScreen = () => {
     try {
       log("Loading event list screen from firestore");
       const firestoreEvents: FirestoreEvent[] = [];
-      const snapshot = await fbFirestore.collection("events").where("endTime", ">", firebaseFirestore.Timestamp.now())
+      const snapshot = await fbFirestore.collection("events").where("interval.end", ">", firebaseFirestore.Timestamp.now())
         .get();
 
       for (const doc of snapshot.docs) {
