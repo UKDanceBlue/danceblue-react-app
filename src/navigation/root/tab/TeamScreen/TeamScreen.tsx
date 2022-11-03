@@ -1,9 +1,11 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Center, Divider, Heading, ScrollView, Text } from "native-base";
+import { canOpenURL, openURL } from "expo-linking";
+import { Box, Center, Divider, Heading, Pressable, ScrollView, Text, ZStack } from "native-base";
 import { useMemo } from "react";
 import { RefreshControl, useWindowDimensions } from "react-native";
 
 import Place from "../../../../common/components/Place";
+import { universalCatch } from "../../../../common/logging";
 import { useLoading, useUserData } from "../../../../context";
 import { useRefreshUserData } from "../../../../context/user";
 
@@ -125,16 +127,47 @@ const TeamScreen = () => {
     }
 
     return (
-      <ScrollView
-        height="100%"
-        refreshControl={
-          <RefreshControl
-            refreshing={isLoading}
-            onRefresh={reload}
-          />
-        }>
-        {column}
-      </ScrollView>
+      <ZStack
+        height="100%">
+        <Box
+          height="100%"
+        >
+          <ScrollView
+            height="100%"
+            refreshControl={
+              <RefreshControl
+                refreshing={isLoading}
+                onRefresh={reload}
+              />
+            }>
+            {column}
+          </ScrollView>
+        </Box>
+        <Pressable
+          position="absolute"
+          width="100%"
+          backgroundColor="blue.500"
+          bottom={0}
+          onPress={() => {
+            canOpenURL("https://www.danceblue.org/spirit-point-form").then((canOpen) => {
+              if (canOpen) {
+                return openURL("https://www.danceblue.org/spirit-point-form");
+              }
+            }).catch(universalCatch);
+          }}
+          _pressed={{
+            backgroundColor: "blue.600",
+            opacity: 0.5
+          }}>
+          <Text
+            fontSize={20}
+            textAlign="center"
+            m={2}
+            color={"white"}>
+              Spirit Point Form
+          </Text>
+        </Pressable>
+      </ZStack>
     );
   }
 };
