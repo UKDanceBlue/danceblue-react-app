@@ -9,7 +9,7 @@
       "releaseChannel": "development",
       "developmentClient": true,
       "cache": {
-        "key": "2"
+        "key": "3"
       },
       "env": {
         "APP_VARIANT": "development",

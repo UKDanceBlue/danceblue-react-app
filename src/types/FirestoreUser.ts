@@ -1,7 +1,9 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 
+import { FirestoreNotification } from "./FirestoreNotification";
 import { isDocumentReference } from "./firebaseTypes";
 
+/** @deprecated Use types from @ukdanceblue/db-app-common instead */
 export interface FirestoreUser {
   attributes: Record<string, string>;
   email: string;
@@ -9,9 +11,10 @@ export interface FirestoreUser {
   lastName: string;
   linkblue?: string | null;
   team?: FirebaseFirestoreTypes.DocumentReference | null;
-  pastNotifications?: FirebaseFirestoreTypes.DocumentReference[] | null;
+  notificationReferences?: FirebaseFirestoreTypes.DocumentReference<FirestoreNotification>[] | null;
 }
 
+/** @deprecated Use types from @ukdanceblue/db-app-common instead */
 export function isFirestoreUser(documentData?: FirebaseFirestoreTypes.DocumentData): documentData is FirestoreUser {
   if (documentData == null) {
     return false;

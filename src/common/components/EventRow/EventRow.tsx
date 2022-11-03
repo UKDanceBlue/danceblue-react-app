@@ -1,7 +1,10 @@
+import { DownloadableImage, FirestoreImage } from "@ukdanceblue/db-app-common";
 import { DateTime, Interval } from "luxon";
-import { Box, Heading, Image, Text, useTheme } from "native-base";
-import { ImageSourcePropType, useWindowDimensions } from "react-native";
+import { Box, Heading, Image, Spinner, Text, useTheme } from "native-base";
+import { useEffect, useState } from "react";
+import { useWindowDimensions } from "react-native";
 
+import { useFirebase } from "../../../context";
 import { useColorModeValue } from "../../customHooks";
 
 
@@ -14,16 +17,36 @@ const EventRow = ({
   interval: intervalString,
   blurb,
 }: {
-  imageSource?: ImageSourcePropType;
+  imageSource?: FirestoreImage;
   title: string;
   interval?: ReturnType<Interval["toISO"]>;
   blurb?: string;
 }) => {
   const { width: windowWidth } = useWindowDimensions();
+  const { fbStorage } = useFirebase();
   const { colors } = useTheme();
   const backgroundColor = useColorModeValue(colors.gray[300], colors.gray[600]);
 
+  const [ downloadableImage, setDownloadableImage ] = useState<DownloadableImage>();
+
   const interval = intervalString ? Interval.fromISO(intervalString) : undefined;
+
+  useEffect(() => {
+    if (imageSource) {
+      DownloadableImage.fromFirestoreImage(
+        imageSource,
+        (uri: string) => {
+          if (uri.startsWith("gs://")) {
+            return fbStorage.refFromURL(uri).getDownloadURL();
+          } else {
+            return Promise.resolve(uri);
+          }
+        }
+      )
+        .then(setDownloadableImage)
+        .catch(console.error);
+    }
+  }, [ fbStorage, imageSource ]);
 
   /**
    * Called to generate a React Native component
@@ -48,6 +71,7 @@ const EventRow = ({
       whenString = interval.toFormat("L/d/yyyy h:mm a");
     }
   }
+
   return (
     <Box
       flexDirection="row"
@@ -61,15 +85,30 @@ const EventRow = ({
       borderWidth={1}
       shadow={"6"}
     >
-      {imageSource &&
+      {downloadableImage &&
         <Image
           testID="event-thumbnail"
-          source={imageSource}
+          source={{
+            uri: downloadableImage.url,
+            height: downloadableImage.height,
+            width: downloadableImage.width,
+          }}
           alt="Event Thumbnail"
           width={windowWidth / 4}
           height={windowWidth / 4}
           resizeMode="contain"
           flex={2}/>
+      }
+      {!downloadableImage &&
+        <Spinner
+          testID="event-thumbnail-spinner"
+          accessibilityLabel="Loading event thumbnail"
+          color={colors.blue[500]}
+          size="lg"
+          flex={2}
+          width={windowWidth / 4}
+          height={windowWidth / 4}
+        />
       }
       <Box flexDirection="column" ml={3} flex={5}>
         <Heading testID="event-title" fontSize="xl">{title}</Heading>

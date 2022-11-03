@@ -1,16 +1,16 @@
 // I removed some unnecessary imports up here
-import { booleanLiteral } from "@babel/types";
+import firestoreBase from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
-import { DateTime, Interval } from "luxon";
+import { FirestoreEvent } from "@ukdanceblue/db-app-common";
+import { DateTime } from "luxon";
 import { Text } from "native-base";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList, SafeAreaView, View } from "react-native";
 import { CalendarList, CalendarUtils, DateData } from "react-native-calendars";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 import { log, universalCatch } from "../../../../common/logging";
+import { timestampToDateTime } from "../../../../common/util/dateTools";
 import { useFirebase, useLoading } from "../../../../context";
-import { ParsedFirestoreEvent, ParsedFirestoreEventWithInterval, doesEventHaveInterval, isRawFirestoreEvent, parseFirestoreEvent } from "../../../../types/FirestoreEvent";
 import { TabNavigatorProps } from "../../../../types/navigationTypes";
 
 // Moved the current date check to inside the component in case someone keeps the app open for a long time or if it doesn't update
@@ -34,10 +34,10 @@ const EventListScreen = () => {
     fbStorage, fbFirestore
   } = useFirebase();
 
-  const [ events, setEvents ] = useState<ParsedFirestoreEvent[]>([]);
+  const [ events, setEvents ] = useState<FirestoreEvent[]>([]);
 
   const [ selected, setSelected ] = useState(now.toFormat(dateFormat));
-  const [ monthEvents, setMonthEvents ] = useState<ParsedFirestoreEvent[]>([]);
+  const [ monthEvents, setMonthEvents ] = useState<FirestoreEvent[]>([]);
   // const [ monthEvents, setMonthEvents ] = useState<({ isFirstOfDay: boolean; event: ParsedFirestoreEvent })[]>([]);
   const [ marked, setMarked ] = useState({});
   const [ sortedMonths, setSortedMonths ] = useState({});
@@ -57,14 +57,14 @@ const EventListScreen = () => {
 
   const onMonthChange = useCallback((month: DateData) => {
     log(`month changed: ${ month.dateString}`);
-    const newEvents: ParsedFirestoreEventWithInterval[] = [];
+    const newEvents: FirestoreEvent[] = [];
 
     // The doesEventHaveInterval is a special kind of function called a type guard
     // Type guards are functions that return a boolean and narrow the type of a variable
     // In this case, it narrows the type of event to ParsedFirestoreEventWithInterval
     // which is just a ParsedFirestoreEvent where we know that the interval property is not undefined
-    events.filter(doesEventHaveInterval).forEach((event) => {
-      const eventDate: DateTime = event.interval.start;
+    events.filter((e): e is (typeof e & { interval: NonNullable<typeof e.interval> }) => e.interval != null).forEach((event) => {
+      const eventDate: DateTime = timestampToDateTime(event.interval.start);
       if ((eventDate.month - 1) === month.month && eventDate.year === month.year) {
         newEvents.push(event);
       }
@@ -81,20 +81,20 @@ const EventListScreen = () => {
   //   }
   // }, [sortedMonths]);
 
-  const partition = (array: { date: DateTime; event: ParsedFirestoreEvent }[], left = 0, right: number = array.length - 1) => {
+  const partition = (array: { date: DateTime; event: FirestoreEvent }[], left = 0, right: number = array.length - 1) => {
     const pivot = array[Math.floor((right + left) / 2)];
     let i = left;
     let j = right;
-  
+
     while (i <= j) {
       while (array[i] < pivot) {
         i++;
       }
-  
+
       while (array[j] > pivot) {
         j--;
       }
-  
+
       if (i <= j) {
         [ array[i], array[j] ] = [ array[j], array[i] ];
         i++;
@@ -109,33 +109,33 @@ const EventListScreen = () => {
     return date.toString().substring(0, 7);
   }, []);
 
-  const quickSort = (array: { date: DateTime; event: ParsedFirestoreEvent }[], left = 0, right: number = array.length - 1) => {
+  const quickSort = useCallback((array: { date: DateTime; event: FirestoreEvent }[], left = 0, right: number = array.length - 1) => {
     let index : number;
-  
+
     if (array.length > 1) {
       index = partition(array, left, right);
-  
+
       if (left < index - 1) {
         quickSort(array, left, index - 1);
       }
-  
+
       if (index < right) {
         quickSort(array, index, right);
       }
     }
-  
-    return array;
-  };
 
-  const sortEvents = (events: ParsedFirestoreEvent[]) => {
-    const sortedObjs: ( { date : DateTime; event: ParsedFirestoreEvent })[] = [];
+    return array;
+  }, []);
+
+  const sortEvents = useCallback((events: FirestoreEvent[]) => {
+    const sortedObjs: ( { date : DateTime; event: FirestoreEvent })[] = [];
     events.forEach((event) => {
-      const date : (DateTime | undefined) = event.interval?.start.plus( { month: -1 });
+      const date : (DateTime | undefined) = event.interval ? timestampToDateTime(event.interval.start).plus( { month: -1 }) : undefined;
       if (date instanceof DateTime) {
         sortedObjs.push( { date, event } );
       }
     });
-    
+
     // log("unsorted");
     // sortedObjs.forEach((item) => {
     //   log(`${item.date.toString()} : ${item.event.title}`);
@@ -146,7 +146,7 @@ const EventListScreen = () => {
     //   log(`${item.date.toString()} : ${item.event.title}`);
     // });
 
-    const eventsObj: { [monthKey: string] : ( { isFirstOfDay: boolean; event: ParsedFirestoreEvent })[] } = {};
+    const eventsObj: { [monthKey: string] : ( { isFirstOfDay: boolean; event: FirestoreEvent })[] } = {};
 
     let lastDateAdded: DateTime;
 
@@ -162,7 +162,7 @@ const EventListScreen = () => {
         if (lastDateAdded instanceof DateTime) {
           isFirstDay = !(obj.date.day === lastDateAdded.day && obj.date.month === lastDateAdded.month && obj.date.year === lastDateAdded.year);
         }
-        const newArr: ({ isFirstOfDay: boolean; event: ParsedFirestoreEvent })[] = [{ isFirstOfDay: isFirstDay, event: obj.event }];
+        const newArr: ({ isFirstOfDay: boolean; event: FirestoreEvent })[] = [{ isFirstOfDay: isFirstDay, event: obj.event }];
         eventsObj[monthKey] = newArr;
       }
       lastDateAdded = obj.date;
@@ -171,7 +171,7 @@ const EventListScreen = () => {
     setSortedMonths(eventsObj);
     log("sortedMonths =");
     log(eventsObj);
-  };
+  }, [ quickSort, yyyyMMstring ]);
 
 
   // const marked = useMemo(() => {
@@ -205,18 +205,16 @@ const EventListScreen = () => {
     setRefreshing(true);
     try {
       log("Loading event list screen from firestore");
-      const firestoreEvents: ParsedFirestoreEvent[] = [];
-      const snapshot = await fbFirestore.collection("events")
+      const firestoreEvents: FirestoreEvent[] = [];
+      const snapshot = await fbFirestore.collection("events").where("interval.end", ">", firestoreBase.Timestamp.now())
         .get();
-      await Promise.all(snapshot.docs.map(async (doc) => {
+
+      for (const doc of snapshot.docs) {
         const data = doc.data();
-        // This is another one of those type guards, the data we get back from firestore SHOULD be a RawFirestoreEvent
-        // But that relies on me not having made any mistakes in the code, and that is not happening, hence the check
-        if (isRawFirestoreEvent(data)) {
-          log ("isRaw");
-          firestoreEvents.push(await parseFirestoreEvent(data, fbStorage));
+        if (FirestoreEvent.isValidJson(data)) {
+          firestoreEvents.push(FirestoreEvent.fromJson(data));
         }
-      }));
+      }
 
       log(`Loaded event list screen from firestore: ${ JSON.stringify(firestoreEvents, null, 2)}`);
       setEvents(firestoreEvents);
@@ -227,12 +225,12 @@ const EventListScreen = () => {
       setRefreshing(false);
     }
   }, [
-    fbFirestore, fbStorage, setRefreshing
+    fbFirestore, setRefreshing, sortEvents
   ]);
 
   useEffect(() => {
-    refresh().catch(universalCatch);
-  }, [refresh]);
+    // refresh().catch(universalCatch);
+  }, []);
 
   useEffect(() => {
     onMonthChange({
@@ -245,17 +243,20 @@ const EventListScreen = () => {
   }, [onMonthChange]);
 
   useEffect(() => {
-    const markedDates = {};
+    const markedDates: Record<string, any> = {};
     for (const event of events) {
-      const eventDate: DateTime = event.interval?.start.plus({ month: -1 });
+      const eventDate = event.interval ? timestampToDateTime(event.interval.start).plus( { month: -1 }) : undefined;
+      if (!(eventDate instanceof DateTime)) {
+        continue;
+      }
       // markedDates[eventDate.toFormat(dateFormat)] = { marked: true, dotColor: "#0033A0" };
       markedDates[eventDate.toFormat(dateFormat)] = { customStyles: { container: { backgroundColor: "#dee8ff" }, text: { color: "black" } } };
     }
     markedDates[now.toFormat(dateFormat)] = { customStyles: { container: { backgroundColor: "#0032A0" }, text: { color: "#FFC72C" } } };
     setMarked(markedDates);
-  }, [events]);
+  }, [ events, now ]);
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: { title: string } }) => (
     <Text> { item.title } </Text>
   );
 
@@ -273,12 +274,11 @@ const EventListScreen = () => {
         hideArrows = {false}
         theme = {{ arrowColor: "#0032A0", textMonthFontWeight: "bold", textMonthFontSize: 20, textDayFontWeight: "bold", textDayHeaderFontWeight: "500" }}
         onMonthChange={onMonthChange}
-
       />
       <View style = {{ height: 1, width: "100%", backgroundColor: "gray", paddingBottom: 20 }}/>
 
       <FlatList
-        data={monthEvents}
+        data={monthEvents.map((event) => ({ title: event.name }))}
         extraData={monthEvents}
         style = {{ backgroundColor: "white" }}
         renderItem = {renderItem}

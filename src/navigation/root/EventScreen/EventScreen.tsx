@@ -1,23 +1,28 @@
 import { useRoute } from "@react-navigation/native";
+import { DownloadableImage } from "@ukdanceblue/db-app-common";
 import { PermissionStatus, createEventAsync, getCalendarPermissionsAsync, requestCalendarPermissionsAsync } from "expo-calendar";
 import { setStringAsync } from "expo-clipboard";
 import { openBrowserAsync } from "expo-web-browser";
-import { DateTime, Interval } from "luxon";
+import { DateTime } from "luxon";
 import { Badge, Box, Button, Center, Heading, Image, Pressable, ScrollView, Text, VStack, ZStack, useTheme } from "native-base";
+import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, useWindowDimensions } from "react-native";
 import openMaps from "react-native-open-maps";
 import { WebView } from "react-native-webview";
 
+import NativeBaseMarkdown from "../../../common/components/NativeBaseMarkdown";
+import { firestoreIntervalToLuxon } from "../../../common/firestoreUtils";
 import { log, universalCatch } from "../../../common/logging";
 import { showMessage } from "../../../common/util/alertUtils";
 import { discoverDefaultCalendar } from "../../../common/util/calendar";
+import { useFirebase } from "../../../context";
 import { RootStackScreenProps } from "../../../types/navigationTypes";
 
 const EventScreen = () => {
   const {
     params: {
       event: {
-        title, description, address, image, interval: intervalString, link
+        name, description, address, images: firestoreImages, interval: firestoreInterval, highlightedLinks
       }
     }
   } = useRoute<RootStackScreenProps<"Event">["route"]>();
@@ -26,9 +31,36 @@ const EventScreen = () => {
     width: screenWidth, height: screenHeight
   } = useWindowDimensions();
 
-  const { colors } = useTheme();
+  const totalWidth = useMemo(() => (firestoreImages?.reduce((acc, image) => acc + image.width, 0) ?? 0), [firestoreImages]);
+  const maxHeight = useMemo(() => (firestoreImages?.reduce((acc, image) => Math.max(acc, Math.min(
+    image.height,
+    (screenWidth * (image.height / image.width))
+  )), 0) ?? 0), [ firestoreImages, screenWidth ]);
+  const [ images, setImages ] = useState<(DownloadableImage | null)[] | undefined>(firestoreImages == null ? undefined : Array(firestoreImages.length).fill(null));
 
-  const interval = intervalString ? Interval.fromISO(intervalString) : undefined;
+  const { colors } = useTheme();
+  const { fbStorage } = useFirebase();
+
+  useEffect(() => {
+    if (firestoreImages == null) {
+      return;
+    } else {
+      Promise.all(firestoreImages.map((image) => {
+        return DownloadableImage.fromFirestoreImage(
+          image,
+          (uri: string) => {
+            if (uri.startsWith("gs://")) {
+              return fbStorage.refFromURL(uri).getDownloadURL();
+            } else {
+              return Promise.resolve(uri);
+            }
+          }
+        );
+      })).then(setImages).catch(universalCatch);
+    }
+  }, [ fbStorage, firestoreImages ]);
+
+  const interval = firestoreInterval ? firestoreIntervalToLuxon(firestoreInterval) : undefined;
 
   let whenString = "";
   let allDay = false;
@@ -55,53 +87,59 @@ const EventScreen = () => {
     }
   }
 
+  const imageCount = images?.length ?? 0;
+
   return (
     <VStack h="full">
       <ScrollView>
-        {image != null && (Array.isArray(image)
-          ? (
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={true}
-              horizontal
-              style={{
-                height: Math.max(...(
-                  image.map(
-                    (
-                      (image) => Math.min(
-                        image.height,
-                        (screenWidth * (image.height / image.width))
-                      )
-                    )
-                  )
-                ), 0)
-              }}>
-              {image.map((pageImage, index) => (
-                <ZStack key={index} style={{ width: Math.min(pageImage.width, screenWidth), height: Math.min(pageImage.height, (screenWidth * (pageImage.height / pageImage.width))), marginRight: index < image.length - 1 ? 6 : 0 }}>
-                  {image.length > 1 && <Badge
-                    position="relative"
-                    rounded="full"
-                    bottom={2}
-                    right={2}
-                    zIndex={1}
-                    variant="solid"><Text color="white">{index+1}/{image.length}</Text></Badge>}
+        {
+          (imageCount) > 0 && images != null && (
+            imageCount > 1
+              ? (
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={true}
+                  horizontal
+                  style={{ height: maxHeight }}>
+                  {images.map((pageImage, index) => (
+                    pageImage ? (
+                      <ZStack key={index} style={{ width: Math.min(pageImage.width, screenWidth), height: Math.min(pageImage.height, (screenWidth * (pageImage.height / pageImage.width))), marginRight: index < imageCount - 1 ? 6 : 0 }}>
+                        {images.length > 1 &&
+                      <Badge
+                        position="relative"
+                        rounded="full"
+                        bottom={2}
+                        right={2}
+                        zIndex={1}
+                        variant="solid">
+                        <Text color="white">{index+1}/{images.length}</Text>
+                      </Badge>}
+                        <Image
+                          source={{ uri: pageImage.url, width: pageImage.width, height: pageImage.width }}
+                          alt={name}
+                          style={{ width: "100%", height: "100%" }}
+                          resizeMode="contain"
+                        />
+                      </ZStack>
+                    ) : (
+                      <Center key={index} style={{ width: Math.min(screenWidth, totalWidth), height: maxHeight, marginRight: index < imageCount - 1 ? 6 : 0 }}>
+                        <ActivityIndicator color={colors.primary[500]} />
+                      </Center>
+                    )))}
+                </ScrollView>)
+              : (
+                !!(images[0]) && (
                   <Image
-                    source={{ uri: pageImage.url, width: pageImage.width, height: pageImage.width }}
-                    alt={title}
-                    style={{ width: "100%", height: "100%" }}
+                    source={{ uri: images[0].url, width: images[0].width, height: images[0].height }}
+                    alt={name}
+                    style={{ width: "100%", height: Math.min(images[0].height, (screenWidth * (images[0].height / images[0].width))) }}
                     resizeMode="contain"
                   />
-                </ZStack>
-              ))}
-            </ScrollView>)
-          : (<Image
-            source={{ uri: image.url, width: image.width, height: image.height }}
-            alt={title}
-            style={{ width: "100%", height: Math.min(image.height, (screenWidth * (image.height / image.width))) }}
-            resizeMode="contain"
-          />))
+                )
+              )
+          )
         }
-        <Heading my={1} mx={2} textAlign="center">{title}</Heading>
+        <Heading my={1} mx={2} textAlign="center">{name}</Heading>
         {address != null &&
           (<Pressable
             onPress={() => {
@@ -140,7 +178,7 @@ const EventScreen = () => {
                 showMessage(undefined, "No calendar found");
               } else {
                 await createEventAsync(defaultCalendar.id, {
-                  title,
+                  title: name,
                   allDay,
                   notes: description,
                   startDate: interval?.start.toJSDate(),
@@ -158,45 +196,33 @@ const EventScreen = () => {
           Add to my calendar
         </Button>
 
-        <Text mt={2} mx={2}>{description}</Text>
-        {link && (
-          Array.isArray(link)
-            ? (
-              <>
-                {link.map((pageLink, index) => (
-                  <Pressable
-                    _pressed={{ opacity: 0.6 }}
-                    width="full"
-                    mx={2}
-                    mb={2}
-                    onPress={() => openBrowserAsync(pageLink.url).catch(universalCatch)}
-                    key={index}
-                  >
-                    <Text
-                      textAlign="center"
-                      color="blue.600"
-                      underline>
-                      {pageLink.text}
-                    </Text>
-                  </Pressable>
-                ))}
-              </>
-            )
-            : (<Pressable
-              _pressed={{ opacity: 0.6 }}
-              width="full"
-              mx={2}
-              mb={2}
-              onPress={() => openBrowserAsync(link.url).catch(universalCatch)
-              }
-            >
-              <Text
-                textAlign="center"
-                color="blue.600"
-                underline>
-                {link.text}
-              </Text>
-            </Pressable>))}
+        <Box mx={2}>
+          <NativeBaseMarkdown>
+            {description}
+          </NativeBaseMarkdown>
+        </Box>
+        {/* Maybe consider removing the link option in favor of just using markdown links? Or keep it so centered links are a thing?? */}
+        {highlightedLinks && (
+          <>
+            {highlightedLinks.map((pageLink, index) => (
+              <Pressable
+                _pressed={{ opacity: 0.6 }}
+                width="full"
+                mx={2}
+                mb={2}
+                onPress={() => openBrowserAsync(pageLink.url).catch(universalCatch)}
+                key={index}
+              >
+                <Text
+                  textAlign="center"
+                  color="blue.600"
+                  underline>
+                  {pageLink.text}
+                </Text>
+              </Pressable>
+            ))}
+          </>
+        )}
 
         {address &&
           <Box

@@ -66,7 +66,7 @@ const Place = ({
           {points === 1 ? " point  " : " points  "}
         </Text>
       </View>
-      {lastRow && (<Divider />)}
+      {!lastRow && (<Divider />)}
     </View>
   );
 };

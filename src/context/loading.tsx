@@ -31,8 +31,8 @@ export const LoadingWrapper = ({ children }: { children: ReactNode }) => {
         {
           (Object.values(loadingReasons).some((val) => val)) &&
           (
-            <Center>
-              <Spinner />
+            <Center width="full" height="full">
+              <Spinner size="lg" color="#0000ff" />
             </Center>
           )
         }

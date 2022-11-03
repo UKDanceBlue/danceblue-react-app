@@ -1,6 +1,5 @@
 import { StackNavigationProp, createStackNavigator } from "@react-navigation/stack";
-import { Center, useTheme } from "native-base";
-import { ActivityIndicator } from "react-native";
+import { useTheme } from "native-base";
 
 import { useColorModeValue } from "../../common/customHooks";
 import { useAuthData } from "../../context";
@@ -28,9 +27,6 @@ const RootScreen = () => {
 
   return (
     <>
-      {!isAuthLoaded && (
-        <Center position="absolute" width="full" height="full"><ActivityIndicator size="large" /></Center>
-      )}
       {isAuthLoaded && (
         <RootStack.Navigator
           screenOptions={({ navigation }: { navigation: StackNavigationProp<RootStackParamList> }) => ({
@@ -52,7 +48,7 @@ const RootScreen = () => {
                 name="Event"
                 component={EventScreen}
                 options={({ route }) => ({
-                  title: route.params.event.title,
+                  title: route.params.event.name,
                   headerMode: "screen",
                 })}
               />
