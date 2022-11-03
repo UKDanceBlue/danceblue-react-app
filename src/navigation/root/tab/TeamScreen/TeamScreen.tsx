@@ -45,7 +45,7 @@ const TeamScreen = () => {
           You are not on a team.
         </Text>
         <Text mx="8" m="4" textAlign="center">
-          If you believe this is an error and have submitted spirit points, please contact your team captain or the DanceBlue committee.
+          If you believe this is an error and have submitted spirit points, try logging out and logging back in. If that doesn&apos;t work, don&apos;t worry, your spirit points are being recorded, please contact your team captain or the DanceBlue committee to get access in the app.
         </Text>
       </Center>
     );
