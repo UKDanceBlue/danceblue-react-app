@@ -18,13 +18,13 @@ import { TabNavigatorProps } from "../../../../types/navigationTypes";
 // That is why you usually only want to put true constants and function or class definitions there, because they should never change
 const dateFormat = "yyyy-MM-dd";
 
+// This is where I moved the current date check, I set it to startOf("minute") just so it doesn't change super frequently (shouldn't matter though)
+const today = DateTime.local().startOf("minute");
+
 const EventListScreen = () => {
   // The useLoading hook is a custom hook defined in the context folder that automatically shows a loading spinner if any of the loading states are true
   // This makes it easy to show a loading spinner when the app is waiting for data from the server or something
   const [ , setRefreshing ] = useLoading("event-list-screen-refreshing");
-
-  // This is where I moved the current date check, I set it to startOf("minute") just so it doesn't change super frequently (shouldn't matter though)
-  const now = DateTime.local().startOf("minute");
 
   const firstLoadNow = useRef(DateTime.local().startOf("minute"));
 
@@ -36,7 +36,7 @@ const EventListScreen = () => {
 
   const [ events, setEvents ] = useState<FirestoreEvent[]>([]);
 
-  const [ selected, setSelected ] = useState(now.toFormat(dateFormat));
+  const [ selected, setSelected ] = useState(today.toFormat(dateFormat));
   const [ monthEvents, setMonthEvents ] = useState<FirestoreEvent[]>([]);
   // const [ monthEvents, setMonthEvents ] = useState<({ isFirstOfDay: boolean; event: ParsedFirestoreEvent })[]>([]);
   const [ marked, setMarked ] = useState({});
@@ -46,10 +46,10 @@ const EventListScreen = () => {
 
   // Try to use unknown instead of any just to be clear about what you're expecting
   const getDate = useCallback((count: number): unknown => {
-    const date = now.toJSDate();
+    const date = today.toJSDate();
     const newDate = date.setDate(date.getDate() + count);
     return CalendarUtils.getCalendarDateString(newDate);
-  }, [now]);
+  }, []);
 
   const onDayPress = useCallback((day: DateData) => {
     setSelected(day.dateString);
@@ -229,8 +229,8 @@ const EventListScreen = () => {
   ]);
 
   useEffect(() => {
-    // refresh().catch(universalCatch);
-  }, []);
+    refresh().catch(universalCatch);
+  }, [refresh]);
 
   useEffect(() => {
     onMonthChange({
@@ -252,9 +252,9 @@ const EventListScreen = () => {
       // markedDates[eventDate.toFormat(dateFormat)] = { marked: true, dotColor: "#0033A0" };
       markedDates[eventDate.toFormat(dateFormat)] = { customStyles: { container: { backgroundColor: "#dee8ff" }, text: { color: "black" } } };
     }
-    markedDates[now.toFormat(dateFormat)] = { customStyles: { container: { backgroundColor: "#0032A0" }, text: { color: "#FFC72C" } } };
+    markedDates[today.toFormat(dateFormat)] = { customStyles: { container: { backgroundColor: "#0032A0" }, text: { color: "#FFC72C" } } };
     setMarked(markedDates);
-  }, [ events, now ]);
+  }, [events]);
 
   const renderItem = ({ item }: { item: { title: string } }) => (
     <Text> { item.title } </Text>
@@ -266,7 +266,7 @@ const EventListScreen = () => {
   return (
     <SafeAreaView style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
       <CalendarList
-        current={now.toFormat(dateFormat)}
+        current={today.toFormat(dateFormat)}
         markingType={"custom"}
         markedDates={marked}
         horizontal
