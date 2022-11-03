@@ -48,7 +48,7 @@ const RootScreen = () => {
                 name="Event"
                 component={EventScreen}
                 options={({ route }) => ({
-                  title: route.params.event.title,
+                  title: route.params.event.name,
                   headerMode: "screen",
                 })}
               />

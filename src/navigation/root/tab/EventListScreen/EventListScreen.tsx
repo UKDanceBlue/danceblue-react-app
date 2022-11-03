@@ -1,5 +1,6 @@
 import firebaseFirestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
+import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime, Interval } from "luxon";
 import { Center, Heading, SectionList, Text, useTheme } from "native-base";
 import { useCallback, useEffect, useState } from "react";
@@ -7,9 +8,9 @@ import { TouchableOpacity } from "react-native";
 
 import EventRow from "../../../../common/components/EventRow";
 import { useColorModeValue } from "../../../../common/customHooks";
+import { firestoreIntervalToLuxon } from "../../../../common/firestoreUtils";
 import { log, universalCatch } from "../../../../common/logging";
 import { useFirebase } from "../../../../context";
-import { ParsedFirestoreEvent, RawFirestoreEvent, parseFirestoreEvent } from "../../../../types/FirestoreEvent";
 import { TabNavigatorProps } from "../../../../types/navigationTypes";
 
 const EventListScreen = () => {
@@ -19,9 +20,9 @@ const EventListScreen = () => {
   const { colors } = useTheme();
   const screenBackgroundColor = useColorModeValue(colors.white, colors.gray[900]);
 
-  const [ events, setEvents ] = useState<ParsedFirestoreEvent[]>([]);
-  const [ today, setToday ] = useState<ParsedFirestoreEvent[]>([]);
-  const [ upcoming, setUpcoming ] = useState<ParsedFirestoreEvent[]>([]);
+  const [ events, setEvents ] = useState<FirestoreEvent[]>([]);
+  const [ today, setToday ] = useState<FirestoreEvent[]>([]);
+  const [ upcoming, setUpcoming ] = useState<FirestoreEvent[]>([]);
   const [ refreshing, setRefreshing ] = useState(false);
 
   const navigation = useNavigation<TabNavigatorProps<"Events">["navigation"]>();
@@ -30,13 +31,16 @@ const EventListScreen = () => {
     setRefreshing(true);
     try {
       log("Loading event list screen from firestore");
-      const firestoreEvents: ParsedFirestoreEvent[] = [];
+      const firestoreEvents: FirestoreEvent[] = [];
       const snapshot = await fbFirestore.collection("events").where("endTime", ">", firebaseFirestore.Timestamp.now())
         .get();
-      await Promise.all(snapshot.docs.map(async (doc) => {
-        const data = doc.data() as RawFirestoreEvent;
-        firestoreEvents.push(await parseFirestoreEvent(data, fbStorage));
-      }));
+
+      for (const doc of snapshot.docs) {
+        const data = doc.data();
+        if (FirestoreEvent.isValidJson(data)) {
+          firestoreEvents.push(FirestoreEvent.fromJson(data));
+        }
+      }
 
       log(`Loaded event list screen from firestore: ${ JSON.stringify(firestoreEvents)}`);
       setEvents(firestoreEvents);
@@ -45,7 +49,7 @@ const EventListScreen = () => {
     } finally {
       setRefreshing(false);
     }
-  }, [ fbFirestore, fbStorage ]);
+  }, [fbFirestore]);
 
   useEffect(() => {
     refresh().catch(universalCatch);
@@ -57,11 +61,11 @@ const EventListScreen = () => {
    * Splits *events* into *today* and *upcoming* based on the events' start day
    */
   useEffect(() => {
-    const todayFromEvents: ParsedFirestoreEvent[] = [];
-    const upcomingFromEvents: ParsedFirestoreEvent[] = [];
+    const todayFromEvents: FirestoreEvent[] = [];
+    const upcomingFromEvents: FirestoreEvent[] = [];
     events.forEach((event) => {
       if (event.interval != null) {
-        if (Interval.fromISO(event.interval).overlaps(Interval.fromDateTimes(DateTime.local().startOf("day"), DateTime.local().endOf("day")))) {
+        if (firestoreIntervalToLuxon(event.interval).overlaps(Interval.fromDateTimes(DateTime.local().startOf("day"), DateTime.local().endOf("day")))) {
           todayFromEvents.push(event);
         } else {
           upcomingFromEvents.push(event);
@@ -114,10 +118,10 @@ const EventListScreen = () => {
             onPress={() => navigation.navigate("Event", { event: row })}
           >
             <EventRow
-              title={row.title}
-              blurb={row.description.length > 99 ? `${row.description.substring(0, 100) }...` : row.description}
-              interval={row.interval}
-              imageSource={row.image == null ? undefined : (Array.isArray(row.image) ? { uri: row.image[0].url, width: row.image[0].width, height: row.image[0].height } : { uri: row.image.url, width: row.image.width, height: row.image.height })}
+              title={row.name}
+              blurb={row.shortDescription ? row.shortDescription : (row.description.length > 99 ? `${row.description.substring(0, 100) }...` : row.description)}
+              interval={row.interval ? firestoreIntervalToLuxon(row.interval).toISO() : undefined}
+              imageSource={row.images == null ? undefined : row.images[0]}
             />
           </TouchableOpacity>
         )}
