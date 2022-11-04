@@ -32,6 +32,7 @@ const EventRow = ({
   const interval = intervalString ? Interval.fromISO(intervalString) : undefined;
 
   useEffect(() => {
+    setDownloadableImage(undefined);
     if (imageSource) {
       DownloadableImage.fromFirestoreImage(
         imageSource,
