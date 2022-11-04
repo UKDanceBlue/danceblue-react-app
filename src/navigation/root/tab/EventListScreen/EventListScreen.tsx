@@ -2,8 +2,8 @@ import FirestoreModule from "@react-native-firebase/firestore";
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime, Interval } from "luxon";
 import { Divider } from "native-base";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { FlatList, ListRenderItem, SafeAreaView, View } from "react-native";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FlatList, ListRenderItem, SafeAreaView } from "react-native";
 import { CalendarList, DateData } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
 
@@ -90,6 +90,20 @@ const EventListScreen = () => {
   const [ selectedMonth, setSelectedMonth ] = useState<DateData>(todayDateData);
   const [ selectedDay, setSelectedDay ] = useState<DateData>(todayDateData);
 
+  // Scroll-to-day functionality
+  const eventsListRef = useRef<FlatList<FirestoreEvent> | null>(null);
+  const dayIndexes = useRef<Partial<Record<string, number>>>({});
+  dayIndexes.current = {};
+
+  useEffect(() => {
+    if (dayIndexes.current[selectedDay.dateString]) {
+      eventsListRef.current?.scrollToIndex({
+        animated: true,
+        index: dayIndexes.current[selectedDay.dateString] ?? 0,
+      });
+    }
+  }, [selectedDay]);
+
   // Earliest date to load (so we don't waste reads on events from 3 years ago)
   const earliestTimestamp = useMemo(() => {
     const defaultEarliest = todayDateTime.minus({ months: 4 }).toMillis();
@@ -98,7 +112,6 @@ const EventListScreen = () => {
   }, [ selectedMonth.timestamp, todayDateTime ]);
 
   const refresh = useCallback(async () => {
-    console.log("Refreshing events");
     setRefreshing(true);
     try {
       const firestoreEvents: FirestoreEvent[] = [];
@@ -135,14 +148,25 @@ const EventListScreen = () => {
   const marked = useMemo(() => markEvents(events, todayDateData.dateString), [ events, todayDateData.dateString ]);
   const markedAndSelected = useMemo(() => addSelectedToMarkedDates(marked, selectedDay), [ marked, selectedDay ]);
 
-  const renderItem: ListRenderItem<FirestoreEvent> = ({ item: thisEvent }) => (
-    <EventRow
-      title={thisEvent.name}
-      blurb={thisEvent.shortDescription}
-      imageSource={thisEvent.images?.[0]}
-      interval={thisEvent.interval ? Interval.fromDateTimes(timestampToDateTime(thisEvent.interval.start), timestampToDateTime(thisEvent.interval.end)).toISO() : undefined}
-    />
-  );
+  const renderItem: ListRenderItem<FirestoreEvent> = ({
+    item: thisEvent, index
+  }) => {
+    if (thisEvent.interval != null) {
+      const eventDate = timestampToDateTime(thisEvent.interval.start).toFormat(dateFormat);
+      if (!((dayIndexes.current[eventDate] ?? NaN) > index)) {
+        dayIndexes.current[eventDate] = index;
+      }
+    }
+
+    return (
+      <EventRow
+        title={thisEvent.name}
+        blurb={thisEvent.shortDescription}
+        imageSource={thisEvent.images?.[0]}
+        interval={thisEvent.interval ? Interval.fromDateTimes(timestampToDateTime(thisEvent.interval.start), timestampToDateTime(thisEvent.interval.end)).toISO() : undefined}
+      />
+    );
+  };
 
   /*
    * Called by React Native when rendering the screen
@@ -162,10 +186,12 @@ const EventListScreen = () => {
       />
       <Divider height={1} />
       <FlatList
+        ref={(list) => eventsListRef.current = list}
         data={eventsByMonth[DateTime.fromObject({
           year: selectedMonth.year,
           month: selectedMonth.month,
         }).toFormat(dateFormatWithoutDay)] ?? []}
+        extraData={selectedMonth}
         style = {{ backgroundColor: "white" }}
         renderItem = {renderItem}
         refreshing={refreshing}

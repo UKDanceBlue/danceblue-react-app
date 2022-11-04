@@ -1,7 +1,7 @@
 import { DownloadableImage, FirestoreImage } from "@ukdanceblue/db-app-common";
 import { DateTime, Interval } from "luxon";
 import { Box, Heading, Image, Spinner, Text, useTheme } from "native-base";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useWindowDimensions } from "react-native";
 
 import { useFirebase } from "../../../context";
@@ -49,29 +49,29 @@ const EventRow = ({
     }
   }, [ fbStorage, imageSource ]);
 
-  /**
-   * Called to generate a React Native component
-   */
-  let whenString = "";
-  if (interval != null) {
-    if (interval.start.toMillis() === DateTime.now().startOf("day").toMillis() && interval.end.toMillis() === DateTime.now().endOf("day").toMillis()) {
+  const whenString = useMemo(() => {
+    let whenString = "";
+    if (interval != null) {
+      if (interval.start.toMillis() === DateTime.now().startOf("day").toMillis() && interval.end.toMillis() === DateTime.now().endOf("day").toMillis()) {
       // All day today
-      whenString = interval.start.toFormat("All Day Today");
-    } else if (interval.start.toMillis() === interval.start.startOf("day").toMillis() && interval.end.toMillis() === interval.end.endOf("day").toMillis()) {
+        whenString = interval.start.toFormat("All Day Today");
+      } else if (interval.start.toMillis() === interval.start.startOf("day").toMillis() && interval.end.toMillis() === interval.end.endOf("day").toMillis()) {
       // All day some other day
-      if (interval.start.toISODate() === interval.end.toISODate()) {
+        if (interval.start.toISODate() === interval.end.toISODate()) {
         // All day on the same day
-        whenString = `All Day ${interval.start.toFormat("L/d/yyyy")}`;
-      } else {
+          whenString = `All Day ${interval.start.toFormat("L/d/yyyy")}`;
+        } else {
         // All day on different days
-        whenString = interval.start.toFormat(`All Day ${interval.start.toFormat("L/d/yyyy")} - ${interval.end.toFormat("L/d/yyyy")}`);
+          whenString = interval.start.toFormat(`All Day ${interval.start.toFormat("L/d/yyyy")} - ${interval.end.toFormat("L/d/yyyy")}`);
+        }
+      } else if (interval.hasSame("day")) {
+        whenString = `${interval.start.toFormat("L/d/yyyy h:mm a")} - ${interval.end.toFormat("h:mm a")}`;
+      } else {
+        whenString = interval.toFormat("L/d/yyyy h:mm a");
       }
-    } else if (interval.hasSame("day")) {
-      whenString = `${interval.start.toFormat("L/d/yyyy h:mm a")} - ${interval.end.toFormat("h:mm a")}`;
-    } else {
-      whenString = interval.toFormat("L/d/yyyy h:mm a");
     }
-  }
+    return whenString;
+  }, [interval]);
 
   return (
     <Box
