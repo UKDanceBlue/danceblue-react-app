@@ -92,6 +92,7 @@ const EventRow = ({
             uri: downloadableImage.url,
             height: downloadableImage.height,
             width: downloadableImage.width,
+            cache: "force-cache",
           }}
           alt="Event Thumbnail"
           width={windowWidth / 4}
