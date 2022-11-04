@@ -1,6 +1,7 @@
-// I removed some unnecessary imports up here
+import FirestoreModule from "@react-native-firebase/firestore";
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime, Interval } from "luxon";
+import { Divider } from "native-base";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FlatList, ListRenderItem, SafeAreaView, View } from "react-native";
 import { CalendarList, DateData } from "react-native-calendars";
@@ -11,13 +12,57 @@ import { universalCatch } from "../../../../common/logging";
 import { timestampToDateTime } from "../../../../common/util/dateTools";
 import { useFirebase, useLoading } from "../../../../context";
 
-// const getCalendarDateString = CalendarUtils.getCalendarDateString as (date?: Parameters<typeof CalendarUtils.getCalendarDateString>[0]) => string | undefined;
-
-// Moved the current date check to inside the component in case someone keeps the app open for a long time or if it doesn't update
-// Code the is placed in "module scope" (outside of the component) will run only when the file is imported for the first time
 // That is why you usually only want to put true constants and function or class definitions there, because they should never change
 const dateFormat = "yyyy-MM-dd";
 const dateFormatWithoutDay = "yyyy-MM";
+
+export const splitEvents = (events: FirestoreEvent[]) => {
+  const newEvents: Partial<Record<string, FirestoreEvent[]>> = {};
+
+  events
+    .filter(
+      (e): e is (typeof e & { interval: NonNullable<typeof e.interval> }) => e.interval != null
+    )
+    .forEach((event) => {
+      const eventDate: DateTime = timestampToDateTime(event.interval.start);
+      const eventDateString = eventDate.toFormat(dateFormatWithoutDay);
+
+      if (newEvents[eventDateString] == null) {
+        newEvents[eventDateString] = [event];
+      } else {
+        newEvents[eventDateString]?.push(event);
+      }
+    });
+
+  return newEvents;
+};
+
+export const markEvents = (events: FirestoreEvent[], todayDateString: string) => {
+  const marked: MarkedDates = {};
+
+  let hasAddedToday = false;
+
+  for (const event of events) {
+    if (event.interval != null) {
+      const eventDate: DateTime = timestampToDateTime(event.interval.start);
+      const formattedDate = eventDate.toFormat(dateFormat);
+
+      marked[formattedDate] = {
+        marked: true,
+        today: formattedDate === todayDateString,
+      };
+      if (formattedDate === todayDateString) {
+        hasAddedToday = true;
+      }
+    }
+  }
+
+  // If we didn't add today or selected day already, we need to add them manually
+  if (!hasAddedToday) {
+    marked[todayDateString] = { today: true };
+  }
+  return marked;
+};
 
 const EventListScreen = () => {
   // Get a reference to the Firebase database
@@ -45,12 +90,21 @@ const EventListScreen = () => {
   const [ selectedMonth, setSelectedMonth ] = useState<DateData>(todayDateData);
   const [ selectedDay, setSelectedDay ] = useState<DateData>(todayDateData);
 
+  // Earliest date to load (so we don't waste reads on events from 3 years ago)
+  const earliestTimestamp = useMemo(() => {
+    const defaultEarliest = todayDateTime.minus({ months: 4 }).toMillis();
+    const twoMonthsBeforeSelected = DateTime.fromMillis(selectedMonth.timestamp).minus({ months: 2 }).toMillis();
+    return Math.min(defaultEarliest, twoMonthsBeforeSelected);
+  }, [ selectedMonth.timestamp, todayDateTime ]);
+
   const refresh = useCallback(async () => {
+    console.log("Refreshing events");
     setRefreshing(true);
     try {
       const firestoreEvents: FirestoreEvent[] = [];
       const snapshot = await fbFirestore
         .collection("events")
+        .where("interval.start", ">=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp))
         .orderBy("interval.start", "asc")
         .get();
 
@@ -67,74 +121,19 @@ const EventListScreen = () => {
     } finally {
       setRefreshing(false);
     }
-  }, [ fbFirestore, setRefreshing ]);
+  }, [
+    earliestTimestamp, fbFirestore, setRefreshing
+  ]);
 
   useEffect(() => {
-    // Only do this on first load
-    if (events.length === 0) {
-      refresh().catch(universalCatch);
-    }
-  }, [ events.length, refresh ]);
+    // This will run when refresh changes (WHICH IT DOES) when the selected month gets close to the earliest date we load be default
+    refresh().catch(universalCatch);
+  }, [refresh]);
 
-  const eventsByMonth = useMemo(() => {
-    const newEvents: Partial<Record<string, FirestoreEvent[]>> = {};
+  const eventsByMonth = useMemo(() => splitEvents(events), [events]);
 
-    events
-      .filter(
-        (e): e is (typeof e & { interval: NonNullable<typeof e.interval> }) => e.interval != null
-      )
-      .forEach((event) => {
-        const eventDate: DateTime = timestampToDateTime(event.interval.start);
-        const eventDateString = eventDate.toFormat(dateFormatWithoutDay);
-
-        if (newEvents[eventDateString] == null) {
-          newEvents[eventDateString] = [event];
-        } else {
-        // We can use '!.push' because we know that the array exists thanks to the nullish check above
-          newEvents[eventDateString]?.push(event);
-        }
-      });
-
-    return newEvents;
-  }, [events]);
-
-  const marked = useMemo(() => {
-    const marked: MarkedDates = {};
-
-    let hasAddedToday = false;
-
-    for (const event of events) {
-      if (event.interval != null) {
-        const eventDate: DateTime = timestampToDateTime(event.interval.start);
-        const formattedDate = eventDate.toFormat(dateFormat);
-
-        marked[formattedDate] = {
-          marked: true,
-          today: formattedDate === todayDateData.dateString,
-        };
-        if (formattedDate === todayDateData.dateString) {
-          hasAddedToday = true;
-        }
-      }
-    }
-
-    // If we didn't add today or selected day already, we need to add them manually
-    if (!hasAddedToday) {
-      marked[todayDateData.dateString] = { today: true };
-    }
-    return marked;
-  }, [ events, todayDateData.dateString ]);
-
-  const markedAndSelected = useMemo(() => {
-    const markedAndSelected = { ...marked };
-
-    markedAndSelected[selectedDay.dateString] = {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      ...(markedAndSelected[selectedDay.dateString] ?? {}),
-      selected: true,
-    };
-    return markedAndSelected;
-  }, [ marked, selectedDay ]);
+  const marked = useMemo(() => markEvents(events, todayDateData.dateString), [ events, todayDateData.dateString ]);
+  const markedAndSelected = useMemo(() => addSelectedToMarkedDates(marked, selectedDay), [ marked, selectedDay ]);
 
   const renderItem: ListRenderItem<FirestoreEvent> = ({ item: thisEvent }) => (
     <EventRow
@@ -161,7 +160,7 @@ const EventListScreen = () => {
         displayLoadingIndicator={refreshing}
         onDayPress={setSelectedDay}
       />
-      <View style = {{ height: 1, width: "100%", backgroundColor: "gray", paddingBottom: 20 }}/>
+      <Divider height={1} />
       <FlatList
         data={eventsByMonth[DateTime.fromObject({
           year: selectedMonth.year,
@@ -176,3 +175,14 @@ const EventListScreen = () => {
 };
 
 export default EventListScreen;
+function addSelectedToMarkedDates(marked: MarkedDates, selectedDay: DateData) {
+  const markedAndSelected = { ...marked };
+
+  markedAndSelected[selectedDay.dateString] = {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    ...(markedAndSelected[selectedDay.dateString] ?? {}),
+    selected: true,
+  };
+  return markedAndSelected;
+}
+
