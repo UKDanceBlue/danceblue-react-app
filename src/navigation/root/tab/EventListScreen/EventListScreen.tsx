@@ -1,8 +1,9 @@
 import FirestoreModule from "@react-native-firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { noop } from "lodash";
 import { DateTime, Interval } from "luxon";
-import { Divider } from "native-base";
+import { Divider, Pressable } from "native-base";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, ListRenderItem, SafeAreaView } from "react-native";
 import { CalendarList, DateData } from "react-native-calendars";
@@ -66,8 +67,9 @@ export const markEvents = (events: FirestoreEvent[], todayDateString: string) =>
 };
 
 const EventListScreen = () => {
-  // Get a reference to the Firebase database
+  // Get external references
   const { fbFirestore } = useFirebase();
+  const { navigate } = useNavigation();
 
   // Events
   const [ refreshing, setRefreshing ] = useLoading("event-list-screen-refreshing");
@@ -149,23 +151,27 @@ const EventListScreen = () => {
   const marked = useMemo(() => markEvents(events, todayDateData.dateString), [ events, todayDateData.dateString ]);
   const markedAndSelected = useMemo(() => addSelectedToMarkedDates(marked, selectedDay), [ marked, selectedDay ]);
 
-  const renderItem: ListRenderItem<FirestoreEvent> = ({
+  const RenderItem: ListRenderItem<FirestoreEvent> = ({
     item: thisEvent, index
-  }) => {
+  }: Parameters<ListRenderItem<FirestoreEvent>>[0]) => {
     if (thisEvent.interval != null) {
       const eventDate = timestampToDateTime(thisEvent.interval.start).toFormat(dateFormat);
       if (!((dayIndexes.current[eventDate] ?? NaN) > index)) {
         dayIndexes.current[eventDate] = index;
       }
     }
-
     return (
-      <EventRow
-        title={thisEvent.name}
-        blurb={thisEvent.shortDescription}
-        imageSource={thisEvent.images?.[0]}
-        interval={thisEvent.interval ? Interval.fromDateTimes(timestampToDateTime(thisEvent.interval.start), timestampToDateTime(thisEvent.interval.end)).toISO() : undefined}
-      />
+      <Pressable
+        _pressed={{ opacity: 0.5 }}
+        onPress={() => navigate("Event", { event: thisEvent })}
+      >
+        <EventRow
+          title={thisEvent.name}
+          blurb={thisEvent.shortDescription}
+          imageSource={thisEvent.images?.[0]}
+          interval={thisEvent.interval ? Interval.fromDateTimes(timestampToDateTime(thisEvent.interval.start), timestampToDateTime(thisEvent.interval.end)).toISO() : undefined}
+        />
+      </Pressable>
     );
   };
 
@@ -194,7 +200,7 @@ const EventListScreen = () => {
         }).toFormat(dateFormatWithoutDay)] ?? []}
         extraData={selectedMonth}
         style = {{ backgroundColor: "white" }}
-        renderItem = {renderItem}
+        renderItem = {RenderItem}
         refreshing={refreshing}
         onRefresh={refresh}
         onScrollToIndexFailed={noop}
