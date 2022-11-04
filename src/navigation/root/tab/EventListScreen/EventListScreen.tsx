@@ -1,5 +1,6 @@
 import FirestoreModule from "@react-native-firebase/firestore";
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
+import { noop } from "lodash";
 import { DateTime, Interval } from "luxon";
 import { Divider } from "native-base";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -73,17 +74,17 @@ const EventListScreen = () => {
   const [ events, setEvents ] = useState<FirestoreEvent[]>([]);
 
   // Today
-  const todayDateTime = DateTime.local().startOf("minute");
-  const todayDateTimeString = todayDateTime.toFormat(dateFormat);
-  const todayDateTimeMillis = todayDateTime.toMillis();
+  const todayDate = DateTime.local().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  const todayDateString = todayDate.toFormat(dateFormat);
+  const todayDateMillis = todayDate.toMillis();
   const todayDateData: DateData = useMemo(() => ({
-    dateString: todayDateTimeString,
-    day: todayDateTime.day,
-    month: todayDateTime.month,
-    year: todayDateTime.year,
-    timestamp: todayDateTimeMillis
+    dateString: todayDateString,
+    day: todayDate.day,
+    month: todayDate.month,
+    year: todayDate.year,
+    timestamp: todayDateMillis
   }), [
-    todayDateTimeString, todayDateTime.day, todayDateTime.month, todayDateTime.year, todayDateTimeMillis
+    todayDateString, todayDate.day, todayDate.month, todayDate.year, todayDateMillis
   ]);
 
   // Calendar selection
@@ -106,10 +107,10 @@ const EventListScreen = () => {
 
   // Earliest date to load (so we don't waste reads on events from 3 years ago)
   const earliestTimestamp = useMemo(() => {
-    const defaultEarliest = todayDateTime.minus({ months: 4 }).toMillis();
+    const defaultEarliest = todayDate.minus({ months: 4 }).toMillis();
     const twoMonthsBeforeSelected = DateTime.fromMillis(selectedMonth.timestamp).minus({ months: 2 }).toMillis();
     return Math.min(defaultEarliest, twoMonthsBeforeSelected);
-  }, [ selectedMonth.timestamp, todayDateTime ]);
+  }, [ selectedMonth.timestamp, todayDate ]);
 
   const refresh = useCallback(async () => {
     setRefreshing(true);
@@ -180,9 +181,9 @@ const EventListScreen = () => {
         pagingEnabled
         hideArrows={false}
         theme={{ arrowColor: "#0032A0", textMonthFontWeight: "bold", textMonthFontSize: 20, textDayFontWeight: "bold", textDayHeaderFontWeight: "500" }}
-        onMonthChange={setSelectedMonth}
+        onMonthChange={(monthDateData) => setSelectedMonth(monthDateData)}
         displayLoadingIndicator={refreshing}
-        onDayPress={setSelectedDay}
+        onDayPress={(dateData) => setSelectedDay(dateData)}
       />
       <Divider height={1} />
       <FlatList
@@ -196,6 +197,7 @@ const EventListScreen = () => {
         renderItem = {renderItem}
         refreshing={refreshing}
         onRefresh={refresh}
+        onScrollToIndexFailed={noop}
       />
     </SafeAreaView> );
 };
