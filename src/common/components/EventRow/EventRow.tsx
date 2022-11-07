@@ -101,7 +101,7 @@ const EventRow = ({
           resizeMode="contain"
           flex={2}/>
       }
-      {!downloadableImage &&
+      {!downloadableImage && imageSource &&
         <Spinner
           testID="event-thumbnail-spinner"
           accessibilityLabel="Loading event thumbnail"
