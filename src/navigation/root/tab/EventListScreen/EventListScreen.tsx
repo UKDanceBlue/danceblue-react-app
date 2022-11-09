@@ -3,20 +3,44 @@ import { useNavigation } from "@react-navigation/native";
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { noop } from "lodash";
 import { DateTime, Interval } from "luxon";
-import { Divider, Pressable } from "native-base";
+import { Column, Divider, Pressable, Text } from "native-base";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FlatList, ListRenderItem, SafeAreaView } from "react-native";
-import { CalendarList, DateData } from "react-native-calendars";
+import { FlatList, ListRenderItem, SafeAreaView, View, useWindowDimensions } from "react-native";
+import { Calendar, DateData } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
+import PagerView from "react-native-pager-view";
 
 import EventRow from "../../../../common/components/EventRow";
 import { universalCatch } from "../../../../common/logging";
 import { timestampToDateTime } from "../../../../common/util/dateTools";
 import { useFirebase, useLoading } from "../../../../context";
 
-// That is why you usually only want to put true constants and function or class definitions there, because they should never change
 const dateFormat = "yyyy-MM-dd";
+const luxonDateTimeToDateString = (dateTime: DateTime): string => {
+  return dateTime.toFormat(dateFormat);
+};
 const dateFormatWithoutDay = "yyyy-MM";
+const luxonDateTimeToMonthString = (dateTime: DateTime): string => {
+  return dateTime.toFormat(dateFormatWithoutDay);
+};
+
+// That is why you usually only want to put true constants and function or class definitions there, because they should never change
+const luxonDateTimeToDateData = (dateTime: DateTime): DateData => {
+  return {
+    dateString: luxonDateTimeToDateString(dateTime),
+    day: dateTime.day,
+    month: dateTime.month,
+    year: dateTime.year,
+    timestamp: dateTime.toMillis(),
+  };
+};
+const dateDataToLuxonDateTime = (dateData: DateData): DateTime => {
+  return DateTime.fromObject({
+    day: dateData.day,
+    month: dateData.month,
+    year: dateData.year,
+  });
+};
 
 export const splitEvents = (events: FirestoreEvent[]) => {
   const newEvents: Partial<Record<string, FirestoreEvent[]>> = {};
@@ -27,22 +51,23 @@ export const splitEvents = (events: FirestoreEvent[]) => {
     )
     .forEach((event) => {
       const eventDate: DateTime = timestampToDateTime(event.interval.start);
-      const eventDateString = eventDate.toFormat(dateFormatWithoutDay);
+      const eventMonthDateString = eventDate.toFormat(dateFormatWithoutDay);
 
-      if (newEvents[eventDateString] == null) {
-        newEvents[eventDateString] = [event];
+      if (newEvents[eventMonthDateString] == null) {
+        newEvents[eventMonthDateString] = [event];
       } else {
-        newEvents[eventDateString]?.push(event);
+        newEvents[eventMonthDateString]?.push(event);
       }
     });
 
   return newEvents;
 };
 
-export const markEvents = (events: FirestoreEvent[], todayDateString: string) => {
+export const markEvents = (events: FirestoreEvent[], todayDateString: string, selectedDay: string) => {
   const marked: MarkedDates = {};
 
   let hasAddedToday = false;
+  let hasAddedSelectedDay = false;
 
   for (const event of events) {
     if (event.interval != null) {
@@ -52,9 +77,13 @@ export const markEvents = (events: FirestoreEvent[], todayDateString: string) =>
       marked[formattedDate] = {
         marked: true,
         today: formattedDate === todayDateString,
+        selected: formattedDate === selectedDay,
       };
       if (formattedDate === todayDateString) {
         hasAddedToday = true;
+      }
+      if (formattedDate === selectedDay) {
+        hasAddedSelectedDay = true;
       }
     }
   }
@@ -63,6 +92,10 @@ export const markEvents = (events: FirestoreEvent[], todayDateString: string) =>
   if (!hasAddedToday) {
     marked[todayDateString] = { today: true };
   }
+  if (!hasAddedSelectedDay) {
+    marked[selectedDay] = { selected: true };
+  }
+
   return marked;
 };
 
@@ -70,28 +103,34 @@ const EventListScreen = () => {
   // Get external references
   const { fbFirestore } = useFirebase();
   const { navigate } = useNavigation();
+  const { width: screenWidth } = useWindowDimensions();
 
   // Events
   const [ refreshing, setRefreshing ] = useLoading("event-list-screen-refreshing");
+  const disableRefresh = useRef(false);
   const [ events, setEvents ] = useState<FirestoreEvent[]>([]);
 
   // Today
-  const todayDate = DateTime.local().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-  const todayDateString = todayDate.toFormat(dateFormat);
-  const todayDateMillis = todayDate.toMillis();
-  const todayDateData: DateData = useMemo(() => ({
-    dateString: todayDateString,
-    day: todayDate.day,
-    month: todayDate.month,
-    year: todayDate.year,
-    timestamp: todayDateMillis
-  }), [
-    todayDateString, todayDate.day, todayDate.month, todayDate.year, todayDateMillis
-  ]);
+  const todayDate = useRef(DateTime.local().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
+  todayDate.current = DateTime.local().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  const todayDateString = useRef(todayDate.current.toFormat(dateFormat));
+  todayDateString.current = todayDate.current.toFormat(dateFormat);
 
   // Calendar selection
-  const [ selectedMonth, setSelectedMonth ] = useState<DateData>(todayDateData);
-  const [ selectedDay, setSelectedDay ] = useState<DateData>(todayDateData);
+  const [ selectedMonth, setSelectedMonth ] = useState<DateData>({
+    dateString: todayDateString.current,
+    day: todayDate.current.day,
+    month: todayDate.current.month,
+    year: todayDate.current.year,
+    timestamp: todayDate.current.toMillis(),
+  });
+  const [ selectedDay, setSelectedDay ] = useState<DateData>({
+    dateString: todayDateString.current,
+    day: todayDate.current.day,
+    month: todayDate.current.month,
+    year: todayDate.current.year,
+    timestamp: todayDate.current.toMillis(),
+  });
 
   // Scroll-to-day functionality
   const eventsListRef = useRef<FlatList<FirestoreEvent> | null>(null);
@@ -105,51 +144,71 @@ const EventListScreen = () => {
         index: dayIndexes.current[selectedDay.dateString] ?? 0,
       });
     }
-  }, [selectedDay]);
+  }, [selectedDay.dateString]);
 
   // Earliest date to load (so we don't waste reads on events from 3 years ago)
+  const lastEarliestTimestamp = useRef<DateTime>();
   const earliestTimestamp = useMemo(() => {
-    const defaultEarliest = todayDate.minus({ months: 4 }).toMillis();
-    const twoMonthsBeforeSelected = DateTime.fromMillis(selectedMonth.timestamp).minus({ months: 2 }).toMillis();
-    return Math.min(defaultEarliest, twoMonthsBeforeSelected);
-  }, [ selectedMonth.timestamp, todayDate ]);
-
-  const refresh = useCallback(async () => {
-    setRefreshing(true);
-    try {
-      const firestoreEvents: FirestoreEvent[] = [];
-      const snapshot = await fbFirestore
-        .collection("events")
-        .where("interval.start", ">=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp))
-        .orderBy("interval.start", "asc")
-        .get();
-
-      for (const doc of snapshot.docs) {
-        const data = doc.data();
-        if (FirestoreEvent.isValidJson(data)) {
-          firestoreEvents.push(FirestoreEvent.fromJson(data));
-        }
-      }
-
-      setEvents(firestoreEvents);
-    } catch (error) {
-      universalCatch(error);
-    } finally {
-      setRefreshing(false);
+    const defaultEarliest = todayDate.current.minus({ months: 4 });
+    const twoMonthsBeforeSelected = DateTime.fromFormat(selectedMonth.dateString, dateFormat).minus({ months: 2 });
+    const newEarliestTimestamp = DateTime.min(defaultEarliest, twoMonthsBeforeSelected);
+    if (lastEarliestTimestamp.current == null || !newEarliestTimestamp.equals(lastEarliestTimestamp.current)) {
+      lastEarliestTimestamp.current = newEarliestTimestamp;
+      return newEarliestTimestamp;
+    } else {
+      return lastEarliestTimestamp.current;
     }
-  }, [
-    earliestTimestamp, fbFirestore, setRefreshing
-  ]);
+  }, [selectedMonth.dateString]);
+
+  const refresh = useCallback( (earliestTimestamp: DateTime) => {
+    setRefreshing(true);
+    disableRefresh.current = true;
+    const firestoreEvents: FirestoreEvent[] = [];
+    return fbFirestore
+      .collection("events")
+      .where("interval.start", ">=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.toMillis()))
+      .where("interval.start", "<=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.plus({ months: 5 }).toMillis()))
+      .orderBy("interval.start", "asc")
+      .get()
+      .then((snapshot) => {
+        for (const doc of snapshot.docs) {
+          const data = doc.data();
+          if (FirestoreEvent.isValidJson(data)) {
+            firestoreEvents.push(FirestoreEvent.fromJson(data));
+          }
+        }
+
+        setEvents(firestoreEvents);
+      })
+      .catch((error) => {
+        universalCatch(error);
+      })
+      .finally(() => {
+        setRefreshing(false);
+        disableRefresh.current = false;
+      });
+  }, [ fbFirestore, setRefreshing ]);
 
   useEffect(() => {
-    // This will run when refresh changes (WHICH IT DOES) when the selected month gets close to the earliest date we load be default
-    refresh().catch(universalCatch);
-  }, [refresh]);
+    if (!disableRefresh.current) {
+      refresh(earliestTimestamp).catch(universalCatch);
+    }
+  }, [ earliestTimestamp, refresh ]);
 
   const eventsByMonth = useMemo(() => splitEvents(events), [events]);
 
-  const marked = useMemo(() => markEvents(events, todayDateData.dateString), [ events, todayDateData.dateString ]);
-  const markedAndSelected = useMemo(() => addSelectedToMarkedDates(marked, selectedDay), [ marked, selectedDay ]);
+  // We need to get the five months surrounding the selected month
+  const shownMonths = useMemo(() => {
+    const months: DateTime[] = [];
+    const startMonth = dateDataToLuxonDateTime(selectedMonth).minus({ months: 2 });
+    for (let i = 0; i < 5; i++) {
+      const month = startMonth.plus({ months: i });
+      months.push(month);
+    }
+    return months;
+  }, [selectedMonth]);
+
+  const marked = useMemo(() => markEvents(events, todayDateString.current, selectedDay.dateString), [ events, selectedDay.dateString ]);
 
   const RenderItem: ListRenderItem<FirestoreEvent> = ({
     item: thisEvent, index
@@ -175,48 +234,62 @@ const EventListScreen = () => {
     );
   };
 
+  console.log(shownMonths);
+
   /*
    * Called by React Native when rendering the screen
    */
   return (
     <SafeAreaView style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
-      <CalendarList
-        current={todayDateData.dateString}
-        markedDates={markedAndSelected}
-        horizontal
-        pagingEnabled
-        hideArrows={false}
-        theme={{ arrowColor: "#0032A0", textMonthFontWeight: "bold", textMonthFontSize: 20, textDayFontWeight: "bold", textDayHeaderFontWeight: "500" }}
-        onMonthChange={(monthDateData) => setSelectedMonth(monthDateData)}
-        displayLoadingIndicator={refreshing}
-        onDayPress={(dateData) => setSelectedDay(dateData)}
-      />
-      <Divider height={1} />
-      <FlatList
-        ref={(list) => eventsListRef.current = list}
-        data={eventsByMonth[DateTime.fromObject({
-          year: selectedMonth.year,
-          month: selectedMonth.month,
-        }).toFormat(dateFormatWithoutDay)] ?? []}
-        extraData={selectedMonth}
-        style = {{ backgroundColor: "white" }}
-        renderItem = {RenderItem}
-        refreshing={refreshing}
-        onRefresh={refresh}
-        onScrollToIndexFailed={noop}
-      />
+      <PagerView
+        onPageSelected={(event) => {
+          const month = shownMonths[event.nativeEvent.position];
+          const monthDateData = luxonDateTimeToDateData(month);
+          if (monthDateData.dateString !== selectedMonth.dateString) {
+            setSelectedMonth(monthDateData);
+          }
+        }}
+        initialPage={2}
+        showPageIndicator
+        style={{ height: "100%", width: "100%" }}
+      >
+        {shownMonths.map((month) => (
+          <View key={luxonDateTimeToMonthString(month)} style={{ height: "100%", width: "100%" }} collapsable={false}>
+            <Column width={screenWidth} height="full">
+              <Calendar
+                current={month.toFormat(dateFormat)}
+                markedDates={marked}
+                pagingEnabled={false}
+                hideArrows
+                theme={{ arrowColor: "#0032A0", textMonthFontWeight: "bold", textMonthFontSize: 20, textDayFontWeight: "bold", textDayHeaderFontWeight: "500" }}
+                displayLoadingIndicator={refreshing}
+                onDayPress={(dateData) => setSelectedDay(dateData)}
+                style={{ width: "100%", height: "49.5%" }}
+              />
+              <Divider height={"1%"} />
+              <FlatList
+                ref={(list) => eventsListRef.current = list}
+                data={ eventsByMonth[luxonDateTimeToMonthString(month)] ??
+                [
+                  new FirestoreEvent("title", "", "", {
+                    start: FirestoreModule.Timestamp.fromMillis(0),
+                    end: FirestoreModule.Timestamp.fromMillis(100000000)
+                  })
+                ]}
+                ListEmptyComponent={<Text style={{ textAlign: "center", marginTop: 20 }}>No events this month</Text>}
+                initialScrollIndex={dayIndexes.current[selectedDay.dateString] ?? 0}
+                extraData={selectedDay}
+                style = {{ backgroundColor: "white", width: "100%", height: "49.5%" }}
+                renderItem = {RenderItem}
+                refreshing={refreshing}
+                onRefresh={() => refresh(earliestTimestamp).catch(universalCatch)}
+                onScrollToIndexFailed={noop}
+              />
+            </Column>
+          </View>
+        ))}
+      </PagerView>
     </SafeAreaView> );
 };
 
 export default EventListScreen;
-function addSelectedToMarkedDates(marked: MarkedDates, selectedDay: DateData) {
-  const markedAndSelected = { ...marked };
-
-  markedAndSelected[selectedDay.dateString] = {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    ...(markedAndSelected[selectedDay.dateString] ?? {}),
-    selected: true,
-  };
-  return markedAndSelected;
-}
-
