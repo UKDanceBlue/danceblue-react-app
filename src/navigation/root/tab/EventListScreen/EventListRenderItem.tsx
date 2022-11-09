@@ -4,6 +4,7 @@ import { Interval } from "luxon";
 import { Pressable } from "native-base";
 import { MutableRefObject } from "react";
 import { ListRenderItem } from "react-native";
+import PagerView from "react-native-pager-view";
 
 import EventRow from "../../../../common/components/EventRow";
 import { timestampToDateTime } from "../../../../common/util/dateTools";
@@ -11,8 +12,8 @@ import { timestampToDateTime } from "../../../../common/util/dateTools";
 import { dateFormat } from "./utils";
 
 export const EventListRenderItem = ({
-  item: thisEvent, index, dayIndexesRef
-}: Parameters<ListRenderItem<FirestoreEvent>>[0] & { dayIndexesRef: MutableRefObject<Partial<Record<string, number>>> }) => {
+  item: thisEvent, index, dayIndexesRef, pagerViewRef
+}: Parameters<ListRenderItem<FirestoreEvent>>[0] & { dayIndexesRef: MutableRefObject<Partial<Record<string, number>>>; pagerViewRef: MutableRefObject<PagerView | null> }) => {
   const { navigate } = useNavigation();
 
   if (thisEvent.interval != null) {
@@ -24,7 +25,11 @@ export const EventListRenderItem = ({
   return (
     <Pressable
       _pressed={{ opacity: 0.5 }}
-      onPress={() => navigate("Event", { event: thisEvent })}
+      onPress={() => {
+        pagerViewRef.current?.setScrollEnabled(false);
+        navigate("Event", { event: thisEvent });
+      }}
+      unstable_pressDelay={200}
     >
       <EventRow
         title={thisEvent.name}
@@ -35,6 +40,4 @@ export const EventListRenderItem = ({
     </Pressable>
   );
 };
-
-export const makeEventListRenderItem = (dayIndexesRef: MutableRefObject<Partial<Record<string, number>>>): ListRenderItem<FirestoreEvent> => (props: Parameters<ListRenderItem<FirestoreEvent>>[0]) => EventListRenderItem({ ...props, dayIndexesRef });
 

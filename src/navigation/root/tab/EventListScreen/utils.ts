@@ -1,9 +1,14 @@
+import FirestoreModule, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime } from "luxon";
+import { MutableRefObject } from "react";
 import { DateData } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
 
+import { universalCatch } from "../../../../common/logging";
 import { timestampToDateTime } from "../../../../common/util/dateTools";
+
+import { LOADED_MONTHS } from "./constants";
 
 export const dateFormat = "yyyy-MM-dd";
 const luxonDateTimeToDateString = (dateTime: DateTime): string => {
@@ -87,3 +92,34 @@ export const markEvents = (events: FirestoreEvent[], todayDateString: string, se
 
   return marked;
 };
+
+export function getRefreshFunction(setRefreshing: (value: boolean) => void, disableRefresh: MutableRefObject<boolean>, fbFirestore: FirebaseFirestoreTypes.Module, setEvents: (value: FirestoreEvent[]) => void): (earliestTimestamp: DateTime) => Promise<void> {
+  return async (earliestTimestamp: DateTime) => {
+    setRefreshing(true);
+    disableRefresh.current = true;
+    try {
+      try {
+        const snapshot = await fbFirestore
+          .collection("events")
+          .where("interval.start", ">=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.startOf("month").toMillis())) // For example, if earliestTimestamp is 2021-03-01, then we only load events from 2021-03-01 onwards
+          .where("interval.start", "<=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.plus({ months: LOADED_MONTHS - 1 }).endOf("month").toMillis())) // and before 2021-7-01, making the middle of the calendar 2021-05-01
+          .orderBy("interval.start", "asc")
+          .get();
+        const firestoreEvents: FirestoreEvent[] = [];
+        for (const doc of snapshot.docs) {
+          const data = doc.data();
+          if (FirestoreEvent.isValidJson(data)) {
+            firestoreEvents.push(FirestoreEvent.fromJson(data));
+          }
+        }
+
+        setEvents(firestoreEvents);
+      } catch (error) {
+        universalCatch(error);
+      }
+    } finally {
+      setRefreshing(false);
+      disableRefresh.current = false;
+    }
+  };
+}

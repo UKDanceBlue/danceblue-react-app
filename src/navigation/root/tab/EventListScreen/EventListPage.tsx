@@ -1,16 +1,17 @@
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { Column, Divider, Text } from "native-base";
-import { useEffect, useRef } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { DateData, MarkedDates } from "react-native-calendars/src/types";
+import PagerView from "react-native-pager-view";
 
 import { universalCatch } from "../../../../common/logging";
 
-import { makeEventListRenderItem } from "./EventListRenderItem";
+import { EventListRenderItem } from "./EventListRenderItem";
 
 export const EventListPage = ({
-  monthString, eventsByMonth, marked, refresh, refreshing, setSelectedDay, selectedDay
+  monthString, eventsByMonth, marked, refresh, refreshing, setSelectedDay, selectedDay, pagerViewRef
 }: {
   monthString: string;
   eventsByMonth: Partial<Record<string, FirestoreEvent[]>>;
@@ -19,11 +20,19 @@ export const EventListPage = ({
   refreshing: boolean;
   setSelectedDay: (value: DateData) => void;
   selectedDay: DateData;
+  pagerViewRef: MutableRefObject<PagerView | null>;
 }) => {
   // Scroll-to-day functionality
   const eventsListRef = useRef<FlatList<FirestoreEvent> | null>(null);
   const dayIndexes = useRef<Partial<Record<string, number>>>({});
   dayIndexes.current = {};
+
+  const [ refreshingManually, setRefreshingManually ] = useState(false);
+  useEffect(() => {
+    if (refreshingManually && !refreshing) {
+      setRefreshingManually(false);
+    }
+  }, [ refreshingManually, refreshing ]);
 
   useEffect(() => {
     if (dayIndexes.current[selectedDay.dateString]) {
@@ -54,9 +63,19 @@ export const EventListPage = ({
         initialScrollIndex={dayIndexes.current[selectedDay.dateString] ?? 0}
         extraData={selectedDay}
         style = {{ backgroundColor: "white", width: "100%", height: "49.5%" }}
-        renderItem = {makeEventListRenderItem(dayIndexes)}
-        refreshing={refreshing}
-        onRefresh={() => refresh().catch(universalCatch)}
+        renderItem = {({
+          item, index, separators
+        }) => (<EventListRenderItem
+          item={item}
+          index={index}
+          separators={separators}
+          dayIndexesRef={dayIndexes}
+          pagerViewRef={pagerViewRef} />)}
+        refreshing={refreshingManually}
+        onRefresh={() => {
+          setRefreshingManually(true);
+          refresh().catch(universalCatch).finally(() => setRefreshingManually(false));
+        }}
         onScrollToIndexFailed={console.error}
       />
     </Column>
