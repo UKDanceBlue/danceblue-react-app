@@ -1,112 +1,24 @@
 import FirestoreModule from "@react-native-firebase/firestore";
-import { useNavigation } from "@react-navigation/native";
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
-import { noop } from "lodash";
-import { DateTime, Interval } from "luxon";
-import { Column, Divider, Pressable, Text } from "native-base";
+import { DateTime } from "luxon";
+import { Center, Spinner } from "native-base";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FlatList, ListRenderItem, SafeAreaView, View, useWindowDimensions } from "react-native";
-import { Calendar, DateData } from "react-native-calendars";
-import { MarkedDates } from "react-native-calendars/src/types";
+import { SafeAreaView, View } from "react-native";
+import { DateData } from "react-native-calendars";
 import PagerView from "react-native-pager-view";
 
-import EventRow from "../../../../common/components/EventRow";
 import { universalCatch } from "../../../../common/logging";
-import { timestampToDateTime } from "../../../../common/util/dateTools";
-import { useFirebase, useLoading } from "../../../../context";
+import { useFirebase } from "../../../../context";
 
-const dateFormat = "yyyy-MM-dd";
-const luxonDateTimeToDateString = (dateTime: DateTime): string => {
-  return dateTime.toFormat(dateFormat);
-};
-const dateFormatWithoutDay = "yyyy-MM";
-const luxonDateTimeToMonthString = (dateTime: DateTime): string => {
-  return dateTime.toFormat(dateFormatWithoutDay);
-};
-
-// That is why you usually only want to put true constants and function or class definitions there, because they should never change
-const luxonDateTimeToDateData = (dateTime: DateTime): DateData => {
-  return {
-    dateString: luxonDateTimeToDateString(dateTime),
-    day: dateTime.day,
-    month: dateTime.month,
-    year: dateTime.year,
-    timestamp: dateTime.toMillis(),
-  };
-};
-const dateDataToLuxonDateTime = (dateData: DateData): DateTime => {
-  return DateTime.fromObject({
-    day: dateData.day,
-    month: dateData.month,
-    year: dateData.year,
-  });
-};
-
-export const splitEvents = (events: FirestoreEvent[]) => {
-  const newEvents: Partial<Record<string, FirestoreEvent[]>> = {};
-
-  events
-    .filter(
-      (e): e is (typeof e & { interval: NonNullable<typeof e.interval> }) => e.interval != null
-    )
-    .forEach((event) => {
-      const eventDate: DateTime = timestampToDateTime(event.interval.start);
-      const eventMonthDateString = eventDate.toFormat(dateFormatWithoutDay);
-
-      if (newEvents[eventMonthDateString] == null) {
-        newEvents[eventMonthDateString] = [event];
-      } else {
-        newEvents[eventMonthDateString]?.push(event);
-      }
-    });
-
-  return newEvents;
-};
-
-export const markEvents = (events: FirestoreEvent[], todayDateString: string, selectedDay: string) => {
-  const marked: MarkedDates = {};
-
-  let hasAddedToday = false;
-  let hasAddedSelectedDay = false;
-
-  for (const event of events) {
-    if (event.interval != null) {
-      const eventDate: DateTime = timestampToDateTime(event.interval.start);
-      const formattedDate = eventDate.toFormat(dateFormat);
-
-      marked[formattedDate] = {
-        marked: true,
-        today: formattedDate === todayDateString,
-        selected: formattedDate === selectedDay,
-      };
-      if (formattedDate === todayDateString) {
-        hasAddedToday = true;
-      }
-      if (formattedDate === selectedDay) {
-        hasAddedSelectedDay = true;
-      }
-    }
-  }
-
-  // If we didn't add today or selected day already, we need to add them manually
-  if (!hasAddedToday) {
-    marked[todayDateString] = { today: true };
-  }
-  if (!hasAddedSelectedDay) {
-    marked[selectedDay] = { selected: true };
-  }
-
-  return marked;
-};
+import { EventListPage } from "./EventListPage";
+import { dateDataToLuxonDateTime, dateFormat, luxonDateTimeToDateData, luxonDateTimeToMonthString, markEvents, splitEvents } from "./utils";
 
 const EventListScreen = () => {
   // Get external references
   const { fbFirestore } = useFirebase();
-  const { navigate } = useNavigation();
-  const { width: screenWidth } = useWindowDimensions();
 
   // Events
-  const [ refreshing, setRefreshing ] = useLoading("event-list-screen-refreshing");
+  const [ refreshing, setRefreshing ] = useState(false);
   const disableRefresh = useRef(false);
   const [ events, setEvents ] = useState<FirestoreEvent[]>([]);
 
@@ -124,6 +36,7 @@ const EventListScreen = () => {
     year: todayDate.current.year,
     timestamp: todayDate.current.toMillis(),
   });
+  const pagerRef = useRef<PagerView | null>(null);
   const [ selectedDay, setSelectedDay ] = useState<DateData>({
     dateString: todayDateString.current,
     day: todayDate.current.day,
@@ -132,25 +45,11 @@ const EventListScreen = () => {
     timestamp: todayDate.current.toMillis(),
   });
 
-  // Scroll-to-day functionality
-  const eventsListRef = useRef<FlatList<FirestoreEvent> | null>(null);
-  const dayIndexes = useRef<Partial<Record<string, number>>>({});
-  dayIndexes.current = {};
-
-  useEffect(() => {
-    if (dayIndexes.current[selectedDay.dateString]) {
-      eventsListRef.current?.scrollToIndex({
-        animated: true,
-        index: dayIndexes.current[selectedDay.dateString] ?? 0,
-      });
-    }
-  }, [selectedDay.dateString]);
-
   // Earliest date to load (so we don't waste reads on events from 3 years ago)
   const lastEarliestTimestamp = useRef<DateTime>();
   const earliestTimestamp = useMemo(() => {
-    const defaultEarliest = todayDate.current.minus({ months: 4 });
-    const twoMonthsBeforeSelected = DateTime.fromFormat(selectedMonth.dateString, dateFormat).minus({ months: 2 });
+    const defaultEarliest = todayDate.current.minus({ months: 6 });
+    const twoMonthsBeforeSelected = DateTime.fromFormat(selectedMonth.dateString, dateFormat).minus({ months: 4 });
     const newEarliestTimestamp = DateTime.min(defaultEarliest, twoMonthsBeforeSelected);
     if (lastEarliestTimestamp.current == null || !newEarliestTimestamp.equals(lastEarliestTimestamp.current)) {
       lastEarliestTimestamp.current = newEarliestTimestamp;
@@ -167,7 +66,7 @@ const EventListScreen = () => {
     return fbFirestore
       .collection("events")
       .where("interval.start", ">=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.toMillis()))
-      .where("interval.start", "<=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.plus({ months: 5 }).toMillis()))
+      .where("interval.start", "<=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.plus({ months: 7 }).toMillis()))
       .orderBy("interval.start", "asc")
       .get()
       .then((snapshot) => {
@@ -201,7 +100,7 @@ const EventListScreen = () => {
   const shownMonths = useMemo(() => {
     const months: DateTime[] = [];
     const startMonth = dateDataToLuxonDateTime(selectedMonth).minus({ months: 2 });
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 7; i++) {
       const month = startMonth.plus({ months: i });
       months.push(month);
     }
@@ -210,32 +109,6 @@ const EventListScreen = () => {
 
   const marked = useMemo(() => markEvents(events, todayDateString.current, selectedDay.dateString), [ events, selectedDay.dateString ]);
 
-  const RenderItem: ListRenderItem<FirestoreEvent> = ({
-    item: thisEvent, index
-  }: Parameters<ListRenderItem<FirestoreEvent>>[0]) => {
-    if (thisEvent.interval != null) {
-      const eventDate = timestampToDateTime(thisEvent.interval.start).toFormat(dateFormat);
-      if (!((dayIndexes.current[eventDate] ?? NaN) > index)) {
-        dayIndexes.current[eventDate] = index;
-      }
-    }
-    return (
-      <Pressable
-        _pressed={{ opacity: 0.5 }}
-        onPress={() => navigate("Event", { event: thisEvent })}
-      >
-        <EventRow
-          title={thisEvent.name}
-          blurb={thisEvent.shortDescription}
-          imageSource={thisEvent.images?.[0]}
-          interval={thisEvent.interval ? Interval.fromDateTimes(timestampToDateTime(thisEvent.interval.start), timestampToDateTime(thisEvent.interval.end)).toISO() : undefined}
-        />
-      </Pressable>
-    );
-  };
-
-  console.log(shownMonths);
-
   /*
    * Called by React Native when rendering the screen
    */
@@ -243,51 +116,52 @@ const EventListScreen = () => {
     <SafeAreaView style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
       <PagerView
         onPageSelected={(event) => {
-          const month = shownMonths[event.nativeEvent.position];
-          const monthDateData = luxonDateTimeToDateData(month);
-          if (monthDateData.dateString !== selectedMonth.dateString) {
-            setSelectedMonth(monthDateData);
+          // 0 is a loading screen
+          if (event.nativeEvent.position !== 0 && shownMonths.length > 0) {
+            const index = event.nativeEvent.position - 1;
+            if (shownMonths[index]) {
+              const month = shownMonths[index];
+              const monthDateData = luxonDateTimeToDateData(month);
+              if (monthDateData.dateString !== selectedMonth.dateString) {
+                setSelectedMonth(monthDateData);
+              }
+            } else {
+              const month = shownMonths[Math.floor(shownMonths.length / 2)];
+              const monthDateData = luxonDateTimeToDateData(month);
+              setSelectedMonth(monthDateData);
+            }
           }
         }}
         initialPage={2}
         showPageIndicator
         style={{ height: "100%", width: "100%" }}
+        ref={(ref) => {
+          pagerRef.current = ref;
+        }}
       >
+        <View key="left-end-loading" style={{ height: "100%", width: "100%" }} collapsable={false}>
+          <Center width="100%" height="100%">
+            <Spinner size="lg" />
+          </Center>
+        </View>
         {shownMonths.map((month) => (
           <View key={luxonDateTimeToMonthString(month)} style={{ height: "100%", width: "100%" }} collapsable={false}>
-            <Column width={screenWidth} height="full">
-              <Calendar
-                current={month.toFormat(dateFormat)}
-                markedDates={marked}
-                pagingEnabled={false}
-                hideArrows
-                theme={{ arrowColor: "#0032A0", textMonthFontWeight: "bold", textMonthFontSize: 20, textDayFontWeight: "bold", textDayHeaderFontWeight: "500" }}
-                displayLoadingIndicator={refreshing}
-                onDayPress={(dateData) => setSelectedDay(dateData)}
-                style={{ width: "100%", height: "49.5%" }}
-              />
-              <Divider height={"1%"} />
-              <FlatList
-                ref={(list) => eventsListRef.current = list}
-                data={ eventsByMonth[luxonDateTimeToMonthString(month)] ??
-                [
-                  new FirestoreEvent("title", "", "", {
-                    start: FirestoreModule.Timestamp.fromMillis(0),
-                    end: FirestoreModule.Timestamp.fromMillis(100000000)
-                  })
-                ]}
-                ListEmptyComponent={<Text style={{ textAlign: "center", marginTop: 20 }}>No events this month</Text>}
-                initialScrollIndex={dayIndexes.current[selectedDay.dateString] ?? 0}
-                extraData={selectedDay}
-                style = {{ backgroundColor: "white", width: "100%", height: "49.5%" }}
-                renderItem = {RenderItem}
-                refreshing={refreshing}
-                onRefresh={() => refresh(earliestTimestamp).catch(universalCatch)}
-                onScrollToIndexFailed={noop}
-              />
-            </Column>
+            <EventListPage
+              eventsByMonth={eventsByMonth}
+              selectedDay={selectedDay}
+              setSelectedDay={setSelectedDay}
+              marked={marked}
+              refreshing={refreshing}
+              refresh={() => refresh(earliestTimestamp)}
+              monthString={luxonDateTimeToMonthString(month)}
+            />
           </View>
         ))}
+        <View key="right-end-loading" style={{ height: "100%", width: "100%" }} collapsable={false}>
+          <Center width="100%" height="100%">
+            <Spinner size="lg" />
+          </Center>
+        </View>
       </PagerView>
     </SafeAreaView> );
 };
