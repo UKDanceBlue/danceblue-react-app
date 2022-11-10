@@ -1,11 +1,11 @@
-import { useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime } from "luxon";
 import { Center, Spinner } from "native-base";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 import { DateData } from "react-native-calendars";
-import PagerView from "react-native-pager-view";
+import PagerView, { PageScrollState } from "react-native-pager-view";
 
 import { universalCatch } from "../../../../common/logging";
 import { useFirebase } from "../../../../context";
@@ -44,7 +44,6 @@ const EventListScreen = () => {
     }
     return monthDates;
   }, [selectedMonth]);
-  const pagerRef = useRef<PagerView | null>(null);
   const [ selectedDay, setSelectedDay ] = useState<DateData>({
     dateString: todayDateString.current,
     day: todayDate.current.day,
@@ -65,6 +64,22 @@ const EventListScreen = () => {
     }
   }, [selectedMonth]);
 
+  // Navigation
+  const { navigate } = useNavigation();
+  const [ pendingNavigation, setPendingNavigation ] = useState<FirestoreEvent | null>(null);
+  const [ scrollState, setScrollState ]= useState<PageScrollState>("idle");
+
+  useEffect(() => {
+    if (pendingNavigation != null) {
+      if (scrollState === "idle") {
+        navigate("Event", { event: pendingNavigation });
+        setPendingNavigation(null);
+      }
+    }
+  }, [
+    navigate, pendingNavigation, scrollState
+  ]);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const refresh = useCallback(getRefreshFunction(setRefreshing, disableRefresh, fbFirestore, setEvents), [
     fbFirestore, setRefreshing, setEvents
@@ -79,13 +94,6 @@ const EventListScreen = () => {
   const eventsByMonth = useMemo(() => splitEvents(events), [events]);
 
   const marked = useMemo(() => markEvents(events, todayDateString.current, selectedDay.dateString), [ events, selectedDay.dateString ]);
-
-  // Re-enable horizontal scrolling when we go to this page after it was disabled when navigating
-  useFocusEffect(
-    useCallback(() => {
-      pagerRef.current?.setScrollEnabled(true);
-    }, [])
-  );
 
   /*
    * Called by React Native when rendering the screen
@@ -113,11 +121,9 @@ const EventListScreen = () => {
         initialPage={2}
         // showPageIndicator
         style={{ height: "100%", width: "100%" }}
-        ref={(ref) => {
-          pagerRef.current = ref;
-        }}
         onMoveShouldSetResponderCapture={() => true}
         onStartShouldSetResponder={() => true}
+        onPageScrollStateChanged={(e) => setScrollState(e.nativeEvent.pageScrollState)}
       >
         {monthDates.map(
           (month, index) => (
@@ -132,7 +138,7 @@ const EventListScreen = () => {
                     refreshing={refreshing}
                     refresh={() => refresh(earliestTimestamp)}
                     monthString={luxonDateTimeToMonthString(month)}
-                    pagerViewRef={pagerRef}
+                    tryToNavigate={setPendingNavigation}
                   />
                 </View>
               )

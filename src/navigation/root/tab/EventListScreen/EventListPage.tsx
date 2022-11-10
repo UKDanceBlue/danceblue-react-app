@@ -1,17 +1,16 @@
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { Column, Divider, Text } from "native-base";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { DateData, MarkedDates } from "react-native-calendars/src/types";
-import PagerView from "react-native-pager-view";
 
 import { universalCatch } from "../../../../common/logging";
 
 import { EventListRenderItem } from "./EventListRenderItem";
 
 export const EventListPage = ({
-  monthString, eventsByMonth, marked, refresh, refreshing, setSelectedDay, selectedDay, pagerViewRef
+  monthString, eventsByMonth, marked, refresh, refreshing, setSelectedDay, selectedDay, tryToNavigate
 }: {
   monthString: string;
   eventsByMonth: Partial<Record<string, FirestoreEvent[]>>;
@@ -20,7 +19,7 @@ export const EventListPage = ({
   refreshing: boolean;
   setSelectedDay: (value: DateData) => void;
   selectedDay: DateData;
-  pagerViewRef: MutableRefObject<PagerView | null>;
+  tryToNavigate: (event: FirestoreEvent) => void;
 }) => {
   // Scroll-to-day functionality
   const eventsListRef = useRef<FlatList<FirestoreEvent> | null>(null);
@@ -70,7 +69,7 @@ export const EventListPage = ({
           index={index}
           separators={separators}
           dayIndexesRef={dayIndexes}
-          pagerViewRef={pagerViewRef} />)}
+          tryToNavigate={tryToNavigate}/>)}
         refreshing={refreshingManually}
         onRefresh={() => {
           setRefreshingManually(true);
