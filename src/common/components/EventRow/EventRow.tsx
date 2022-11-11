@@ -1,10 +1,9 @@
-import { DownloadableImage, FirestoreImage } from "@ukdanceblue/db-app-common";
+import { DownloadableImage } from "@ukdanceblue/db-app-common";
 import { DateTime, Interval } from "luxon";
 import { Box, Heading, Image, Spinner, Text, useTheme } from "native-base";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useWindowDimensions } from "react-native";
 
-import { useFirebase } from "../../../context";
 import { useColorModeValue } from "../../customHooks";
 
 
@@ -17,37 +16,16 @@ const EventRow = ({
   interval: intervalString,
   blurb,
 }: {
-  imageSource?: FirestoreImage;
+  imageSource?: DownloadableImage | null; // Undefined means no image, null means loading
   title: string;
   interval?: ReturnType<Interval["toISO"]>;
   blurb?: string;
 }) => {
   const { width: windowWidth } = useWindowDimensions();
-  const { fbStorage } = useFirebase();
   const { colors } = useTheme();
   const backgroundColor = useColorModeValue(colors.gray[300], colors.gray[600]);
 
-  const [ downloadableImage, setDownloadableImage ] = useState<DownloadableImage>();
-
   const interval = intervalString ? Interval.fromISO(intervalString) : undefined;
-
-  useEffect(() => {
-    setDownloadableImage(undefined);
-    if (imageSource) {
-      DownloadableImage.fromFirestoreImage(
-        imageSource,
-        (uri: string) => {
-          if (uri.startsWith("gs://")) {
-            return fbStorage.refFromURL(uri).getDownloadURL();
-          } else {
-            return Promise.resolve(uri);
-          }
-        }
-      )
-        .then(setDownloadableImage)
-        .catch(console.error);
-    }
-  }, [ fbStorage, imageSource ]);
 
   const whenString = useMemo(() => {
     let whenString = "";
@@ -86,13 +64,13 @@ const EventRow = ({
       borderWidth={1}
       shadow={"6"}
     >
-      {downloadableImage &&
+      {imageSource != null &&
         <Image
           testID="event-thumbnail"
           source={{
-            uri: downloadableImage.url,
-            height: downloadableImage.height,
-            width: downloadableImage.width,
+            uri: imageSource.url,
+            height: imageSource.height,
+            width: imageSource.width,
             cache: "force-cache",
           }}
           alt="Event Thumbnail"
@@ -101,7 +79,7 @@ const EventRow = ({
           resizeMode="contain"
           flex={2}/>
       }
-      {!downloadableImage && imageSource &&
+      {imageSource === null &&
         <Spinner
           testID="event-thumbnail-spinner"
           accessibilityLabel="Loading event thumbnail"

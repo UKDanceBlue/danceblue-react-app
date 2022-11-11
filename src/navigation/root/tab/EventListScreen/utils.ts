@@ -1,5 +1,6 @@
 import FirestoreModule, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
-import { FirestoreEvent } from "@ukdanceblue/db-app-common";
+import { FirebaseStorageTypes } from "@react-native-firebase/storage";
+import { DownloadableImage, FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime } from "luxon";
 import { MutableRefObject } from "react";
 import { DateData } from "react-native-calendars";
@@ -93,7 +94,7 @@ export const markEvents = (events: FirestoreEvent[], todayDateString: string, se
   return marked;
 };
 
-export function getRefreshFunction(setRefreshing: (value: boolean) => void, disableRefresh: MutableRefObject<boolean>, fbFirestore: FirebaseFirestoreTypes.Module, setEvents: (value: FirestoreEvent[]) => void): (earliestTimestamp: DateTime) => Promise<void> {
+export function getRefreshFunction(setRefreshing: (value: boolean) => void, disableRefresh: MutableRefObject<boolean>, fbFirestore: FirebaseFirestoreTypes.Module, fbStorage: FirebaseStorageTypes.Module, setEvents: (value: FirestoreEvent[]) => void, setDownloadableImages: (value: Partial<Record<string, DownloadableImage>>) => void): (earliestTimestamp: DateTime) => Promise<void> {
   return async (earliestTimestamp: DateTime) => {
     setRefreshing(true);
     disableRefresh.current = true;
@@ -106,12 +107,32 @@ export function getRefreshFunction(setRefreshing: (value: boolean) => void, disa
           .orderBy("interval.start", "asc")
           .get();
         const firestoreEvents: FirestoreEvent[] = [];
-        for (const doc of snapshot.docs) {
+
+        const downloadableImagePromises: Promise<[string, DownloadableImage]>[] = [];
+
+        for await (const doc of snapshot.docs) {
           const data = doc.data();
           if (FirestoreEvent.isValidJson(data)) {
-            firestoreEvents.push(FirestoreEvent.fromJson(data));
+            const firestoreEvent = FirestoreEvent.fromJson(data);
+            firestoreEvents.push(firestoreEvent);
+            if (firestoreEvent.images != null) {
+              for (const image of firestoreEvent.images) {
+                downloadableImagePromises.push(Promise.all([
+                  image.uri, DownloadableImage.fromFirestoreImage(image, (uri: string) => {
+                    if (uri.startsWith("gs://")) {
+                      return fbStorage.refFromURL(uri).getDownloadURL();
+                    } else {
+                      return Promise.resolve(uri);
+                    }
+                  })
+                ]));
+              }
+            }
           }
         }
+
+        const downloadableImages: Partial<Record<string, DownloadableImage>> = Object.fromEntries(await Promise.all(downloadableImagePromises));
+        setDownloadableImages(downloadableImages);
 
         setEvents(firestoreEvents);
       } catch (error) {

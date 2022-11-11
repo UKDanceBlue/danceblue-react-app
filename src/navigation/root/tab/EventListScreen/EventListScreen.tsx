@@ -1,11 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
-import { FirestoreEvent } from "@ukdanceblue/db-app-common";
+import { DownloadableImage, FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime } from "luxon";
 import { Center, Spinner } from "native-base";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 import { DateData } from "react-native-calendars";
-import PagerView, { PageScrollState } from "react-native-pager-view";
+import PagerView from "react-native-pager-view";
 
 import { universalCatch } from "../../../../common/logging";
 import { useFirebase } from "../../../../context";
@@ -16,12 +16,15 @@ import { dateFormat, getRefreshFunction, luxonDateTimeToMonthString, markEvents,
 
 const EventListScreen = () => {
   // Get external references
-  const { fbFirestore } = useFirebase();
+  const {
+    fbFirestore, fbStorage
+  } = useFirebase();
 
   // Events
   const [ refreshing, setRefreshing ] = useState(false);
   const disableRefresh = useRef(false);
   const [ events, setEvents ] = useState<FirestoreEvent[]>([]);
+  const [ downloadableImages, setDownloadableImages ] = useState<Partial<Record<string, DownloadableImage>>>({});
 
   // Today
   const todayDate = useRef(DateTime.local().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
@@ -66,22 +69,9 @@ const EventListScreen = () => {
 
   // Navigation
   const { navigate } = useNavigation();
-  const [ pendingNavigation, setPendingNavigation ] = useState<FirestoreEvent | null>(null);
-  const [ scrollState, setScrollState ]= useState<PageScrollState>("idle");
-
-  useEffect(() => {
-    if (pendingNavigation != null) {
-      if (scrollState === "idle") {
-        navigate("Event", { event: pendingNavigation });
-        setPendingNavigation(null);
-      }
-    }
-  }, [
-    navigate, pendingNavigation, scrollState
-  ]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const refresh = useCallback(getRefreshFunction(setRefreshing, disableRefresh, fbFirestore, setEvents), [
+  const refresh = useCallback(getRefreshFunction(setRefreshing, disableRefresh, fbFirestore, fbStorage, setEvents, setDownloadableImages), [
     fbFirestore, setRefreshing, setEvents
   ]);
 
@@ -123,7 +113,6 @@ const EventListScreen = () => {
         style={{ height: "100%", width: "100%" }}
         onMoveShouldSetResponderCapture={() => true}
         onStartShouldSetResponder={() => true}
-        onPageScrollStateChanged={(e) => setScrollState(e.nativeEvent.pageScrollState)}
       >
         {monthDates.map(
           (month, index) => (
@@ -138,7 +127,8 @@ const EventListScreen = () => {
                     refreshing={refreshing}
                     refresh={() => refresh(earliestTimestamp)}
                     monthString={luxonDateTimeToMonthString(month)}
-                    tryToNavigate={setPendingNavigation}
+                    tryToNavigate={(eventToNavigateTo) => navigate("Event", { event: eventToNavigateTo })}
+                    downloadableImages={downloadableImages}
                   />
                 </View>
               )

@@ -1,4 +1,4 @@
-import { FirestoreEvent } from "@ukdanceblue/db-app-common";
+import { DownloadableImage, FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { Column, Divider, Text } from "native-base";
 import { useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
@@ -10,7 +10,7 @@ import { universalCatch } from "../../../../common/logging";
 import { EventListRenderItem } from "./EventListRenderItem";
 
 export const EventListPage = ({
-  monthString, eventsByMonth, marked, refresh, refreshing, setSelectedDay, selectedDay, tryToNavigate
+  monthString, eventsByMonth, marked, refresh, refreshing, setSelectedDay, selectedDay, tryToNavigate, downloadableImages
 }: {
   monthString: string;
   eventsByMonth: Partial<Record<string, FirestoreEvent[]>>;
@@ -20,6 +20,7 @@ export const EventListPage = ({
   setSelectedDay: (value: DateData) => void;
   selectedDay: DateData;
   tryToNavigate: (event: FirestoreEvent) => void;
+  downloadableImages:Partial<Record<string, DownloadableImage>>;
 }) => {
   // Scroll-to-day functionality
   const eventsListRef = useRef<FlatList<FirestoreEvent> | null>(null);
@@ -34,10 +35,14 @@ export const EventListPage = ({
   }, [ refreshingManually, refreshing ]);
 
   useEffect(() => {
-    if (dayIndexes.current[selectedDay.dateString]) {
+    const index = dayIndexes.current[selectedDay.dateString];
+    if (index === 0) {
+      // Not sure why, but scrollToIndex doesn't work if the index is 0
+      eventsListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    } else if (index != null) {
       eventsListRef.current?.scrollToIndex({
         animated: true,
-        index: dayIndexes.current[selectedDay.dateString] ?? 0,
+        index,
       });
     }
   }, [selectedDay.dateString]);
@@ -52,16 +57,16 @@ export const EventListPage = ({
         theme={{ arrowColor: "#0032A0", textMonthFontWeight: "bold", textMonthFontSize: 20, textDayFontWeight: "bold", textDayHeaderFontWeight: "500" }}
         displayLoadingIndicator={refreshing}
         onDayPress={(dateData) => setSelectedDay(dateData)}
-        style={{ width: "100%", height: "49.5%" }}
+        style={{ width: "100%", height: 380 }}
       />
-      <Divider height={"1%"} />
+      <Divider height={"1"} backgroundColor="blue.400" />
       <FlatList
         ref={(list) => eventsListRef.current = list}
         data={ eventsByMonth[monthString] ?? [] }
         ListEmptyComponent={<Text style={{ textAlign: "center", marginTop: 20 }}>No events this month</Text>}
         initialScrollIndex={dayIndexes.current[selectedDay.dateString] ?? 0}
         extraData={selectedDay}
-        style = {{ backgroundColor: "white", width: "100%", height: "49.5%" }}
+        style = {{ backgroundColor: "white", width: "100%" }}
         renderItem = {({
           item, index, separators
         }) => (<EventListRenderItem
@@ -69,7 +74,8 @@ export const EventListPage = ({
           index={index}
           separators={separators}
           dayIndexesRef={dayIndexes}
-          tryToNavigate={tryToNavigate}/>)}
+          tryToNavigate={tryToNavigate}
+          downloadableImage={item.images?.[0] ? downloadableImages[item.images[0].uri] : undefined}/>)}
         refreshing={refreshingManually}
         onRefresh={() => {
           setRefreshingManually(true);
