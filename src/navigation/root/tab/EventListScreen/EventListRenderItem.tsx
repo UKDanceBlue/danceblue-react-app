@@ -1,7 +1,8 @@
 import { DownloadableImage, FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { Interval } from "luxon";
 import { MutableRefObject, useCallback, useMemo } from "react";
-import { ListRenderItem, TouchableOpacity } from "react-native";
+import { ListRenderItem } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 import EventRow from "../../../../common/components/EventRow";
 import { timestampToDateTime } from "../../../../common/util/dateTools";
@@ -9,7 +10,7 @@ import { timestampToDateTime } from "../../../../common/util/dateTools";
 import { dateFormat } from "./utils";
 
 export const EventListRenderItem = ({
-  item: thisEvent, index, dayIndexesRef, tryToNavigate, downloadableImage,
+  item: thisEvent, index, dayIndexesRef, tryToNavigate, downloadableImage
 }:
 Parameters<ListRenderItem<FirestoreEvent>>[0] &
 {

@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import { Center, Spinner } from "native-base";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SafeAreaView, View } from "react-native";
-import { DateData } from "react-native-calendars";
+import { NativeViewGestureHandler } from "react-native-gesture-handler";
 import PagerView from "react-native-pager-view";
 
 import { universalCatch } from "../../../../common/logging";
@@ -47,13 +47,6 @@ const EventListScreen = () => {
     }
     return monthDates;
   }, [selectedMonth]);
-  const [ selectedDay, setSelectedDay ] = useState<DateData>({
-    dateString: todayDateString.current,
-    day: todayDate.current.day,
-    month: todayDate.current.month,
-    year: todayDate.current.year,
-    timestamp: todayDate.current.toMillis(),
-  });
 
   // Earliest date to load (so we don't waste reads on events from 3 years ago)
   const lastEarliestTimestamp = useRef<DateTime>();
@@ -83,65 +76,64 @@ const EventListScreen = () => {
 
   const eventsByMonth = useMemo(() => splitEvents(events), [events]);
 
-  const marked = useMemo(() => markEvents(events, todayDateString.current, selectedDay.dateString), [ events, selectedDay.dateString ]);
+  const marked = useMemo(() => markEvents(events, todayDateString.current), [events]);
 
   /*
    * Called by React Native when rendering the screen
    */
   return (
     <SafeAreaView style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
-      <PagerView
-        onPageSelected={(event) => {
+      <NativeViewGestureHandler
+        disallowInterruption={true}>
+        <PagerView
+          onPageSelected={(event) => {
           // 0 is a loading screen
-          const index = event.nativeEvent.position;
-          if (monthDates[index]) {
-            if (index > 0 && index < LOADED_MONTHS - 1) {
-              const month = monthDates[index];
-              if (!(month.startOf("month").equals(selectedMonth.startOf("month")))) {
+            const index = event.nativeEvent.position;
+            if (monthDates[index]) {
+              if (index > 0 && index < LOADED_MONTHS - 1) {
+                const month = monthDates[index];
+                if (!(month.startOf("month").equals(selectedMonth.startOf("month")))) {
+                  setSelectedMonth(month);
+                }
+              }
+            } else {
+              const month = monthDates[Math.floor(monthDates.length / 2)];
+              if (month as typeof monthDates[number] | undefined) {
                 setSelectedMonth(month);
               }
             }
-          } else {
-            const month = monthDates[Math.floor(monthDates.length / 2)];
-            if (month as typeof monthDates[number] | undefined) {
-              setSelectedMonth(month);
-            }
-          }
-        }}
-        initialPage={2}
-        // showPageIndicator
-        style={{ height: "100%", width: "100%" }}
-        onMoveShouldSetResponderCapture={() => true}
-        onStartShouldSetResponder={() => true}
-      >
-        {monthDates.map(
-          (month, index) => (
-            (index > 0 && index < LOADED_MONTHS - 1)
-              ? (
-                <View key={luxonDateTimeToMonthString(month)} style={{ height: "100%", width: "100%" }} collapsable={false}>
-                  <EventListPage
-                    eventsByMonth={eventsByMonth}
-                    selectedDay={selectedDay}
-                    setSelectedDay={setSelectedDay}
-                    marked={marked}
-                    refreshing={refreshing}
-                    refresh={() => refresh(earliestTimestamp)}
-                    monthString={luxonDateTimeToMonthString(month)}
-                    tryToNavigate={(eventToNavigateTo) => navigate("Event", { event: eventToNavigateTo })}
-                    downloadableImages={downloadableImages}
-                  />
-                </View>
-              )
-              : (
-                <View key={luxonDateTimeToMonthString(month)} style={{ height: "100%", width: "100%" }} collapsable={false}>
-                  <Center width="100%" height="100%">
-                    <Spinner size="lg" />
-                  </Center>
-                </View>
-              )
-          )
-        )}
-      </PagerView>
+          }}
+          initialPage={2}
+          // showPageIndicator
+          style={{ height: "100%", width: "100%" }}
+        >
+          {monthDates.map(
+            (month, index) => (
+              (index > 0 && index < LOADED_MONTHS - 1)
+                ? (
+                  <View key={luxonDateTimeToMonthString(month)} style={{ height: "100%", width: "100%" }} collapsable={false}>
+                    <EventListPage
+                      eventsByMonth={eventsByMonth}
+                      marked={marked}
+                      refreshing={refreshing}
+                      refresh={() => refresh(earliestTimestamp)}
+                      monthString={luxonDateTimeToMonthString(month)}
+                      tryToNavigate={(eventToNavigateTo) => navigate("Event", { event: eventToNavigateTo })}
+                      downloadableImages={downloadableImages}
+                    />
+                  </View>
+                )
+                : (
+                  <View key={luxonDateTimeToMonthString(month)} style={{ height: "100%", width: "100%" }} collapsable={false}>
+                    <Center width="100%" height="100%">
+                      <Spinner size="lg" />
+                    </Center>
+                  </View>
+                )
+            )
+          )}
+        </PagerView>
+      </NativeViewGestureHandler>
     </SafeAreaView> );
 };
 

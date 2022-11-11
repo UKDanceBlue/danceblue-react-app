@@ -58,11 +58,10 @@ export const splitEvents = (events: FirestoreEvent[]) => {
   return newEvents;
 };
 
-export const markEvents = (events: FirestoreEvent[], todayDateString: string, selectedDay: string) => {
+export const markEvents = (events: FirestoreEvent[], todayDateString: string) => {
   const marked: MarkedDates = {};
 
   let hasAddedToday = false;
-  let hasAddedSelectedDay = false;
 
   for (const event of events) {
     if (event.interval != null) {
@@ -72,13 +71,9 @@ export const markEvents = (events: FirestoreEvent[], todayDateString: string, se
       marked[formattedDate] = {
         marked: true,
         today: formattedDate === todayDateString,
-        selected: formattedDate === selectedDay,
       };
       if (formattedDate === todayDateString) {
         hasAddedToday = true;
-      }
-      if (formattedDate === selectedDay) {
-        hasAddedSelectedDay = true;
       }
     }
   }
@@ -86,9 +81,6 @@ export const markEvents = (events: FirestoreEvent[], todayDateString: string, se
   // If we didn't add today or selected day already, we need to add them manually
   if (!hasAddedToday) {
     marked[todayDateString] = { today: true };
-  }
-  if (!hasAddedSelectedDay) {
-    marked[selectedDay] = { selected: true };
   }
 
   return marked;
