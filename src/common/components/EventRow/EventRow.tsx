@@ -4,8 +4,6 @@ import { Box, Heading, Image, Spinner, Text, useTheme } from "native-base";
 import { useMemo } from "react";
 import { useWindowDimensions } from "react-native";
 
-import { useColorModeValue } from "../../customHooks";
-
 
 /**
  * A simple row of *Event*s from *startDate* to *endDate*
@@ -23,7 +21,6 @@ const EventRow = ({
 }) => {
   const { width: windowWidth } = useWindowDimensions();
   const { colors } = useTheme();
-  const backgroundColor = useColorModeValue(colors.gray[300], colors.gray[600]);
 
   const interval = intervalString ? Interval.fromISO(intervalString) : undefined;
 
@@ -40,7 +37,7 @@ const EventRow = ({
           whenString = `All Day ${interval.start.toFormat("L/d/yyyy")}`;
         } else {
         // All day on different days
-          whenString = interval.start.toFormat(`All Day ${interval.start.toFormat("L/d/yyyy")} - ${interval.end.toFormat("L/d/yyyy")}`);
+          whenString = `All Day ${ interval.toFormat("L/d/yyyy")}`;
         }
       } else if (interval.hasSame("day")) {
         whenString = `${interval.start.toFormat("L/d/yyyy h:mm a")} - ${interval.end.toFormat("h:mm a")}`;
@@ -56,7 +53,8 @@ const EventRow = ({
       flexDirection="row"
       justifyContent={"space-around"}
       alignItems={"center"}
-      backgroundColor={backgroundColor}
+      _light={{ backgroundColor: colors.gray[300] }}
+      _dark={{ backgroundColor: colors.gray[600] }}
       m={5}
       p={3}
       pl={2}

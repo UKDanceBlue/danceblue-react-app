@@ -2,11 +2,11 @@ import { DownloadableImage, FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { Column, Divider, Text } from "native-base";
 import { useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
-import { Calendar } from "react-native-calendars";
 import { DateData, MarkedDates } from "react-native-calendars/src/types";
 
 import { universalCatch } from "../../../../common/logging";
 
+import Calendar from "./Calendar";
 import { EventListRenderItem } from "./EventListRenderItem";
 
 export const EventListPage = ({
@@ -60,12 +60,12 @@ export const EventListPage = ({
       <Calendar
         current={monthString}
         markedDates={markedWithSelected}
-        pagingEnabled={false}
+        hideExtraDays
         hideArrows
         theme={{ arrowColor: "#0032A0", textMonthFontWeight: "bold", textMonthFontSize: 20, textDayFontWeight: "bold", textDayHeaderFontWeight: "500" }}
         displayLoadingIndicator={refreshing}
         onDayPress={setSelectedDay}
-        style={{ width: "100%", height: 380 }}
+        style={{ width: "100%" }}
         disableAllTouchEventsForDisabledDays
       />
       <Divider height={"1"} backgroundColor="blue.400" />
