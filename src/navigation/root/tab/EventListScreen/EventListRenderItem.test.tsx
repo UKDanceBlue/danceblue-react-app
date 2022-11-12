@@ -25,4 +25,8 @@ describe("<EventListRenderItem />", () => {
     fireEvent.press(tree.queryByTestId("event-list-row-0-touchable"));
     expect(tryToNavigate).toHaveBeenCalledWith(testEvent);
   });
+
+  it("renders correctly", () => {
+    expect(tree).toMatchSnapshot();
+  });
 });
