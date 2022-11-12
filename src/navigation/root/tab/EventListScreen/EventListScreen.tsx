@@ -12,7 +12,7 @@ import { useFirebase } from "../../../../context";
 
 import { EventListPage } from "./EventListPage";
 import { LOADED_MONTHS, LOADED_MONTHS_BEFORE_AFTER } from "./constants";
-import { dateFormat, getRefreshFunction, luxonDateTimeToMonthString, markEvents, splitEvents } from "./utils";
+import { getRefreshFunction, luxonDateTimeToDateString, luxonDateTimeToMonthString, markEvents, splitEvents } from "./utils";
 
 const EventListScreen = () => {
   // Get external references
@@ -29,8 +29,8 @@ const EventListScreen = () => {
   // Today
   const todayDate = useRef(DateTime.local().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
   todayDate.current = DateTime.local().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-  const todayDateString = useRef(todayDate.current.toFormat(dateFormat));
-  todayDateString.current = todayDate.current.toFormat(dateFormat);
+  const todayDateString = useRef(luxonDateTimeToDateString(todayDate.current));
+  todayDateString.current = luxonDateTimeToDateString(todayDate.current);
 
   // Calendar selection
   /*

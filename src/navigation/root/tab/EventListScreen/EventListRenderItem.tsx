@@ -7,7 +7,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import EventRow from "../../../../common/components/EventRow";
 import { timestampToDateTime } from "../../../../common/util/dateTools";
 
-import { dateFormat } from "./utils";
+import { RNCAL_DATE_FORMAT } from "./constants";
 
 export const EventListRenderItem = ({
   item: thisEvent, index, dayIndexesRef, tryToNavigate, downloadableImage
@@ -19,7 +19,7 @@ Parameters<ListRenderItem<FirestoreEvent>>[0] &
   downloadableImage?: DownloadableImage | null;
 }) => {
   if (thisEvent.interval != null) {
-    const eventDate = timestampToDateTime(thisEvent.interval.start).toFormat(dateFormat);
+    const eventDate = timestampToDateTime(thisEvent.interval.start).toFormat(RNCAL_DATE_FORMAT);
     if (!((dayIndexesRef.current[eventDate] ?? NaN) > index)) {
       dayIndexesRef.current[eventDate] = index;
     }

@@ -9,17 +9,36 @@ import { MarkedDates } from "react-native-calendars/src/types";
 import { universalCatch } from "../../../../common/logging";
 import { timestampToDateTime } from "../../../../common/util/dateTools";
 
-import { LOADED_MONTHS } from "./constants";
+import { LOADED_MONTHS, RNCAL_DATE_FORMAT, RNCAL_DATE_FORMAT_NO_DAY } from "./constants";
 
-export const dateFormat = "yyyy-MM-dd";
-const luxonDateTimeToDateString = (dateTime: DateTime): string => {
-  return dateTime.toFormat(dateFormat);
+/**
+ * Converts a luxon DateTime to a string in the format used by react-native-calendars
+ *
+ * @param dateTime The DateTime to convert
+ * @returns dateTime.toFormat(RNCAL_DATE_FORMAT)
+ */
+export const luxonDateTimeToDateString = (dateTime: DateTime): string => {
+  return dateTime.toFormat(RNCAL_DATE_FORMAT);
 };
-const dateFormatWithoutDay = "yyyy-MM";
+
+/**
+ * Converts a luxon DateTime to a month string in the format used by react-native-calendars
+ *
+ * @param dateTime The DateTime to convert
+ * @returns dateTime.toFormat(RNCAL_DATE_FORMAT_NO_DAY)
+ */
 export const luxonDateTimeToMonthString = (dateTime: DateTime): string => {
-  return dateTime.toFormat(dateFormatWithoutDay);
+  return dateTime.toFormat(RNCAL_DATE_FORMAT_NO_DAY);
 };
-// That is why you usually only want to put true constants and function or class definitions there, because they should never change
+
+/**
+ * Converts a luxon DateTime to a react-native-calendars date object
+ *
+ * Constructed using the day, month, and year components of DateTime, the DateTime.toMillis() method, and luxonDateTimeToDateString
+ *
+ * @param dateTime The DateTime to convert
+ * @returns A date object corresponding to dateTime
+ */
 export const luxonDateTimeToDateData = (dateTime: DateTime): DateData => {
   return {
     dateString: luxonDateTimeToDateString(dateTime),
@@ -29,6 +48,15 @@ export const luxonDateTimeToDateData = (dateTime: DateTime): DateData => {
     timestamp: dateTime.toMillis(),
   };
 };
+
+/**
+ * Converts a react-native-calendars date object to a luxon DateTime
+ *
+ * Constructed using only the day, month, and year components of dateData
+ *
+ * @param dateData The date object to convert
+ * @returns A DateTime corresponding to dateData
+ */
 export const dateDataToLuxonDateTime = (dateData: DateData): DateTime => {
   return DateTime.fromObject({
     day: dateData.day,
@@ -37,6 +65,12 @@ export const dateDataToLuxonDateTime = (dateData: DateData): DateTime => {
   });
 };
 
+/**
+ * Splits a list of events into an object keyed by month string
+ *
+ * @param events The events to split
+ * @returns An object keyed by month string, with the values being the events in that month
+ */
 export const splitEvents = (events: FirestoreEvent[]) => {
   const newEvents: Partial<Record<string, FirestoreEvent[]>> = {};
 
@@ -46,7 +80,7 @@ export const splitEvents = (events: FirestoreEvent[]) => {
     )
     .forEach((event) => {
       const eventDate: DateTime = timestampToDateTime(event.interval.start);
-      const eventMonthDateString = eventDate.toFormat(dateFormatWithoutDay);
+      const eventMonthDateString = eventDate.toFormat(RNCAL_DATE_FORMAT_NO_DAY);
 
       if (newEvents[eventMonthDateString] == null) {
         newEvents[eventMonthDateString] = [event];
@@ -58,6 +92,13 @@ export const splitEvents = (events: FirestoreEvent[]) => {
   return newEvents;
 };
 
+/**
+ * Gets the events for the given month and produces a MarkedDates object for react-native-calendars
+ *
+ * @param events The full list of events
+ * @param todayDateString The date string for today
+ * @returns A MarkedDates object for react-native-calendars
+ */
 export const markEvents = (events: FirestoreEvent[], todayDateString: string) => {
   const marked: MarkedDates = {};
 
@@ -66,7 +107,7 @@ export const markEvents = (events: FirestoreEvent[], todayDateString: string) =>
   for (const event of events) {
     if (event.interval != null) {
       const eventDate: DateTime = timestampToDateTime(event.interval.start);
-      const formattedDate = eventDate.toFormat(dateFormat);
+      const formattedDate = eventDate.toFormat(RNCAL_DATE_FORMAT);
 
       marked[formattedDate] = {
         marked: true,
@@ -86,6 +127,9 @@ export const markEvents = (events: FirestoreEvent[], todayDateString: string) =>
   return marked;
 };
 
+/**
+ * Create a refresh function used across the event screen
+ */
 export function getRefreshFunction(setRefreshing: (value: boolean) => void, disableRefresh: MutableRefObject<boolean>, fbFirestore: FirebaseFirestoreTypes.Module, fbStorage: FirebaseStorageTypes.Module, setEvents: (value: FirestoreEvent[]) => void, setDownloadableImages: (value: Partial<Record<string, DownloadableImage>>) => void): (earliestTimestamp: DateTime) => Promise<void> {
   return async (earliestTimestamp: DateTime) => {
     setRefreshing(true);
