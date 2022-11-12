@@ -1901,6 +1901,11 @@
     find-up "^5.0.0"
     js-yaml "^4.1.0"
 
+"@faker-js/faker@^7.6.0":
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-7.6.0.tgz#9ea331766084288634a9247fcd8b84f16ff4ba07"
+  integrity sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==
+
 "@formatjs/ecma402-abstract@1.11.4":
   version "1.11.4"
   resolved "https://registry.yarnpkg.com/@formatjs/ecma402-abstract/-/ecma402-abstract-1.11.4.tgz#b962dfc4ae84361f9f08fbce411b4e4340930eda"
@@ -3895,10 +3900,10 @@
     "@typescript-eslint/types" "5.29.0"
     eslint-visitor-keys "^3.3.0"
 
-"@ukdanceblue/db-app-common@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@ukdanceblue/db-app-common/-/db-app-common-1.0.5.tgz#3e2093eaa08e99e98ff106fc98658992601344ab"
-  integrity sha512-vyScnV+3lRBMD6YraP1iz4hL06UnlQvacsnWSs1HgQhWdvJEC6MyyaQlQdMbxP0/FK2CBvt+TQE3Hst8+QJDIQ==
+"@ukdanceblue/db-app-common@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@ukdanceblue/db-app-common/-/db-app-common-1.0.8.tgz#e249cee6593be0fc9d6050880d9f974d35ffc3da"
+  integrity sha512-N68D2617FOpQTPqPD35XY/YeY95Rd0WEi8oW+wb/wLXt9CvaEqMNsOt9ode+AGbfjCVaDwz00HuuLSFyJqBcHQ==
 
 "@urql/core@2.3.6":
   version "2.3.6"

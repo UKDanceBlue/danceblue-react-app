@@ -77,11 +77,10 @@ export const EventListPage = ({
         extraData={selectedDay}
         style = {{ backgroundColor: "white", width: "100%" }}
         renderItem = {({
-          item, index, separators
+          item, index
         }) => (<EventListRenderItem
           item={item}
           index={index}
-          separators={separators}
           dayIndexesRef={dayIndexes}
           tryToNavigate={tryToNavigate}
           downloadableImage={item.images?.[0] ? downloadableImages[item.images[0].uri] : undefined}

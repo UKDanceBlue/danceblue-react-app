@@ -12,7 +12,7 @@ import { useFirebase } from "../../../../context";
 
 import { EventListPage } from "./EventListPage";
 import { LOADED_MONTHS, LOADED_MONTHS_BEFORE_AFTER } from "./constants";
-import { getRefreshFunction, luxonDateTimeToDateString, luxonDateTimeToMonthString, markEvents, splitEvents } from "./utils";
+import { getRefreshFunction, luxonDateTimeToDateString, luxonDateTimeToMonthString, markEvents, splitEvents } from "./eventListUtils";
 
 const EventListScreen = () => {
   // Get external references

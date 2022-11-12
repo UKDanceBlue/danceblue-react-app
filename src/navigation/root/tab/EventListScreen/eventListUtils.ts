@@ -58,11 +58,7 @@ export const luxonDateTimeToDateData = (dateTime: DateTime): DateData => {
  * @returns A DateTime corresponding to dateData
  */
 export const dateDataToLuxonDateTime = (dateData: DateData): DateTime => {
-  return DateTime.fromObject({
-    day: dateData.day,
-    month: dateData.month,
-    year: dateData.year,
-  });
+  return DateTime.fromMillis(dateData.timestamp);
 };
 
 /**
@@ -75,17 +71,16 @@ export const splitEvents = (events: FirestoreEvent[]) => {
   const newEvents: Partial<Record<string, FirestoreEvent[]>> = {};
 
   events
-    .filter(
-      (e): e is (typeof e & { interval: NonNullable<typeof e.interval> }) => e.interval != null
-    )
     .forEach((event) => {
-      const eventDate: DateTime = timestampToDateTime(event.interval.start);
-      const eventMonthDateString = eventDate.toFormat(RNCAL_DATE_FORMAT_NO_DAY);
+      if (event.interval != null) {
+        const eventDate: DateTime = timestampToDateTime(event.interval.start);
+        const eventMonthDateString = eventDate.toFormat(RNCAL_DATE_FORMAT_NO_DAY);
 
-      if (newEvents[eventMonthDateString] == null) {
-        newEvents[eventMonthDateString] = [event];
-      } else {
-        newEvents[eventMonthDateString]?.push(event);
+        if (newEvents[eventMonthDateString] == null) {
+          newEvents[eventMonthDateString] = [event];
+        } else {
+          newEvents[eventMonthDateString]?.push(event);
+        }
       }
     });
 

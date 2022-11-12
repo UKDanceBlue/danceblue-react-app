@@ -10,9 +10,9 @@ import { timestampToDateTime } from "../../../../common/util/dateTools";
 import { RNCAL_DATE_FORMAT } from "./constants";
 
 export const EventListRenderItem = ({
-  item: thisEvent, index, dayIndexesRef, tryToNavigate, downloadableImage
+  item: thisEvent, index, dayIndexesRef, tryToNavigate, downloadableImage,
 }:
-Parameters<ListRenderItem<FirestoreEvent>>[0] &
+Omit<Parameters<ListRenderItem<FirestoreEvent>>[0], "separators"> &
 {
   dayIndexesRef: MutableRefObject<Partial<Record<string, number>>>;
   tryToNavigate: (event: FirestoreEvent) => void;
@@ -32,6 +32,7 @@ Parameters<ListRenderItem<FirestoreEvent>>[0] &
   return useMemo(() => (
     <TouchableOpacity
       onPress={onPress}
+      testID={`event-list-row-${index}-touchable`}
     >
       <EventRow
         title={thisEvent.name}
@@ -41,7 +42,7 @@ Parameters<ListRenderItem<FirestoreEvent>>[0] &
       />
     </TouchableOpacity>
   ), [
-    downloadableImage, onPress, thisEvent.interval, thisEvent.name, thisEvent.shortDescription
+    downloadableImage, index, onPress, thisEvent.interval, thisEvent.name, thisEvent.shortDescription
   ]);
 };
 
