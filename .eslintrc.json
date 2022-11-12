@@ -107,7 +107,7 @@
         "jest/prefer-todo": "warn",
         "jest/consistent-test-it": "error",
         "@typescript-eslint/no-unsafe-assignment": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-non-null-assertion": "off"
       }
     }
   ],
