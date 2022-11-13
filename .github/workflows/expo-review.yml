@@ -1,5 +1,7 @@
 name: Expo Review (pr-#)
-on: [pull_request]
+on:
+  pull_request:
+    branches: [ main ]
 jobs:
   publish:
     runs-on: ubuntu-latest
