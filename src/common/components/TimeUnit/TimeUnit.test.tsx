@@ -1,4 +1,4 @@
-import { renderWithNativeBase } from "../../test-helpers/NativeBase";
+import { renderWithNativeBase } from "../../../../test-helpers/NativeBase";
 
 import TimeUnit from ".";
 

@@ -5,14 +5,6 @@ import { DateTime } from "luxon";
 
 import { dateDataToLuxonDateTime, luxonDateTimeToDateData, luxonDateTimeToDateString, luxonDateTimeToMonthString, markEvents, splitEvents } from "./eventListUtils";
 
-const mockLog = jest.fn();
-const mockRecordError = jest.fn();
-
-jest.mock("@react-native-firebase/crashlytics", () => jest.fn().mockImplementation(() => ({
-  log: mockLog,
-  recordError: mockRecordError
-})));
-
 describe("Luxon <-> React Native Calendars date conversion", () => {
   const fakeDate = faker.date.soon();
   const fakeYear = String(fakeDate.getFullYear()).padStart(4, "0");
@@ -183,6 +175,6 @@ describe("markEvents", () => {
 
   it("Only marks a single date as today", () => {
     const todayDates = Object.values(markedDates).filter((date) => date.today);
-    expect(todayDates.length).toBe(1);
+    expect(todayDates).toHaveLength(1);
   });
 });
