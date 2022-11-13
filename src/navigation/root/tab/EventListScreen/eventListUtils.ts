@@ -1,5 +1,4 @@
-import FirestoreModule, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
-import { FirebaseStorageTypes } from "@react-native-firebase/storage";
+import FirestoreModule from "@react-native-firebase/firestore";
 import { DownloadableImage, FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime } from "luxon";
 import { MutableRefObject } from "react";
@@ -8,6 +7,7 @@ import { MarkedDates } from "react-native-calendars/src/types";
 
 import { universalCatch } from "../../../../common/logging";
 import { timestampToDateTime } from "../../../../common/util/dateTools";
+import { useFirebase } from "../../../../context";
 
 import { LOADED_MONTHS, RNCAL_DATE_FORMAT, RNCAL_DATE_FORMAT_NO_DAY } from "./constants";
 
@@ -125,7 +125,11 @@ export const markEvents = (events: FirestoreEvent[], todayDateString: string) =>
 /**
  * Create a refresh function used across the event screen
  */
-export function getRefreshFunction(setRefreshing: (value: boolean) => void, disableRefresh: MutableRefObject<boolean>, fbFirestore: FirebaseFirestoreTypes.Module, fbStorage: FirebaseStorageTypes.Module, setEvents: (value: FirestoreEvent[]) => void, setDownloadableImages: (value: Partial<Record<string, DownloadableImage>>) => void): (earliestTimestamp: DateTime) => Promise<void> {
+export function useEventListRefreshFunction(setRefreshing: (value: boolean) => void, disableRefresh: MutableRefObject<boolean>, setEvents: (value: FirestoreEvent[]) => void, setDownloadableImages: (value: Partial<Record<string, DownloadableImage>>) => void): (earliestTimestamp: DateTime) => Promise<void> {
+  const {
+    fbFirestore, fbStorage
+  } = useFirebase();
+
   return async (earliestTimestamp: DateTime) => {
     setRefreshing(true);
     disableRefresh.current = true;

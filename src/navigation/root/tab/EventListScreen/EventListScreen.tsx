@@ -8,18 +8,12 @@ import { NativeViewGestureHandler } from "react-native-gesture-handler";
 import PagerView from "react-native-pager-view";
 
 import { universalCatch } from "../../../../common/logging";
-import { useFirebase } from "../../../../context";
 
 import { EventListPage } from "./EventListPage";
 import { LOADED_MONTHS, LOADED_MONTHS_BEFORE_AFTER } from "./constants";
-import { getRefreshFunction, luxonDateTimeToDateString, luxonDateTimeToMonthString, markEvents, splitEvents } from "./eventListUtils";
+import { luxonDateTimeToDateString, luxonDateTimeToMonthString, markEvents, splitEvents, useEventListRefreshFunction } from "./eventListUtils";
 
 const EventListScreen = () => {
-  // Get external references
-  const {
-    fbFirestore, fbStorage
-  } = useFirebase();
-
   // Events
   const [ refreshing, setRefreshing ] = useState(false);
   const disableRefresh = useRef(false);
@@ -64,9 +58,7 @@ const EventListScreen = () => {
   const { navigate } = useNavigation();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const refresh = useCallback(getRefreshFunction(setRefreshing, disableRefresh, fbFirestore, fbStorage, setEvents, setDownloadableImages), [
-    fbFirestore, setRefreshing, setEvents
-  ]);
+  const refresh = useCallback(useEventListRefreshFunction(setRefreshing, disableRefresh, setEvents, setDownloadableImages), [ setRefreshing, setEvents ]);
 
   useEffect(() => {
     if (!disableRefresh.current) {
