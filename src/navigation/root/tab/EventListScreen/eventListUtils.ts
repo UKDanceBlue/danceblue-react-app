@@ -1,7 +1,7 @@
 import FirestoreModule from "@react-native-firebase/firestore";
 import { DownloadableImage, FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime } from "luxon";
-import { MutableRefObject } from "react";
+import { RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DateData } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
 
@@ -94,7 +94,7 @@ export const splitEvents = (events: FirestoreEvent[]) => {
  * @param todayDateString The date string for today
  * @returns A MarkedDates object for react-native-calendars
  */
-export const markEvents = (events: FirestoreEvent[], todayDateString: string) => {
+export const markEvents = (events: FirestoreEvent[], todayDateString: string | null) => {
   const marked: MarkedDates = {};
 
   let hasAddedToday = false;
@@ -115,67 +115,85 @@ export const markEvents = (events: FirestoreEvent[], todayDateString: string) =>
   }
 
   // If we didn't add today or selected day already, we need to add them manually
-  if (!hasAddedToday) {
+  if (!hasAddedToday && todayDateString != null) {
     marked[todayDateString] = { today: true };
   }
 
   return marked;
 };
 
-/**
- * Create a refresh function used across the event screen
- */
-export function useEventListRefreshFunction(setRefreshing: (value: boolean) => void, disableRefresh: MutableRefObject<boolean>, setEvents: (value: FirestoreEvent[]) => void, setDownloadableImages: (value: Partial<Record<string, DownloadableImage>>) => void): (earliestTimestamp: DateTime) => Promise<void> {
+export const useEvents = ({
+  earliestTimestamp, todayDateString
+}: {
+  earliestTimestamp: DateTime;
+  todayDateString: RefObject<string>;
+}): [markedDates: MarkedDates, eventsByMonth: Partial<Record<string, FirestoreEvent[]>>, downloadableImages: Partial<Record<string, DownloadableImage>>, refreshing: boolean, refresh: () => Promise<void>] => {
   const {
     fbFirestore, fbStorage
   } = useFirebase();
+  const [ refreshing, setRefreshing ] = useState(false);
+  const disableRefresh = useRef(false);
 
-  return async (earliestTimestamp: DateTime) => {
+  const [ events, setEvents ] = useState<FirestoreEvent[]>([]);
+  const [ downloadableImages, setDownloadableImages ] = useState<Partial<Record<string, DownloadableImage>>>({});
+
+  const refresh = useCallback(async () => {
     setRefreshing(true);
     disableRefresh.current = true;
     try {
-      try {
-        const snapshot = await fbFirestore
-          .collection("events")
-          .where("interval.start", ">=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.startOf("month").toMillis())) // For example, if earliestTimestamp is 2021-03-01, then we only load events from 2021-03-01 onwards
-          .where("interval.start", "<=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.plus({ months: LOADED_MONTHS - 1 }).endOf("month").toMillis())) // and before 2021-7-01, making the middle of the calendar 2021-05-01
-          .orderBy("interval.start", "asc")
-          .get();
-        const firestoreEvents: FirestoreEvent[] = [];
+      const snapshot = await fbFirestore
+        .collection("events")
+        .where("interval.start", ">=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.startOf("month").toMillis())) // For example, if earliestTimestamp is 2021-03-01, then we only load events from 2021-03-01 onwards
+        .where("interval.start", "<=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.plus({ months: LOADED_MONTHS - 1 }).endOf("month").toMillis())) // and before 2021-7-01, making the middle of the calendar 2021-05-01
+        .orderBy("interval.start", "asc")
+        .get();
+      const firestoreEvents: FirestoreEvent[] = [];
 
-        const downloadableImagePromises: Promise<[string, DownloadableImage]>[] = [];
+      const downloadableImagePromises: Promise<[string, DownloadableImage]>[] = [];
 
-        for await (const doc of snapshot.docs) {
-          const data = doc.data();
-          if (FirestoreEvent.isValidJson(data)) {
-            const firestoreEvent = FirestoreEvent.fromJson(data);
-            firestoreEvents.push(firestoreEvent);
-            if (firestoreEvent.images != null) {
-              for (const image of firestoreEvent.images) {
-                downloadableImagePromises.push(Promise.all([
-                  image.uri, DownloadableImage.fromFirestoreImage(image, (uri: string) => {
-                    if (uri.startsWith("gs://")) {
-                      return fbStorage.refFromURL(uri).getDownloadURL();
-                    } else {
-                      return Promise.resolve(uri);
-                    }
-                  })
-                ]));
-              }
+      for await (const doc of snapshot.docs) {
+        const data = doc.data();
+        if (FirestoreEvent.isValidJson(data)) {
+          const firestoreEvent = FirestoreEvent.fromJson(data);
+          firestoreEvents.push(firestoreEvent);
+          if (firestoreEvent.images != null) {
+            for (const image of firestoreEvent.images) {
+              downloadableImagePromises.push(Promise.all([
+                image.uri, DownloadableImage.fromFirestoreImage(image, (uri: string) => {
+                  if (uri.startsWith("gs://")) {
+                    return fbStorage.refFromURL(uri).getDownloadURL();
+                  } else {
+                    return Promise.resolve(uri);
+                  }
+                })
+              ]));
             }
           }
         }
-
-        const downloadableImages: Partial<Record<string, DownloadableImage>> = Object.fromEntries(await Promise.all(downloadableImagePromises));
-        setDownloadableImages(downloadableImages);
-
-        setEvents(firestoreEvents);
-      } catch (error) {
-        universalCatch(error);
       }
+
+      const downloadableImages: Partial<Record<string, DownloadableImage>> = Object.fromEntries(await Promise.all(downloadableImagePromises));
+      setDownloadableImages(downloadableImages);
+
+      setEvents(firestoreEvents);
+    } catch (error) {
+      universalCatch(error);
     } finally {
       setRefreshing(false);
       disableRefresh.current = false;
     }
-  };
-}
+  }, [
+    earliestTimestamp, fbFirestore, fbStorage
+  ]);
+  useEffect(() => {
+    (refresh)().catch(universalCatch);
+  }, [refresh]);
+
+  const eventsByMonth = useMemo(() => splitEvents(events), [events]);
+
+  const marked = useMemo(() => markEvents(events, todayDateString.current), [ events, todayDateString ]);
+
+  return [
+    marked, eventsByMonth, downloadableImages, refreshing, refresh
+  ];
+};

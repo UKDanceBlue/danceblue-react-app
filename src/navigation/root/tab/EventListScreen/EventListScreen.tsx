@@ -1,25 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
-import { DownloadableImage, FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime } from "luxon";
 import { Center, Spinner } from "native-base";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
 import PagerView from "react-native-pager-view";
 
-import { universalCatch } from "../../../../common/logging";
-
 import { EventListPage } from "./EventListPage";
 import { LOADED_MONTHS, LOADED_MONTHS_BEFORE_AFTER } from "./constants";
-import { luxonDateTimeToDateString, luxonDateTimeToMonthString, markEvents, splitEvents, useEventListRefreshFunction } from "./eventListUtils";
+import { luxonDateTimeToDateString, luxonDateTimeToMonthString, useEvents } from "./eventListUtils";
 
 const EventListScreen = () => {
-  // Events
-  const [ refreshing, setRefreshing ] = useState(false);
-  const disableRefresh = useRef(false);
-  const [ events, setEvents ] = useState<FirestoreEvent[]>([]);
-  const [ downloadableImages, setDownloadableImages ] = useState<Partial<Record<string, DownloadableImage>>>({});
-
   // Today
   const todayDate = useRef(DateTime.local().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
   todayDate.current = DateTime.local().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
@@ -57,18 +48,13 @@ const EventListScreen = () => {
   // Navigation
   const { navigate } = useNavigation();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const refresh = useCallback(useEventListRefreshFunction(setRefreshing, disableRefresh, setEvents, setDownloadableImages), [ setRefreshing, setEvents ]);
-
-  useEffect(() => {
-    if (!disableRefresh.current) {
-      refresh(earliestTimestamp).catch(universalCatch);
-    }
-  }, [ earliestTimestamp, refresh ]);
-
-  const eventsByMonth = useMemo(() => splitEvents(events), [events]);
-
-  const marked = useMemo(() => markEvents(events, todayDateString.current), [events]);
+  const [
+    markedDates,
+    eventsByMonth,
+    downloadableImages,
+    refreshing,
+    refresh,
+  ] = useEvents({ earliestTimestamp, todayDateString });
 
   /*
    * Called by React Native when rendering the screen
@@ -76,7 +62,7 @@ const EventListScreen = () => {
   return (
     <SafeAreaView style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
       <NativeViewGestureHandler
-        disallowInterruption={true}>
+        disallowInterruption>
         <PagerView
           onPageSelected={(event) => {
           // 0 is a loading screen
@@ -106,9 +92,9 @@ const EventListScreen = () => {
                   <View key={luxonDateTimeToMonthString(month)} style={{ height: "100%", width: "100%" }} collapsable={false}>
                     <EventListPage
                       eventsByMonth={eventsByMonth}
-                      marked={marked}
+                      marked={markedDates}
                       refreshing={refreshing}
-                      refresh={() => refresh(earliestTimestamp)}
+                      refresh={() => refresh()}
                       monthString={luxonDateTimeToMonthString(month)}
                       tryToNavigate={(eventToNavigateTo) => navigate("Event", { event: eventToNavigateTo })}
                       downloadableImages={downloadableImages}
