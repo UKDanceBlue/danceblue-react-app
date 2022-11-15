@@ -5,7 +5,7 @@ import { DateTime } from "luxon";
 
 import { dateDataToLuxonDateTime, luxonDateTimeToDateData, luxonDateTimeToDateString, luxonDateTimeToMonthString, markEvents, splitEvents } from "./eventListUtils";
 
-describe("Luxon <-> React Native Calendars date conversion", () => {
+describe("Luxon <-> React Native Calendars date conversion (random data)", () => {
   const fakeDate = faker.date.soon();
   const fakeYear = String(fakeDate.getFullYear()).padStart(4, "0");
   const fakeMonth = String(fakeDate.getMonth() + 1).padStart(2, "0");
@@ -59,6 +59,67 @@ describe("Luxon <-> React Native Calendars date conversion", () => {
       month: fakeLuxonDate.month,
       year: fakeLuxonDate.year,
       timestamp: fakeTimestamp
+    });
+  });
+});
+
+describe("Luxon <-> React Native Calendars date conversion (fixed data)", () => {
+  const year = "2020";
+  const month = "06";
+  const day = "03";
+  const dateString = `${year}-${month}-${day}`;
+  const luxonDate = DateTime.fromObject({
+    year: Number(year),
+    month: Number(month),
+    day: Number(day)
+  });
+  const timestamp = luxonDate.toMillis();
+
+  it("converts a luxon DateTime to a string in the format used by react-native-calendars", () => {
+    expect(luxonDateTimeToDateString(luxonDate)).toBe(dateString);
+  });
+
+  it("converts a luxon DateTime to a month string in the format used by react-native-calendars", () => {
+    expect(luxonDateTimeToMonthString(luxonDate)).toBe(dateString.split("-").slice(0, 2).join("-"));
+  });
+
+  it("converts a luxon DateTime to a react-native-calendars date object", () => {
+    expect(luxonDateTimeToDateData(luxonDate)).toEqual({
+      dateString,
+      day: luxonDate.day,
+      month: luxonDate.month,
+      year: luxonDate.year,
+      timestamp
+    });
+  });
+
+  it("converts a react-native-calendars date object to a luxon DateTime", () => {
+    expect(dateDataToLuxonDateTime({
+      dateString,
+      day: luxonDate.day,
+      month: luxonDate.month,
+      year: luxonDate.year,
+      timestamp
+    })).toEqual(luxonDate);
+  });
+
+  it("is reversible with luxon input", () => {
+    expect(dateDataToLuxonDateTime(luxonDateTimeToDateData(luxonDate))).toEqual(luxonDate);
+  });
+
+  it("is reversible with react-native-calendars input", () => {
+    expect(luxonDateTimeToDateData(dateDataToLuxonDateTime({
+      dateString,
+      day: luxonDate.day,
+      month: luxonDate.month,
+      year: luxonDate.year,
+      timestamp
+    }))).toEqual({
+      dateString,
+      day: luxonDate.day,
+      month: luxonDate.month,
+      year: luxonDate.year,
+      timestamp
     });
   });
 });
