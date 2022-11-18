@@ -214,8 +214,9 @@ describe("markEvents", () => {
   // Randomly choose a fakeStartTimes to be today
   const todyIndex = faker.datatype.number({ min: 0, max: fakeMonthStrings.length - 1 });
 
+  jest.setSystemTime(fakeEvents[todyIndex].interval!.start.toDate());
   // Used for most tests
-  const markedDates = markEvents(fakeEvents, fakeMonthStrings[todyIndex]);
+  const markedDates = markEvents(fakeEvents);
 
   it("Marks the correct dates as having events", () => {
     for (const key of Object.keys(markedDates)) {
@@ -229,7 +230,7 @@ describe("markEvents", () => {
   });
 
   it("Marks today when there are no events today", () => {
-    const markedDatesWithNoEventsToday = markEvents(fakeEvents, "0000-00-00");
+    const markedDatesWithNoEventsToday = markEvents(fakeEvents);
     expect(markedDatesWithNoEventsToday["0000-00-00"]).toBeDefined();
     expect(markedDatesWithNoEventsToday["0000-00-00"].today).toBe(true);
   });

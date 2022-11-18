@@ -1,6 +1,6 @@
 import { DownloadableImage, FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { Column, Divider, Text } from "native-base";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { DateData, MarkedDates } from "react-native-calendars/src/types";
 
@@ -46,23 +46,26 @@ export const EventListPage = ({
     }
   }, [selectedDay?.dateString]);
 
-  const markedWithSelected = { ...marked };
-  if (selectedDay?.dateString) {
-    markedWithSelected[selectedDay.dateString] = {
+  const markedWithSelected = useMemo(() => {
+    const returnVal = { ...marked };
+    if (selectedDay?.dateString) {
+      returnVal[selectedDay.dateString] = {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      ...(markedWithSelected[selectedDay.dateString] ?? {}),
-      selected: true,
-    };
-  }
+        ...(returnVal[selectedDay.dateString] ?? {}),
+        selected: true,
+      };
+    }
+    return returnVal;
+  }, [ marked, selectedDay?.dateString ]);
 
   return (
     <Column width="full" height="full">
       <Calendar
-        current={monthString}
+        initialDate={monthString}
         markedDates={markedWithSelected}
         hideExtraDays
         hideArrows
-        theme={{ arrowColor: "#0032A0", textMonthFontWeight: "bold", textMonthFontSize: 20, textDayFontWeight: "bold", textDayHeaderFontWeight: "500" }}
+        theme={useMemo(() => ({ arrowColor: "#0032A0", textMonthFontWeight: "bold", textMonthFontSize: 20, textDayFontWeight: "bold", textDayHeaderFontWeight: "500" }), [])}
         displayLoadingIndicator={refreshing}
         onDayPress={setSelectedDay}
         style={{ width: "100%" }}

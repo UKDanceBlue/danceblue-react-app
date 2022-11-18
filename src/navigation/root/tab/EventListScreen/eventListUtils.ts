@@ -2,7 +2,7 @@ import FirestoreModule, { FirebaseFirestoreTypes } from "@react-native-firebase/
 import { DownloadableImage, FirestoreEvent, FirestoreEventJson } from "@ukdanceblue/db-app-common";
 import { MaybeWithFirestoreMetadata } from "@ukdanceblue/db-app-common/dist/firestore/internal";
 import { DateTime } from "luxon";
-import { RefObject, useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { DateData } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
 
@@ -95,7 +95,9 @@ export const splitEvents = (events: FirestoreEvent[]) => {
  * @param todayDateString The date string for today
  * @returns A MarkedDates object for react-native-calendars
  */
-export const markEvents = (events: FirestoreEvent[], todayDateString: string | null) => {
+export const markEvents = (events: FirestoreEvent[]) => {
+  const todayDateString = getTodayDateString();
+
   const marked: MarkedDates = {};
 
   let hasAddedToday = false;
@@ -116,7 +118,7 @@ export const markEvents = (events: FirestoreEvent[], todayDateString: string | n
   }
 
   // If we didn't add today or selected day already, we need to add them manually
-  if (!hasAddedToday && todayDateString != null) {
+  if (!hasAddedToday) {
     marked[todayDateString] = { today: true };
   }
 
@@ -129,10 +131,12 @@ export type UseEventsStateInternalReducerPayloads = {
 } | {
   action: "setEvents";
   payload: FirestoreEvent[];
-} | {
-  action: "setEvent";
-  payload: FirestoreEvent;
-} | {
+}
+// | {
+//   action: "setEvent";
+//   payload: FirestoreEvent;
+// }
+| {
   action: "addEvent";
   payload: FirestoreEvent;
 } | {
@@ -181,18 +185,18 @@ export const useEventsStateInternal = () => useReducer(
           throw new Error("Event has no document metadata");
         }
       }
-      case "setEvent":{
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const documentId = payload.documentMetadata?.documentId as string | undefined;
-        if (documentId) {
-          return {
-            ...prevState,
-            [documentId]: payload,
-          };
-        } else {
-          throw new Error("Event has no document metadata");
-        }
-      }
+      // case "setEvent":{
+      //   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      //   const documentId = payload.documentMetadata?.documentId as string | undefined;
+      //   if (documentId) {
+      //     return {
+      //       ...prevState,
+      //       [documentId]: payload,
+      //     };
+      //   } else {
+      //     throw new Error("Event has no document metadata");
+      //   }
+      // }
       case "addEvents":{
         return {
           ...prevState,
@@ -223,12 +227,14 @@ export const useEventsStateInternal = () => useReducer(
   , {}
 );
 
-export const useEvents = ({
-  earliestTimestamp, todayDateString
-}: {
+export const getToday = () => DateTime.local().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+export const getTodayDateString = () => luxonDateTimeToDateString(getToday());
+
+export const useEvents = ({ earliestTimestamp }: {
   earliestTimestamp: DateTime;
-  todayDateString: RefObject<string>;
 }): [markedDates: MarkedDates, eventsByMonth: Partial<Record<string, FirestoreEvent[]>>, downloadableImages: Partial<Record<string, DownloadableImage>>, refreshing: boolean, refresh: () => Promise<void>] => {
+  const lastEarliestTimestamp = useRef<DateTime | null>(null);
+
   const {
     fbFirestore, fbStorage
   } = useFirebase();
@@ -238,64 +244,91 @@ export const useEvents = ({
 
   const [ events, updateEvents ] = useEventsStateInternal();
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (earliestTimestamp: DateTime) => {
     setRefreshing(true);
     disableRefresh.current = true;
-    try {
-      const snapshot = await fbFirestore
-        .collection<MaybeWithFirestoreMetadata<FirestoreEventJson>>("events")
-        .where(new FirestoreModule.FieldPath("interval", "start"), ">=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.startOf("month").toMillis())) // For example, if earliestTimestamp is 2021-03-01, then we only load events from 2021-03-01 onwards
-        .where(new FirestoreModule.FieldPath("interval", "start"), "<=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.plus({ months: LOADED_MONTHS - 1 }).endOf("month").toMillis())) // and before 2021-7-01, making the middle of the calendar 2021-05-01
-        .orderBy(new FirestoreModule.FieldPath("interval", "start"), "asc")
-        .get();
+    const snapshot = await fbFirestore
+      .collection<MaybeWithFirestoreMetadata<FirestoreEventJson>>("events")
+      .where(new FirestoreModule.FieldPath("interval", "start"), ">=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.startOf("month").toMillis())) // For example, if earliestTimestamp is 2021-03-01, then we only load events from 2021-03-01 onwards
+      .where(new FirestoreModule.FieldPath("interval", "start"), "<=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.plus({ months: LOADED_MONTHS - 1 }).endOf("month").toMillis())) // and before 2021-7-01, making the middle of the calendar 2021-05-01
+      .orderBy(new FirestoreModule.FieldPath("interval", "start"), "asc")
+      .get();
 
-      const downloadableImagePromises: Promise<[string, DownloadableImage]>[] = [];
+    const downloadableImagePromises: Promise<[string, DownloadableImage]>[] = [];
 
-      for await (const doc of snapshot.docs) {
-        let firestoreEvent: FirestoreEvent;
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          firestoreEvent = (FirestoreEvent.fromSnapshot as (snapshot: FirebaseFirestoreTypes.DocumentSnapshot<MaybeWithFirestoreMetadata<FirestoreEventJson>>) => FirestoreEvent)(doc);
-        } catch (e) {
-          console.error(e);
-          continue;
-        }
-        updateEvents({ action: "addEvent", payload: firestoreEvent });
-        if (firestoreEvent.images != null) {
-          for (const image of firestoreEvent.images) {
-            downloadableImagePromises.push(Promise.all([
-              image.uri, DownloadableImage.fromFirestoreImage(image, (uri: string) => {
-                if (uri.startsWith("gs://")) {
-                  return fbStorage.refFromURL(uri).getDownloadURL();
-                } else {
-                  return Promise.resolve(uri);
-                }
-              })
-            ]));
-          }
+    const eventsToSet = [];
+
+    for await (const doc of snapshot.docs) {
+      let firestoreEvent: FirestoreEvent;
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        firestoreEvent = (FirestoreEvent.fromSnapshot as (snapshot: FirebaseFirestoreTypes.DocumentSnapshot<MaybeWithFirestoreMetadata<FirestoreEventJson>>) => FirestoreEvent)(doc);
+      } catch (e) {
+        console.error(e);
+        continue;
+      }
+      eventsToSet.push(firestoreEvent);
+      if (firestoreEvent.images != null) {
+        for (const image of firestoreEvent.images) {
+          downloadableImagePromises.push(Promise.all([
+            image.uri, DownloadableImage.fromFirestoreImage(image, (uri: string) => {
+              if (uri.startsWith("gs://")) {
+                return fbStorage.refFromURL(uri).getDownloadURL();
+              } else {
+                return Promise.resolve(uri);
+              }
+            })
+          ]));
         }
       }
-
-      const downloadableImages: Partial<Record<string, DownloadableImage>> = Object.fromEntries(await Promise.all(downloadableImagePromises));
-      setDownloadableImages(downloadableImages);
-    } catch (error) {
-      universalCatch(error);
-    } finally {
-      setRefreshing(false);
-      disableRefresh.current = false;
     }
+
+    updateEvents({
+      action: "setEvents",
+      payload: eventsToSet
+    });
+
+    const downloadableImages: Partial<Record<string, DownloadableImage>> = Object.fromEntries(await Promise.all(downloadableImagePromises));
+    setDownloadableImages(downloadableImages);
   }, [
-    earliestTimestamp, fbFirestore, fbStorage, updateEvents
+    fbFirestore, fbStorage, updateEvents
   ]);
+
   useEffect(() => {
-    (refresh)().catch(universalCatch);
-  }, [refresh]);
+    if (
+      !disableRefresh.current &&
+      (
+        (lastEarliestTimestamp.current == null) ||
+        Math.abs(earliestTimestamp.diff(lastEarliestTimestamp.current, "months").get("months")) >= 2.5
+      )) {
+      (refresh)(earliestTimestamp)
+        .catch(universalCatch)
+        .finally(() => {
+          setRefreshing(false);
+          disableRefresh.current = false;
+          lastEarliestTimestamp.current = earliestTimestamp;
+        });
+    }
+  }, [ earliestTimestamp, refresh ]);
 
   const eventsByMonth = useMemo(() => splitEvents(Object.values(events) as NonNullable<typeof events[string]>[]), [events]);
 
-  const marked = useMemo(() => markEvents((Object.values(events) as NonNullable<typeof events[string]>[]), todayDateString.current), [ events, todayDateString ]);
+  const marked = useMemo(() => markEvents((Object.values(events) as NonNullable<typeof events[string]>[])), [events]);
 
   return [
-    marked, eventsByMonth, downloadableImages, refreshing, refresh
+    marked,
+    eventsByMonth,
+    downloadableImages,
+    refreshing,
+    useCallback(
+      () => refresh(earliestTimestamp)
+        .catch(universalCatch)
+        .finally(() => {
+          setRefreshing(false);
+          disableRefresh.current = false;
+          lastEarliestTimestamp.current = earliestTimestamp;
+        }),
+      [ earliestTimestamp, refresh ]
+    )
   ];
 };

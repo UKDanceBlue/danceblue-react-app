@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { RefObject, useCallback, useMemo, useRef } from "react";
 import { StyleProp, View, ViewStyle } from "react-native";
 import BasicDay from "react-native-calendars/src/calendar/day/basic";
 import Day, { DayProps } from "react-native-calendars/src/calendar/day/index";
@@ -9,12 +9,11 @@ import styleConstructor from "react-native-calendars/src/calendar/style";
 import { extractDayProps, extractHeaderProps } from "react-native-calendars/src/componentUpdater";
 import { isGTE, isLTE, page, sameMonth } from "react-native-calendars/src/dateutils";
 import { getState } from "react-native-calendars/src/day-state-manager";
-import { useDidUpdate } from "react-native-calendars/src/hooks";
-import { parseDate as paseDateUntyped, toMarkingFormat, xdateToData } from "react-native-calendars/src/interface";
+import { parseDate as paseDateUntyped, toMarkingFormat } from "react-native-calendars/src/interface";
 import { DateData, MarkedDates, Theme } from "react-native-calendars/src/types";
 import XDate from "xdate";
 
-const parseDate = paseDateUntyped as (date: Parameters<typeof paseDateUntyped>[0]) => XDate;
+const parseDate = paseDateUntyped as (date: Parameters<typeof paseDateUntyped>[0]) => XDate | undefined;
 
 /*
 The MIT License (MIT)
@@ -38,7 +37,6 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-
 export interface CalendarProps extends CalendarHeaderProps, DayProps {
   /** Specify theme properties to override specific styles for calendar parts */
   theme?: Theme;
@@ -51,9 +49,9 @@ export interface CalendarProps extends CalendarHeaderProps, DayProps {
   /** Specify style for calendar container element */
   style?: StyleProp<ViewStyle>;
   /** Initially visible month */
-  current?: string; // TODO: migrate to 'initialDate'
+  // current?: string; // TODO: migrate to 'initialDate'
   /** Initially visible month. If changed will initialize the calendar to this value */
-  initialDate?: string;
+  initialDate: string;
   /** Minimum date that can be selected, dates before minDate will be grayed out */
   minDate?: string;
   /** Maximum date that can be selected, dates after maxDate will be grayed out */
@@ -69,9 +67,9 @@ export interface CalendarProps extends CalendarHeaderProps, DayProps {
   /** Handler which gets executed on day long press */
   onDayLongPress?: (date: DateData) => void;
   /** Handler which gets executed when month changes in calendar */
-  onMonthChange?: (date: DateData) => void;
+  // onMonthChange?: (date: DateData) => void;
   /** Handler which gets executed when visible month changes in calendar */
-  onVisibleMonthsChange?: (months: DateData[]) => void;
+  // onVisibleMonthsChange?: (months: DateData[]) => void;
   /** Disables changing month when click on days of other months (when hideExtraDays is false) */
   disableMonthChange?: boolean;
   /** Enable the option to swipe between months */
@@ -82,9 +80,9 @@ export interface CalendarProps extends CalendarHeaderProps, DayProps {
   headerStyle?: StyleProp<ViewStyle>;
   /** Allow rendering a totally custom header */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  customHeader?: any;
+  // customHeader?: any;
   /** Allow selection of dates before minDate or after maxDate */
-  allowSelectionOutOfRange?: boolean;
+  // allowSelectionOutOfRange?: boolean;
 }
 
 /**
@@ -95,72 +93,45 @@ export interface CalendarProps extends CalendarHeaderProps, DayProps {
 const Calendar = (props: CalendarProps) => {
   const {
     initialDate,
-    current,
+    // current,
     theme,
     markedDates,
     minDate,
     maxDate,
-    allowSelectionOutOfRange,
+    // allowSelectionOutOfRange,
     onDayPress,
     onDayLongPress,
-    onMonthChange,
-    onVisibleMonthsChange,
-    disableMonthChange,
+    // onMonthChange,
+    // onVisibleMonthsChange,
+    // disableMonthChange,
     // enableSwipeMonths,
     hideExtraDays,
     firstDay,
     showSixWeeks,
     displayLoadingIndicator,
-    customHeader,
+    // customHeader,
     headerStyle,
     accessibilityElementsHidden,
     importantForAccessibility,
     testID,
     style: propsStyle
   } = props;
-  const [ currentMonth, setCurrentMonth ] = useState(current || initialDate ? parseDate(current ?? initialDate) : new XDate());
+
+  const currentMonth = useMemo(() => (parseDate(initialDate) ?? new XDate()), [initialDate]);
+
   const style = useRef(styleConstructor(theme));
-  const header = useRef();
+  const headerRef = useRef();
   const weekNumberMarking = useRef({ disabled: true, disableTouchEvent: true });
-
-  useEffect(() => {
-    if (initialDate) {
-      setCurrentMonth(parseDate(initialDate));
-    }
-  }, [initialDate]);
-
-  useDidUpdate(() => {
-    const _currentMonth = currentMonth.clone();
-    onMonthChange?.(xdateToData(_currentMonth));
-    onVisibleMonthsChange?.([xdateToData(_currentMonth)]);
-  }, [currentMonth]);
-
-  const updateMonth = useCallback((newMonth: XDate) => {
-    if (sameMonth(newMonth, currentMonth)) {
-      return;
-    }
-    setCurrentMonth(newMonth);
-  }, [currentMonth]);
-
-  const addMonth = useCallback((count: number) => {
-    const newMonth = currentMonth.clone().addMonths(count, true);
-    updateMonth(newMonth);
-  }, [ currentMonth, updateMonth ]);
 
   const handleDayInteraction = useCallback((date: DateData, interaction?: (date: DateData) => void) => {
     const day = new XDate(date.dateString);
 
-    if (allowSelectionOutOfRange || !(minDate && !isGTE(day, new XDate(minDate))) && !(maxDate && !isLTE(day, new XDate(maxDate)))) {
-      if (!disableMonthChange) {
-        updateMonth(day);
-      }
+    if (!(minDate && !isGTE(day, new XDate(minDate))) && !(maxDate && !isLTE(day, new XDate(maxDate)))) {
       if (interaction) {
         interaction(date);
       }
     }
-  }, [
-    minDate, maxDate, allowSelectionOutOfRange, disableMonthChange, updateMonth
-  ]);
+  }, [ minDate, maxDate ]);
 
   const _onDayPress = useCallback((date?: DateData) => {
     if (date) {handleDayInteraction(date, onDayPress);}
@@ -170,7 +141,7 @@ const Calendar = (props: CalendarProps) => {
     if (date) {handleDayInteraction(date, onDayLongPress);}
   }, [ handleDayInteraction, onDayLongPress ]);
 
-  const renderWeekNumber = (weekNumber: number) => {
+  const renderWeekNumber = useCallback((weekNumber: number) => {
     return (
       <View style={style.current.dayContainer} key={`week-container-${weekNumber}`}>
         <BasicDay
@@ -184,11 +155,11 @@ const Calendar = (props: CalendarProps) => {
         </BasicDay>
       </View>
     );
-  };
+  }, [ theme, testID ]);
 
-  const renderDay = (day: XDate, id: number) => {
-    const dayProps = extractDayProps(props);
+  const dayProps = useMemo(() => extractDayProps(props), [props]);
 
+  const renderDay = useCallback((day: XDate, id: number) => {
     if (!sameMonth(day, currentMonth) && hideExtraDays) {
       return <View key={id} style={style.current.emptyDayContainer}/>;
     }
@@ -208,70 +179,54 @@ const Calendar = (props: CalendarProps) => {
         />
       </View>
     );
-  };
+  }, [
+    currentMonth, hideExtraDays, dayProps, testID, props, markedDates, _onDayPress, onLongPressDay
+  ]);
 
-  const renderWeek = (days: XDate[], id: number) => {
-    const week = [];
-
-    days.forEach((day: XDate, id2: number) => {
-      week.push(renderDay(day, id2));
-    }, this);
-
-    if (props.showWeekNumbers) {
-      week.unshift(renderWeekNumber(days[days.length - 1].getWeek()));
-    }
-
-    return (
-      <View style={style.current.week} key={id}>
-        {week}
-      </View>
-    );
-  };
-
-  const renderMonth = () => {
+  const renderMonth = useCallback(() => {
     const shouldShowSixWeeks = showSixWeeks && !hideExtraDays;
     const days = page(currentMonth, firstDay, shouldShowSixWeeks);
     const weeks = [];
 
     while (days.length) {
-      weeks.push(renderWeek(days.splice(0, 7), weeks.length));
+      weeks.push(renderWeek(days.splice(0, 7), renderDay, props, renderWeekNumber, style, weeks.length));
     }
 
     return <View style={style.current.monthView}>{weeks}</View>;
-  };
+  }, [
+    currentMonth, firstDay, showSixWeeks, hideExtraDays, renderDay, props, renderWeekNumber
+  ]);
 
   const shouldDisplayIndicator = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (currentMonth) {
-      const lastMonthOfDay = toMarkingFormat(currentMonth.clone().addMonths(1, true).setDate(1)
-        .addDays(-1));
-      if (displayLoadingIndicator && !markedDates?.[lastMonthOfDay]) {
-        return true;
-      }
+    const lastMonthOfDay = toMarkingFormat(currentMonth.clone().addMonths(1, true).setDate(1)
+      .addDays(-1));
+    if (displayLoadingIndicator && !markedDates?.[lastMonthOfDay]) {
+      return true;
     }
     return false;
   }, [
     currentMonth, displayLoadingIndicator, markedDates
   ]);
 
-  const renderHeader = () => {
-    const headerProps = extractHeaderProps(props);
-    const ref = customHeader ? undefined : header;
-    const CustomHeader = customHeader;
-    const HeaderComponent = customHeader ? CustomHeader : CalendarHeader;
+  const headerProps = useMemo(() => extractHeaderProps(props), [props]);
 
+  const renderHeader = useCallback(() => {
     return (
-      <HeaderComponent
+      <CalendarHeader
         {...headerProps}
         testID={`${testID ?? ""}.header`}
         style={headerStyle}
-        ref={ref}
+        ref={headerRef}
         month={currentMonth}
-        addMonth={addMonth}
         displayLoadingIndicator={shouldDisplayIndicator}
       />
     );
-  };
+  }, [
+    headerProps, testID, headerStyle, currentMonth, shouldDisplayIndicator
+  ]);
+
+  const header = useMemo(() => renderHeader(), [renderHeader]);
+  const month = useMemo(() => renderMonth(), [renderMonth]);
 
   return (
     <View
@@ -280,11 +235,29 @@ const Calendar = (props: CalendarProps) => {
       accessibilityElementsHidden={accessibilityElementsHidden} // iOS
       importantForAccessibility={importantForAccessibility} // Android
     >
-      {renderHeader()}
-      {renderMonth()}
+      {header}
+      {month}
     </View>
   );
 };
 
 export default Calendar;
 Calendar.displayName = "Calendar";
+function renderWeek(days: XDate[], renderDay: (day: XDate, id: number) => JSX.Element, props: CalendarProps, renderWeekNumber: (weekNumber: number) => JSX.Element, style: RefObject<{ week: StyleProp<ViewStyle> }>, id: number) {
+  const week = [];
+
+  days.forEach((day: XDate, id2: number) => {
+    week.push(renderDay(day, id2));
+  });
+
+  if (props.showWeekNumbers) {
+    week.unshift(renderWeekNumber(days[days.length - 1].getWeek()));
+  }
+
+  return (
+    <View style={style.current?.week} key={id}>
+      {week}
+    </View>
+  );
+}
+
