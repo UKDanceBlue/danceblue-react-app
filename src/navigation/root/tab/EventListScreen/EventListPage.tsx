@@ -1,4 +1,5 @@
 import { DownloadableImage, FirestoreEvent } from "@ukdanceblue/db-app-common";
+import { DateTime } from "luxon";
 import { Column, Divider, Text } from "native-base";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FlatList } from "react-native";
@@ -8,11 +9,12 @@ import { universalCatch } from "../../../../common/logging";
 
 import Calendar from "./Calendar";
 import { EventListRenderItem } from "./EventListRenderItem";
+import { dateDataToLuxonDateTime, luxonDateTimeToDateString, luxonDateTimeToMonthString } from "./eventListUtils";
 
 export const EventListPage = ({
-  monthString, eventsByMonth, marked, refresh, refreshing, tryToNavigate, downloadableImages
+  month, eventsByMonth, marked, refresh, refreshing, tryToNavigate, downloadableImages
 }: {
-  monthString: string;
+  month: DateTime;
   eventsByMonth: Partial<Record<string, FirestoreEvent[]>>;
   marked: MarkedDates;
   refresh: () => Promise<void>;
@@ -20,6 +22,8 @@ export const EventListPage = ({
   tryToNavigate: (event: FirestoreEvent) => void;
   downloadableImages:Partial<Record<string, DownloadableImage>>;
 }) => {
+  const monthString = luxonDateTimeToMonthString(month);
+
   const [ selectedDay, setSelectedDay ] = useState<DateData>();
   // Scroll-to-day functionality
   const eventsListRef = useRef<FlatList<FirestoreEvent> | null>(null);
@@ -34,17 +38,47 @@ export const EventListPage = ({
   }, [ refreshingManually, refreshing ]);
 
   useEffect(() => {
-    const index = selectedDay?.dateString ? dayIndexes.current[selectedDay.dateString] : undefined;
-    if (index === 0) {
-      // Not sure why, but scrollToIndex doesn't work if the index is 0
-      eventsListRef.current?.scrollToOffset({ offset: 0, animated: true });
-    } else if (index != null) {
-      eventsListRef.current?.scrollToIndex({
-        animated: true,
-        index,
-      });
+    let scrollToDay = dateDataToLuxonDateTime(selectedDay);
+    if (scrollToDay !== undefined && scrollToDay.invalidReason == null) {
+      let failed = false;
+      // Find the next day that has events, if none, fall back to the last day that has events
+      let indexToCheck = dayIndexes.current[luxonDateTimeToDateString(scrollToDay)];
+      while ((indexToCheck == null) && !failed) {
+        scrollToDay = scrollToDay.plus({ days: 1 });
+        if (!(scrollToDay.hasSame(month, "month"))) {
+          failed = true;
+        } else {
+          indexToCheck = dayIndexes.current[luxonDateTimeToDateString(scrollToDay)];
+        }
+      }
+      if (indexToCheck == null || failed) {
+        // Go the other way
+        scrollToDay = dateDataToLuxonDateTime(selectedDay);
+        failed = false;
+        if (scrollToDay !== undefined && scrollToDay.invalidReason == null) {
+          while ((indexToCheck == null) && !failed) {
+            scrollToDay = scrollToDay.minus({ days: 1 });
+            if (!(scrollToDay.hasSame(month, "month"))) {
+              failed = true;
+            } else {
+              indexToCheck = dayIndexes.current[luxonDateTimeToDateString(scrollToDay)];
+            }
+          }
+        }
+      }
+      if (!failed && (indexToCheck != null)) {
+        if (indexToCheck === 0) {
+          // Not sure why, but scrollToIndex doesn't work if the index is 0
+          eventsListRef.current?.scrollToOffset({ offset: 0, animated: true });
+        } else {
+          eventsListRef.current?.scrollToIndex({
+            animated: true,
+            index: indexToCheck,
+          });
+        }
+      }
     }
-  }, [selectedDay?.dateString]);
+  }, [ month, selectedDay ]);
 
   const markedWithSelected = useMemo(() => {
     const returnVal = { ...marked };

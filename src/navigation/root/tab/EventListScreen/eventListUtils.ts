@@ -18,9 +18,18 @@ import { LOADED_MONTHS, RNCAL_DATE_FORMAT, RNCAL_DATE_FORMAT_NO_DAY } from "./co
  * @param dateTime The DateTime to convert
  * @returns dateTime.toFormat(RNCAL_DATE_FORMAT)
  */
-export const luxonDateTimeToDateString = (dateTime: DateTime): string => {
-  return dateTime.toFormat(RNCAL_DATE_FORMAT);
-};
+export function luxonDateTimeToDateString(dateTime: DateTime): string;
+export function luxonDateTimeToDateString(dateTime: undefined): undefined;
+export function luxonDateTimeToDateString(dateTime: null): null;
+export function luxonDateTimeToDateString(dateTime: DateTime | undefined): string | undefined;
+export function luxonDateTimeToDateString(dateTime: DateTime | null): string | null;
+export function luxonDateTimeToDateString(dateTime: DateTime | undefined | null): string | undefined | null {
+  if (dateTime == null) {
+    return dateTime;
+  } else {
+    return dateTime.toFormat(RNCAL_DATE_FORMAT);
+  }
+}
 
 /**
  * Converts a luxon DateTime to a month string in the format used by react-native-calendars
@@ -28,9 +37,18 @@ export const luxonDateTimeToDateString = (dateTime: DateTime): string => {
  * @param dateTime The DateTime to convert
  * @returns dateTime.toFormat(RNCAL_DATE_FORMAT_NO_DAY)
  */
-export const luxonDateTimeToMonthString = (dateTime: DateTime): string => {
-  return dateTime.toFormat(RNCAL_DATE_FORMAT_NO_DAY);
-};
+export function luxonDateTimeToMonthString(dateTime: DateTime): string;
+export function luxonDateTimeToMonthString(dateTime: undefined): undefined;
+export function luxonDateTimeToMonthString(dateTime: null): null;
+export function luxonDateTimeToMonthString(dateTime: DateTime | undefined): string | undefined;
+export function luxonDateTimeToMonthString(dateTime: DateTime | null): string | null;
+export function luxonDateTimeToMonthString(dateTime: DateTime | undefined | null): string | undefined | null {
+  if (dateTime == null) {
+    return dateTime;
+  } else {
+    return dateTime.toFormat(RNCAL_DATE_FORMAT_NO_DAY);
+  }
+}
 
 /**
  * Converts a luxon DateTime to a react-native-calendars date object
@@ -40,15 +58,24 @@ export const luxonDateTimeToMonthString = (dateTime: DateTime): string => {
  * @param dateTime The DateTime to convert
  * @returns A date object corresponding to dateTime
  */
-export const luxonDateTimeToDateData = (dateTime: DateTime): DateData => {
-  return {
-    dateString: luxonDateTimeToDateString(dateTime),
-    day: dateTime.day,
-    month: dateTime.month,
-    year: dateTime.year,
-    timestamp: dateTime.toMillis(),
-  };
-};
+export function luxonDateTimeToDateData(dateTime: DateTime): DateData;
+export function luxonDateTimeToDateData(dateTime: undefined): undefined;
+export function luxonDateTimeToDateData(dateTime: null): null;
+export function luxonDateTimeToDateData(dateTime: DateTime | undefined): DateData | undefined;
+export function luxonDateTimeToDateData(dateTime: DateTime | null): DateData | null;
+export function luxonDateTimeToDateData(dateTime: DateTime | undefined | null): DateData | undefined | null {
+  if (dateTime == null) {
+    return dateTime;
+  } else {
+    return {
+      dateString: luxonDateTimeToDateString(dateTime),
+      day: dateTime.day,
+      month: dateTime.month,
+      year: dateTime.year,
+      timestamp: dateTime.toMillis(),
+    };
+  }
+}
 
 /**
  * Converts a react-native-calendars date object to a luxon DateTime
@@ -58,9 +85,25 @@ export const luxonDateTimeToDateData = (dateTime: DateTime): DateData => {
  * @param dateData The date object to convert
  * @returns A DateTime corresponding to dateData
  */
-export const dateDataToLuxonDateTime = (dateData: DateData): DateTime => {
-  return DateTime.fromMillis(dateData.timestamp);
-};
+export function dateDataToLuxonDateTime(dateData: DateData): DateTime;
+export function dateDataToLuxonDateTime(dateData: undefined): undefined;
+export function dateDataToLuxonDateTime(dateData: null): null;
+export function dateDataToLuxonDateTime(dateData: DateData | undefined): DateTime | undefined;
+export function dateDataToLuxonDateTime(dateData: DateData | null): DateTime | null;
+export function dateDataToLuxonDateTime(dateData: DateData | undefined | null): DateTime | undefined | null {
+  if (dateData == null) {
+    return dateData;
+  } else {
+    return DateTime.fromObject(
+      {
+        day: dateData.day,
+        month: dateData.month,
+        year: dateData.year,
+      },
+      { zone: "utc" }
+    );
+  }
+}
 
 /**
  * Splits a list of events into an object keyed by month string

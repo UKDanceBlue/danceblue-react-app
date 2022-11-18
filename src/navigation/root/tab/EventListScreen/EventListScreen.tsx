@@ -116,7 +116,7 @@ const EventListScreen = () => {
                 marked={markedDates}
                 refreshing={refreshing}
                 refresh={refresh}
-                monthString={luxonDateTimeToMonthString(month )}
+                month={month}
                 tryToNavigate={(eventToNavigateTo) => navigate("Event", { event: eventToNavigateTo })}
                 downloadableImages={downloadableImages}
               />
