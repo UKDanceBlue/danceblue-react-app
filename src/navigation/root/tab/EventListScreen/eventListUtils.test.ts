@@ -215,9 +215,14 @@ describe("markEvents", () => {
   // Randomly choose a fakeStartTimes to be today
   const todyIndex = faker.datatype.number({ min: 0, max: fakeMonthStrings.length - 1 });
 
-  jest.setSystemTime(fakeEvents[todyIndex].interval!.start.toDate());
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  const oldDateTimeLocal = DateTime.local;
+  DateTime.local = jest.fn(() => DateTime.fromJSDate(fakeEvents[todyIndex].interval!.start.toDate()));
+
   // Used for most tests
   const markedDates = markEvents(fakeEvents);
+
+  DateTime.local = oldDateTimeLocal;
 
   it("Marks the correct dates as having events", () => {
     for (const key of Object.keys(markedDates)) {
@@ -230,14 +235,10 @@ describe("markEvents", () => {
     expect(markedDates[fakeMonthStrings[todyIndex]].today).toBe(true);
   });
 
-  it("Marks today when there are no events today", () => {
-    const markedDatesWithNoEventsToday = markEvents(fakeEvents);
-    expect(markedDatesWithNoEventsToday["0000-00-00"]).toBeDefined();
-    expect(markedDatesWithNoEventsToday["0000-00-00"].today).toBe(true);
-  });
-
   it("Only marks a single date as today", () => {
     const todayDates = Object.values(markedDates).filter((date) => date.today);
     expect(todayDates).toHaveLength(1);
   });
+
+  jest.useFakeTimers("modern");
 });
