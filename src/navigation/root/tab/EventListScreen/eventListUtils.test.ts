@@ -7,12 +7,13 @@ import { dateDataToLuxonDateTime, luxonDateTimeToDateData, luxonDateTimeToDateSt
 
 describe("Luxon <-> React Native Calendars date conversion (random data)", () => {
   const fakeDate = faker.date.soon();
+  fakeDate.setUTCHours(0, 0, 0, 0);
   const fakeYear = String(fakeDate.getFullYear()).padStart(4, "0");
   const fakeMonth = String(fakeDate.getMonth() + 1).padStart(2, "0");
-  const fakeDay = String(fakeDate.getDate()).padStart(2, "0");
+  const fakeDay = String(fakeDate.getDate() + 1).padStart(2, "0");
   const fakeDateString = `${fakeYear}-${fakeMonth}-${fakeDay}`;
   const fakeTimestamp = fakeDate.getTime();
-  const fakeLuxonDate = DateTime.fromJSDate(fakeDate);
+  const fakeLuxonDate = DateTime.fromJSDate(fakeDate, { zone: "utc" });
 
   it("converts a luxon DateTime to a string in the format used by react-native-calendars", () => {
     expect(luxonDateTimeToDateString(fakeLuxonDate)).toBe(fakeDateString);
@@ -72,7 +73,7 @@ describe("Luxon <-> React Native Calendars date conversion (fixed data)", () => 
     year: Number(year),
     month: Number(month),
     day: Number(day)
-  });
+  }, { zone: "utc" });
   const timestamp = luxonDate.toMillis();
 
   it("converts a luxon DateTime to a string in the format used by react-native-calendars", () => {
