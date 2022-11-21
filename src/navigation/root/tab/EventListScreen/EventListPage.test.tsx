@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 import { renderWithNativeBase } from "../../../../../test-helpers/NativeBase";
 
 import { EventListPage } from "./EventListPage";
@@ -11,7 +13,7 @@ describe("<EventListPage />", () => {
       eventsByMonth={{}}
       marked={{}}
       tryToNavigate={() => undefined}
-      monthString="2021-01"
+      month={DateTime.fromObject({ year: 2021, month: 1 })}
     />).toJSON();
     expect(tree).toMatchSnapshot();
   });

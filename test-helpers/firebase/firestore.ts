@@ -141,7 +141,7 @@ export function mockFirestore({
     waitForPendingWrites: mockWaitForPendingWrites,
   };
 
-  const mockFirestoreFactory: jest.Mock<LimitedFirestoreModule, []> = jest.fn().mockImplementation(() => (replacementImplementation)) as jest.Mock<LimitedFirestoreModule, []>;
+  const mockFirestoreFactory: jest.Mock<LimitedFirestoreModule, []> = jest.fn<LimitedFirestoreModule, []>().mockImplementation(() => (replacementImplementation));
   return {
     mockFirestoreFactory,
     mockBatch,

@@ -239,6 +239,4 @@ describe("markEvents", () => {
     const todayDates = Object.values(markedDates).filter((date) => date.today);
     expect(todayDates).toHaveLength(1);
   });
-
-  jest.useFakeTimers("modern");
 });

@@ -129,7 +129,7 @@ export function mockStorage({
     setMaxOperationRetryTime: jest.fn(),
     setMaxUploadRetryTime: jest.fn(),
   };
-  const mockStorageFactory = jest.fn().mockImplementation(() => (replacementImplementation));
+  const mockStorageFactory = jest.fn<Omit<FirebaseStorageTypes.Module, "native" | "app" | "emitter" | "useEmulator">, []>().mockImplementation(() => (replacementImplementation));
   return {
     mockStorageFactory,
     mockedRefsByPath,

@@ -30,7 +30,7 @@ export function mockCrashlytics({ didCrashOnPreviousExecution = false }: {
     crash: mockCrash,
   };
 
-  const mockCrashlyticsFactory = jest.fn().mockImplementation(() => (replacementImplementation));
+  const mockCrashlyticsFactory = jest.fn<Omit<FirebaseCrashlyticsTypes.Module, "native" | "app" | "emitter">, []>().mockImplementation(() => (replacementImplementation));
 
   return {
     mockLog,

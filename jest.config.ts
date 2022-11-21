@@ -1,9 +1,9 @@
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
-module.exports = {
+import type { JestConfigWithTsJest } from "ts-jest";
+
+const jestConfig: JestConfigWithTsJest = {
   preset: "jest-expo",
-  globals: { "ts-jest": { tsconfig: { jsx: "react-jsx" } } },
   transform: {
-    "^.+\\.tsx?$": "ts-jest",
+    "^.+\\.tsx?$": [ "ts-jest", { tsConfig: { jsx: "react-jsx" } } ],
     // "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js",
   },
   testMatch: ["**/?(*.)+(spec|test).ts?(x)"],
@@ -21,6 +21,8 @@ module.exports = {
   coverageReporters: [
     "json-summary", "text", "lcov"
   ],
-  "setupFilesAfterEnv": [ "@testing-library/jest-native/extend-expect", "<rootDir>/jest.setup.js" ],
+  "setupFilesAfterEnv": [ "@testing-library/jest-native/extend-expect", "<rootDir>/jest.setup.ts" ],
   automock: false,
 };
+
+export default jestConfig;

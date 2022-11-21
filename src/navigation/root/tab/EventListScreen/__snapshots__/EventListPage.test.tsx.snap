@@ -4,8 +4,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
 <RNCSafeAreaProvider
   onInsetsChange={[Function]}
   style={
-    Array [
-      Object {
+    [
+      {
         "flex": 1,
       },
       undefined,
@@ -13,9 +13,9 @@ exports[`<EventListPage /> renders correctly 1`] = `
   }
 >
   <View
-    dataSet={Object {}}
+    dataSet={{}}
     style={
-      Object {
+      {
         "height": "100%",
         "width": "100%",
       }
@@ -23,13 +23,13 @@ exports[`<EventListPage /> renders correctly 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "backgroundColor": "white",
             "paddingLeft": 5,
             "paddingRight": 5,
           },
-          Object {
+          {
             "width": "100%",
           },
         ]
@@ -37,12 +37,12 @@ exports[`<EventListPage /> renders correctly 1`] = `
     >
       <View
         accessibilityActions={
-          Array [
-            Object {
+          [
+            {
               "label": "increment",
               "name": "increment",
             },
-            Object {
+            {
               "label": "decrement",
               "name": "decrement",
             },
@@ -55,8 +55,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "flexDirection": "row",
                 "justifyContent": "space-between",
@@ -71,7 +71,7 @@ exports[`<EventListPage /> renders correctly 1`] = `
           <View />
           <View
             style={
-              Object {
+              {
                 "flexDirection": "row",
               }
             }
@@ -79,7 +79,7 @@ exports[`<EventListPage /> renders correctly 1`] = `
             <Text
               allowFontScaling={false}
               style={
-                Object {
+                {
                   "color": "#2d4150",
                   "fontFamily": "System",
                   "fontSize": 20,
@@ -89,15 +89,15 @@ exports[`<EventListPage /> renders correctly 1`] = `
               }
               testID="HEADER_MONTH_NAME-.header"
             >
-              November 2022
+              January 2021
             </Text>
           </View>
           <View />
         </View>
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "flexDirection": "row",
                 "justifyContent": "space-around",
                 "marginTop": 7,
@@ -112,8 +112,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
             allowFontScaling={false}
             numberOfLines={1}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#b6c1cd",
                   "fontFamily": "System",
                   "fontSize": 13,
@@ -133,8 +133,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
             allowFontScaling={false}
             numberOfLines={1}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#b6c1cd",
                   "fontFamily": "System",
                   "fontSize": 13,
@@ -154,8 +154,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
             allowFontScaling={false}
             numberOfLines={1}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#b6c1cd",
                   "fontFamily": "System",
                   "fontSize": 13,
@@ -175,8 +175,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
             allowFontScaling={false}
             numberOfLines={1}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#b6c1cd",
                   "fontFamily": "System",
                   "fontSize": 13,
@@ -196,8 +196,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
             allowFontScaling={false}
             numberOfLines={1}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#b6c1cd",
                   "fontFamily": "System",
                   "fontSize": 13,
@@ -217,8 +217,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
             allowFontScaling={false}
             numberOfLines={1}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#b6c1cd",
                   "fontFamily": "System",
                   "fontSize": 13,
@@ -238,8 +238,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
             allowFontScaling={false}
             numberOfLines={1}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#b6c1cd",
                   "fontFamily": "System",
                   "fontSize": 13,
@@ -258,14 +258,14 @@ exports[`<EventListPage /> renders correctly 1`] = `
       </View>
       <View
         style={
-          Object {
+          {
             "backgroundColor": "white",
           }
         }
       >
         <View
           style={
-            Object {
+            {
               "flexDirection": "row",
               "justifyContent": "space-around",
               "marginVertical": 7,
@@ -274,31 +274,52 @@ exports[`<EventListPage /> renders correctly 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "flex": 1,
               }
             }
           />
           <View
             style={
-              Object {
+              {
                 "flex": 1,
               }
             }
           />
           <View
             style={
-              Object {
+              {
+                "flex": 1,
+              }
+            }
+          />
+          <View
+            style={
+              {
+                "flex": 1,
+              }
+            }
+          />
+          <View
+            style={
+              {
+                "flex": 1,
+              }
+            }
+          />
+          <View
+            style={
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Tuesday 1 November 2022 "
+              accessibilityLabel=" Friday 1 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -313,20 +334,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-01"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-01"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -341,8 +362,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -357,17 +378,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Wednesday 2 November 2022 "
+              accessibilityLabel=" Saturday 2 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -382,20 +403,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-02"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-02"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -410,8 +431,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -424,19 +445,29 @@ exports[`<EventListPage /> renders correctly 1`] = `
               />
             </View>
           </View>
+        </View>
+        <View
+          style={
+            {
+              "flexDirection": "row",
+              "justifyContent": "space-around",
+              "marginVertical": 7,
+            }
+          }
+        >
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Thursday 3 November 2022 "
+              accessibilityLabel=" Sunday 3 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -451,20 +482,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-03"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-03"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -479,8 +510,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -495,17 +526,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Friday 4 November 2022 "
+              accessibilityLabel=" Monday 4 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -520,20 +551,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-04"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-04"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -548,8 +579,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -564,17 +595,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Saturday 5 November 2022 "
+              accessibilityLabel=" Tuesday 5 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -589,20 +620,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-05"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-05"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -617,8 +648,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -631,29 +662,19 @@ exports[`<EventListPage /> renders correctly 1`] = `
               />
             </View>
           </View>
-        </View>
-        <View
-          style={
-            Object {
-              "flexDirection": "row",
-              "justifyContent": "space-around",
-              "marginVertical": 7,
-            }
-          }
-        >
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Sunday 6 November 2022 "
+              accessibilityLabel=" Wednesday 6 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -668,20 +689,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-06"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-06"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -696,8 +717,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -712,17 +733,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Monday 7 November 2022 "
+              accessibilityLabel=" Thursday 7 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -737,20 +758,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-07"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-07"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -765,8 +786,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -781,17 +802,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Tuesday 8 November 2022 "
+              accessibilityLabel=" Friday 8 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -806,20 +827,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-08"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-08"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -834,8 +855,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -850,17 +871,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Wednesday 9 November 2022 "
+              accessibilityLabel=" Saturday 9 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -875,20 +896,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-09"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-09"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -903,8 +924,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -917,19 +938,29 @@ exports[`<EventListPage /> renders correctly 1`] = `
               />
             </View>
           </View>
+        </View>
+        <View
+          style={
+            {
+              "flexDirection": "row",
+              "justifyContent": "space-around",
+              "marginVertical": 7,
+            }
+          }
+        >
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Thursday 10 November 2022 "
+              accessibilityLabel=" Sunday 10 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -944,20 +975,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-10"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-10"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -972,8 +1003,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -988,17 +1019,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Friday 11 November 2022 "
+              accessibilityLabel=" Monday 11 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1013,20 +1044,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-11"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-11"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -1041,8 +1072,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -1057,17 +1088,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Saturday 12 November 2022 "
+              accessibilityLabel=" Tuesday 12 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1082,20 +1113,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-12"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-12"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -1110,8 +1141,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -1124,29 +1155,19 @@ exports[`<EventListPage /> renders correctly 1`] = `
               />
             </View>
           </View>
-        </View>
-        <View
-          style={
-            Object {
-              "flexDirection": "row",
-              "justifyContent": "space-around",
-              "marginVertical": 7,
-            }
-          }
-        >
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Sunday 13 November 2022 "
+              accessibilityLabel=" Wednesday 13 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1161,20 +1182,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-13"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-13"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -1189,8 +1210,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -1205,17 +1226,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Monday 14 November 2022 "
+              accessibilityLabel=" Thursday 14 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1230,20 +1251,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-14"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-14"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -1258,8 +1279,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -1274,17 +1295,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Tuesday 15 November 2022 "
+              accessibilityLabel=" Friday 15 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1299,20 +1320,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-15"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-15"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -1327,8 +1348,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -1343,17 +1364,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Wednesday 16 November 2022 "
+              accessibilityLabel=" Saturday 16 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1368,20 +1389,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-16"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-16"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -1396,8 +1417,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -1410,19 +1431,29 @@ exports[`<EventListPage /> renders correctly 1`] = `
               />
             </View>
           </View>
+        </View>
+        <View
+          style={
+            {
+              "flexDirection": "row",
+              "justifyContent": "space-around",
+              "marginVertical": 7,
+            }
+          }
+        >
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Thursday 17 November 2022 "
+              accessibilityLabel=" Sunday 17 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1437,20 +1468,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-17"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-17"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -1465,8 +1496,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -1481,17 +1512,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel="today Friday 18 November 2022 "
+              accessibilityLabel=" Monday 18 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1506,31 +1537,26 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
-                  "backgroundColor": undefined,
-                  "borderRadius": 16,
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-18"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-18"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
                       "fontSize": 16,
                       "fontWeight": "bold",
                       "marginTop": 6,
-                    },
-                    Object {
-                      "color": "#00BBF2",
                     },
                   ]
                 }
@@ -1539,8 +1565,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -1555,17 +1581,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Saturday 19 November 2022 "
+              accessibilityLabel=" Tuesday 19 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1580,20 +1606,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-19"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-19"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -1608,8 +1634,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -1622,29 +1648,19 @@ exports[`<EventListPage /> renders correctly 1`] = `
               />
             </View>
           </View>
-        </View>
-        <View
-          style={
-            Object {
-              "flexDirection": "row",
-              "justifyContent": "space-around",
-              "marginVertical": 7,
-            }
-          }
-        >
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Sunday 20 November 2022 "
+              accessibilityLabel=" Wednesday 20 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1659,20 +1675,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-20"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-20"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -1687,8 +1703,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -1703,17 +1719,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Monday 21 November 2022 "
+              accessibilityLabel=" Thursday 21 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1728,20 +1744,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-21"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-21"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -1756,8 +1772,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -1772,17 +1788,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Tuesday 22 November 2022 "
+              accessibilityLabel=" Friday 22 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1797,20 +1813,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-22"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-22"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -1825,8 +1841,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -1841,17 +1857,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Wednesday 23 November 2022 "
+              accessibilityLabel=" Saturday 23 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -1866,20 +1882,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-23"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-23"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -1894,215 +1910,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
-                      "borderRadius": 2,
-                      "height": 4,
-                      "marginHorizontal": 1,
-                      "marginTop": 1,
-                      "opacity": 0,
-                      "width": 4,
-                    },
-                  ]
-                }
-              />
-            </View>
-          </View>
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flex": 1,
-              }
-            }
-          >
-            <View
-              accessibilityLabel=" Thursday 24 November 2022 "
-              accessibilityRole="button"
-              accessibilityState={
-                Object {
-                  "disabled": false,
-                }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                Object {
-                  "alignItems": "center",
-                  "height": 32,
-                  "opacity": 1,
-                  "width": 32,
-                }
-              }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-24"
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "rgba(255, 255, 255, 0)",
-                      "color": "#2d4150",
-                      "fontFamily": "System",
-                      "fontSize": 16,
-                      "fontWeight": "bold",
-                      "marginTop": 6,
-                    },
-                  ]
-                }
-              >
-                24
-              </Text>
-              <View
-                style={
-                  Array [
-                    Object {
-                      "borderRadius": 2,
-                      "height": 4,
-                      "marginHorizontal": 1,
-                      "marginTop": 1,
-                      "opacity": 0,
-                      "width": 4,
-                    },
-                  ]
-                }
-              />
-            </View>
-          </View>
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flex": 1,
-              }
-            }
-          >
-            <View
-              accessibilityLabel=" Friday 25 November 2022 "
-              accessibilityRole="button"
-              accessibilityState={
-                Object {
-                  "disabled": false,
-                }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                Object {
-                  "alignItems": "center",
-                  "height": 32,
-                  "opacity": 1,
-                  "width": 32,
-                }
-              }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-25"
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "rgba(255, 255, 255, 0)",
-                      "color": "#2d4150",
-                      "fontFamily": "System",
-                      "fontSize": 16,
-                      "fontWeight": "bold",
-                      "marginTop": 6,
-                    },
-                  ]
-                }
-              >
-                25
-              </Text>
-              <View
-                style={
-                  Array [
-                    Object {
-                      "borderRadius": 2,
-                      "height": 4,
-                      "marginHorizontal": 1,
-                      "marginTop": 1,
-                      "opacity": 0,
-                      "width": 4,
-                    },
-                  ]
-                }
-              />
-            </View>
-          </View>
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flex": 1,
-              }
-            }
-          >
-            <View
-              accessibilityLabel=" Saturday 26 November 2022 "
-              accessibilityRole="button"
-              accessibilityState={
-                Object {
-                  "disabled": false,
-                }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                Object {
-                  "alignItems": "center",
-                  "height": 32,
-                  "opacity": 1,
-                  "width": 32,
-                }
-              }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-26"
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "rgba(255, 255, 255, 0)",
-                      "color": "#2d4150",
-                      "fontFamily": "System",
-                      "fontSize": 16,
-                      "fontWeight": "bold",
-                      "marginTop": 6,
-                    },
-                  ]
-                }
-              >
-                26
-              </Text>
-              <View
-                style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -2118,7 +1927,7 @@ exports[`<EventListPage /> renders correctly 1`] = `
         </View>
         <View
           style={
-            Object {
+            {
               "flexDirection": "row",
               "justifyContent": "space-around",
               "marginVertical": 7,
@@ -2127,17 +1936,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Sunday 27 November 2022 "
+              accessibilityLabel=" Sunday 24 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -2152,20 +1961,227 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-27"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-24"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "color": "#2d4150",
+                      "fontFamily": "System",
+                      "fontSize": 16,
+                      "fontWeight": "bold",
+                      "marginTop": 6,
+                    },
+                  ]
+                }
+              >
+                24
+              </Text>
+              <View
+                style={
+                  [
+                    {
+                      "borderRadius": 2,
+                      "height": 4,
+                      "marginHorizontal": 1,
+                      "marginTop": 1,
+                      "opacity": 0,
+                      "width": 4,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flex": 1,
+              }
+            }
+          >
+            <View
+              accessibilityLabel=" Monday 25 January 2021 "
+              accessibilityRole="button"
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "height": 32,
+                  "opacity": 1,
+                  "width": 32,
+                }
+              }
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-25"
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  [
+                    {
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "color": "#2d4150",
+                      "fontFamily": "System",
+                      "fontSize": 16,
+                      "fontWeight": "bold",
+                      "marginTop": 6,
+                    },
+                  ]
+                }
+              >
+                25
+              </Text>
+              <View
+                style={
+                  [
+                    {
+                      "borderRadius": 2,
+                      "height": 4,
+                      "marginHorizontal": 1,
+                      "marginTop": 1,
+                      "opacity": 0,
+                      "width": 4,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flex": 1,
+              }
+            }
+          >
+            <View
+              accessibilityLabel=" Tuesday 26 January 2021 "
+              accessibilityRole="button"
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "height": 32,
+                  "opacity": 1,
+                  "width": 32,
+                }
+              }
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-26"
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  [
+                    {
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "color": "#2d4150",
+                      "fontFamily": "System",
+                      "fontSize": 16,
+                      "fontWeight": "bold",
+                      "marginTop": 6,
+                    },
+                  ]
+                }
+              >
+                26
+              </Text>
+              <View
+                style={
+                  [
+                    {
+                      "borderRadius": 2,
+                      "height": 4,
+                      "marginHorizontal": 1,
+                      "marginTop": 1,
+                      "opacity": 0,
+                      "width": 4,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flex": 1,
+              }
+            }
+          >
+            <View
+              accessibilityLabel=" Wednesday 27 January 2021 "
+              accessibilityRole="button"
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "height": 32,
+                  "opacity": 1,
+                  "width": 32,
+                }
+              }
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-27"
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -2180,8 +2196,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -2196,17 +2212,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Monday 28 November 2022 "
+              accessibilityLabel=" Thursday 28 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -2221,20 +2237,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-28"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-28"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -2249,8 +2265,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -2265,17 +2281,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Tuesday 29 November 2022 "
+              accessibilityLabel=" Friday 29 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -2290,20 +2306,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-29"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-29"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -2318,8 +2334,8 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -2334,17 +2350,17 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "flex": 1,
               }
             }
           >
             <View
-              accessibilityLabel=" Wednesday 30 November 2022 "
+              accessibilityLabel=" Saturday 30 January 2021 "
               accessibilityRole="button"
               accessibilityState={
-                Object {
+                {
                   "disabled": false,
                 }
               }
@@ -2359,20 +2375,20 @@ exports[`<EventListPage /> renders correctly 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "height": 32,
                   "opacity": 1,
                   "width": 32,
                 }
               }
-              testID="native.calendar.SELECT_DATE_SLOT-2022-11-30"
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-30"
             >
               <Text
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "backgroundColor": "rgba(255, 255, 255, 0)",
                       "color": "#2d4150",
                       "fontFamily": "System",
@@ -2387,8 +2403,87 @@ exports[`<EventListPage /> renders correctly 1`] = `
               </Text>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
+                      "borderRadius": 2,
+                      "height": 4,
+                      "marginHorizontal": 1,
+                      "marginTop": 1,
+                      "opacity": 0,
+                      "width": 4,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "flexDirection": "row",
+              "justifyContent": "space-around",
+              "marginVertical": 7,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flex": 1,
+              }
+            }
+          >
+            <View
+              accessibilityLabel=" Sunday 31 January 2021 "
+              accessibilityRole="button"
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "height": 32,
+                  "opacity": 1,
+                  "width": 32,
+                }
+              }
+              testID="native.calendar.SELECT_DATE_SLOT-2021-01-31"
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  [
+                    {
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "color": "#2d4150",
+                      "fontFamily": "System",
+                      "fontSize": 16,
+                      "fontWeight": "bold",
+                      "marginTop": 6,
+                    },
+                  ]
+                }
+              >
+                31
+              </Text>
+              <View
+                style={
+                  [
+                    {
                       "borderRadius": 2,
                       "height": 4,
                       "marginHorizontal": 1,
@@ -2403,21 +2498,42 @@ exports[`<EventListPage /> renders correctly 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "flex": 1,
               }
             }
           />
           <View
             style={
-              Object {
+              {
                 "flex": 1,
               }
             }
           />
           <View
             style={
-              Object {
+              {
+                "flex": 1,
+              }
+            }
+          />
+          <View
+            style={
+              {
+                "flex": 1,
+              }
+            }
+          />
+          <View
+            style={
+              {
+                "flex": 1,
+              }
+            }
+          />
+          <View
+            style={
+              {
                 "flex": 1,
               }
             }
@@ -2426,14 +2542,14 @@ exports[`<EventListPage /> renders correctly 1`] = `
       </View>
     </View>
     <View
-      dataSet={Object {}}
-      style={Object {}}
+      dataSet={{}}
+      style={{}}
     />
     <View
       aria-orientation="horizontal"
-      dataSet={Object {}}
+      dataSet={{}}
       style={
-        Object {
+        {
           "backgroundColor": "#60a5fa",
           "height": 4,
           "width": "100%",
@@ -2442,14 +2558,14 @@ exports[`<EventListPage /> renders correctly 1`] = `
       thickness="1"
     />
     <View
-      dataSet={Object {}}
-      style={Object {}}
+      dataSet={{}}
+      style={{}}
     />
     <RCTScrollView
       ListEmptyComponent={
         <Memo
           style={
-            Object {
+            {
               "marginTop": 20,
               "textAlign": "center",
             }
@@ -2458,7 +2574,7 @@ exports[`<EventListPage /> renders correctly 1`] = `
           No events this month
         </Memo>
       }
-      data={Array []}
+      data={[]}
       getItem={[Function]}
       getItemCount={[Function]}
       initialScrollIndex={0}
@@ -2482,23 +2598,23 @@ exports[`<EventListPage /> renders correctly 1`] = `
       removeClippedSubviews={false}
       renderItem={[Function]}
       scrollEventThrottle={50}
-      stickyHeaderIndices={Array []}
+      stickyHeaderIndices={[]}
       style={
-        Object {
+        {
           "backgroundColor": "white",
           "width": "100%",
         }
       }
-      viewabilityConfigCallbackPairs={Array []}
+      viewabilityConfigCallbackPairs={[]}
     >
       <RCTRefreshControl />
       <View>
         <Text
-          dataSet={Object {}}
+          dataSet={{}}
           onLayout={[Function]}
           style={
-            Array [
-              Object {
+            [
+              {
                 "backgroundColor": undefined,
                 "color": "#171717",
                 "fontFamily": undefined,
@@ -2509,7 +2625,7 @@ exports[`<EventListPage /> renders correctly 1`] = `
                 "lineHeight": 21,
                 "textDecorationLine": undefined,
               },
-              Object {
+              {
                 "marginTop": 20,
                 "textAlign": "center",
               },
