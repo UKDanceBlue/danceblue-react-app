@@ -229,7 +229,7 @@ export async function loadEvents(earliestTimestamp: DateTime, fbFirestore: Fireb
     let firestoreEvent: FirestoreEvent;
     try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      firestoreEvent = (FirestoreEvent.fromSnapshot as (snapshot: FirebaseFirestoreTypes.DocumentSnapshot<MaybeWithFirestoreMetadata<FirestoreEventJson>>) => FirestoreEvent)(doc);
+      firestoreEvent = FirestoreEvent.fromSnapshot(doc);
     } catch (e) {
       console.error(e);
       continue;
