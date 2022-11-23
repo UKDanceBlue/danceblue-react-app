@@ -7,7 +7,6 @@ import { EventListPage } from "./EventListPage";
 describe("<EventListPage />", () => {
   it("renders correctly", () => {
     const tree = renderWithNativeBase(<EventListPage
-      downloadableImages={{}}
       refreshing={false}
       refresh={() => Promise.resolve()}
       eventsByMonth={{}}

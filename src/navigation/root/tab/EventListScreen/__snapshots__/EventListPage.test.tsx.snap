@@ -2550,7 +2550,7 @@ exports[`<EventListPage /> renders correctly 1`] = `
       dataSet={{}}
       style={
         {
-          "backgroundColor": "#60a5fa",
+          "backgroundColor": "#a1a1aa",
           "height": 4,
           "width": "100%",
         }

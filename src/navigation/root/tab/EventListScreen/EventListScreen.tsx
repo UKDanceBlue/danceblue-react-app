@@ -56,7 +56,6 @@ const EventListScreen = () => {
   const [
     markedDates,
     eventsByMonth,
-    downloadableImages,
     refreshing,
     refresh,
   ] = useEvents({ earliestTimestamp });
@@ -110,7 +109,7 @@ const EventListScreen = () => {
           }}
           style={{ height: "100%", width: "100%" }}
           renderItem={({ item: month }) => (
-            <View key={luxonDateTimeToMonthString(month )} style={{ height: "100%", width: "100%" }} collapsable={false}>
+            <View key={luxonDateTimeToMonthString(month)} style={{ height: "100%", width: "100%" }} collapsable={false}>
               <EventListPage
                 eventsByMonth={eventsByMonth}
                 marked={markedDates}
@@ -118,7 +117,6 @@ const EventListScreen = () => {
                 refresh={refresh}
                 month={month}
                 tryToNavigate={(eventToNavigateTo) => navigate("Event", { event: eventToNavigateTo })}
-                downloadableImages={downloadableImages}
               />
             </View>)}
         />
