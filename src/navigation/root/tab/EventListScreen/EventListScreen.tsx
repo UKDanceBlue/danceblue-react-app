@@ -4,7 +4,6 @@ import { Center, Spinner } from "native-base";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, SafeAreaView, View } from "react-native";
 import { LazyPagerView } from "react-native-pager-view";
-import { OptimizedHeavyScreen } from "react-navigation-heavy-screen";
 
 import { EventListPage } from "./EventListPage";
 import { LOADED_MONTHS_BEFORE_AFTER } from "./constants";
