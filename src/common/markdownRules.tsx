@@ -490,4 +490,17 @@ export const rules: RenderRules = {
       {children}
     </Text>
   ),
+
+  html_inline: ({
+    content, key
+  }: { content: string; key: React.Key }) => {
+    if (content === "<br>" || content === "<br/>" || content === "<br />") {
+      return (
+        <Text key={key}>
+          {"\n"}
+        </Text>
+      );
+    }
+    return null;
+  },
 } as const;

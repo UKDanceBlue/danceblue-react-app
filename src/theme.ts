@@ -1,6 +1,6 @@
+import { RecursivePartial } from "@ukdanceblue/db-app-common";
 import { Theme, extendTheme } from "native-base";
 
-import { RecursivePartial } from "./types/typeUtils";
 
 /*
  * Useful links for extending the theme:

@@ -1,20 +1,20 @@
 import crashlytics from "@react-native-firebase/crashlytics";
 import { isError } from "lodash";
 
-import { NativeFirebaseError } from "../types/firebaseTypes";
+import { isFirebaseError } from "../types/firebaseTypes";
 
 export function log(message: string | boolean | number | object, level: "trace" | "debug" | "log" | "info" | "warn" | "error" = "log") {
   try {
-  // eslint-disable-next-line no-console
-    const consoleMethod = console[level];
-    if (typeof consoleMethod === "function") {
-      consoleMethod(message);
+    if (__DEV__) {
+      // eslint-disable-next-line no-console
+      const consoleMethod = console[level];
+      if (typeof consoleMethod === "function") {
+        consoleMethod(message);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(message);
+      }
     } else {
-    // eslint-disable-next-line no-console
-      console.log(message);
-    }
-
-    if (!__DEV__) {
       if (typeof message === "object") {
         message = JSON.stringify(message, null, 2);
       }
@@ -36,32 +36,6 @@ export function logError(error: Error) {
   } catch (error) {
     console.error(error);
   }
-}
-
-export function isFirebaseError(error: unknown): error is NativeFirebaseError {
-  if (typeof error !== "object" || error == null) {
-    return false;
-  }
-  if (typeof (error as NativeFirebaseError).code !== "string") {
-    return false;
-  }
-  if (typeof (error as NativeFirebaseError).message !== "string") {
-    return false;
-  }
-  if (typeof (error as NativeFirebaseError).name !== "string") {
-    return false;
-  }
-  if (typeof (error as NativeFirebaseError).namespace !== "string") {
-    return false;
-  }
-  if (typeof (error as NativeFirebaseError).stack !== "string" && (error as NativeFirebaseError).stack != null) {
-    return false;
-  }
-  if (typeof (error as NativeFirebaseError).cause !== "string" && (error as NativeFirebaseError).cause != null) {
-    return false;
-  }
-
-  return true;
 }
 
 export function universalCatch(error: unknown) {
