@@ -29,6 +29,14 @@ const monthDates = (new Array(monthCount) as DateTime[])
 
 const EventListScreen = () => {
   const lazyPagerRef = useRef<LazyPagerView<DateTime> | null>(null);
+  const [ isFirstRender, setIsFirstRender ] = useState(true);
+  useEffect(() => {
+    if (isFirstRender) {
+      setTimeout(() => {
+        setIsFirstRender(false);
+      }, 0);
+    }
+  }, [isFirstRender]);
   const [ hasPagerRefBeenSet, setHasPagerRefBeenSet ] = useState(false);
   const [ hasSetPage, setHasSetPage ] = useState(false);
   const lastIndex = useRef<number | null>(null);
@@ -74,66 +82,71 @@ const EventListScreen = () => {
    * Called by React Native when rendering the screen
    */
   return (
-    <OptimizedHeavyScreen>{/* Without <OptimizedHeavyScreen>, the transition to this page will be slow */}
-      <SafeAreaView style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
-        <Center flex={1}>
-          <Spinner />
-        </Center>
-        <AnimatedPager
-          ref={(ref?: LazyPagerView<DateTime>) => {
-            if (ref != null) {
-              lazyPagerRef.current = ref;
-              setHasPagerRefBeenSet(true);
-            }
-          }}
-          buffer={2}
-          maxRenderWindow={20}
-          // Lib does not support dynamically orientation change
-          orientation="horizontal"
-          // Lib does not support dynamically transitionStyle change
-          transitionStyle="scroll"
-          data={
-            monthDates
-          }
-          keyExtractor={(dateTime) => luxonDateTimeToMonthString(dateTime)}
-          onPageScroll={({
-            nativeEvent: {
-              offset, position
-            }
-          }) => {
-            const index = Math.round(position + offset);
-            if (index !== lastIndex.current && (position + offset) !== 0) {
-              lastIndex.current = index;
-              if (monthDates[index]) {
-                const month = monthDates[index];
-                if (!(month.startOf("month").equals(selectedMonth.startOf("month")))) {
-                  setSelectedMonth(month);
+    <SafeAreaView style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
+      {
+        isFirstRender
+          ? (
+            <Center flex={1}>
+              <Spinner />
+            </Center>
+          )
+          : (
+            <AnimatedPager
+              ref={(ref?: LazyPagerView<DateTime>) => {
+                if (ref != null) {
+                  lazyPagerRef.current = ref;
+                  setHasPagerRefBeenSet(true);
                 }
-              } else {
-                console.warn("Index", index, "is out of bounds");
-                const month = monthDates[Math.floor(monthDates.length / 2)];
-                if (month as typeof monthDates[number] | undefined) {
-                  setSelectedMonth(month);
-                }
+              }}
+              buffer={2}
+              maxRenderWindow={20}
+              // Lib does not support dynamically orientation change
+              orientation="horizontal"
+              // Lib does not support dynamically transitionStyle change
+              transitionStyle="scroll"
+              data={
+                monthDates
               }
-            }
-          }}
-          style={{ height: "100%", width: "100%" }}
-          renderItem={({ item: month }) => (
-            <View key={luxonDateTimeToMonthString(month)} style={{ height: "100%", width: "100%" }} collapsable={false}>
-              <EventListPage
-                eventsByMonth={eventsByMonth}
-                marked={markedDates}
-                refreshing={refreshing}
-                refresh={refresh}
-                month={month}
-                tryToNavigate={(eventToNavigateTo) => navigate("Event", { event: eventToNavigateTo })}
-              />
-            </View>
-          )}
-        />
-      </SafeAreaView>
-    </OptimizedHeavyScreen>);
+              keyExtractor={(dateTime) => luxonDateTimeToMonthString(dateTime)}
+              onPageScroll={({
+                nativeEvent: {
+                  offset, position
+                }
+              }) => {
+                const index = Math.round(position + offset);
+                if (index !== lastIndex.current && (position + offset) !== 0) {
+                  lastIndex.current = index;
+                  if (monthDates[index]) {
+                    const month = monthDates[index];
+                    if (!(month.startOf("month").equals(selectedMonth.startOf("month")))) {
+                      setSelectedMonth(month);
+                    }
+                  } else {
+                    console.warn("Index", index, "is out of bounds");
+                    const month = monthDates[Math.floor(monthDates.length / 2)];
+                    if (month as typeof monthDates[number] | undefined) {
+                      setSelectedMonth(month);
+                    }
+                  }
+                }
+              }}
+              style={{ height: "100%", width: "100%" }}
+              renderItem={({ item: month }) => (
+                <View key={luxonDateTimeToMonthString(month)} style={{ height: "100%", width: "100%" }} collapsable={false}>
+                  <EventListPage
+                    eventsByMonth={eventsByMonth}
+                    marked={markedDates}
+                    refreshing={refreshing}
+                    refresh={refresh}
+                    month={month}
+                    tryToNavigate={(eventToNavigateTo) => navigate("Event", { event: eventToNavigateTo })}
+                  />
+                </View>
+              )}
+            />
+          )
+      }
+    </SafeAreaView>);
 };
 
 export default EventListScreen;
