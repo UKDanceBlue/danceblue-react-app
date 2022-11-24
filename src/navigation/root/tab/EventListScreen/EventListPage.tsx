@@ -1,4 +1,4 @@
-import { DownloadableImage, FirestoreEvent } from "@ukdanceblue/db-app-common";
+import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime } from "luxon";
 import { Column, Divider, Text } from "native-base";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -12,7 +12,7 @@ import { EventListRenderItem } from "./EventListRenderItem";
 import { dateDataToLuxonDateTime, luxonDateTimeToDateString, luxonDateTimeToMonthString } from "./eventListUtils";
 
 export const EventListPage = ({
-  month, eventsByMonth, marked, refresh, refreshing, tryToNavigate, downloadableImages
+  month, eventsByMonth, marked, refresh, refreshing, tryToNavigate
 }: {
   month: DateTime;
   eventsByMonth: Partial<Record<string, FirestoreEvent[]>>;
@@ -20,7 +20,6 @@ export const EventListPage = ({
   refresh: () => Promise<void>;
   refreshing: boolean;
   tryToNavigate: (event: FirestoreEvent) => void;
-  downloadableImages:Partial<Record<string, DownloadableImage>>;
 }) => {
   const monthString = luxonDateTimeToMonthString(month);
 
@@ -105,7 +104,7 @@ export const EventListPage = ({
         style={{ width: "100%" }}
         disableAllTouchEventsForDisabledDays
       />
-      <Divider height={"1"} backgroundColor="blue.400" />
+      <Divider height={"1"} backgroundColor="gray.400" />
       <FlatList
         ref={(list) => eventsListRef.current = list}
         data={ eventsByMonth[monthString] ?? [] }
@@ -120,7 +119,6 @@ export const EventListPage = ({
           index={index}
           dayIndexesRef={dayIndexes}
           tryToNavigate={tryToNavigate}
-          downloadableImage={item.images?.[0] ? downloadableImages[item.images[0].uri] : undefined}
         />)}
         refreshing={refreshingManually}
         onRefresh={() => {

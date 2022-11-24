@@ -1,6 +1,5 @@
 import FirestoreModule, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
-import { FirebaseStorageTypes } from "@react-native-firebase/storage";
-import { DownloadableImage, FirestoreEvent, FirestoreEventJson } from "@ukdanceblue/db-app-common";
+import { FirestoreEvent, FirestoreEventJson } from "@ukdanceblue/db-app-common";
 import { MaybeWithFirestoreMetadata } from "@ukdanceblue/db-app-common/dist/firestore/internal";
 import { DateTime } from "luxon";
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
@@ -213,15 +212,13 @@ export const useEventsStateInternal = () => useReducer(
 export const getToday = () => DateTime.local().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
 export const getTodayDateString = () => luxonDateTimeToDateString(getToday());
 
-export async function loadEvents(earliestTimestamp: DateTime, fbFirestore: FirebaseFirestoreTypes.Module, fbStorage: FirebaseStorageTypes.Module): Promise<{ downloadableImages: Partial<Record<string, DownloadableImage>>; eventsToSet: FirestoreEvent[] }> {
+export async function loadEvents(earliestTimestamp: DateTime, fbFirestore: FirebaseFirestoreTypes.Module): Promise<{ eventsToSet: FirestoreEvent[] }> {
   const snapshot = await fbFirestore
     .collection<MaybeWithFirestoreMetadata<FirestoreEventJson>>("events")
     .where(new FirestoreModule.FieldPath("interval", "start"), ">=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.startOf("month").toMillis())) // For example, if earliestTimestamp is 2021-03-01, then we only load events from 2021-03-01 onwards
     .where(new FirestoreModule.FieldPath("interval", "start"), "<=", FirestoreModule.Timestamp.fromMillis(earliestTimestamp.plus({ months: LOADED_MONTHS - 1 }).endOf("month").toMillis())) // and before 2021-7-01, making the middle of the calendar 2021-05-01
     .orderBy(new FirestoreModule.FieldPath("interval", "start"), "asc")
     .get();
-
-  const downloadableImagePromises: Promise<[string, DownloadableImage]>[] = [];
 
   const eventsToSet = [];
 
@@ -235,35 +232,19 @@ export async function loadEvents(earliestTimestamp: DateTime, fbFirestore: Fireb
       continue;
     }
     eventsToSet.push(firestoreEvent);
-    if (firestoreEvent.images != null) {
-      for (const image of firestoreEvent.images) {
-        downloadableImagePromises.push(Promise.all([
-          image.uri, DownloadableImage.fromFirestoreImage(image, (uri: string) => {
-            if (uri.startsWith("gs://")) {
-              return fbStorage.refFromURL(uri).getDownloadURL();
-            } else {
-              return Promise.resolve(uri);
-            }
-          })
-        ]));
-      }
-    }
   }
 
-  return { downloadableImages: Object.fromEntries(await Promise.all(downloadableImagePromises)), eventsToSet };
+  return { eventsToSet };
 }
 
 export const useEvents = ({ earliestTimestamp }: {
   earliestTimestamp: DateTime;
-}): [markedDates: MarkedDates, eventsByMonth: Partial<Record<string, FirestoreEvent[]>>, downloadableImages: Partial<Record<string, DownloadableImage>>, refreshing: boolean, refresh: () => Promise<void>] => {
+}): [markedDates: MarkedDates, eventsByMonth: Partial<Record<string, FirestoreEvent[]>>, refreshing: boolean, refresh: () => Promise<void>] => {
   const lastEarliestTimestamp = useRef<DateTime | null>(null);
 
-  const {
-    fbFirestore, fbStorage
-  } = useFirebase();
+  const { fbFirestore } = useFirebase();
   const [ refreshing, setRefreshing ] = useState(false);
   const disableRefresh = useRef(false);
-  const [ downloadableImages, setDownloadableImages ] = useState<Partial<Record<string, DownloadableImage>>>({});
 
   const [ events, updateEvents ] = useEventsStateInternal();
 
@@ -271,18 +252,13 @@ export const useEvents = ({ earliestTimestamp }: {
     setRefreshing(true);
     disableRefresh.current = true;
 
-    const {
-      eventsToSet, downloadableImages
-    } = await loadEvents(earliestTimestamp, fbFirestore, fbStorage);
+    const { eventsToSet } = await loadEvents(earliestTimestamp, fbFirestore);
 
     updateEvents({
       action: "setEvents",
       payload: eventsToSet
     });
-    setDownloadableImages(downloadableImages);
-  }, [
-    fbFirestore, fbStorage, updateEvents
-  ]);
+  }, [ fbFirestore, updateEvents ]);
 
   useEffect(() => {
     if (
@@ -308,7 +284,6 @@ export const useEvents = ({ earliestTimestamp }: {
   return [
     marked,
     eventsByMonth,
-    downloadableImages,
     refreshing,
     useCallback(
       () => refresh(earliestTimestamp)
