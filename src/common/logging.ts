@@ -5,16 +5,16 @@ import { isFirebaseError } from "../types/firebaseTypes";
 
 export function log(message: string | boolean | number | object, level: "trace" | "debug" | "log" | "info" | "warn" | "error" = "log") {
   try {
-  // eslint-disable-next-line no-console
-    const consoleMethod = console[level];
-    if (typeof consoleMethod === "function") {
-      consoleMethod(message);
+    if (__DEV__) {
+      // eslint-disable-next-line no-console
+      const consoleMethod = console[level];
+      if (typeof consoleMethod === "function") {
+        consoleMethod(message);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(message);
+      }
     } else {
-    // eslint-disable-next-line no-console
-      console.log(message);
-    }
-
-    if (!__DEV__) {
       if (typeof message === "object") {
         message = JSON.stringify(message, null, 2);
       }

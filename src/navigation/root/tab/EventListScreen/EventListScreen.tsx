@@ -1,9 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import { DateTime } from "luxon";
+import { Center, Spinner } from "native-base";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, SafeAreaView, View } from "react-native";
-import { NativeViewGestureHandler } from "react-native-gesture-handler";
 import { LazyPagerView } from "react-native-pager-view";
+import { OptimizedHeavyScreen } from "react-navigation-heavy-screen";
 
 import { EventListPage } from "./EventListPage";
 import { LOADED_MONTHS_BEFORE_AFTER } from "./constants";
@@ -28,6 +29,8 @@ const monthDates = (new Array(monthCount) as DateTime[])
 
 const EventListScreen = () => {
   const lazyPagerRef = useRef<LazyPagerView<DateTime> | null>(null);
+  const [ hasPagerRefBeenSet, setHasPagerRefBeenSet ] = useState(false);
+  const [ hasSetPage, setHasSetPage ] = useState(false);
   const lastIndex = useRef<number | null>(null);
   // Calendar selection
   /*
@@ -62,20 +65,28 @@ const EventListScreen = () => {
   ] = useEvents({ earliestTimestamp });
 
   useEffect(() => {
-    if (lazyPagerRef.current) {
+    if (!hasSetPage && hasPagerRefBeenSet && lazyPagerRef.current != null) {
       lazyPagerRef.current.setPageWithoutAnimation(Math.floor(monthCount / 2));
+      setHasSetPage(true);
     }
-  }, []);
+  }, [ hasPagerRefBeenSet, hasSetPage ]);
 
   /*
    * Called by React Native when rendering the screen
    */
   return (
-    <SafeAreaView style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
-      <NativeViewGestureHandler
-        disallowInterruption>
+    <OptimizedHeavyScreen>{/* Without <OptimizedHeavyScreen>, the transition to this page will be slow */}
+      <SafeAreaView style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
+        <Center flex={1}>
+          <Spinner />
+        </Center>
         <AnimatedPager
-          ref={lazyPagerRef}
+          ref={(ref?: LazyPagerView<DateTime>) => {
+            if (ref != null) {
+              lazyPagerRef.current = ref;
+              setHasPagerRefBeenSet(true);
+            }
+          }}
           buffer={2}
           maxRenderWindow={20}
           // Lib does not support dynamically orientation change
@@ -120,10 +131,11 @@ const EventListScreen = () => {
                 tryToNavigate={(eventToNavigateTo) => navigate("Event", { event: eventToNavigateTo })}
                 downloadableImages={downloadableImages}
               />
-            </View>)}
+            </View>
+          )}
         />
-      </NativeViewGestureHandler>
-    </SafeAreaView> );
+      </SafeAreaView>
+    </OptimizedHeavyScreen>);
 };
 
 export default EventListScreen;

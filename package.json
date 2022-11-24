@@ -87,6 +87,7 @@
     "react-native-super-grid": "^4.1.1",
     "react-native-svg": "12.3.0",
     "react-native-webview": "11.23.0",
+    "react-navigation-heavy-screen": "^1.2.1",
     "typescript": "^4.6.3",
     "uuid": "3.4.0"
   },

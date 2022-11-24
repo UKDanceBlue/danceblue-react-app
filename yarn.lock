@@ -7426,7 +7426,7 @@ hermes-profile-transformer@^0.0.6:
   dependencies:
     source-map "^0.7.3"
 
-hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.1:
+hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
   integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
@@ -10588,6 +10588,13 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-animatable@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.3.3.tgz#a13a4af8258e3bb14d0a9d839917e9bb9274ec8a"
+  integrity sha512-2ckIxZQAsvWn25Ho+DK3d1mXIgj7tITkrS4pYDvx96WyOttSvzzFeQnM2od0+FUMzILbdHDsDEqZvnz1DYNQ1w==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-bundle-visualizer@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/react-native-bundle-visualizer/-/react-native-bundle-visualizer-3.1.1.tgz#cf8eaf7035cd92000dbcf8c2f2434f6f5accc050"
@@ -10779,6 +10786,14 @@ react-native@0.69.6:
     use-sync-external-store "^1.0.0"
     whatwg-fetch "^3.0.0"
     ws "^6.1.4"
+
+react-navigation-heavy-screen@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-navigation-heavy-screen/-/react-navigation-heavy-screen-1.2.1.tgz#cae4aa2f218b9ec909d73278768371e074d6ccbb"
+  integrity sha512-BVTBH/kTa9rXEz3XPDfRLNPSEPWXdQYXAqUOojal/GIUuC+nxk8iOITsB9n1Qdq67icj3Ai1JUNJIO67PlQD4A==
+  dependencies:
+    hoist-non-react-statics "^3.3.2"
+    react-native-animatable "^1.3.3"
 
 react-reconciler@^0.26.2:
   version "0.26.2"
