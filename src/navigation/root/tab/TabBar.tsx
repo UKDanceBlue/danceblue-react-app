@@ -14,8 +14,7 @@ import HeaderIcons from "../../HeaderIcons";
 import EventListScreen from "./EventListScreen";
 import HomeScreen from "./HomeScreen";
 import HoursScreen from "./HoursScreen";
-import ScoreboardScreen from "./ScoreBoardScreen";
-import TeamScreen from "./TeamScreen";
+import SpiritScreen from "./spirit/SpiritStack";
 
 const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
 
@@ -24,8 +23,7 @@ export const possibleTabs = {
     key="Events"
     name="Events"
     component={EventListScreen}/>,
-  Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
-  Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,
+  Team: <Tabs.Screen key="Team" name="Team" component={SpiritScreen} />,
   MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
 } as { [name: string]: ReactElement };
 

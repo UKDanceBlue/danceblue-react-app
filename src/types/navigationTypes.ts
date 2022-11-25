@@ -1,17 +1,22 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
-import { StackScreenProps } from "@react-navigation/stack";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 
 import { FirestoreHour } from "./firebaseTypes";
 
+export type TeamStackParamList = {
+  MyTeam: undefined;
+  Scoreboard: undefined;
+};
+
+export type TeamStackScreenProps<T extends keyof TeamStackParamList> = NativeStackScreenProps<TeamStackParamList, T>;
 
 export type TabNavigatorParamList = {
   Home: undefined;
   Events: undefined;
-  Scoreboard: undefined;
-  Team: undefined;
+  Team: NavigatorScreenParams<TeamStackParamList>;
   Marathon: undefined;
   "Scavenger Hunt": undefined;
 };
@@ -35,7 +40,7 @@ export type RootStackParamList = {
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
-  StackScreenProps<RootStackParamList, T>;
+NativeStackScreenProps<RootStackParamList, T>;
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

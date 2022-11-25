@@ -2,11 +2,11 @@ import firebaseFirestore from "@react-native-firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl, SafeAreaView, ScrollView } from "react-native";
 
-import Standings from "../../../../common/components/Standings";
-import { universalCatch } from "../../../../common/logging";
-import { useAuthData, useUserData } from "../../../../context";
-import { SpiritTeamsRootDoc } from "../../../../types/SpiritTeamsRootDoc";
-import { StandingType } from "../../../../types/StandingType";
+import Standings from "../../../../../common/components/Standings";
+import { universalCatch } from "../../../../../common/logging";
+import { useAuthData, useUserData } from "../../../../../context";
+import { SpiritTeamsRootDoc } from "../../../../../types/SpiritTeamsRootDoc";
+import { StandingType } from "../../../../../types/StandingType";
 
 /**
  * Wrapper for a Standings component
