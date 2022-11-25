@@ -2,7 +2,7 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "native-base";
 import { ReactElement, useEffect, useState } from "react";
 
@@ -59,7 +59,7 @@ const TabBar = () => {
       screenOptions={({
         route, navigation
       }: {
-            navigation: StackNavigationProp<RootStackParamList>;
+            navigation: NativeStackNavigationProp<RootStackParamList>;
             route: RouteProp<TabNavigatorParamList>;
         }) => ({
         headerStyle: { backgroundColor: headerBgColor },
