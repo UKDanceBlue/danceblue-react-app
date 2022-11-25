@@ -1,5 +1,5 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View } from "native-base";
 import { PixelRatio, TouchableOpacity } from "react-native";
 
@@ -8,7 +8,7 @@ import { RootStackParamList } from "../types/navigationTypes";
 const HeaderIcons = ({
   navigation, color
 }: {
-  navigation: StackNavigationProp<RootStackParamList>;
+  navigation: NativeStackNavigationProp<RootStackParamList>;
   color?: string;
 }) => (
   <View
