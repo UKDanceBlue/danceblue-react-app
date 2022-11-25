@@ -1,7 +1,9 @@
 import { NativeStackNavigationProp, createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useTheme } from "native-base";
+import { useWindowDimensions } from "react-native";
 
 import { useColorModeValue } from "../../common/customHooks";
+import { log } from "../../common/logging";
 import { useAuthData } from "../../context";
 import { RootStackParamList } from "../../types/navigationTypes";
 import HeaderIcons from "../HeaderIcons";
@@ -16,6 +18,7 @@ import TabBar from "./tab/TabBar";
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 const RootScreen = () => {
+  const { fontScale } = useWindowDimensions();
   const {
     isAuthLoaded, isLoggedIn
   } = useAuthData();
@@ -46,10 +49,50 @@ const RootScreen = () => {
               <RootStack.Screen
                 name="Event"
                 component={EventScreen}
-                options={({ route }) => ({
-                  title: route.params.event.name,
-                  headerMode: "screen",
-                })}
+                options={({ route }) => {
+                  let title = "Event";
+                  let spacesInTitle = 0;
+                  if (route.params.event.name) {
+                    title = route.params.event.name;
+                    for (let i = 0; i < title.length; i++) {
+                      if (title[i] === " ") {
+                        spacesInTitle++;
+                      }
+                    }
+                  }
+                  let titleWidth = title.length * fontScale;
+
+                  // Safety precaution:
+                  let loopCount = 0;
+
+                  let hadToBreakWord = false;
+                  if (titleWidth > 18) {
+                    while (titleWidth > 18) {
+                      if (spacesInTitle > 0) {
+                        title = title.split(" ").slice(0, -1).join(" ");
+                        spacesInTitle--;
+                      } else {
+                        title = title.slice(0, -1);
+                        hadToBreakWord = true;
+                      }
+                      titleWidth = title.length * fontScale;
+
+                      if (++loopCount > 100) {
+                        log("Infinite loop detected while calculating title width for event screen.", "warn");
+                      }
+                    }
+
+                    if (hadToBreakWord) {
+                      title = `${title }...`;
+                    }
+                  }
+
+                  return ({
+                    title,
+                    headerMode: "screen",
+                  // headerRight: undefined,
+                  });
+                }}
               />
               {/* <RootStack.Screen name="Hour Details" component={HourScreen} /> */}
             </>
