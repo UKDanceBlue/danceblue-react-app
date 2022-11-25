@@ -89,6 +89,7 @@ const TabBar = () => {
           null,
         ],
       })}
+      tabBar={(props) => (<TabBarComponent {...props} />)}
     >
       <Tabs.Screen name="Home" component={HomeScreen} />
       {isConfigLoaded && currentTabs}
