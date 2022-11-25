@@ -4,10 +4,10 @@ import { Box, Center, Divider, Heading, Pressable, ScrollView, Text, ZStack } fr
 import { useMemo } from "react";
 import { RefreshControl, useWindowDimensions } from "react-native";
 
-import Place from "../../../../common/components/Place";
-import { universalCatch } from "../../../../common/logging";
-import { useLoading, useUserData } from "../../../../context";
-import { useRefreshUserData } from "../../../../context/user";
+import Place from "../../../../../common/components/Place";
+import { universalCatch } from "../../../../../common/logging";
+import { useLoading, useUserData } from "../../../../../context";
+import { useRefreshUserData } from "../../../../../context/user";
 
 const TeamScreen = () => {
   const {
