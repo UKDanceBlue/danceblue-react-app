@@ -1,4 +1,4 @@
-import { StackNavigationProp, createStackNavigator } from "@react-navigation/stack";
+import { NativeStackNavigationProp, createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useTheme } from "native-base";
 
 import { useColorModeValue } from "../../common/customHooks";
@@ -13,13 +13,12 @@ import ProfileScreen from "./ProfileScreen";
 // import HourScreen from "./tab/HoursScreen/HourScreen";
 import TabBar from "./tab/TabBar";
 
-const RootStack = createStackNavigator<RootStackParamList>();
+const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 const RootScreen = () => {
   const {
     isAuthLoaded, isLoggedIn
   } = useAuthData();
-
 
   const { colors } = useTheme();
   const headerBgColor = useColorModeValue(colors.white, colors.gray[800]);
@@ -29,7 +28,7 @@ const RootScreen = () => {
     <>
       {isAuthLoaded && (
         <RootStack.Navigator
-          screenOptions={({ navigation }: { navigation: StackNavigationProp<RootStackParamList> }) => ({
+          screenOptions={({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList> }) => ({
             headerStyle: { backgroundColor: headerBgColor },
             headerTitleStyle: { color: headerFgColor },
             headerRight: () => <HeaderIcons navigation={navigation} color={headerFgColor} />,
