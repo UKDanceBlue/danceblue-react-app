@@ -6,6 +6,7 @@ const validUnits = [
 
 /**
  * A label for a unit of time
+ * @param props The react props
  * @param props.value The value of time
  * @param props.unit The unit of time (plural)
  */

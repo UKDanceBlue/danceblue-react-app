@@ -2,8 +2,8 @@ import { FirebaseRemoteConfigTypes } from "@react-native-firebase/remote-config"
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import { log, logError, universalCatch } from "../common/logging";
-import { useFirebase } from "../context/firebase";
 
+import { useFirebase } from "./firebase";
 import { useLoading } from "./loading";
 import { UserLoginType } from "./user";
 

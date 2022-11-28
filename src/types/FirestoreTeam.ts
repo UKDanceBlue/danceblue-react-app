@@ -51,9 +51,5 @@ export function isFirestoreTeam(
     return false;
   }
 
-  if (typeof (data as Partial<FirestoreTeam>).individualTotals !== "object" || (data as Partial<FirestoreTeam>).individualTotals == null) {
-    return false;
-  }
-
-  return true;
+  return !(typeof (data as Partial<FirestoreTeam>).individualTotals !== "object" || (data as Partial<FirestoreTeam>).individualTotals == null);
 }

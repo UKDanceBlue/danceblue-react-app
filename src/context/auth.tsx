@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 import { log, universalCatch } from "../common/logging";
-import { useDeviceData } from "../context/device";
-import { useFirebase } from "../context/firebase";
+
+import { useDeviceData } from "./device";
+import { useFirebase } from "./firebase";
 
 interface UnloadedAuthData {
   isAuthLoaded: false;
