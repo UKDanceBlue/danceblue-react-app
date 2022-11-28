@@ -1,6 +1,6 @@
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime } from "luxon";
-import { Column, Divider, Text } from "native-base";
+import { Column, Divider, Spinner, Text } from "native-base";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { DateData, MarkedDates } from "react-native-calendars/src/types";
@@ -108,7 +108,11 @@ export const EventListPage = ({
       <FlatList
         ref={(list) => eventsListRef.current = list}
         data={ eventsByMonth[monthString] ?? [] }
-        ListEmptyComponent={<Text style={{ textAlign: "center", marginTop: 20 }}>No events this month</Text>}
+        ListEmptyComponent={
+          refreshing
+            ? (<Spinner size="lg" mt={20} />)
+            : (<Text style={{ textAlign: "center", marginTop: 20 }}>No events this month</Text>)
+        }
         initialScrollIndex={selectedDay?.dateString ? (dayIndexes.current[selectedDay.dateString] ?? 0) : 0}
         extraData={selectedDay}
         style = {{ backgroundColor: "white", width: "100%" }}
