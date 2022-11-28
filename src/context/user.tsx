@@ -2,12 +2,12 @@ import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 import { log, universalCatch } from "../common/logging";
-import { useFirebase } from "../context/firebase";
 import { FirestoreNotification } from "../types/FirestoreNotification";
 import { FirestoreTeam, isFirestoreTeam } from "../types/FirestoreTeam";
 import { isFirestoreUser } from "../types/FirestoreUser";
 
 import { useAuthData } from "./auth";
+import { useFirebase } from "./firebase";
 import { useLoading } from "./loading";
 
 export type UserLoginType = "anonymous" | "ms-oath-linkblue";
