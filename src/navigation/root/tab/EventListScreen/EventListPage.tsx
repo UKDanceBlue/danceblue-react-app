@@ -12,7 +12,7 @@ import { EventListRenderItem } from "./EventListRenderItem";
 import { dateDataToLuxonDateTime, luxonDateTimeToDateString, luxonDateTimeToMonthString } from "./eventListUtils";
 
 export const EventListPage = ({
-  month, eventsByMonth, marked, refresh, refreshing, tryToNavigate
+  month, eventsByMonth, marked, refresh, refreshing, tryToNavigate, disabled = false
 }: {
   month: DateTime;
   eventsByMonth: Partial<Record<string, FirestoreEvent[]>>;
@@ -20,6 +20,7 @@ export const EventListPage = ({
   refresh: () => Promise<void>;
   refreshing: boolean;
   tryToNavigate: (event: FirestoreEvent) => void;
+  disabled?: boolean;
 }) => {
   const monthString = luxonDateTimeToMonthString(month);
 
@@ -103,6 +104,7 @@ export const EventListPage = ({
         onDayPress={setSelectedDay}
         style={{ width: "100%" }}
         disableAllTouchEventsForDisabledDays
+        disabledByDefault={disabled}
       />
       <Divider height={"1"} backgroundColor="gray.400" />
       <FlatList

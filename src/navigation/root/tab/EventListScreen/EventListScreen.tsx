@@ -1,6 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
 import { DateTime } from "luxon";
-import { ZStack } from "native-base";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Animated, SafeAreaView, View } from "react-native";
 import { LazyPagerView } from "react-native-pager-view";
@@ -28,9 +27,6 @@ const monthDates = (new Array(monthCount) as DateTime[])
 
 const DummyView = (
   <View
-    key={luxonDateTimeToMonthString(DateTime.now())}
-    style={{ height: "100%", width: "100%" }}
-    collapsable={false}
     onStartShouldSetResponder={() => true}
     onTouchEnd={(e) => { e.stopPropagation(); }}>
     <EventListPage
@@ -40,6 +36,7 @@ const DummyView = (
       refresh={() => Promise.resolve()}
       month={DateTime.now()}
       tryToNavigate={() => undefined}
+      disabled
     />
   </View>
 );
@@ -104,64 +101,59 @@ const EventListScreen = () => {
         isFirstRender
           ? (DummyView)
           : (
-            <ZStack>
-              <AnimatedPager
-                ref={(ref?: LazyPagerView<DateTime>) => {
-                  if (ref != null) {
-                    lazyPagerRef.current = ref;
-                    setHasPagerRefBeenSet(true);
-                  }
-                }}
-                buffer={2}
-                maxRenderWindow={20}
-                // Lib does not support dynamically orientation change
-                orientation="horizontal"
-                // Lib does not support dynamically transitionStyle change
-                transitionStyle="scroll"
-                data={
-                  monthDates
+            <AnimatedPager
+              ref={(ref?: LazyPagerView<DateTime>) => {
+                if (ref != null) {
+                  lazyPagerRef.current = ref;
+                  setHasPagerRefBeenSet(true);
                 }
-                keyExtractor={(dateTime) => luxonDateTimeToMonthString(dateTime)}
-                onPageScroll={({
-                  nativeEvent: {
-                    offset, position
-                  }
-                }) => {
-                  const index = Math.round(position + offset);
-                  if (index !== lastIndex.current && (position + offset) !== 0) {
-                    lastIndex.current = index;
-                    if (monthDates[index]) {
-                      const month = monthDates[index];
-                      if (!(month.startOf("month").equals(selectedMonth.startOf("month")))) {
-                        setSelectedMonth(month);
-                      }
-                    } else {
-                      console.warn("Index", index, "is out of bounds");
-                      const month = monthDates[Math.floor(monthDates.length / 2)];
-                      if (month as typeof monthDates[number] | undefined) {
-                        setSelectedMonth(month);
-                      }
+              }}
+              buffer={2}
+              maxRenderWindow={20}
+              // Lib does not support dynamically orientation change
+              orientation="horizontal"
+              // Lib does not support dynamically transitionStyle change
+              transitionStyle="scroll"
+              data={
+                monthDates
+              }
+              keyExtractor={(dateTime) => luxonDateTimeToMonthString(dateTime)}
+              onPageScroll={({
+                nativeEvent: {
+                  offset, position
+                }
+              }) => {
+                const index = Math.round(position + offset);
+                if (index !== lastIndex.current && (position + offset) !== 0) {
+                  lastIndex.current = index;
+                  if (monthDates[index]) {
+                    const month = monthDates[index];
+                    if (!(month.startOf("month").equals(selectedMonth.startOf("month")))) {
+                      setSelectedMonth(month);
+                    }
+                  } else {
+                    console.warn("Index", index, "is out of bounds");
+                    const month = monthDates[Math.floor(monthDates.length / 2)];
+                    if (month as typeof monthDates[number] | undefined) {
+                      setSelectedMonth(month);
                     }
                   }
-                }}
-                style={{ height: "100%", width: "100%" }}
-                renderItem={({ item: month }) => (
-                  <View key={luxonDateTimeToMonthString(month)} style={{ height: "100%", width: "100%" }} collapsable={false}>
-                    <EventListPage
-                      eventsByMonth={eventsByMonth}
-                      marked={markedDates}
-                      refreshing={refreshing}
-                      refresh={refresh}
-                      month={month}
-                      tryToNavigate={(eventToNavigateTo) => navigate("Event", { event: eventToNavigateTo })}
-                    />
-                  </View>
-                )}
-              />
-              {!hasSetPage && (
-                DummyView
+                }
+              }}
+              style={{ height: "100%", width: "100%" }}
+              renderItem={({ item: month }) => (
+                <View key={luxonDateTimeToMonthString(month)} style={{ height: "100%", width: "100%" }} collapsable={false}>
+                  <EventListPage
+                    eventsByMonth={eventsByMonth}
+                    marked={markedDates}
+                    refreshing={refreshing}
+                    refresh={refresh}
+                    month={month}
+                    tryToNavigate={(eventToNavigateTo) => navigate("Event", { event: eventToNavigateTo })}
+                  />
+                </View>
               )}
-            </ZStack>
+            />
           )
       }
     </SafeAreaView>);
