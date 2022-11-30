@@ -2,7 +2,7 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "native-base";
 import { ReactElement, useEffect, useState } from "react";
 
@@ -22,11 +22,14 @@ import TeamScreen from "./TeamScreen";
 const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
 
 export const possibleTabs = {
-  Events: <Tabs.Screen key="Events" name="Events" component={EventListScreen} /> as ReactElement,
-  Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} /> as ReactElement,
-  Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} /> as ReactElement,
-  MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} /> as ReactElement,
-} as Record<string, ReactElement>;
+  Events: <Tabs.Screen
+    key="Events"
+    name="Events"
+    component={EventListScreen}/>,
+  Scoreboard: <Tabs.Screen key="Scoreboard" name="Scoreboard" component={ScoreboardScreen} />,
+  Team: <Tabs.Screen key="Team" name="Team" component={TeamScreen} />,
+  MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
+} as { [name: string]: ReactElement };
 
 const TabBar = () => {
   const {
@@ -56,7 +59,7 @@ const TabBar = () => {
       screenOptions={({
         route, navigation
       }: {
-            navigation: StackNavigationProp<RootStackParamList>;
+            navigation: NativeStackNavigationProp<RootStackParamList>;
             route: RouteProp<TabNavigatorParamList>;
         }) => ({
         headerStyle: { backgroundColor: headerBgColor },

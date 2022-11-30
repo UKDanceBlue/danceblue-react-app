@@ -34,7 +34,7 @@ const NativeBaseMarkdown = ({
     markdownit={
       // This is caused by using a reexport
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-      MarkdownIt({ linkify: true, typographer: true })
+      MarkdownIt({ linkify: true, typographer: true, html: true })
     }
   >
     {children}

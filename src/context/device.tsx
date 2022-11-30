@@ -1,14 +1,19 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { isDevice, osName } from "expo-device";
-import { AndroidImportance, IosAuthorizationStatus, getExpoPushTokenAsync, getPermissionsAsync, requestPermissionsAsync, setNotificationChannelAsync } from "expo-notifications";
+import { AndroidImportance,
+  IosAuthorizationStatus,
+  getExpoPushTokenAsync,
+  getPermissionsAsync,
+  requestPermissionsAsync,
+  setNotificationChannelAsync } from "expo-notifications";
 import { AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY, getItemAsync, setItemAsync } from "expo-secure-store";
 import { createContext, useContext, useEffect, useState } from "react";
 import { V4Options, v4 } from "uuid";
 
 import { universalCatch } from "../common/logging";
 import { showMessage } from "../common/util/alertUtils";
-import { useFirebase } from "../context/firebase";
 
+import { useFirebase } from "./firebase";
 import { useLoading } from "./loading";
 
 const uuidStoreKey = __DEV__ ? "danceblue.device-uuid.dev" : "danceblue.device-uuid";

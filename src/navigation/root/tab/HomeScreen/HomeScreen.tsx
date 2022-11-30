@@ -1,5 +1,5 @@
 import { Box, Button, Text, VStack, useTheme } from "native-base";
-import { Linking } from "react-native";
+import { Linking, StatusBar } from "react-native";
 
 import PodcastPlayer from "../../../../common/components/PodcastPlayer";
 import { useColorModeValue } from "../../../../common/customHooks";
@@ -16,42 +16,45 @@ const HomeScreen = () => {
   const bgColor = useColorModeValue(colors.white, colors.gray[600]);
 
   return (
-    <VStack flexDirection="column" bgColor={bgColor}>
-      <Box height="35%" tintColor={bgColor}>
-        <HeaderImage />
-      </Box>
-      <Box height="10%">
-        <Button
-          borderRadius={0}
-          margin={0}
-          backgroundColor={colors.blue[700]}
-          _pressed={{ opacity: 0.5 }}
-          onPress={async () => {
-            if (
-              await Linking.canOpenURL(
-                "https://danceblue.networkforgood.com/"
-              ).catch(universalCatch)
-            ) {
-              Linking.openURL(
-                "https://danceblue.networkforgood.com/"
-              ).catch(universalCatch);
-            }
-          }}
-        >
-          <Text
-            bold
-            fontSize={30}
-            color="light.100"
-            shadow="1">Donate Now!</Text>
-        </Button>
-      </Box>
-      <Box height="15%">
-        <PodcastPlayer />
-      </Box>
-      <Box height="40%">
-        <SponsorCarousel />
-      </Box>
-    </VStack>
+    <>
+      <StatusBar hidden = { false } />
+      <VStack flexDirection="column" bgColor={bgColor}>
+        <Box height="35%" tintColor={bgColor}>
+          <HeaderImage />
+        </Box>
+        <Box height="10%">
+          <Button
+            borderRadius={0}
+            margin={0}
+            backgroundColor={colors.blue[700]}
+            _pressed={{ opacity: 0.5 }}
+            onPress={async () => {
+              if (
+                await Linking.canOpenURL(
+                  "https://danceblue.networkforgood.com/"
+                ).catch(universalCatch)
+              ) {
+                Linking.openURL(
+                  "https://danceblue.networkforgood.com/"
+                ).catch(universalCatch);
+              }
+            }}
+          >
+            <Text
+              bold
+              fontSize={30}
+              color="light.100"
+              shadow="1">Donate Now!</Text>
+          </Button>
+        </Box>
+        <Box height="15%">
+          <PodcastPlayer />
+        </Box>
+        <Box height="40%">
+          <SponsorCarousel />
+        </Box>
+      </VStack>
+    </>
   );
 };
 

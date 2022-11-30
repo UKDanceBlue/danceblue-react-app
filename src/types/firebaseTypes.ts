@@ -4,6 +4,27 @@ import { FirebaseStorageTypes } from "@react-native-firebase/storage";
 import { HourInstructionsType, SpecialComponentType } from "./hourScreenTypes";
 
 export type NativeFirebaseError = Parameters<FirebaseStorageTypes.TaskSnapshotObserver["error"]>[0];
+export function isFirebaseError(error: unknown): error is NativeFirebaseError {
+  if (typeof error !== "object" || error == null) {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).code !== "string") {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).message !== "string") {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).name !== "string") {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).namespace !== "string") {
+    return false;
+  }
+  if (typeof (error as NativeFirebaseError).stack !== "string" && (error as NativeFirebaseError).stack != null) {
+    return false;
+  }
+  return !(typeof (error as NativeFirebaseError).cause !== "string" && (error as NativeFirebaseError).cause != null);
+}
 
 export interface FirestoreHour {
   hourNumber: number;
@@ -41,11 +62,7 @@ export const isCollectionReference = (firestoreReference?: unknown): firestoreRe
   if (typeof (firestoreReference as FirebaseFirestoreTypes.CollectionReference).id !== "string") {
     return false;
   }
-  if (typeof (firestoreReference as FirebaseFirestoreTypes.CollectionReference).path !== "string") {
-    return false;
-  }
-
-  return true;
+  return typeof (firestoreReference as FirebaseFirestoreTypes.CollectionReference).path === "string";
 };
 
 export const isDocumentReference = (firestoreReference?: unknown): firestoreReference is FirebaseFirestoreTypes.DocumentReference => {
@@ -58,9 +75,5 @@ export const isDocumentReference = (firestoreReference?: unknown): firestoreRefe
   if (typeof (firestoreReference as FirebaseFirestoreTypes.DocumentReference).path !== "string") {
     return false;
   }
-  if (typeof (firestoreReference as FirebaseFirestoreTypes.DocumentReference).parent !== "object") {
-    return false;
-  }
-
-  return true;
+  return typeof (firestoreReference as FirebaseFirestoreTypes.DocumentReference).parent === "object";
 };

@@ -1,5 +1,9 @@
 name: Test Codebase
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,6 +16,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Install modules
-        run: yarn install --frozen-lockfile --production=false --non-interactive
+        run: yarn install --production=false --non-interactive
       - name: Run jest
         run: yarn test

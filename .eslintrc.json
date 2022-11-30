@@ -21,22 +21,6 @@
     // Eslint rules
     {
       "files": [
-        "**/*.test.*"
-      ],
-      "plugins": [
-        "jest"
-      ],
-      "extends": [
-        "plugin:jest/recommended",
-        "plugin:jest/style"
-      ],
-      "rules": {
-        "jest/prefer-todo": "warn",
-        "jest/consistent-test-it": "error"
-      }
-    },
-    {
-      "files": [
         "**/*.ts*"
       ],
       "plugins": [
@@ -106,6 +90,24 @@
             "after": true
           }
         ]
+      }
+    },
+    {
+      "files": [
+        "**/*.test.*"
+      ],
+      "plugins": [
+        "jest"
+      ],
+      "extends": [
+        "plugin:jest/recommended",
+        "plugin:jest/style"
+      ],
+      "rules": {
+        "jest/prefer-todo": "warn",
+        "jest/consistent-test-it": "error",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-non-null-assertion": "off"
       }
     }
   ],
