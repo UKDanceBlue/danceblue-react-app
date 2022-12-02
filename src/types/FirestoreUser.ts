@@ -1,6 +1,6 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+import { FirestoreNotification } from "@ukdanceblue/db-app-common";
 
-import { FirestoreNotification } from "./FirestoreNotification";
 import { isDocumentReference } from "./firebaseTypes";
 
 /** @deprecated Use types from @ukdanceblue/db-app-common instead */
@@ -53,9 +53,5 @@ export function isFirestoreUser(documentData?: FirebaseFirestoreTypes.DocumentDa
   if (documentData.team != null && !(isDocumentReference(documentData.team))) {
     return false;
   }
-  if (documentData.pastNotifications != null && (!Array.isArray(documentData.pastNotifications) || documentData.pastNotifications.some((x) => !(isDocumentReference(x))))) {
-    return false;
-  }
-
-  return true;
+  return !(documentData.pastNotifications != null && (!Array.isArray(documentData.pastNotifications) || documentData.pastNotifications.some((x) => !(isDocumentReference(x)))));
 }
