@@ -8,7 +8,7 @@ export const letterSpacings: RecursivePartial<Theme["letterSpacings"]> = {
   "lg": "0.025em",
   "xl": "0.05em",
   "2xl": "0.1em",
-};
+} as const;
 export const lineHeights: RecursivePartial<Theme["lineHeights"]> = {
   "2xs": "1em",
   "xs": "1.125em",
@@ -20,7 +20,7 @@ export const lineHeights: RecursivePartial<Theme["lineHeights"]> = {
   "3xl": "2.5em",
   "4xl": "3em",
   "5xl": "4em",
-};
+} as const;
 export const fontWeights: RecursivePartial<Theme["fontWeights"]> = {
   hairline: 100,
   thin: 200,
@@ -32,14 +32,93 @@ export const fontWeights: RecursivePartial<Theme["fontWeights"]> = {
   extrabold: 800,
   black: 900,
   extraBlack: 950,
-};
-export const fonts: RecursivePartial<Theme["fonts"]> = {
-  // TODO: https://docs.nativebase.io/customizing-fonts
-  heading: undefined,
-  body: undefined,
-  mono: undefined,
-};
-export const fontConfig: RecursivePartial<Theme["fontConfig"]> = { /* TODO: https://docs.nativebase.io/customizing-fonts */ };
+} as const;
+
+export const fontConfig: RecursivePartial<Theme["fontConfig"]> = {
+  "bodoni-flf": {
+    100: {
+      normal: "bodoni-flf-roman",
+      italic: "bodoni-flf-italic",
+    },
+    200: {
+      normal: "bodoni-flf-roman",
+      italic: "bodoni-flf-italic",
+    },
+    300: {
+      normal: "bodoni-flf-roman",
+      italic: "bodoni-flf-italic",
+    },
+    400: {
+      normal: "bodoni-flf-roman",
+      italic: "bodoni-flf-italic",
+    },
+    500: {
+      normal: "bodoni-flf-roman",
+      italic: "bodoni-flf-italic",
+    },
+    600: {
+      normal: "bodoni-flf-roman",
+      italic: "bodoni-flf-italic",
+    },
+    700: {
+      normal: "bodoni-flf-bold",
+      italic: "bodoni-flf-bold-italic",
+    },
+    800: {
+      normal: "bodoni-flf-bold",
+      italic: "bodoni-flf-bold-italic",
+    },
+    900: {
+      normal: "bodoni-flf-bold",
+      italic: "bodoni-flf-bold-italic",
+    },
+  },
+  "opensans-condensed": {
+    100: {
+      normal: "opensans-condensed-light",
+      italic: "opensans-condensed-light-italic",
+    },
+    200: {
+      normal: "opensans-condensed-light",
+      italic: "opensans-condensed-light-italic",
+    },
+    300: {
+      normal: "opensans-condensed-light",
+      italic: "opensans-condensed-light-italic",
+    },
+    400: {
+      normal: "opensans-condensed-light",
+      italic: "opensans-condensed-light-italic",
+    },
+    500: {
+      normal: "opensans-condensed-light",
+      italic: "opensans-condensed-light-italic",
+    },
+    600: {
+      normal: "opensans-condensed-light",
+      italic: "opensans-condensed-light-italic",
+    },
+    700: {
+      normal: "opensans-condensed-bold",
+      italic: "opensans-condensed-light-italic",
+    },
+    800: {
+      normal: "opensans-condensed-bold",
+      italic: "opensans-condensed-light-italic",
+    },
+    900: {
+      normal: "opensans-condensed-bold",
+      italic: "opensans-condensed-light-italic",
+    },
+  },
+} as const;
+
+export const fonts = {
+  heading: "bodoni-flf",
+  body: "opensans-condensed",
+  mono: undefined
+} as const;
+
 export const fontSizes: RecursivePartial<Theme["fontSizes"]> = {
   "2xs": 10,
   "xs": 12,
@@ -55,7 +134,7 @@ export const fontSizes: RecursivePartial<Theme["fontSizes"]> = {
   "7xl": 72,
   "8xl": 96,
   "9xl": 128,
-};
+} as const;
 export const opacity: RecursivePartial<Theme["opacity"]> = {
   0: 0,
   5: 0.05,
@@ -72,7 +151,7 @@ export const opacity: RecursivePartial<Theme["opacity"]> = {
   90: 0.9,
   95: 0.95,
   100: 1,
-};
+} as const;
 export const shadows: RecursivePartial<Theme["shadows"]> = {
   0: {
     shadowColor: "#000",
@@ -174,4 +253,4 @@ export const shadows: RecursivePartial<Theme["shadows"]> = {
     shadowRadius: 6.27,
     elevation: 10,
   },
-};
+} as const;
