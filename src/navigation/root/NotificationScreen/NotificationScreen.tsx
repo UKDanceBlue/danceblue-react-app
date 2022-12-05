@@ -1,4 +1,4 @@
-import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+import firestore, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { FirestoreNotification, isFirestoreNotification } from "@ukdanceblue/db-app-common";
 import { manufacturer as deviceManufacturer } from "expo-device";
 import { openSettings } from "expo-linking";
@@ -8,18 +8,28 @@ import { Box, Button, Heading, Row, SectionList, Skeleton, Text, View, useTheme 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Alert, RefreshControl, SectionListRenderItem, useWindowDimensions } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
-import Animated, { useAnimatedGestureHandler,
+import Animated, { SharedValue,
+  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring } from "react-native-reanimated";
 
 import { log, universalCatch } from "../../../common/logging";
-import { useDeviceData, useLoading, useUserData } from "../../../context";
+import { useAuthData, useDeviceData, useLoading, useUserData } from "../../../context";
 import { useRefreshUserData } from "../../../context/user";
 
-const AnimatedNotificationRow: SectionListRenderItem<FirestoreNotification | undefined, { title: string; data: (FirestoreNotification | undefined)[] }> = ({ item: notification }: { item: FirestoreNotification | undefined }) => {
+interface NotificationListDataEntry {
+  notification: (FirestoreNotification | undefined);
+  reference: FirebaseFirestoreTypes.DocumentReference<FirestoreNotification> | undefined;
+  indexWithOpenMenu: Animated.SharedValue<undefined | number>;
+}
+
+const AnimatedNotificationRow: SectionListRenderItem<NotificationListDataEntry | undefined, { title: string; data: (NotificationListDataEntry | undefined)[] }> = ({ item }: { item: NotificationListDataEntry | undefined }) => {
   const { width: screenWidth } = useWindowDimensions();
   const { sizes } = useTheme();
+  const refreshUserData = useRefreshUserData();
+
+  const { uid } = useAuthData();
 
   const sideMenuWidth = screenWidth * 0.2;
   const x = useSharedValue(0);
@@ -65,6 +75,7 @@ const AnimatedNotificationRow: SectionListRenderItem<FirestoreNotification | und
     x, buttonRowHeight, flung
   ]);
 
+  const notification = item?.notification;
   const loading = notification == null;
 
   return (
@@ -122,10 +133,31 @@ const AnimatedNotificationRow: SectionListRenderItem<FirestoreNotification | und
             style={animatedButtonRowStyle}
           >
             <Button
+              disabled={uid == null}
               onPress={() => {
                 Alert.alert(
                   "Delete Notification",
-                  "Are you sure you want to delete this notification?"
+                  "Are you sure you want to delete this notification?",
+                  [
+                    {
+                      style: "cancel",
+                      text: "Cancel"
+                    },
+                    {
+                      style: "destructive",
+                      text: "Delete",
+                      onPress: () => {
+                        if (uid) {
+                          firestore()
+                            .collection("users")
+                            .doc(uid)
+                            .update({ notificationReferences: firestore.FieldValue.arrayRemove(item?.reference) })
+                            .then(refreshUserData)
+                            .catch(universalCatch);
+                        }
+                      }
+                    }
+                  ]
                 );
               }}
               width="100%"
@@ -160,7 +192,7 @@ function NotificationScreen() {
   const [ isLoading, setIsLoading ] = useState(false);
   const isAnyLoading = isLoading || isUserDataLoading;
 
-  const [ notifications, setNotifications ] = useState<(FirestoreNotification | undefined)[]>([]);
+  const [ notifications, setNotifications ] = useState<(NotificationListDataEntry | undefined)[]>([]);
 
   // Clear badge count when navigating to this screen
   useEffect(() => {
@@ -174,8 +206,8 @@ function NotificationScreen() {
   }, []);
 
   useEffect(() => {
-    refresh(notificationReferences, setNotifications).catch(universalCatch);
-  }, [notificationReferences]);
+    refresh(notificationReferences, setNotifications, indexWithOpenMenu).catch(universalCatch);
+  }, [ indexWithOpenMenu, notificationReferences ]);
 
   if (!notificationPermissionsGranted) {
     return (
@@ -199,35 +231,33 @@ function NotificationScreen() {
             setIsLoading(true);
             setNotifications(notificationReferences.map(() => undefined));
             refreshUserData()
-              .then(() => refresh(notificationReferences, setNotifications))
+              .then(() => refresh(notificationReferences, setNotifications, indexWithOpenMenu))
               .then(() => setIsLoading(false))
               .catch(universalCatch);
           }}/>}
-        data={{ notifications, indexWithOpenMenu }}
-        getItem={(data: {
-          notifications: FirestoreNotification[];
-          indexWithOpenMenu: Animated.SharedValue<undefined | number>;
-        }, index) => data.notifications[index]}
-        getItemCount={(data: {
-          notifications: FirestoreNotification[];
-          indexWithOpenMenu: Animated.SharedValue<undefined | number>;
-        }) => data.notifications.length}
+        data={notifications}
         sections={
-          Object.entries(notifications.reduce<Record<string, (FirestoreNotification | undefined)[] | undefined>>((acc, notification) => {
-            if (notification == null) {
-              acc[""] = [ ...(acc[""] ?? []), notification ];
+          Object.entries(notifications.reduce<Record<string, NotificationListDataEntry[] | undefined>>((acc, data) => {
+            if (data?.notification == null) {
+              acc[""] = [
+                ...(acc[""] ?? []), {
+                  notification: undefined,
+                  reference: undefined,
+                  indexWithOpenMenu
+                }
+              ];
 
               return acc;
             } else {
-              const date = DateTime.fromISO(notification.sendTime).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
+              const date = DateTime.fromISO(data.notification.sendTime).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
 
-              acc[date] = [ ...(acc[date] ?? []), notification ];
+              acc[date] = [ ...(acc[date] ?? []), data ];
 
               return acc;
             }
           }, {})).map(([ date, notifications ]) => ({ title: date, data: notifications ?? [] }))
         }
-        keyExtractor={(notification, i) => notification == null ? String(i) : `${notification.title} : ${notification.sendTime}`}
+        keyExtractor={(data, i) => data?.notification == null ? String(i) : `${data.notification.title} : ${data.notification.sendTime}`}
         ListEmptyComponent={() => (
           <View>
             <Text textAlign="center">No Notifications</Text>
@@ -254,10 +284,10 @@ export default NotificationScreen;
 
 async function refresh(
   notificationReferences: FirebaseFirestoreTypes.DocumentReference<FirestoreNotification>[],
-  setNotifications: Dispatch<SetStateAction<(FirestoreNotification | undefined)[]>>
-) {
+  setNotifications: Dispatch<SetStateAction<(NotificationListDataEntry | undefined)[]>>,
+  indexWithOpenMenu: SharedValue<number | undefined>) {
   // Get the notifications from references
-  const promises: Promise<FirestoreNotification | undefined>[] = [];
+  const promises: Promise<NotificationListDataEntry | undefined>[] = [];
 
   let hasAlerted = false;
 
@@ -285,7 +315,11 @@ async function refresh(
 
       const pastNotificationSnapshotData = pastNotificationSnapshot.data();
       if (isFirestoreNotification(pastNotificationSnapshotData)) {
-        return pastNotificationSnapshotData;
+        return {
+          notification: pastNotificationSnapshotData,
+          indexWithOpenMenu,
+          reference: pastNotificationSnapshot.ref
+        };
       } else {
         log(`Past notification: FirebaseFirestoreTypes.DocumentSnapshot<FirestoreNotification> "${pastNotificationSnapshot.ref.path}" is not valid`, "warn");
         return undefined;
@@ -295,7 +329,16 @@ async function refresh(
 
   const resolvedPromises = await Promise.all(promises);
   const notificationsByDate = resolvedPromises
-    .filter((notification): notification is FirestoreNotification => notification !== undefined)
-    .sort((a, b) => DateTime.fromISO(b.sendTime).toMillis() - DateTime.fromISO(a.sendTime).toMillis());
+    .filter((notification): notification is NotificationListDataEntry => notification !== undefined)
+    .sort((a, b) => (
+      b.notification?.sendTime == null
+        ? 0
+        : DateTime.fromISO(b.notification.sendTime).toMillis()
+    ) -
+      (a.notification?.sendTime == null
+        ? 0
+        : DateTime.fromISO(a.notification.sendTime).toMillis()
+      )
+    );
   setNotifications(notificationsByDate);
 }
