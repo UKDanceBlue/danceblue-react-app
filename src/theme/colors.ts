@@ -38,4 +38,4 @@ export const colors: RecursivePartial<Theme["colors"]> = {
     800: "#4e2300",
     900: "#1d0900",
   },
-};
+} as const;

@@ -11,4 +11,4 @@ export const components: RecursivePartial<Theme["components"]> = {
     }
   },
   Text: { baseStyle: { fontSize: 15 } },
-};
+} as const;
