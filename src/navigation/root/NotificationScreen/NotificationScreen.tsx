@@ -4,7 +4,7 @@ import { manufacturer as deviceManufacturer } from "expo-device";
 import { openSettings } from "expo-linking";
 import { setBadgeCountAsync } from "expo-notifications";
 import { DateTime } from "luxon";
-import { Box, Button, Heading, Row, SectionList, Text, View, useTheme } from "native-base";
+import { Box, Button, Heading, Row, SectionList, Skeleton, Text, View, useTheme } from "native-base";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Alert, RefreshControl, SectionListRenderItem, useWindowDimensions } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
@@ -17,79 +17,23 @@ import { log, universalCatch } from "../../../common/logging";
 import { useDeviceData, useLoading, useUserData } from "../../../context";
 import { useRefreshUserData } from "../../../context/user";
 
-const NotificationRow = ({
-  item: notification, screenWidth, sideMenuWidth
-}: { item: FirestoreNotification; screenWidth: number; sideMenuWidth: number }) => {
+const AnimatedNotificationRow: SectionListRenderItem<FirestoreNotification | undefined, { title: string; data: (FirestoreNotification | undefined)[] }> = ({ item: notification }: { item: FirestoreNotification | undefined }) => {
+  const { width: screenWidth } = useWindowDimensions();
   const { sizes } = useTheme();
 
-  return (
-    <Row
-      width={screenWidth + sideMenuWidth}
-      collapsable={false}
-      my="2">
-      <Box
-        mx="4"
-        p="1.5"
-        background="blue.200"
-        rounded="md"
-        shadow="2"
-        width={screenWidth - (sizes[4] * 2)}
-      >
-        <View flexDirection="row" justifyContent="space-between">
-          <Heading size="sm">{notification.title}</Heading>
-          <Text>
-            {
-              DateTime.fromISO(notification.sendTime).toLocaleString(DateTime.TIME_SIMPLE)
-            }
-          </Text>
-        </View>
-        <Text>
-          <Text>{notification.body}</Text>
-        </Text>
-      </Box>
-      <Row
-        width={sideMenuWidth}
-      >
-        <Button
-          onPress={() => {
-            Alert.alert(
-              "Delete Notification",
-              "Are you sure you want to delete this notification?"
-            );
-          }}
-          width="100%"
-          height="100%"
-          variant="solid"
-          colorScheme="red"
-        >
-          Delete
-        </Button>
-      </Row>
-    </Row>
-  );
-};
-
-const AnimatedNotificationRow: SectionListRenderItem<FirestoreNotification, { title: string; data: FirestoreNotification[] }> = ({ item }: { item: FirestoreNotification }) => {
-  const { width: screenWidth } = useWindowDimensions();
   const sideMenuWidth = screenWidth * 0.2;
   const x = useSharedValue(0);
+  const flung = useSharedValue(false);
 
   // A gesture handler that allows swiping the view left only, right will just bounce
-  const gestureHandler = useAnimatedGestureHandler({
+  const panGestureHandler = useAnimatedGestureHandler({
     onStart: (_, ctx: { startX: number }) => {
       ctx.startX = x.value;
     },
     onActive: (event, ctx) => {
       const desiredTransition = ctx.startX + event.translationX;
       if (desiredTransition < 0) {
-        // Try to move the view left (showing buttons)
-        if (desiredTransition > -(sideMenuWidth + 20)) {
-          // Not yet to the end of the buttons, so move the view without restriction
-          x.value = desiredTransition;
-        } else {
-          // The view is already at the leftmost position, so bounce back
-          x.value = -(sideMenuWidth + 20) + (desiredTransition + (sideMenuWidth + 20)) * 0.1;
-        }
+        x.value = desiredTransition;
       } else {
         // Try to move the view right
         x.value = desiredTransition * 0.1;
@@ -104,18 +48,95 @@ const AnimatedNotificationRow: SectionListRenderItem<FirestoreNotification, { ti
     },
   });
 
-  const animatedStyle = useAnimatedStyle(() => {
+  const animatedViewStyle = useAnimatedStyle(() => {
     return { transform: [{ translateX: x.value }] };
   });
 
+  const buttonRowHeight = useSharedValue<number>(0);
+  const animatedButtonRowStyle = useAnimatedStyle(() => {
+    let width = sideMenuWidth;
+
+    if (x.value < -(sideMenuWidth + sizes["4"])) {
+      width -= x.value + sideMenuWidth + sizes["4"];
+    }
+
+    return { width, height: buttonRowHeight.value };
+  }, [
+    x, buttonRowHeight, flung
+  ]);
+
+  const loading = notification == null;
+
   return (
-    <PanGestureHandler onGestureEvent={gestureHandler} minDist={15}>
-      <Animated.View style={animatedStyle} >
-        <NotificationRow
-          item={item}
-          screenWidth={screenWidth}
-          sideMenuWidth={sideMenuWidth}
-        />
+    // TODO add support for flinging the menu to delete
+    <PanGestureHandler onGestureEvent={panGestureHandler} minDist={15}>
+      <Animated.View style={animatedViewStyle} >
+        <Row
+          width={screenWidth + sideMenuWidth}
+          collapsable={false}
+          my="2">
+          <Box
+            mx="4"
+            p="1.5"
+            background="blue.200"
+            rounded="md"
+            shadow="2"
+            width={screenWidth - (sizes[4] * 2)}
+            onLayout={(event) => {
+              buttonRowHeight.value = (event.nativeEvent.layout.height);
+            }}
+          >
+            <View flexDirection="row" justifyContent="space-between" mb="2">
+              <Skeleton.Text
+                isLoaded={!loading}
+                lines={1}
+                width={(screenWidth / 6) * 3}
+              >
+                <Heading
+                  size="sm"
+                  flex={5}>{notification?.title}</Heading>
+              </Skeleton.Text>
+              <Skeleton.Text
+                isLoaded={!loading}
+                lines={1}
+                width={(screenWidth / 6) * 2}
+                textAlign="end"
+              >
+                <Text flex={1}>
+                  {
+                    notification && DateTime.fromISO(notification.sendTime).toLocaleString(DateTime.TIME_SIMPLE)
+                  }
+                </Text>
+              </Skeleton.Text>
+            </View>
+            <Skeleton.Text
+              isLoaded={!loading}
+              width={screenWidth - (sizes[4] * 3)}
+            >
+              <Text>
+                <Text>{notification?.body}</Text>
+              </Text>
+            </Skeleton.Text>
+          </Box>
+          <Animated.View
+            style={animatedButtonRowStyle}
+          >
+            <Button
+              onPress={() => {
+                Alert.alert(
+                  "Delete Notification",
+                  "Are you sure you want to delete this notification?"
+                );
+              }}
+              width="100%"
+              height="100%"
+              variant="solid"
+              colorScheme="red"
+            >
+              Delete
+            </Button>
+          </Animated.View>
+        </Row>
       </Animated.View>
     </PanGestureHandler>
   );
@@ -124,7 +145,7 @@ const AnimatedNotificationRow: SectionListRenderItem<FirestoreNotification, { ti
 /**
  * Component for "Profile" screen in main navigation
  */
-const NotificationScreen = () => {
+function NotificationScreen() {
   const { getsNotifications: notificationPermissionsGranted } = useDeviceData();
 
   const indexWithOpenMenu = useSharedValue<undefined | number>(undefined);
@@ -133,13 +154,13 @@ const NotificationScreen = () => {
   const refreshUserData = useRefreshUserData();
 
   const [
-    ,, { UserDataProvider: isUserDataLoading }
+    , , { UserDataProvider: isUserDataLoading }
   ] = useLoading();
 
   const [ isLoading, setIsLoading ] = useState(false);
   const isAnyLoading = isLoading || isUserDataLoading;
 
-  const [ notifications, setNotifications ] = useState<FirestoreNotification[]>([]);
+  const [ notifications, setNotifications ] = useState<(FirestoreNotification | undefined)[]>([]);
 
   // Clear badge count when navigating to this screen
   useEffect(() => {
@@ -160,10 +181,10 @@ const NotificationScreen = () => {
     return (
       <View>
         <Text textAlign="center">
-        You have not enabled notifications for this device, enable them in the settings app
+          You have not enabled notifications for this device, enable them in the settings app
         </Text>
         {deviceManufacturer === "Apple" && (
-          <Button onPress={() => openSettings().catch(universalCatch)} >
+          <Button onPress={() => openSettings().catch(universalCatch)}>
             Open Settings
           </Button>
         )}
@@ -176,11 +197,12 @@ const NotificationScreen = () => {
           refreshing={isAnyLoading ?? false}
           onRefresh={() => {
             setIsLoading(true);
+            setNotifications(notificationReferences.map(() => undefined));
             refreshUserData()
               .then(() => refresh(notificationReferences, setNotifications))
               .then(() => setIsLoading(false))
               .catch(universalCatch);
-          }} />}
+          }}/>}
         data={{ notifications, indexWithOpenMenu }}
         getItem={(data: {
           notifications: FirestoreNotification[];
@@ -191,39 +213,48 @@ const NotificationScreen = () => {
           indexWithOpenMenu: Animated.SharedValue<undefined | number>;
         }) => data.notifications.length}
         sections={
-          Object.entries(notifications.reduce<Record<string, FirestoreNotification[] | undefined>>((acc, notification) => {
-            const date = DateTime.fromISO(notification.sendTime).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
+          Object.entries(notifications.reduce<Record<string, (FirestoreNotification | undefined)[] | undefined>>((acc, notification) => {
+            if (notification == null) {
+              acc[""] = [ ...(acc[""] ?? []), notification ];
 
-            acc[date] = [ ...(acc[date] ?? []), notification ];
+              return acc;
+            } else {
+              const date = DateTime.fromISO(notification.sendTime).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
 
-            return acc;
+              acc[date] = [ ...(acc[date] ?? []), notification ];
+
+              return acc;
+            }
           }, {})).map(([ date, notifications ]) => ({ title: date, data: notifications ?? [] }))
         }
-        keyExtractor={(notification) => `${notification.title } : ${ notification.sendTime}`}
+        keyExtractor={(notification, i) => notification == null ? String(i) : `${notification.title} : ${notification.sendTime}`}
         ListEmptyComponent={() => (
           <View>
             <Text textAlign="center">No Notifications</Text>
           </View>
         )}
         renderSectionHeader={({ section: { title } }) => (
-          <Heading
-            size="md"
-            p={2}
-          >
-            {title}
-          </Heading>
+          <View
+            backgroundColor="light.100">
+            <Heading
+              size="md"
+              p={2}
+            >
+              {title}
+            </Heading>
+          </View>
         )}
         renderItem={AnimatedNotificationRow}
       />
     );
   }
-};
+}
 
 export default NotificationScreen;
 
 async function refresh(
   notificationReferences: FirebaseFirestoreTypes.DocumentReference<FirestoreNotification>[],
-  setNotifications: Dispatch<SetStateAction<FirestoreNotification[]>>
+  setNotifications: Dispatch<SetStateAction<(FirestoreNotification | undefined)[]>>
 ) {
   // Get the notifications from references
   const promises: Promise<FirestoreNotification | undefined>[] = [];
@@ -234,7 +265,7 @@ async function refresh(
     promises.push((async () => {
       let pastNotificationSnapshot: FirebaseFirestoreTypes.DocumentSnapshot<FirestoreNotification> | undefined = undefined;
       try {
-        pastNotificationSnapshot = await pastNotificationRef.get({ source: "cache" });
+        pastNotificationSnapshot = await pastNotificationRef.get({ source: "server" });
       } catch (_) {
         try {
           pastNotificationSnapshot = await pastNotificationRef.get();
