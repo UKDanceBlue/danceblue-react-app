@@ -1,7 +1,6 @@
-import { RecursivePartial } from "@ukdanceblue/db-app-common";
 import { Theme } from "native-base";
 
-export const letterSpacings: RecursivePartial<Theme["letterSpacings"]> = {
+export const letterSpacings: Partial<Theme["letterSpacings"]> = {
   "xs": "-0.05em",
   "sm": "-0.025em",
   "md": 0,
@@ -9,7 +8,7 @@ export const letterSpacings: RecursivePartial<Theme["letterSpacings"]> = {
   "xl": "0.05em",
   "2xl": "0.1em",
 } as const;
-export const lineHeights: RecursivePartial<Theme["lineHeights"]> = {
+export const lineHeights: Partial<Theme["lineHeights"]> = {
   "2xs": "1em",
   "xs": "1.125em",
   "sm": "1.25em",
@@ -21,7 +20,7 @@ export const lineHeights: RecursivePartial<Theme["lineHeights"]> = {
   "4xl": "3em",
   "5xl": "4em",
 } as const;
-export const fontWeights: RecursivePartial<Theme["fontWeights"]> = {
+export const fontWeights: Partial<Theme["fontWeights"]> = {
   hairline: 100,
   thin: 200,
   light: 300,
@@ -34,7 +33,7 @@ export const fontWeights: RecursivePartial<Theme["fontWeights"]> = {
   extraBlack: 950,
 } as const;
 
-export const fontConfig: RecursivePartial<Theme["fontConfig"]> = {
+export const fontConfig: Partial<Theme["fontConfig"]> = {
   "bodoni-flf": {
     100: {
       normal: "bodoni-flf-roman",
@@ -119,7 +118,7 @@ export const fonts = {
   mono: undefined
 } as const;
 
-export const fontSizes: RecursivePartial<Theme["fontSizes"]> = {
+export const fontSizes: Partial<Theme["fontSizes"]> = {
   "2xs": 10,
   "xs": 12,
   "sm": 14,
@@ -135,7 +134,7 @@ export const fontSizes: RecursivePartial<Theme["fontSizes"]> = {
   "8xl": 96,
   "9xl": 128,
 } as const;
-export const opacity: RecursivePartial<Theme["opacity"]> = {
+export const opacity: Partial<Theme["opacity"]> = {
   0: 0,
   5: 0.05,
   10: 0.1,
@@ -152,7 +151,7 @@ export const opacity: RecursivePartial<Theme["opacity"]> = {
   95: 0.95,
   100: 1,
 } as const;
-export const shadows: RecursivePartial<Theme["shadows"]> = {
+export const shadows: Partial<Theme["shadows"]> = {
   0: {
     shadowColor: "#000",
     shadowOffset: {

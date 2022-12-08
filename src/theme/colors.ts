@@ -1,7 +1,7 @@
-import { RecursivePartial } from "@ukdanceblue/db-app-common";
 import { Theme } from "native-base";
+import type { IColorHues } from "native-base/src/theme/base/colors";
 
-export const colors: RecursivePartial<Theme["colors"]> = {
+export const colors: Partial<Record<keyof Theme["colors"], IColorHues>> = {
   primary: {
     50: "#e0f5ff",
     100: "#b1d8ff",
