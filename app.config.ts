@@ -27,17 +27,17 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   */
   const bundleVersion: Version = {
     major: 2,
-    minor: 0,
-    patch: 4
+    minor: 1,
+    patch: 0
   } as const;
   const nativeVersion: Version = {
     major: 2,
-    minor: 0,
-    patch: 2
+    minor: 1,
+    patch: 0
   } as const;
 
   // Both the sum of version.patch + buildsThisVersion and the sum of baseBuildCount + buildsThisVersion must increase each time a native build is submitted.
-  const baseBuildCount = 30;
+  const baseBuildCount = 31;
   const buildsThisVersion = 0;
 
   // DO NOT CHANGE ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU'RE DOING
