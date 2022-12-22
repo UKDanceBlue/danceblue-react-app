@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { existsSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, readdirSync, writeFileSync } from "fs";
 
 import { ConfigContext, ExpoConfig } from "@expo/config"; // WARNING - @expo/config types aren't versioned
 
@@ -49,6 +49,7 @@ interface Version {
   minor: number;
   patch: number;
 }
+
 type SemVer = `${Version["major"]}.${Version["minor"]}.${Version["patch"]}`;
 
 type DanceBlueQualifiedName = `org.danceblue.app${`.${string}` | ""}`;
@@ -56,8 +57,17 @@ type DanceBlueQualifiedName = `org.danceblue.app${`.${string}` | ""}`;
 export default ({ config }: ConfigContext): ExpoConfig => {
   const IS_DEV = process.env.APP_VARIANT === "development";
 
+  // App info
+  const name = IS_DEV ? "DB DEV CLIENT" : "DanceBlue";
+  const qualifiedName = IS_DEV ? "org.danceblue.app.dev" : "org.danceblue.app";
+
+  // Google Services Files
+  const androidGoogleServicesFile = IS_DEV ? "./google-services.dev.json" : "./google-services.json";
+  const iosGoogleServicesFile = IS_DEV ? "./GoogleService-Info.dev.plist" : "./GoogleService-Info.plist";
+
   console.log(`Generating manifest for ${IS_DEV ? "development" : "production"} app`);
 
+  // Check that the version is valid
   if (nativeVersion.major !== bundleVersion.major) {
     throw new Error(`Major version mismatch: ${nativeVersion.major} !== ${bundleVersion.major}. Avoid bumping the bundle version without making a new build.`);
   }
@@ -66,13 +76,16 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   } else if (nativeVersion.minor === bundleVersion.minor && nativeVersion.patch > bundleVersion.patch) {
     throw new Error(`Patch version mismatch: ${nativeVersion.patch} > ${bundleVersion.patch}. Bundle cannot be labeled as older than the runtime version.`);
   }
+
+  // Assemble the various version codes
   const bundleVersionString: SemVer = `${bundleVersion.major}.${bundleVersion.minor}.${bundleVersion.patch}`;
   const runtimeVersion: SemVer = `${nativeVersion.major}.${nativeVersion.minor}.${nativeVersion.patch}`;
   const versionCode = baseBuildCount + buildsThisVersion;
   const buildNumber: SemVer = `${nativeVersion.major}.${nativeVersion.minor}.${nativeVersion.patch + buildsThisVersion}`;
 
-  if (!IS_DEV) {
-  // Show a warning if the version is the same as the last build
+  // If we are in a version-checked environment, check the version
+  if (process.env.CHECK_VERSION === "true") {
+    // Show a warning if the version is the same as the last build
     const newVersionFile = makeVersionFile(bundleVersionString, runtimeVersion, baseBuildCount, buildsThisVersion);
     if (existsSync("./version.txt")) {
       const lastVersionFile = readFileSync("./version.txt", "utf8");
@@ -86,19 +99,23 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     writeFileSync("./version.txt", newVersionFile);
   }
 
-  // App info
-  const name = IS_DEV ? "DB DEV CLIENT" : "DanceBlue";
-  const qualifiedName = IS_DEV ? "org.danceblue.app.dev" : "org.danceblue.app";
-
-  const androidGoogleServicesFile = IS_DEV ? "./google-services.dev.json" : "./google-services.json";
   // Check that the Google services file exists
-  if (!existsSync(androidGoogleServicesFile)) {
-    throw new Error(`GoogleService-Info file not found at ${androidGoogleServicesFile}`);
+  const onNotExist = process.env.EAS_BUILD_RUNNER === "eas-build" ? console.warn : (err: string) => {
+    throw new Error(err);
+  };
+  if (process.env.EAS_BUILD && !existsSync(androidGoogleServicesFile)) {
+    console.error("Detected files:", readdirSync(".").join(" --- "));
+    onNotExist(`GoogleService-Info file not found at ${androidGoogleServicesFile}`);
+  } else {
+    console.log("Android Google Services file exists");
   }
-  const iosGoogleServicesFile = IS_DEV ? "./GoogleService-Info.dev.plist" : "./GoogleService-Info.plist";
+
   // Check that the Google services file exists
   if (!existsSync(iosGoogleServicesFile)) {
-    throw new Error(`GoogleService-Info file not found at ${iosGoogleServicesFile}`);
+    console.error("Detected files:", readdirSync(".").join(" --- "));
+    onNotExist(`GoogleService-Info file not found at ${iosGoogleServicesFile}`);
+  } else {
+    console.log("iOS Google Services file exists");
   }
 
   return makeExpoConfig({
@@ -115,7 +132,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ios: iosGoogleServicesFile
     }
   });
-};
+}
+;
 
 /**
  * This helper function is used to safely build an ExpoConfig object from the given properties.
@@ -126,7 +144,15 @@ export default ({ config }: ConfigContext): ExpoConfig => {
  */
 function makeExpoConfig(
   {
-    baseConfig, name, slug, version, androidBuildNumber, iosBuildString, runtimeVersion, qualifiedName, googleServicesFiles
+    baseConfig,
+    name,
+    slug,
+    version,
+    androidBuildNumber,
+    iosBuildString,
+    runtimeVersion,
+    qualifiedName,
+    googleServicesFiles
   }: {
     baseConfig: Partial<ExpoConfig>;
     name: "DB DEV CLIENT" | "DanceBlue";

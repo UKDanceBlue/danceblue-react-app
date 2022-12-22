@@ -2,8 +2,6 @@ import { isDevelopmentBuild } from "expo-dev-client";
 import { setNotificationHandler } from "expo-notifications";
 import { LogBox } from "react-native";
 
-
-
 LogBox.ignoreLogs(["'SplashScreen.show' has already been called for given view controller."]);
 
 if (isDevelopmentBuild()) {
