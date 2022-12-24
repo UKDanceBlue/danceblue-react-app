@@ -108,13 +108,18 @@ export const AnimatedNotificationRow: SectionListRenderItem<NotificationListData
                       style: "destructive",
                       text: "Delete",
                       onPress: () => {
-                        if (uid) {
-                          fbFirestore
-                            .collection("users")
-                            .doc(uid)
-                            .update({ notificationReferences: firestore.FieldValue.arrayRemove(item?.reference) })
-                            .then(refreshUserData)
-                            .catch(universalCatch);
+                        if (item != null) {
+                          if (uid) {
+                            fbFirestore
+                              .collection("users")
+                              .doc(uid)
+                              .update({ notificationReferences: firestore.FieldValue.arrayRemove(item.reference) })
+                              .then(refreshUserData)
+                              .catch(universalCatch);
+                            if (item.reference?.parent.isEqual(fbFirestore.collection(`users/${uid}/past-notifications`))) {
+                              item.reference.delete().catch(universalCatch);
+                            }
+                          }
                         }
                       }
                     }
