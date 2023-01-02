@@ -15,6 +15,7 @@ import { useRefreshUserData } from "../../../context/user";
 
 import { NotificationRow } from "./NotificationRow";
 import { NotificationSectionHeader } from "./NotificationSectionHeader";
+import { useFallBackNotificationLoader } from "./fallbackNotificationLoader";
 import { refreshNotificationScreen } from "./refresh";
 
 export interface NotificationListDataEntry {
@@ -41,7 +42,9 @@ function NotificationScreen() {
   const [ isLoading, setIsLoading ] = useState(false);
   const isAnyLoading = isLoading || isUserDataLoading;
 
-  const [ notifications, setNotifications ] = useState<(NotificationListDataEntry | undefined)[]>([]);
+  const [ fallbackNotifications, refreshFallbackNotifications ] = useFallBackNotificationLoader(notificationReferences.length === 0, indexWithOpenMenu);
+  const [ userNotifications, setNotifications ] = useState<(NotificationListDataEntry | undefined)[]>([]);
+  const notifications = userNotifications.concat(fallbackNotifications?? []);
 
   // Clear badge count when navigating to this screen
   useEffect(() => {
@@ -80,7 +83,11 @@ function NotificationScreen() {
             setIsLoading(true);
             setNotifications(notificationReferences.map(() => undefined));
             refreshUserData()
-              .then(() => refreshNotificationScreen(notificationReferences, setNotifications, indexWithOpenMenu))
+              .then(() => Promise.all([
+                refreshFallbackNotifications(),
+                refreshNotificationScreen(notificationReferences, setNotifications, indexWithOpenMenu)
+              ])
+              )
               .then(() => setIsLoading(false))
               .catch(universalCatch);
           }}/>}
