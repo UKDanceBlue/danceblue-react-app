@@ -44,7 +44,7 @@ export const useReactNavigationTheme = (): ReactNavigationTheme => {
       return {
         dark: true,
         colors: {
-          primary: theme.colors.primary[500],
+          primary: theme.colors.primary[300],
           secondary: theme.colors.secondary[400],
           tertiary: theme.colors.tertiary[500],
           background: theme.colors.gray[700],
