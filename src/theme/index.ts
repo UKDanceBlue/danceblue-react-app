@@ -45,6 +45,8 @@ export const useReactNavigationTheme = (): ReactNavigationTheme => {
         dark: true,
         colors: {
           primary: theme.colors.primary[500],
+          secondary: theme.colors.secondary[400],
+          tertiary: theme.colors.tertiary[500],
           background: theme.colors.gray[700],
           card: theme.colors.gray[800],
           text: theme.colors.lightText,
@@ -56,7 +58,9 @@ export const useReactNavigationTheme = (): ReactNavigationTheme => {
       return {
         dark: false,
         colors: {
-          primary: theme.colors.primary[300],
+          primary: theme.colors.primary[600],
+          secondary: theme.colors.secondary[400],
+          tertiary: theme.colors.tertiary[500],
           background: theme.colors.light["50"],
           card: theme.colors.light[100],
           text: theme.colors.darkText,
