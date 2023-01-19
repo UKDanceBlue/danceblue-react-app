@@ -37,6 +37,9 @@ declare module "native-base" {
 export const useReactNavigationTheme = (): ReactNavigationTheme => {
   const { colorMode } = useColorMode();
   const isDark = colorMode === "dark";
+  
+  const { colors: { primary } } = useTheme();
+
   const theme = useTheme();
 
   return useMemo(() => {
