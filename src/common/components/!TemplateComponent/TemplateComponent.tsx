@@ -16,7 +16,7 @@ const TemplateComponent = ({ param }: { param:string }) => {
 
   return (
     <View>
-      <Text bg={primary[700]} color="#fff">hi {param} {"<3"}</Text>
+      <Text bg={primary[700]} color="#fff" fontFamily={body}>hi {param} {"<3"}</Text>
     </View>
   );
 };
