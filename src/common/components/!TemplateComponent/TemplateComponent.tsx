@@ -1,4 +1,4 @@
-import { Text, useTheme } from "native-base";
+import { Text, View, useTheme } from "native-base";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
@@ -15,7 +15,10 @@ const TemplateComponent = ({ param }: { param:string }) => {
   } = useThemeFonts();
 
   return (
-    <Text bg={primary[700]} color="#fff">hi {param} {"<3"}</Text>
+    <View>
+      <Text bg={primary[700]} color="#fff">hi {param} {"<3"}</Text>
+    </View>
   );
 };
+
 export default TemplateComponent;
