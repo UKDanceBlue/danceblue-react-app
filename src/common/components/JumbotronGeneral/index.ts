@@ -1,3 +1,3 @@
-import TemplateComponent from "./TemplateComponent";
+import JumbotronGeneral from "./JumbotronGeneral";
 
-export default TemplateComponent;
+export default JumbotronGeneral;
