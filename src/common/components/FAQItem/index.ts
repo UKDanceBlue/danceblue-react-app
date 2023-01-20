@@ -1,3 +1,3 @@
-import TemplateComponent from "./TemplateComponent";
+import FAQItem from "./FAQItem";
 
-export default TemplateComponent;
+export default FAQItem;
