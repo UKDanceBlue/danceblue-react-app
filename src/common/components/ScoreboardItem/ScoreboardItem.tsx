@@ -71,7 +71,11 @@ const ScoreboardItem = ({
                 borderRadius={50}
                 size={20}/>
             </Container>
-            <Container justifyContent="flex-start" width={1000} marginLeft={1}>
+            <Container
+              justifyContent="flex-start"
+              width={1000}
+              marginLeft={1}
+              alignItems="stretch">
               <Text color={primary[600]} fontSize={themes.fontSizes.lg} bold>{name}</Text>
             </Container>
           </Flex>

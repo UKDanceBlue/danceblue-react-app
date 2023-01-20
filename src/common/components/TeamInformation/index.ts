@@ -1,3 +1,3 @@
-import TemplateComponent from "./TemplateComponent";
+import TeamInformation from "./TeamInformation";
 
-export default TemplateComponent;
+export default TeamInformation;
