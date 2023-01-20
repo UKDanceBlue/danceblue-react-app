@@ -1,8 +1,12 @@
-import { Text, View, useTheme } from "native-base";
+import * as WebBrowser from "expo-web-browser";
+import { useTheme } from "native-base";
+import { Icon, ListItem } from "react-native-elements";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
-const TemplateComponent = ({ param }: { param:string }) => {
+const AboutItem = ({
+  title, icon, type, link
+}: { title:string; icon:string; type:string; link:string }) => {
   const themes = useTheme();
   const {
     primary, // Standard is 600, light background is 100
@@ -15,10 +19,18 @@ const TemplateComponent = ({ param }: { param:string }) => {
   } = useThemeFonts();
 
   return (
-    <View>
-      <Text bg={primary[700]} color="#fff" fontFamily={body}>hi {param} {"<3"}</Text>
-    </View>
+    <ListItem
+      style={{ borderColor: primary[600] }}
+      containerStyle={{ backgroundColor: primary[100], borderColor: primary[600] }}
+      onPress={link ? () => WebBrowser.openBrowserAsync(link) : undefined}
+      bottomDivider>
+      <Icon name={icon} type={type} color={primary[600]}/>
+      <ListItem.Content>
+        <ListItem.Title style={{ color: primary[600], fontWeight: "bold" }}>{title}</ListItem.Title>
+      </ListItem.Content>
+      <ListItem.Chevron color={primary[600]}/>
+    </ListItem>
   );
 };
 
-export default TemplateComponent;
+export default AboutItem;

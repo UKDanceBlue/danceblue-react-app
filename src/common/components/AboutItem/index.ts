@@ -1,3 +1,3 @@
-import TemplateComponent from "./AboutItem";
+import AboutItem from "./AboutItem";
 
-export default TemplateComponent;
+export default AboutItem;
