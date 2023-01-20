@@ -1,3 +1,3 @@
-import TemplateComponent from "./TemplateComponent";
+import NotificationItem from "./NotificationItem";
 
-export default TemplateComponent;
+export default NotificationItem;
