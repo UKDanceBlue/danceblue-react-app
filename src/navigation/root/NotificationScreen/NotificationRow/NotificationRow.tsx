@@ -69,9 +69,14 @@ export const AnimatedNotificationRow: SectionListRenderItem<NotificationListData
   const notification = item?.notification;
   const loading = notification == null;
 
+  const {
+    isLoggedIn, isAnonymous
+  } = useAuthData();
+
+  const canDelete = !isAnonymous && isLoggedIn;
+
   return (
-    // TODO add support for flinging the menu to delete
-    <PanGestureHandler onGestureEvent={panGestureHandler} minDist={15}>
+    <PanGestureHandler onGestureEvent={canDelete ? panGestureHandler : () => undefined} minDist={15} enabled={canDelete}>
       <Animated.View style={animatedViewStyle}>
         <Row
           width={screenWidth + sideMenuWidth}
@@ -94,7 +99,7 @@ export const AnimatedNotificationRow: SectionListRenderItem<NotificationListData
             style={animatedButtonRowStyle}
           >
             <Button
-              disabled={uid == null}
+              disabled={!canDelete}
               onPress={() => {
                 Alert.alert(
                   "Delete Notification",
