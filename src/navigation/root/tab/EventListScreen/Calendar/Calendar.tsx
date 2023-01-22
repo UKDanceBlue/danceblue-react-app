@@ -200,10 +200,7 @@ const Calendar = (props: CalendarProps) => {
   const shouldDisplayIndicator = useMemo(() => {
     const lastMonthOfDay = toMarkingFormat(currentMonth.clone().addMonths(1, true).setDate(1)
       .addDays(-1));
-    if (displayLoadingIndicator && !markedDates?.[lastMonthOfDay]) {
-      return true;
-    }
-    return false;
+    return !!(displayLoadingIndicator && !markedDates?.[lastMonthOfDay]);
   }, [
     currentMonth, displayLoadingIndicator, markedDates
   ]);

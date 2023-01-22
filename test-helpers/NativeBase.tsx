@@ -10,6 +10,7 @@ const inset = {
 /**
  * Editing this function will require an update to test snapshots.
  * @param element The element to test.
+ * @param nativeBaseProps
  * @returns The output of *render()*, wrapped with the NativeBaseProvider.
  */
 export const renderWithNativeBase = (element: ReactElement, nativeBaseProps: NativeBaseProviderProps = {}) => {
