@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Expo" type="ReactNative" factoryName="React Native">
+    <node-interpreter value="project" />
+    <react-native value="$PROJECT_DIR$/node_modules/react-native" />
+    <platform value="ANDROID" />
+    <envs />
+    <only-packager />
+    <build-and-launch value="false" />
+    <hermes-engine value="true" />
+    <browser value="cc615d42-432c-4bb6-954a-1b7e5d623a66" />
+    <method v="2">
+      <option name="ReactNativePackager" enabled="true" />
+    </method>
+  </configuration>
+</component>

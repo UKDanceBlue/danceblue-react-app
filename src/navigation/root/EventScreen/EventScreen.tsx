@@ -1,10 +1,24 @@
 import { useRoute } from "@react-navigation/native";
 import { DownloadableImage } from "@ukdanceblue/db-app-common";
-import { PermissionStatus, createEventAsync, getCalendarPermissionsAsync, requestCalendarPermissionsAsync } from "expo-calendar";
+import { PermissionStatus,
+  createEventAsync,
+  getCalendarPermissionsAsync,
+  requestCalendarPermissionsAsync } from "expo-calendar";
 import { setStringAsync } from "expo-clipboard";
 import { openBrowserAsync } from "expo-web-browser";
 import { DateTime } from "luxon";
-import { Badge, Box, Button, Center, Heading, Image, Pressable, ScrollView, Text, VStack, ZStack, useTheme } from "native-base";
+import { Badge,
+  Box,
+  Button,
+  Center,
+  Heading,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  VStack,
+  ZStack,
+  useTheme } from "native-base";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, useWindowDimensions } from "react-native";
 import openMaps from "react-native-open-maps";
@@ -115,7 +129,7 @@ const EventScreen = () => {
                         <Text color="white">{index+1}/{images.length}</Text>
                       </Badge>}
                         <Image
-                          source={{ uri: pageImage.url, width: pageImage.width, height: pageImage.width }}
+                          source={{ uri: pageImage.url, width: pageImage.width, height: pageImage.height }}
                           alt={name}
                           style={{ width: "100%", height: "100%" }}
                           resizeMode="contain"

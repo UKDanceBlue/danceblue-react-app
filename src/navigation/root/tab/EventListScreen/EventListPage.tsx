@@ -1,6 +1,6 @@
 import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 import { DateTime } from "luxon";
-import { Column, Divider, Text } from "native-base";
+import { Column, Divider, Spinner, Text } from "native-base";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { DateData, MarkedDates } from "react-native-calendars/src/types";
@@ -12,7 +12,7 @@ import { EventListRenderItem } from "./EventListRenderItem";
 import { dateDataToLuxonDateTime, luxonDateTimeToDateString, luxonDateTimeToMonthString } from "./eventListUtils";
 
 export const EventListPage = ({
-  month, eventsByMonth, marked, refresh, refreshing, tryToNavigate
+  month, eventsByMonth, marked, refresh, refreshing, tryToNavigate, disabled = false
 }: {
   month: DateTime;
   eventsByMonth: Partial<Record<string, FirestoreEvent[]>>;
@@ -20,6 +20,7 @@ export const EventListPage = ({
   refresh: () => Promise<void>;
   refreshing: boolean;
   tryToNavigate: (event: FirestoreEvent) => void;
+  disabled?: boolean;
 }) => {
   const monthString = luxonDateTimeToMonthString(month);
 
@@ -103,12 +104,17 @@ export const EventListPage = ({
         onDayPress={setSelectedDay}
         style={{ width: "100%" }}
         disableAllTouchEventsForDisabledDays
+        disabledByDefault={disabled}
       />
       <Divider height={"1"} backgroundColor="gray.400" />
       <FlatList
         ref={(list) => eventsListRef.current = list}
         data={ eventsByMonth[monthString] ?? [] }
-        ListEmptyComponent={<Text style={{ textAlign: "center", marginTop: 20 }}>No events this month</Text>}
+        ListEmptyComponent={
+          refreshing
+            ? (<Spinner size="lg" mt={20} />)
+            : (<Text style={{ textAlign: "center", marginTop: 20 }}>No events this month</Text>)
+        }
         initialScrollIndex={selectedDay?.dateString ? (dayIndexes.current[selectedDay.dateString] ?? 0) : 0}
         extraData={selectedDay}
         style = {{ backgroundColor: "white", width: "100%" }}

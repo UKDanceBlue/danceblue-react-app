@@ -7,7 +7,7 @@ export interface FirestoreTeam {
   memberAccounts: Record<string, string | null>;
   fundraisingTotal?: number;
   totalPoints?: number;
-  networkForGoodId?: string;
+  networkForGoodId?: number;
   individualTotals?: Record<string, number>;
 }
 
@@ -47,13 +47,9 @@ export function isFirestoreTeam(
     return false;
   }
 
-  if ((data as Partial<FirestoreTeam>).networkForGoodId != null && typeof (data as Partial<FirestoreTeam>).networkForGoodId !== "string") {
+  if ((data as Partial<FirestoreTeam>).networkForGoodId != null && typeof (data as Partial<FirestoreTeam>).networkForGoodId !== "number" && typeof ((data as Partial<FirestoreTeam>).networkForGoodId as string | number) !== "string") {
     return false;
   }
 
-  if (typeof (data as Partial<FirestoreTeam>).individualTotals !== "object" || (data as Partial<FirestoreTeam>).individualTotals == null) {
-    return false;
-  }
-
-  return true;
+  return !(typeof (data as Partial<FirestoreTeam>).individualTotals !== "object" || (data as Partial<FirestoreTeam>).individualTotals == null);
 }

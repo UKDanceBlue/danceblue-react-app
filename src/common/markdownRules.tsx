@@ -392,9 +392,7 @@ export const rules: RenderRules = {
     if (siblings.length < 1) {
       // Should never happen, but just in case.
       // This would only occur if the node had no siblings including itself (not logical)
-      return (
-        null
-      );
+      return null;
     } else {
       const styleForRow = siblings[siblings.length-1]?.index === node.index
         ? { ...styles._VIEW_SAFE_tr, borderBottomWidth: undefined, borderColor: undefined }
