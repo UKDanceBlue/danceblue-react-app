@@ -1,5 +1,5 @@
-import { Text, View, useTheme } from "native-base";
-import { Icon } from "react-native-elements";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { Icon, Text, View, useTheme } from "native-base";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
@@ -16,12 +16,14 @@ const JumbotronTeam = ({ team }: { team:string }) => {
   } = useThemeFonts();
 
   return (
-    <View margin={3} backgroundColor={primary[100]} padding={4}>
-      <Icon
-        name="users"
-        type="font-awesome"
-        color={secondary[100]}
-        size={36}/>
+    <View
+      margin={3}
+      backgroundColor={primary[100]}
+      padding={4}
+      alignItems="center"
+      display="flex"
+      justifyContent="space-evenly">
+      <FontAwesome5 name="users" size={40} color={secondary[100]}/>
       <Text
         textAlign="center"
         fontSize="2xl"

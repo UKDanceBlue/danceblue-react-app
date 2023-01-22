@@ -1,11 +1,10 @@
-import { Text, View, useTheme } from "native-base";
-import { Icon } from "react-native-elements";
+import { Icon, Text, View, useTheme } from "native-base";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
 const JumbotronGeneral = ({
-  icon, iconColor, type, title, text, subtitle
-}: { icon:string; iconColor:string; type:string; title:string; text:string; subtitle:string }) => {
+  icon, iconColor, iconType, title, text, subtitle
+}: { icon:string; iconColor:string; iconType:unknown; title:string; text:string; subtitle:string }) => {
   const themes = useTheme();
   const {
     primary, // Standard is 600, light background is 100
@@ -18,12 +17,19 @@ const JumbotronGeneral = ({
   } = useThemeFonts();
 
   return (
-    <View margin={3} backgroundColor={primary[100]} padding={4}>
-      <Icon
+    <View
+      margin={3}
+      backgroundColor={primary[100]}
+      padding={4}
+      paddingTop={6}
+      alignItems="center"
+      display="flex"
+      justifyContent="space-evenly">
+      {icon && (<Icon
+        as={iconType}
         name={icon}
-        type={type}
         color={iconColor}
-        size={36}/>
+        size={36}/>)}
       <Text
         textAlign="center"
         fontSize="2xl"
