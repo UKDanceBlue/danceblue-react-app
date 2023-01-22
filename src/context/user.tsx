@@ -1,8 +1,8 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+import { FirestoreNotification } from "@ukdanceblue/db-app-common";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 import { log, universalCatch } from "../common/logging";
-import { FirestoreNotification } from "../types/FirestoreNotification";
 import { FirestoreTeam, isFirestoreTeam } from "../types/FirestoreTeam";
 import { isFirestoreUser } from "../types/FirestoreUser";
 
