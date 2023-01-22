@@ -1,7 +1,7 @@
 import NetInfo, { NetInfoState, NetInfoStateType, NetInfoUnknownState } from "@react-native-community/netinfo";
 import firebaseStorage from "@react-native-firebase/storage";
 import { isEqual } from "lodash";
-import { useColorModeValue as useColorModeValueNativeBase } from "native-base";
+import { useColorModeValue as useColorModeValueNativeBase, useTheme } from "native-base";
 import { DependencyList, useDebugValue, useEffect, useRef, useState } from "react";
 
 export function useFirebaseStorageUrl(googleUri?: string) {
@@ -76,3 +76,11 @@ export function useCurrentDate(refreshInterval?: number) {
 }
 
 export const useColorModeValue = <A, B>(lightValue: A, darkValue: B): A | B => useColorModeValueNativeBase(lightValue, darkValue) as A | B;
+
+export const useThemeColors = () => {
+  return useTheme().colors;
+};
+
+export const useThemeFonts = () => {
+  return useTheme().fonts;
+};
