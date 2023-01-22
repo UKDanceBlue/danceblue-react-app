@@ -39,8 +39,8 @@ const NotificationItem = ({
         size={35}
         style={{ padding: 5, marginLeft: 5 }}/>
       <ListItem.Content>
-        <ListItem.Title style={{ color: primary[600], fontWeight: "bold", fontFamily: "opensans-condensed-bold", fontSize: 14 }}>{title}</ListItem.Title>
-        <ListItem.Subtitle style={{ color: primary[600], fontFamily: "opensans-condensed-light", fontSize: 14 }}>{subtitle}</ListItem.Subtitle>
+        <ListItem.Title style={{ color: primary[600], fontWeight: "bold", fontFamily: body, fontSize: 14 }}>{title}</ListItem.Title>
+        <ListItem.Subtitle style={{ color: primary[600], fontFamily: mono, fontSize: 14 }}>{subtitle}</ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
   );

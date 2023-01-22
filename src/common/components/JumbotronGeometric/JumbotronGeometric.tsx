@@ -14,7 +14,7 @@ const JumbotronGeometric = ({
     success, warning, error, danger, blue
   } = useThemeColors();
   const {
-    heading, body, mono
+    headingBold, heading, body, mono
   } = useThemeFonts();
   
   function validateBGColor() {
@@ -65,10 +65,10 @@ const JumbotronGeometric = ({
         containerStyle: { paddingBottom: 7 }
       }}
       title={title}
-      titleStyle={{ fontFamily: "bodoni-flf-bold", color: fontColor("title"), fontSize: 30, marginBottom: 3 }}
+      titleStyle={{ fontFamily: headingBold, color: fontColor("title"), fontSize: 30, marginBottom: 3 }}
       titleNumberOfLines={1}
       caption={text}
-      captionStyle={{ fontFamily: "opensans-condensed-light", color: fontColor("caption"), fontSize: 18 }}
+      captionStyle={{ fontFamily: mono, color: fontColor("caption"), fontSize: 18 }}
       height={200}
       overlayContainerStyle={{ padding: 0 }}
       featured/>

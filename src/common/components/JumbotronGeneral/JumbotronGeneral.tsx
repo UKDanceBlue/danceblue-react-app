@@ -14,7 +14,7 @@ const JumbotronGeneral = ({
     success, warning, error, danger, blue
   } = useThemeColors();
   const {
-    heading, body, mono
+    headingBold, heading, body, mono
   } = useThemeFonts();
 
   return (
@@ -28,7 +28,8 @@ const JumbotronGeneral = ({
         textAlign="center"
         fontSize="2xl"
         color={primary[600]}
-        fontFamily="bodoni-flf-bold">{title}</Text>
+        fontFamily={headingBold}
+        bold>{title}</Text>
       <Text
         textAlign="center"
         fontSize="lg"
@@ -38,7 +39,7 @@ const JumbotronGeneral = ({
         textAlign="center"
         fontSize="md"
         color={primary[600]}
-        font={mono}>{subtitle}</Text>
+        fontFamily={mono}>{subtitle}</Text>
     </View>
   );
 };

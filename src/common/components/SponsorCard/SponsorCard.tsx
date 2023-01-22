@@ -47,8 +47,8 @@ const SponsorCard = ({
           bold
           style={styles.text}>{descrption}</Text>
         <Text
-          font={mono}
-          fontWeight={themes.fontWeights.light}
+          fontFamily={mono}
+          fontSize={themes.fontSizes.md}
           color={primary[600]}
           textAlign="center"
           style={styles.text}>Click to learn more</Text>

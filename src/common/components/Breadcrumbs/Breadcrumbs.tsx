@@ -15,7 +15,7 @@ const Breadcrumbs = ({
   
   function ReturnElement() {
     if (includeBreadcrumbs) {
-      return <View><Text marginLeft={"3"}>{`< ${previousPage}`}</Text></View>;
+      return <View><Text fontSize={themes.fontSizes.lg} fontFamily={mono} marginLeft={"3"}>{`< ${previousPage}`}</Text></View>;
     }
   }
 
@@ -25,7 +25,8 @@ const Breadcrumbs = ({
         bg={primary[700]}
         color={secondary[400]}
         textAlign="center"
-        fontSize={themes.fontSizes.md}
+        fontSize={themes.fontSizes.lg}
+        fontFamily={body}
         bold>{pageName}</Text>
 
       {ReturnElement()}

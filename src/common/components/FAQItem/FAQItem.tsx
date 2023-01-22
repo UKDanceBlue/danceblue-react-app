@@ -19,10 +19,10 @@ const FAQItem = ({
 
   return (
     <Card containerStyle={{ padding: 0, shadowOpacity: 0 }}>
-      <Card.Title style={{ color: primary[600], backgroundColor: primary[100], paddingTop: 5, paddingBottom: 5, marginBottom: 0 }}>{question}</Card.Title>
+      <Card.Title style={{ fontSize: themes.fontSizes.xl, color: primary[600], backgroundColor: primary[100], paddingTop: 5, paddingBottom: 5, marginBottom: 0 }}>{question}</Card.Title>
       <Card.Divider/>
       <View margin={3} marginTop={0}>
-        <Text>{answer}</Text>
+        <Text fontFamily={body} color={primary[600]}>{answer}</Text>
       </View>
     </Card>
   );

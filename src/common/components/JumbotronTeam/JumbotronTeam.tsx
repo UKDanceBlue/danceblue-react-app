@@ -12,7 +12,7 @@ const JumbotronTeam = ({ team }: { team:string }) => {
     success, warning, error, danger, blue
   } = useThemeColors();
   const {
-    heading, body, mono
+    headingBold, heading, body, mono
   } = useThemeFonts();
 
   return (
@@ -26,7 +26,7 @@ const JumbotronTeam = ({ team }: { team:string }) => {
         textAlign="center"
         fontSize="2xl"
         color={primary[600]}
-        fontFamily="bodoni-flf-bold">{team}</Text>
+        fontFamily={headingBold}>{team}</Text>
       <Text
         textAlign="center"
         fontSize="lg"
@@ -36,7 +36,7 @@ const JumbotronTeam = ({ team }: { team:string }) => {
         textAlign="center"
         fontSize="md"
         color={primary[600]}
-        font={mono}>Click here to go to your Team Dashboard!</Text>
+        fontFamily={mono}>Click here to go to your Team Dashboard!</Text>
     </View>
   );
 };

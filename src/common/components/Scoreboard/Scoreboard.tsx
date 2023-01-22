@@ -19,7 +19,7 @@ const Scoreboard = ({ title }: { title:string }) => {
       <Text
         textAlign="center"
         color={secondary[400]}
-        fontFamily="bodoni-flf-bold"
+        fontFamily={heading}
         fontSize={themes.fontSizes["4xl"]}
         style={{
           textShadowColor: secondary[300],

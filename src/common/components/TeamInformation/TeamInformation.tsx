@@ -56,19 +56,19 @@ const TeamInformation = ({
           <Flex direction="row">
             <Text color={primary[600]}>
               <Text font={body} fontSize={themes.fontSizes.lg} bold>Name: </Text>
-              <Text fontFamily={"opensans-condensed-light"} fontSize={themes.fontSizes.lg}>{name}</Text>
+              <Text fontFamily={mono} fontSize={themes.fontSizes.lg}>{name}</Text>
             </Text>
           </Flex>
           <Flex direction="row">
             <Text color={primary[600]}>
               <Text font={body} fontSize={themes.fontSizes.lg} bold>Captain(s): </Text>
-              <Text fontFamily={"opensans-condensed-light"} fontSize={themes.fontSizes.lg}>{captainString}</Text>
+              <Text fontFamily={mono} fontSize={themes.fontSizes.lg}>{captainString}</Text>
             </Text>
           </Flex>
           <Flex direction="row">
             <Text color={primary[600]}>
               <Text font={body} fontSize={themes.fontSizes.lg} bold>Members: </Text>
-              <Text fontFamily={"opensans-condensed-light"} fontSize={themes.fontSizes.lg}>{memberString}</Text>
+              <Text fontFamily={mono} fontSize={themes.fontSizes.lg}>{memberString}</Text>
             </Text>
           </Flex>
         </Container>

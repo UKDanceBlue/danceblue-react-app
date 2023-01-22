@@ -26,7 +26,7 @@ const AboutItem = ({
       bottomDivider>
       <Icon name={icon} type={type} color={primary[600]}/>
       <ListItem.Content>
-        <ListItem.Title style={{ color: primary[600], fontWeight: "bold" }}>{title}</ListItem.Title>
+        <ListItem.Title style={{ color: primary[600], fontWeight: "bold", fontFamily: body }}>{title}</ListItem.Title>
       </ListItem.Content>
       <ListItem.Chevron color={primary[600]}/>
     </ListItem>

@@ -113,6 +113,7 @@ export const fontConfig: Partial<Theme["fontConfig"]> = {
 } as const;
 
 export const fonts = {
+  headingBold: "bodoni-flf-bold",
   heading: "bodoni-flf-roman",
   body: "opensans-condensed-bold",
   mono: "opensans-condensed-light"
