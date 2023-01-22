@@ -1,11 +1,11 @@
-import { Text, View, useTheme } from "native-base";
-import { Tile } from "react-native-elements";
+import { Column, Icon, Text, View, useTheme } from "native-base";
+import { ImageBackground, ImageSourcePropType } from "react-native";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
 const JumbotronGeometric = ({
-  icon, iconType, title, text, bgColor
-}: { icon:string; iconType:string; title:string; text:string; bgColor:string }) => {
+  icon, iconType, title, text, bgColor="blue"
+}: { icon:string; iconType:unknown; title:string; text:string; bgColor:string }) => {
   const themes = useTheme();
   const {
     primary, // Standard is 600, light background is 100
@@ -19,10 +19,10 @@ const JumbotronGeometric = ({
   
   function validateBGColor() {
     switch (bgColor) {
-    case "white": return "https://i.gyazo.com/2782482b06aef9279fd902c46e4c6614.png";
-    case "blue": return "https://i.gyazo.com/ad6e2f81beae7862b3268894b6fa31c8.png";
-    case "lightblue": return "https://i.gyazo.com/c2452245848a13292a98e6f67e3fe4e8.png";
-    default: return "https://i.gyazo.com/ad6e2f81beae7862b3268894b6fa31c8.png";
+    case "white": return require("../../../../assets/bg-geometric/white.png") as ImageSourcePropType;
+    case "blue": return require("../../../../assets/bg-geometric/blue.png") as ImageSourcePropType;
+    case "lightblue": return require("../../../../assets/bg-geometric/lightblue.png") as ImageSourcePropType;
+    default: return require("../../../../assets/bg-geometric/blue.png") as ImageSourcePropType;
     }
   }
   
@@ -55,23 +55,17 @@ const JumbotronGeometric = ({
   }
 
   return (
-    <Tile
-      imageSrc={{ uri: validateBGColor() }}
-      icon={{
-        name: icon,
-        type: iconType,
-        size: 34,
-        color: iconColor(),
-        containerStyle: { paddingBottom: 7 }
-      }}
-      title={title}
-      titleStyle={{ fontFamily: headingBold, color: fontColor("title"), fontSize: 30, marginBottom: 3 }}
-      titleNumberOfLines={1}
-      caption={text}
-      captionStyle={{ fontFamily: mono, color: fontColor("caption"), fontSize: 18 }}
-      height={200}
-      overlayContainerStyle={{ padding: 0 }}
-      featured/>
+    <ImageBackground source={validateBGColor()} resizeMode="cover">
+      <Column
+        display="flex"
+        height={200}
+        justifyContent="center"
+        alignItems="center">
+        {icon && (<Icon as={iconType} name={icon} color={iconColor()}/>)}
+        <Text style={{ fontFamily: headingBold, color: fontColor("title"), fontSize: 30, marginBottom: 3 }}>{title}</Text>
+        <Text style={{ fontFamily: mono, color: fontColor("caption"), fontSize: 18 }}>{text}</Text>
+      </Column>
+    </ImageBackground>
   );
 };
 
