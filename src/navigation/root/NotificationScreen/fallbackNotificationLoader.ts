@@ -1,5 +1,6 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { FirestoreNotification } from "@ukdanceblue/db-app-common";
+// import { getInstallationTimeAsync } from "expo-application";
 import { useEffect, useMemo, useState } from "react";
 import { SharedValue } from "react-native-reanimated";
 
@@ -14,12 +15,12 @@ export const useFallBackNotificationLoader = (enable: boolean, indexWithOpenMenu
 
   const getNotifications = useMemo(async () => {
     if (enable) {
-      // const installationTime = await getInstallationTimeAsync(); TODO - use this to filter out notifications that are too old once the cloud function is updated
+      // const installationTime = await getInstallationTimeAsync(); // TODO - use this to filter out notifications that are too old once the cloud function is updated
       return (
         (
         await fbFirestore
           .collection("past-notifications")
-          // .orderBy("sendTime", "desc")
+          .orderBy("sendTime", "desc")
           // .where("sendTime", ">=", installationTime)
           .where("sentToAll", "==", true)
           .get()
