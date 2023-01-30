@@ -1,22 +1,19 @@
 import { Icon as IconType } from "@expo/vector-icons/build/createIconSet";
-import { Column, Icon, Text, View, useTheme } from "native-base";
+import { Column, Icon, Text } from "native-base";
 import { ImageBackground, ImageSourcePropType } from "react-native";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
-// TODO - Merge with JumbotronGeneral
+/** @deprecated TODO - Merge with Jumbotron */
 const JumbotronGeometric = <PossibleIconNames extends string, IconFontName extends string, IconName extends PossibleIconNames>({
   icon, iconType, title, text, bgColor="blue"
 }: { icon:IconName; iconType: IconType<PossibleIconNames, IconFontName>; title:string; text:string; bgColor:string }) => {
-  const themes = useTheme();
   const {
-    primary, // Standard is 600, light background is 100
-    secondary, // Standard is 400
-    tertiary, // Standard is 500
-    success, warning, error, danger, blue
+    primary,
+    secondary,
   } = useThemeColors();
   const {
-    headingBold, heading, body, mono
+    headingBold, mono
   } = useThemeFonts();
 
   function validateBGColor() {
