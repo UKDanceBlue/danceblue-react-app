@@ -24,7 +24,7 @@ const SponsorCard = ({
     success, warning, error, danger, blue
   } = useThemeColors();
   const {
-    heading, body, mono
+    heading, mono
   } = useThemeFonts();
   const [url] = useFirebaseStorageUrl(`gs://react-danceblue.appspot.com${imagePath}`);
 
@@ -40,12 +40,6 @@ const SponsorCard = ({
           alt={name}
           resizeMode="contain"
         />
-        <Text
-          font={body}
-          color={primary[600]}
-          textAlign="justify"
-          bold
-          style={styles.text}>{descrption}</Text>
         <Text
           fontFamily={mono}
           fontSize={themes.fontSizes.md}
