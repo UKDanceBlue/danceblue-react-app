@@ -77,10 +77,16 @@ export function useCurrentDate(refreshInterval?: number) {
 
 export const useColorModeValue = <A, B>(lightValue: A, darkValue: B): A | B => useColorModeValueNativeBase(lightValue, darkValue) as A | B;
 
+/**
+ * Only use for non-NativeBase components, NativeBase components should just use something like "color.123"
+ */
 export const useThemeColors = () => {
   return useTheme().colors;
 };
 
+/**
+ * Only use for non-NativeBase components, NativeBase components should just use the font family name in a string like "body"
+ */
 export const useThemeFonts = () => {
   return useTheme().fonts;
 };
