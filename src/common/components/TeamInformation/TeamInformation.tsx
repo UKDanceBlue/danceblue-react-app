@@ -1,6 +1,5 @@
-import { Container, Flex, Image, Text, View, useTheme } from "native-base";
-import { Icon } from "react-native-elements";
-import { fonts } from "react-native-elements/dist/config";
+import { Entypo } from "@expo/vector-icons";
+import { Container, Flex, Icon, Image, Text, View, useTheme } from "native-base";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
@@ -9,13 +8,11 @@ const TeamInformation = ({
 }: { name:string; captains:string[]; members:string[] }) => {
   const themes = useTheme();
   const {
-    primary, // Standard is 600, light background is 100
-    secondary, // Standard is 400
-    tertiary, // Standard is 500
-    success, warning, error, danger, blue
+    primary,
+    secondary,
   } = useThemeColors();
   const {
-    heading, body, mono
+    body, mono
   } = useThemeFonts();
 
   const captainString = captains.join(", ");
@@ -31,8 +28,8 @@ const TeamInformation = ({
         <Container flex={0.1} justifyContent="center" alignItems="stretch">
           <Icon
             name="awareness-ribbon"
-            type="entypo"
-            color={secondary[400]}
+            as={Entypo}
+            color="secondary.400"
             backgroundColor="white"
             borderRadius={50}
             size={35}/>

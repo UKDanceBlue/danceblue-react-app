@@ -1,32 +1,28 @@
-import { Text, View, useTheme } from "native-base";
+import { Entypo } from "@expo/vector-icons";
+import { Text, View } from "native-base";
 
-import { useThemeColors, useThemeFonts } from "../../customHooks";
+import { useThemeColors } from "../../customHooks";
 import ScoreboardItem from "../ScoreboardItem";
 
 const Scoreboard = ({ title }: { title:string }) => {
-  const themes = useTheme();
-  const {
-    primary, secondary, tertiary, success, warning, error, danger
-  } = useThemeColors();
-  const {
-    heading, body, mono
-  } = useThemeFonts();
+  const textShadowColor = useThemeColors().secondary[300];
+
   const ichooseyou = "awareness-ribbon";
-  const fromyou = "entypo";
+  const fromyou = Entypo;
 
   return (
     <View>
       <Text
         textAlign="center"
-        color={secondary[400]}
-        fontFamily={heading}
-        fontSize={themes.fontSizes["4xl"]}
+        color="secondary.400"
+        fontFamily="heading"
+        fontSize="4xl"
         style={{
-          textShadowColor: secondary[300],
+          textShadowColor,
           textShadowOffset: { width: 2, height: 1.5 },
           textShadowRadius: 1
         }}>{title}</Text>
-    
+
       <ScoreboardItem
         rank={1}
         name="Alpha Gamma Delta <3"

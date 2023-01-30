@@ -1,18 +1,16 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Icon, Text, View, useTheme } from "native-base";
+import { Text, View } from "native-base";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
+/** @deprecated TODO - Merge with Jumbotron */
 const JumbotronTeam = ({ team }: { team:string }) => {
-  const themes = useTheme();
   const {
-    primary, // Standard is 600, light background is 100
-    secondary, // Standard is 400
-    tertiary, // Standard is 500
-    success, warning, error, danger, blue
+    primary,
+    secondary,
   } = useThemeColors();
   const {
-    headingBold, heading, body, mono
+    headingBold, mono
   } = useThemeFonts();
 
   return (
