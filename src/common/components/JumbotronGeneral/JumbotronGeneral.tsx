@@ -1,10 +1,11 @@
+import { Icon as IconType } from "@expo/vector-icons/build/createIconSet";
 import { Icon, Text, View, useTheme } from "native-base";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
-const JumbotronGeneral = ({
+const JumbotronGeneral = <PossibleIconNames extends string, IconFontName extends string, IconName extends PossibleIconNames>({
   icon, iconColor, iconType, title, text, subtitle
-}: { icon:string; iconColor:string; iconType:unknown; title:string; text:string; subtitle:string }) => {
+}: { icon:IconName; iconColor:string; iconType: IconType<PossibleIconNames, IconFontName>; title:string; text:string; subtitle:string }) => {
   const themes = useTheme();
   const {
     primary, // Standard is 600, light background is 100

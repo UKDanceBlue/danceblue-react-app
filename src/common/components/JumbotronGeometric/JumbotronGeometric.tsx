@@ -1,11 +1,13 @@
+import { Icon as IconType } from "@expo/vector-icons/build/createIconSet";
 import { Column, Icon, Text, View, useTheme } from "native-base";
 import { ImageBackground, ImageSourcePropType } from "react-native";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
-const JumbotronGeometric = ({
+// TODO - Merge with JumbotronGeneral
+const JumbotronGeometric = <PossibleIconNames extends string, IconFontName extends string, IconName extends PossibleIconNames>({
   icon, iconType, title, text, bgColor="blue"
-}: { icon:string; iconType:unknown; title:string; text:string; bgColor:string }) => {
+}: { icon:IconName; iconType: IconType<PossibleIconNames, IconFontName>; title:string; text:string; bgColor:string }) => {
   const themes = useTheme();
   const {
     primary, // Standard is 600, light background is 100
@@ -16,7 +18,7 @@ const JumbotronGeometric = ({
   const {
     headingBold, heading, body, mono
   } = useThemeFonts();
-  
+
   function validateBGColor() {
     switch (bgColor) {
     case "white": return require("../../../../assets/bg-geometric/white.png") as ImageSourcePropType;
@@ -25,7 +27,7 @@ const JumbotronGeometric = ({
     default: return require("../../../../assets/bg-geometric/blue.png") as ImageSourcePropType;
     }
   }
-  
+
   function iconColor() {
     switch (bgColor) {
     case "white": return primary[600];
@@ -34,7 +36,7 @@ const JumbotronGeometric = ({
     default: return secondary[200];
     }
   }
-  
+
   function fontColor(loc:string) {
     switch (loc){
     case "title":

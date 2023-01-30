@@ -1,22 +1,15 @@
+import { Icon as IconType } from "@expo/vector-icons/build/createIconSet";
 import * as WebBrowser from "expo-web-browser";
-import { Icon, useTheme } from "native-base";
+import { Icon } from "native-base";
 import { ListItem } from "react-native-elements";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
-const AboutItem = ({
+const AboutItem = <PossibleIconNames extends string, IconFontName extends string, IconName extends PossibleIconNames>({
   icon, iconType, iconColor, link, title
-}: { icon:string; iconType:unknown; iconColor:string; link:string; title:string }) => {
-  const themes = useTheme();
-  const {
-    primary, // Standard is 600, light background is 100
-    secondary, // Standard is 400
-    tertiary, // Standard is 500
-    success, warning, error, danger, blue
-  } = useThemeColors();
-  const {
-    heading, body, mono
-  } = useThemeFonts();
+}: { icon:IconName; iconType:IconType<PossibleIconNames, IconFontName>; iconColor:string; link:string; title:string }) => {
+  const { primary } = useThemeColors();
+  const { body } = useThemeFonts();
 
   return (
     <ListItem

@@ -38,9 +38,9 @@ function getAward(rank: number) {
   }
 }
 
-const ScoreboardItem = <G extends string, FN extends string, IconName extends G>({
+const ScoreboardItem = <PossibleIconNames extends string, IconFontName extends string, IconName extends PossibleIconNames>({
   rank, name, points, icon, type
-}: { rank: number; name: string; points: number; icon: IconName; type: IconType<G, FN> }) => {
+}: { rank: number; name: string; points: number; icon: IconName; type: IconType<PossibleIconNames, IconFontName> }) => {
   return (
     <View
       marginLeft={3}
