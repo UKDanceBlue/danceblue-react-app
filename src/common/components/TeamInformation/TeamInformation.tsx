@@ -1,5 +1,5 @@
-import { Container, Flex, Image, Text, View, useTheme } from "native-base";
-import { Icon } from "react-native-elements";
+import { Entypo } from "@expo/vector-icons";
+import { Container, Flex, Icon, Image, Text, View, useTheme } from "native-base";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
@@ -28,8 +28,8 @@ const TeamInformation = ({
         <Container flex={0.1} justifyContent="center" alignItems="stretch">
           <Icon
             name="awareness-ribbon"
-            type="entypo"
-            color={secondary[400]}
+            as={Entypo}
+            color="secondary.400"
             backgroundColor="white"
             borderRadius={50}
             size={35}/>

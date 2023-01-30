@@ -4,7 +4,7 @@ import "intl/locale-data/jsonp/en";
 
 // Import third-party dependencies
 import NetInfo from "@react-native-community/netinfo";
-import { FontSource, useFonts } from "expo-font";
+import { useFonts } from "expo-font";
 import { hideAsync } from "expo-splash-screen";
 import { UpdateEventType,
   addListener as addUpdateListener,
@@ -16,6 +16,16 @@ import { useEffect, useRef, useState } from "react";
 import { AppState, EventSubscription, StatusBar } from "react-native";
 
 import "./src/common/util/AndroidTimerFix"; // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
+
+// Fonts
+import BoldoniFlfBoldItalicFont from "./assets/fonts/bodoni-flf-font/Bodoni-FLF-Bold-Italic.ttf";
+import BoldoniFlfBoldFont from "./assets/fonts/bodoni-flf-font/Bodoni-FLF-Bold.ttf";
+import BoldoniFlfItalicFont from "./assets/fonts/bodoni-flf-font/Bodoni-FLF-Italic.ttf";
+import BoldoniFlfRomanFont from "./assets/fonts/bodoni-flf-font/Bodoni-FLF-Roman.ttf";
+import OpenSansCondensedBoldFont from "./assets/fonts/opensans-condensed/OpenSans-Condensed-Bold.ttf";
+import OpenSansCondensedLightItalicFont from "./assets/fonts/opensans-condensed/OpenSans-Condensed-Light-Italic.ttf";
+import OpenSansCondensedLightFont from "./assets/fonts/opensans-condensed/OpenSans-Condensed-Light.ttf";
+// Normal imports
 import ErrorBoundary from "./src/common/components/ErrorBoundary";
 import { log, logError, universalCatch } from "./src/common/logging";
 import { showMessage, showPrompt } from "./src/common/util/alertUtils";
@@ -34,13 +44,13 @@ const App = () => {
   const [ theme, setTheme ] = useState<ICustomTheme | undefined>(undefined);
 
   const [ fontsLoaded, error ] = useFonts({
-    "bodoni-flf-bold": require("./assets/fonts/bodoni-flf-font/Bodoni-FLF-Bold.ttf") as FontSource,
-    "bodoni-flf-italic": require("./assets/fonts/bodoni-flf-font/Bodoni-FLF-Italic.ttf") as FontSource,
-    "bodoni-flf-bold-italic": require("./assets/fonts/bodoni-flf-font/Bodoni-FLF-Bold-Italic.ttf") as FontSource,
-    "bodoni-flf-roman": require("./assets/fonts/bodoni-flf-font/Bodoni-FLF-Roman.ttf") as FontSource,
-    "opensans-condensed-bold": require("./assets/fonts/opensans-condensed/OpenSans-Condensed-Bold.ttf") as FontSource,
-    "opensans-condensed-light": require("./assets/fonts/opensans-condensed/OpenSans-Condensed-Light.ttf") as FontSource,
-    "opensans-condensed-light-italic": require("./assets/fonts/opensans-condensed/OpenSans-Condensed-Light-Italic.ttf") as FontSource,
+    "bodoni-flf-bold": BoldoniFlfBoldFont,
+    "bodoni-flf-bold-italic": BoldoniFlfBoldItalicFont,
+    "bodoni-flf-italic": BoldoniFlfItalicFont,
+    "bodoni-flf-roman": BoldoniFlfRomanFont,
+    "opensans-condensed-bold": OpenSansCondensedBoldFont,
+    "opensans-condensed-light": OpenSansCondensedLightFont,
+    "opensans-condensed-light-italic": OpenSansCondensedLightItalicFont
   });
 
   useEffect(() => {
