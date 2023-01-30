@@ -3,7 +3,9 @@ import originalComponentThemes from "native-base/src/theme/components";
 
 const {
   Button: originalButtonTheme,
-  Text: originalTextTheme
+  Text: originalTextTheme,
+  View: originalViewTheme,
+  VStack: originalVStackTheme,
 } = originalComponentThemes;
 
 type BaseStyleProp<T extends { baseStyle: BaseStyle }, BaseStyle extends (arg: Param) => unknown = T["baseStyle"], Param = Parameters<BaseStyle>[0]> = Param;
@@ -18,5 +20,42 @@ export const components: Partial<Record<keyof Theme["components"], ComponentThem
       padding: "3",
     }),
   },
-  Text: { defaultProps: () => ({ fontSize: 15 }), baseStyle: originalTextTheme.baseStyle },
+  Text: {
+    defaultProps: () => ({ fontSize: 15 }),
+    baseStyle: originalTextTheme.baseStyle,
+    variants: {
+      "card-title": {
+        color: "primary.600",
+        fontSize: "xl",
+        fontWeight: "bold",
+        textAlign: "center",
+      },
+      "card-text": {
+        color: "primary.600",
+        fontFamily: "body",
+        padding: "1em",
+      }
+    },
+  },
+  View: {
+    defaultProps: () => ({ }),
+    baseStyle: originalViewTheme.baseStyle,
+    variants: {
+      "card-title-box": {
+        backgroundColor: "primary.100",
+        paddingY: "2",
+      },
+    },
+  },
+  VStack: {
+    defaultProps: () => ({ }),
+    baseStyle: originalVStackTheme.baseStyle,
+    variants: {
+      "card": {
+        margin: "15",
+        borderWidth: "1",
+        borderColor: "light.100",
+      },
+    },
+  },
 } as const;
