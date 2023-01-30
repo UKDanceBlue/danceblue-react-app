@@ -1,6 +1,5 @@
 import { Container, Flex, Image, Text, View, useTheme } from "native-base";
 import { Icon } from "react-native-elements";
-import { fonts } from "react-native-elements/dist/config";
 
 import { useThemeColors, useThemeFonts } from "../../customHooks";
 
@@ -9,13 +8,11 @@ const TeamInformation = ({
 }: { name:string; captains:string[]; members:string[] }) => {
   const themes = useTheme();
   const {
-    primary, // Standard is 600, light background is 100
-    secondary, // Standard is 400
-    tertiary, // Standard is 500
-    success, warning, error, danger, blue
+    primary,
+    secondary,
   } = useThemeColors();
   const {
-    heading, body, mono
+    body, mono
   } = useThemeFonts();
 
   const captainString = captains.join(", ");

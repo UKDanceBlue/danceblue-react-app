@@ -2,7 +2,6 @@ import { Box, Button, Text, VStack, useTheme } from "native-base";
 import { Linking, StatusBar } from "react-native";
 
 import PodcastPlayer from "../../../../common/components/PodcastPlayer";
-import SponsorsBlock from "../../../../common/components/SponsorsBlock";
 import { useColorModeValue } from "../../../../common/customHooks";
 import { universalCatch } from "../../../../common/logging";
 
@@ -23,7 +22,6 @@ const HomeScreen = () => {
         <Box height="35%" tintColor={bgColor}>
           <HeaderImage />
         </Box>
-        <SponsorsBlock param="jackson <3"/>
         <Box height="10%">
           <Button
             borderRadius={0}
