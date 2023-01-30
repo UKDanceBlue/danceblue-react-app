@@ -23,7 +23,6 @@ const HomeScreen = () => {
         <Box height="35%" tintColor={bgColor}>
           <HeaderImage />
         </Box>
-        <SponsorsBlock param="jackson <3"/>
         <Box height="10%">
           <Button
             borderRadius={0}
