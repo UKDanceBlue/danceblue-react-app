@@ -13,7 +13,7 @@ import { UpdateEventType,
   reloadAsync } from "expo-updates";
 import { ICustomTheme, NativeBaseProvider } from "native-base";
 import { useEffect, useRef, useState } from "react";
-import { AppState, EventSubscription, StatusBar } from "react-native";
+import { AppState, EventSubscription } from "react-native";
 
 import "./src/common/util/AndroidTimerFix"; // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
 
@@ -125,7 +125,6 @@ const App = () => {
     <NativeBaseProvider config={{ strictMode: __DEV__ ? "error" : "off" }} theme={theme}>
       <ErrorBoundary>
         <CombinedContext>
-          <StatusBar backgroundColor="white" barStyle="dark-content" />
           <FilledNavigationContainer />
         </CombinedContext>
       </ErrorBoundary>
