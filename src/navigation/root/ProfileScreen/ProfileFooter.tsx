@@ -1,27 +1,27 @@
+import { Ionicons } from "@expo/vector-icons";
 import { nativeApplicationVersion, nativeBuildVersion } from "expo-application";
 import { openURL } from "expo-linking";
-import { Button, HStack, Text, VStack, useColorMode } from "native-base";
+import { Button, HStack, Icon, IconButton, Text, View, useColorMode } from "native-base";
 import { useState } from "react";
 import { TextInput } from "react-native";
 
 import { useColorModeValue } from "../../../common/customHooks";
 import { universalCatch } from "../../../common/logging";
-import { useTryToSetDemoMode } from "../../../context";
-
-
-
+import { useAuthData, useFirebase, useTryToSetDemoMode } from "../../../context";
 
 export const ProfileFooter = () => {
   const tryToEnterDemoMode = useTryToSetDemoMode();
-
+  const { fbAuth } = useFirebase();
   const [ reportLongPressed, setReportLongPressed ] = useState(false);
   const [ suggestLongPressed, setSuggestLongPressed ] = useState(false);
 
   const { toggleColorMode } = useColorMode();
-  const modeToChangeTo = useColorModeValue("Dark", "Light");
+  const colorModeIcon = useColorModeValue("moon", "md-sunny");
+
+  const { isAnonymous } = useAuthData();
 
   return (
-    <VStack flex={1} justifyContent="flex-end">
+    <>
       {reportLongPressed && suggestLongPressed && (
         <TextInput
           style={{ borderWidth: 2, minWidth: "30%" }}
@@ -35,19 +35,36 @@ export const ProfileFooter = () => {
           }}
         />
       )}
-      {__DEV__ && (
-        <Button
-          alignSelf="center"
-          width="2/5"
-          onPress={toggleColorMode}
-        >
-          {`Set color mode to ${modeToChangeTo}`}
-        </Button>
-      )}
 
       <HStack justifyContent="center">
         <Button
+          onPress={() => {
+            openURL("https://danceblue.networkforgood.com").catch(universalCatch);
+          }}
           width="2/5"
+          backgroundColor="primary.600"
+          _text={{ color: "secondary.400" }}
+          _pressed={{ opacity: 0.6 }}
+        >
+            Donate #FTK!
+        </Button>
+        <Button
+          onPress={() => {
+            fbAuth.signOut().catch(universalCatch);
+          }}
+          width="2/5"
+          backgroundColor={isAnonymous ? "secondary.400" : "danger.600"}
+          _text={{ color: isAnonymous ? "primary.600" : "white" }}
+          _pressed={{ opacity: 0.6 }}
+        >
+          {isAnonymous ? "Sign in" : "Sign out"}
+        </Button>
+      </HStack>
+
+      <HStack alignItems="center" justifyItems="space-evenly">
+        <Button
+          variant="outline"
+          width="30%"
           onPress={() => {
             openURL(
               "mailto:app@danceblue.org?subject=DanceBlue%20App%20Issue%20Report&body=What%20happened%3A%0A%3Ctype%20here%3E%0A%0AWhat%20I%20was%20doing%3A%0A%3Ctype%20here%3E%0A%0AOther%20information%3A%0A%3Ctype%20here%3E"
@@ -56,10 +73,14 @@ export const ProfileFooter = () => {
           onLongPress={() => {
             setReportLongPressed(true);
           }}
-        >Report an issue
+        >Report issue
         </Button>
+
+        <View width="10%"/>
+
         <Button
-          width="2/5"
+          variant="outline"
+          width="30%"
           onPress={() => {
             openURL(
               "mailto:app@danceblue.org?subject=DanceBlue%20App%20Suggestion&body=%3Ctype%20here%3E"
@@ -68,12 +89,25 @@ export const ProfileFooter = () => {
           onLongPress={() => {
             setSuggestLongPressed(!!reportLongPressed);
           }}
-        >Suggest a change
+        >Suggest change
         </Button>
       </HStack>
+
+      <HStack marginTop="2" alignItems="center">{ __DEV__ && (
+        <>
+          <IconButton icon={<Icon
+            size="6"
+            as={Ionicons}
+            name={colorModeIcon}
+            onPress={toggleColorMode}/>}/>
+          {/* <Switch onToggle={toggleColorMode}/> */}
+          <View width="3%"/>
+        </>
+      )}
       <Text
         style={{ textAlign: "center" }}
       >{`Version: ${nativeApplicationVersion ?? ""} (${nativeBuildVersion ?? ""})`}</Text>
-    </VStack>
+      </HStack>
+    </>
   );
 };
