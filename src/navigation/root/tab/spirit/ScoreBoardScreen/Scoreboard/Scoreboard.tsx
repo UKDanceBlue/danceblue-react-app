@@ -1,7 +1,7 @@
 import { Entypo } from "@expo/vector-icons";
 import { Text, View } from "native-base";
 
-import { useThemeColors } from "../../customHooks";
+import { useThemeColors } from "../../../../../../common/customHooks";
 import ScoreboardItem from "../ScoreboardItem";
 
 const Scoreboard = ({ title }: { title:string }) => {
