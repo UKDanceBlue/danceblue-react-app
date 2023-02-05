@@ -9,7 +9,7 @@ const SpiritStack = createNativeStackNavigator<TeamStackParamList>();
 
 const SpiritScreen = () => {
   return (
-    <SpiritStack.Navigator>
+    <SpiritStack.Navigator screenOptions={{ headerShown: false }}>
       <SpiritStack.Screen name="Scoreboard" component={ScoreboardScreen} />
       <SpiritStack.Screen
         name="MyTeam"

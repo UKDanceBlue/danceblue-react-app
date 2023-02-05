@@ -106,16 +106,12 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   if (process.env.EAS_BUILD && !existsSync(androidGoogleServicesFile)) {
     console.error("Detected files:", readdirSync(".").join(" --- "));
     onNotExist(`GoogleService-Info file not found at ${androidGoogleServicesFile}`);
-  } else {
-    console.log("Android Google Services file exists");
   }
 
   // Check that the Google services file exists
   if (!existsSync(iosGoogleServicesFile)) {
     console.error("Detected files:", readdirSync(".").join(" --- "));
     onNotExist(`GoogleService-Info file not found at ${iosGoogleServicesFile}`);
-  } else {
-    console.log("iOS Google Services file exists");
   }
 
   return makeExpoConfig({
@@ -132,8 +128,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ios: iosGoogleServicesFile
     }
   });
-}
-;
+};
 
 /**
  * This helper function is used to safely build an ExpoConfig object from the given properties.

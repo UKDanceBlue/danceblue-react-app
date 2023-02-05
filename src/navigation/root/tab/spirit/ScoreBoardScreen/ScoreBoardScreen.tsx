@@ -1,18 +1,26 @@
+import { FontAwesome5 } from "@expo/vector-icons";
+import { Icon } from "@expo/vector-icons/build/createIconSet";
 import firebaseFirestore from "@react-native-firebase/firestore";
+import { SpiritTeamsRootDoc } from "@ukdanceblue/db-app-common";
+import { VStack } from "native-base/src/components/primitives";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl, SafeAreaView, ScrollView } from "react-native";
 
-import Standings from "../../../../../common/components/Standings";
+import Jumbotron from "../../../../../common/components/Jumbotron";
+import JumbotronTeam from "../../../../../common/components/JumbotronTeam";
 import { universalCatch } from "../../../../../common/logging";
 import { useAuthData, useUserData } from "../../../../../context";
-import { SpiritTeamsRootDoc } from "../../../../../types/SpiritTeamsRootDoc";
 import { StandingType } from "../../../../../types/StandingType";
+
+import Scoreboard from "./Scoreboard/Scoreboard";
 
 /**
  * Wrapper for a Standings component
  */
 const ScoreBoardScreen = () => {
-  const { teamId: userTeamId } = useUserData();
+  const {
+    teamId: userTeamId, team
+  } = useUserData();
   const dbRole = useAuthData().authClaims?.dbRole ?? "public";
   // const moraleTeamName = useAppSelector((state) => state);
   const [ standingData, setStandingData ] = useState<StandingType[]>([]);
@@ -24,15 +32,20 @@ const ScoreBoardScreen = () => {
     // case "spirit":
     firebaseFirestore().doc("spirit/teams").get()
       .then((querySnapshot) => {
-        const rootTeamData = querySnapshot.data() as SpiritTeamsRootDoc;
-        setStandingData(Object.entries(rootTeamData.basicInfo).filter(([ ,{ teamClass } ]) => teamClass === "committee" ? dbRole === "committee" : true).map(([ teamId, teamData ]) => {
-          return {
-            id: teamId,
-            highlighted: teamId === userTeamId,
-            name: teamData.name,
-            points: teamData.totalPoints ?? 0
-          };
-        }));
+        const rootTeamDataJson = querySnapshot.data() as unknown;
+        if (!SpiritTeamsRootDoc.isSpiritTeamsRootDocJson(rootTeamDataJson)) {
+          throw new Error("Invalid data type");
+        } else {
+          const rootTeamData = SpiritTeamsRootDoc.fromJson(rootTeamDataJson);
+          setStandingData(Object.entries(rootTeamData.basicInfo).filter(([ ,{ teamClass } ]) => teamClass === "committee" ? dbRole === "committee" : true).map(([ teamId, teamData ]) => {
+            return {
+              id: teamId,
+              highlighted: teamId === userTeamId,
+              name: teamData.name,
+              points: teamData.totalPoints ?? 0
+            };
+          }));
+        }
       })
       .catch(universalCatch)
       .finally(() => setLoading(false));
@@ -78,7 +91,22 @@ const ScoreBoardScreen = () => {
       refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} />}
     >
       <SafeAreaView>
-        <Standings titleText="Spirit Point Standings" standingData={standingData} startExpanded />
+        <VStack>
+          {
+            team == null
+              ? (<Jumbotron
+                title="You are not part of a team"
+                text=""
+                subtitle="If you believe this is an error and you have submitted your spirit points, please contact your team captain or the DanceBlue committee."
+                icon="users"
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                iconType={FontAwesome5}
+                iconColor="blue.500"
+              />)
+              : (<JumbotronTeam team={team.name} />)
+          }
+          <Scoreboard title="Spirit Points" data={standingData}/>
+        </VStack>
       </SafeAreaView>
     </ScrollView>
   );

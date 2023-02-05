@@ -1,38 +1,27 @@
-import { FontAwesome } from "@expo/vector-icons";
 import { Icon as IconType } from "@expo/vector-icons/build/createIconSet";
 import { Container, Flex, Icon, Text, View } from "native-base";
+import { useWindowDimensions } from "react-native";
 
-function getAward(rank: number) {
+import DanceBlueRibbon from "../../../../../../../assets/svgs/DBRibbon";
+import { useThemeColors } from "../../../../../../common/customHooks";
+
+import FirstPlaceMedal from "./1stPlace";
+import SecondPlaceMedal from "./2ndPlace";
+import ThirdPlaceMedal from "./3rdPlace";
+
+function getAward(rank: number, size: number, colors: string[]) {
   switch (rank) {
   case 1:
     return (
-      <Icon
-        name="trophy"
-        as={FontAwesome}
-        color="secondary.400"
-        borderRadius={50}
-        style={{ paddingBottom: 10, paddingTop: 10 }}
-        size={30}/>
+      <FirstPlaceMedal width={size} height={size} color={colors[0]}/>
     );
   case 2:
     return (
-      <Icon
-        name="trophy"
-        as={FontAwesome}
-        color="primary.400"
-        borderRadius={50}
-        style={{ paddingBottom: 10, paddingTop: 10 }}
-        size={30}/>
+      <SecondPlaceMedal width={size} height={size} color={colors[1]}/>
     );
   case 3:
     return (
-      <Icon
-        name="trophy"
-        as={FontAwesome}
-        color="tertiary.400"
-        borderRadius={50}
-        style={{ paddingBottom: 10, paddingTop: 10 }}
-        size={30}/>
+      <ThirdPlaceMedal width={size} height={size} color={colors[2]}/>
     );
   default: return <Text color="primary.600" fontSize="3xl" bold>{rank}</Text>;
   }
@@ -41,6 +30,9 @@ function getAward(rank: number) {
 const ScoreboardItem = <PossibleIconNames extends string, IconFontName extends string, IconName extends PossibleIconNames>({
   rank, name, points, icon, type
 }: { rank: number; name: string; points: number; icon: IconName; type: IconType<PossibleIconNames, IconFontName> }) => {
+  const { width: screenWidth } = useWindowDimensions();
+  const colors = useThemeColors();
+
   return (
     <View
       marginLeft={3}
@@ -48,30 +40,34 @@ const ScoreboardItem = <PossibleIconNames extends string, IconFontName extends s
       height={50}
       style={{ borderBottomWidth: 1, borderBottomColor: "primary.600" }}>
       <Flex direction="row" alignItems="center" flex={1}>
-        <Container justifyContent="center" alignItems="center" flex={0.15}>
-          {getAward(rank)}
+        <Container
+          justifyContent="center"
+          alignItems="center"
+          flex={1}
+          ml="2"
+          mr="4">
+          {getAward(rank, screenWidth * 0.1, [
+            colors.secondary[400], colors.primary[400], colors.tertiary[400]
+          ])}
         </Container>
-        <Container justifyContent="flex-start" flex={1} marginLeft={2}>
+        <Container
+          justifyContent="flex-start"
+          flex={8}>
           <Flex direction="row">
             <Container justifyContent="center" alignItems="flex-start" flex={0}>
-              <Icon
-                name={icon}
-                as={type}
-                color="secondary.400"
-                backgroundColor="white"
-                borderRadius={50}
-                size={20}/>
+              <DanceBlueRibbon width={screenWidth*0.1} height={screenWidth*0.1}/>
             </Container>
             <Container
               justifyContent="flex-start"
-              width={1000}
               marginLeft={1}
               alignItems="stretch">
               <Text color="primary.600" fontSize="lg" bold>{name}</Text>
             </Container>
           </Flex>
         </Container>
-        <Container justifyContent="flex-end" width={100} flex={0.3}>
+        <Container
+          justifyContent="flex-end"
+          flex={2}>
           <Text color="primary.600" fontSize="lg" fontFamily="mono">{points} points</Text>
         </Container>
       </Flex>

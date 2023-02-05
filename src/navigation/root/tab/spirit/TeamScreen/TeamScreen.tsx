@@ -9,6 +9,8 @@ import { universalCatch } from "../../../../../common/logging";
 import { useLoading, useUserData } from "../../../../../context";
 import { useRefreshUserData } from "../../../../../context/user";
 
+import TeamInformation from "./TeamInformation";
+
 const TeamScreen = () => {
   const {
     team, linkblue: userLinkblue
@@ -56,118 +58,12 @@ const TeamScreen = () => {
       name, memberNames, fundraisingTotal, totalPoints
     } = team;
 
-    const column = [];
-
-    // Add a title for the team
-    column.push(
-      <Heading
-        key="team-title"
-        size="2xl"
-        textAlign="center"
-      >
-        {name}
-      </Heading>
-    );
-
-    // Add a fundraising total if it exists
-    if (fundraisingTotal != null) {
-      column.push(
-        <Text fontSize={20} textAlign="center" key="fundraising">
-            Fundraising Total: <Text bold>${fundraisingTotal}</Text>
-        </Text>
-      );
-    }
-
-    // Add a title for spirit points if individual totals exist or if total points exist
-    if (individualTotals != null || totalPoints != null) {
-      column.push(
-        <Heading
-          size="lg"
-          textAlign="center"
-          key="spirit-title"
-          mt={30}>
-            Spirit Points
-        </Heading>,
-        <Divider
-          my={2}
-          key="spirit-divider"/>
-      );
-    }
-
-    // Add grand total if it exists
-    if (totalPoints != null) {
-      column.push(
-        <Text fontSize={20} textAlign="center" key="total-points">
-          Total Points: <Text bold>{totalPoints}</Text>
-        </Text>
-      );
-    }
-
-    // Add a list of members and their points
-    if (individualTotals != null) {
-      column.push(
-        <Heading
-          size="md"
-          textAlign="left"
-          m={2}
-          key="individual-title">
-            Individual Totals
-        </Heading>,
-        ...(individualTotals.map(([ linkblue, points ], index) => (
-          <Place
-            key={linkblue}
-            rank={index + 1}
-            name={memberNames[linkblue] ?? linkblue}
-            points={points}
-            isHighlighted={linkblue === userLinkblue}
-            lastRow={index === Object.entries(individualTotals).length - 1}
-          />
-        )))
-      );
-    }
-
     return (
-      <ZStack
-        height="100%">
-        <Box
-          height="100%"
-        >
-          <ScrollView
-            height="100%"
-            refreshControl={
-              <RefreshControl
-                refreshing={isLoading}
-                onRefresh={reload}
-              />
-            }>
-            {column}
-          </ScrollView>
-        </Box>
-        <Pressable
-          position="absolute"
-          width="100%"
-          backgroundColor="blue.500"
-          bottom={0}
-          onPress={() => {
-            canOpenURL("https://www.danceblue.org/spirit-point-form").then((canOpen) => {
-              if (canOpen) {
-                return openURL("https://www.danceblue.org/spirit-point-form");
-              }
-            }).catch(universalCatch);
-          }}
-          _pressed={{
-            backgroundColor: "blue.600",
-            opacity: 0.5
-          }}>
-          <Text
-            fontSize={20}
-            textAlign="center"
-            m={2}
-            color={"white"}>
-              Spirit Point Form
-          </Text>
-        </Pressable>
-      </ZStack>
+      <TeamInformation
+        captains={[]}
+        members={Object.values(memberNames).filter((name): name is string => name != null)}
+        name={name}
+      />
     );
   }
 };
