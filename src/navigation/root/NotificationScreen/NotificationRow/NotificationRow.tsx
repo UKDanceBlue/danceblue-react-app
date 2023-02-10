@@ -85,7 +85,7 @@ export const AnimatedNotificationRow: SectionListRenderItem<NotificationListData
           <Box
             mx="4"
             p="1.5"
-            background="blue.200"
+            background="primary.100"
             rounded="md"
             shadow="2"
             width={screenWidth - (sizes[4] * 2)}

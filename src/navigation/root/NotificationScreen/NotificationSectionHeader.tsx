@@ -1,4 +1,4 @@
-import { Heading, View } from "native-base";
+import { Heading, View, useTheme } from "native-base";
 import { SectionListProps } from "react-native";
 
 import { NotificationListDataEntry } from "./NotificationScreen";
@@ -7,7 +7,7 @@ type NotificationSectionHeaderType = NonNullable<SectionListProps<NotificationLi
 export const NotificationSectionHeader: NotificationSectionHeaderType = ({ section: { title } }: Parameters<NotificationSectionHeaderType>[0]) => {
   return (
     <View
-      backgroundColor="light.100">
+      backgroundColor="#fff">
       <Heading
         size="md"
         p={2}

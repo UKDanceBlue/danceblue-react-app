@@ -4,7 +4,7 @@ import type { IColorHues } from "native-base/src/theme/base/colors";
 export const colors: Partial<Record<keyof Theme["colors"], IColorHues>> = {
   primary: { // BASE COLOR: #0032A0 (level 600), Dark Blue
     50: "#e0edff",
-    100: "#b1caff",
+    100: "#BBC9E8",
     200: "#7fa7ff",
     300: "#4d84ff",
     400: "#1e61fe",
