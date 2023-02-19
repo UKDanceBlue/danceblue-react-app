@@ -94,6 +94,8 @@ function NotificationScreen() {
         <JumbotronGeometric title={jumboText()}/>
         <Text textAlign="center" fontSize={theme.fontSizes["3xl"]}>Notifications</Text>
         <SectionList
+          ListFooterComponent={View}
+          ListFooterComponentStyle={{ height: 20 }}
           backgroundColor="#fff"
           refreshControl={<RefreshControl
             refreshing={isAnyLoading ?? false}
