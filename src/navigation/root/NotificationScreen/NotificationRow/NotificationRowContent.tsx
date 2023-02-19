@@ -7,6 +7,7 @@ import { memo } from "react";
 import { useWindowDimensions } from "react-native";
 
 import DBLogoCondensed from "../../../../../assets/svgs/DBLogoCondensed";
+import DanceBlueRibbon from "../../../../../assets/svgs/DBRibbon";
 import { useThemeFonts } from "../../../../common/customHooks";
 
 const NonMemoizedNotificationRowContent = ({
@@ -27,10 +28,12 @@ const NonMemoizedNotificationRowContent = ({
         backgroundColor={unread ? "primary.600" : "white"}
         borderRadius="50"
         marginRight="3"
-        padding="2"
         shadow="3"
         style={{ shadowOpacity: unread ? 0.6 : 0 }}>
-        <DBLogoCondensed svgProps={{ width: screenWidth*0.1, height: screenWidth*0.1 }} letterColor="#fff"/>
+        {/* TODO: FIX AND CHANGE TO DBLOGO CONDENSED
+          <DBLogoCondensed svgProps={{ width: screenWidth*0.5, height: screenWidth*0.5 }} letterColor="#fff"/>
+        */}
+        <DanceBlueRibbon svgProps={{ width: screenWidth*0.12, height: screenWidth*0.12 }}/>
       </View>
       <VStack>
         <View flexDirection="row" justifyContent="space-between" mb="2">
