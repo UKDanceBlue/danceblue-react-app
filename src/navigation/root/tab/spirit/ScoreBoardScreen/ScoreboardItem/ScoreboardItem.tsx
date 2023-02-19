@@ -54,7 +54,7 @@ const ScoreboardItem = ({
           flex={8}>
           <Flex direction="row">
             <Container justifyContent="center" alignItems="flex-start" flex={0}>
-              <DanceBlueRibbon width={screenWidth*0.1} height={screenWidth*0.1}/>
+              <DanceBlueRibbon svgProps={{ width: screenWidth*0.1, height: screenWidth*0.1 }}/>
             </Container>
             <Container
               justifyContent="flex-start"
