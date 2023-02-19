@@ -9,8 +9,8 @@ import { useWindowDimensions } from "react-native";
 import { useThemeFonts } from "../../../../common/customHooks";
 
 const NonMemoizedNotificationRowContent = ({
-  loading, notification
-}: { loading: boolean; notification: FirestoreNotification | undefined }) => {
+  loading, notification, unread
+}: { loading: boolean; notification: FirestoreNotification | undefined; unread: boolean }) => {
   const { width: screenWidth } = useWindowDimensions();
   const {
     sizes, fontSizes
@@ -22,13 +22,19 @@ const NonMemoizedNotificationRowContent = ({
 
   return (<>
     <HStack alignItems="center" maxWidth="85%">
-      <Icon
-        name={"facebook"}
-        as={Entypo}
-        color="primary.600"
-        backgroundColor="white"
-        size={35}
-        marginRight={3}/>
+      <View
+        backgroundColor={unread ? "primary.600" : "white"}
+        borderRadius="50"
+        marginRight="3"
+        padding="2"
+        shadow="3"
+        style={{ shadowOpacity: unread ? 0.6 : 0 }}>
+        <Icon
+          name={"awareness-ribbon"}
+          as={Entypo}
+          color="secondary.400"
+          size={35}/>
+      </View>
       <VStack>
         <View flexDirection="row" justifyContent="space-between" mb="2">
           <Skeleton.Text
