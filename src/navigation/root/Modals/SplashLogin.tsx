@@ -1,12 +1,13 @@
-import { Button, Center, Text, View } from "native-base";
+import { Button, Center, Image, Text, View, ZStack } from "native-base";
 import { useEffect } from "react";
-import { ActivityIndicator, Dimensions, ImageBackground } from "react-native";
+import { ActivityIndicator, Dimensions, ImageSourcePropType, StatusBar } from "react-native";
 
-import splashBackground from "../../../../assets/screens/login-modal/dancing.jpg";
 import { useLinkBlueLogin } from "../../../common/auth";
 import { universalCatch } from "../../../common/logging";
 import { showMessage } from "../../../common/util/alertUtils";
 import { useAppConfig, useFirebase } from "../../../context";
+
+import { getRandomSplashLoginBackground } from "./SplashLoginBackgrounds";
 
 const SplashLoginScreen = () => {
   const { allowedLoginTypes } = useAppConfig();
@@ -27,88 +28,84 @@ const SplashLoginScreen = () => {
       showMessage(error.message, "Error logging in");
     }
   }, [error]);
+
+  const heightOfBackground = Dimensions.get("window").height * 0.6;
+  const heightOfContent = Dimensions.get("window").height * 0.4;
+
   return (
-    <View>
-      <ImageBackground source={splashBackground} style={localStyles.image}>
-        <View display="flex" flex={1} justifyContent="space-between">
+    <>
+      <StatusBar hidden/>
+      <ZStack>
+        <Image
+          source={getRandomSplashLoginBackground()}
+          alt="Background"
+          width={Dimensions.get("window").width}
+          height={heightOfBackground}
+          overflow="hidden"
+          resizeMode="cover"/>
+        <Image
+          alt="Welcome Overlay"
+          source={require("../../../../assets/screens/login-modal/welcome-back-overlay.png") as ImageSourcePropType}
+          height={Dimensions.get("window").height}
+          width={Dimensions.get("window").width}
+          resizeMode="cover"
+          zIndex={0}/>
+        <View>
           <View
-            flexShrink={2}
-            mt={"1/6"}
-            mb="3/5"
-            w="4/5"
-            alignSelf="center"
-            borderRadius={10}
-            p={5}
-            backgroundColor="#aaaaaa33">
-            <Text
-              fontSize={20}
-              color="light.100"
-              textAlign="center">
-            Welcome to UK DanceBlue!
-            </Text>
-            <Text color="light.100" textAlign="center">
-            The UK DanceBlue app has many features that are only available with a user account.
-            </Text>
-            <Text color="light.100" textAlign="center">
-            With an account you get access to profile badges, team info, and other features coming
-            soon!
-            </Text>
-          </View>
-          <View flex={1} justifyContent="flex-end">
+            justifyContent="center"
+            height={heightOfContent}
+            top={heightOfBackground}
+            zIndex={100}
+            position="absolute"
+            width={Dimensions.get("window").width}
+            marginTop={15}>
             { allowedLoginTypes.includes("ms-oath-linkblue") && (
-              <View flex={1}>
-                <Text
-                  color="light.200"
-                  textAlign="center">
-            UK Student or Staff? Sign in with your LinkBlue account
-                </Text>
+              <View>
                 <Button
                   onPress={() => trigger()}
-                  variant="ghost"
-                  backgroundColor="#bbbbff22"
-                  _pressed={{ backgroundColor: "#bbbbff55" }}
-                  width="2/3"
+                  width={Dimensions.get("window").width - 50}
+                  backgroundColor="secondary.400"
+                  _pressed={{ backgroundColor: "primary.600" }}
                   alignSelf="center"
+                  margin={5}
                 >
-                  <Text color="light.300" textAlign="center">SSO Login!</Text>
+                  <Text
+                    color="primary.600"
+                    textAlign="center"
+                    fontFamily="body"
+                    fontSize="xl">Login with Linkblue</Text>
                 </Button>
               </View>
             )}
 
             { allowedLoginTypes.includes("anonymous") && (
-              <View flex={1}>
-                <Text color="light.200" textAlign="center">
-            Want to look around first? You can always sign in later on the profile page
-                </Text>
+              <View>
                 <Button
                   onPress={() => fbAuth.signInAnonymously().catch(universalCatch)}
-                  variant="ghost"
-                  backgroundColor="#ffffff22"
-                  _pressed={{ backgroundColor: "#ffffff55" }}
-                  width="2/3"
+                  width={Dimensions.get("window").width - 50}
+                  backgroundColor="primary.600"
+                  _pressed={{ backgroundColor: "secondary.400" }}
                   alignSelf="center"
+                  margin={5}
                 >
-                  <Text color="light.300" textAlign="center">Continue as a Guest</Text>
+                  <Text
+                    color="#ffffff"
+                    textAlign="center"
+                    fontFamily="body"
+                    fontSize="xl">Continue as Guest</Text>
                 </Button>
               </View>
             )}
           </View>
+          { loading && (
+            <Center position="absolute" width="full" height="full">
+              <ActivityIndicator size="large" />
+            </Center>
+          )}
         </View>
-      </ImageBackground>
-      { loading && (
-        <Center position="absolute" width="full" height="full">
-          <ActivityIndicator size="large" />
-        </Center>
-      )}
-    </View>
+      </ZStack>
+    </>
   );
-};
-
-const localStyles = {
-  image: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
-  }
 };
 
 export default SplashLoginScreen;

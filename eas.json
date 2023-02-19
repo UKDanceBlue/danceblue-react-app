@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">=2.0.0",
+    "version": ">=2.9.0",
     "requireCommit": true
   },
   "build": {
@@ -34,6 +34,9 @@
       "releaseChannel": "preview",
       "cache": {
         "key": "2"
+      },
+      "env": {
+        "APP_VARIANT": "production"
       }
     },
     "production": {
@@ -41,6 +44,10 @@
       "releaseChannel": "prod-v2",
       "cache": {
         "key": "2"
+      },
+      "env": {
+        "APP_VARIANT": "production",
+        "CHECK_VERSION": "true"
       }
     }
   },

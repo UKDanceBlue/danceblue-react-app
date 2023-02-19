@@ -2,6 +2,7 @@ import { Box, Button, Text, VStack, useTheme } from "native-base";
 import { Linking, StatusBar } from "react-native";
 
 import PodcastPlayer from "../../../../common/components/PodcastPlayer";
+import SponsorsBlock from "../../../../common/components/SponsorsBlock";
 import { useColorModeValue } from "../../../../common/customHooks";
 import { universalCatch } from "../../../../common/logging";
 

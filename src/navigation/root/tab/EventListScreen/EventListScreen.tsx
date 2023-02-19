@@ -1,7 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { DateTime } from "luxon";
-import { Center, Spinner } from "native-base";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Animated, SafeAreaView, View } from "react-native";
 import { LazyPagerView } from "react-native-pager-view";
 
@@ -25,6 +24,22 @@ const monthDates = (new Array(monthCount) as DateTime[])
   .map((
     dateTime, i) => dateTime.plus({ months: i - (monthCount / 2) })
   );
+
+const DummyView = (
+  <View
+    onStartShouldSetResponder={() => true}
+    onTouchEnd={(e) => { e.stopPropagation(); }}>
+    <EventListPage
+      eventsByMonth={{}}
+      marked={{}}
+      refreshing={true}
+      refresh={() => Promise.resolve()}
+      month={DateTime.now()}
+      tryToNavigate={() => undefined}
+      disabled
+    />
+  </View>
+);
 
 const EventListScreen = () => {
   const lazyPagerRef = useRef<LazyPagerView<DateTime> | null>(null);
@@ -70,7 +85,7 @@ const EventListScreen = () => {
     refresh,
   ] = useEvents({ earliestTimestamp });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!hasSetPage && hasPagerRefBeenSet && lazyPagerRef.current != null) {
       lazyPagerRef.current.setPageWithoutAnimation(Math.floor(monthCount / 2));
       setHasSetPage(true);
@@ -84,11 +99,7 @@ const EventListScreen = () => {
     <SafeAreaView style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
       {
         isFirstRender
-          ? (
-            <Center flex={1}>
-              <Spinner />
-            </Center>
-          )
+          ? (DummyView)
           : (
             <AnimatedPager
               ref={(ref?: LazyPagerView<DateTime>) => {

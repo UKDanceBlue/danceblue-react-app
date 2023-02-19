@@ -135,7 +135,6 @@ export const splitEvents = (events: FirestoreEvent[]) => {
  * Gets the events for the given month and produces a MarkedDates object for react-native-calendars
  *
  * @param events The full list of events
- * @param todayDateString The date string for today
  * @returns A MarkedDates object for react-native-calendars
  */
 export const markEvents = (events: FirestoreEvent[]) => {

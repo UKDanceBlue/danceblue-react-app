@@ -3,11 +3,9 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useTheme } from "native-base";
 import { ReactElement, useEffect, useState } from "react";
 
 // Import first-party dependencies
-import { useColorModeValue } from "../../../common/customHooks";
 import { log } from "../../../common/logging";
 import { useAppConfig } from "../../../context";
 import { RootStackParamList, TabNavigatorParamList } from "../../../types/navigationTypes";
@@ -34,10 +32,6 @@ const TabBar = () => {
     isConfigLoaded, enabledScreens
   } = useAppConfig();
 
-  const { colors } = useTheme();
-  const headerBgColor = useColorModeValue(colors.white, colors.gray[800]);
-  const headerFgColor = useColorModeValue(colors.gray[800], colors.light[400]);
-
   const [ currentTabs, setCurrentTabs ] = useState<ReactElement[]>([]);
 
   useEffect(() => {
@@ -60,8 +54,6 @@ const TabBar = () => {
             navigation: NativeStackNavigationProp<RootStackParamList>;
             route: RouteProp<TabNavigatorParamList>;
         }) => ({
-        headerStyle: { backgroundColor: headerBgColor },
-        headerTitleStyle: { color: headerFgColor },
         tabBarIcon: ({
           color, size
         }) => {
@@ -90,10 +82,8 @@ const TabBar = () => {
           );
         },
         headerRight: () => (
-          <HeaderIcons navigation={navigation} color={headerFgColor} />
+          <HeaderIcons navigation={navigation} />
         ),
-        tabBarActiveTintColor: "white",
-        tabBarActiveBackgroundColor: "#3248a8",
         tabBarStyle: [
           { display: "flex" },
           null,

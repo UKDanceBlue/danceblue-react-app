@@ -4,58 +4,68 @@ import "intl/locale-data/jsonp/en";
 
 // Import third-party dependencies
 import NetInfo from "@react-native-community/netinfo";
-import analytics from "@react-native-firebase/analytics";
-import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
-import { addEventListener as addLinkingEventListener, canOpenURL, createURL as createLinkingURL, getInitialURL as getInitialLinkingURL, openURL } from "expo-linking";
-import { addNotificationResponseReceivedListener } from "expo-notifications";
-import { UpdateEventType, addListener as addUpdateListener, checkForUpdateAsync, fetchUpdateAsync, reloadAsync } from "expo-updates";
-import { ICustomTheme, NativeBaseProvider, useDisclose } from "native-base";
+import { useFonts } from "expo-font";
+import { hideAsync } from "expo-splash-screen";
+import { UpdateEventType,
+  addListener as addUpdateListener,
+  checkForUpdateAsync,
+  fetchUpdateAsync,
+  reloadAsync } from "expo-updates";
+import { ICustomTheme, NativeBaseProvider } from "native-base";
 import { useEffect, useRef, useState } from "react";
-import { AppState, EventSubscription, StatusBar } from "react-native";
-import { WebViewSource } from "react-native-webview/lib/WebViewTypes";
-
+import { AppState, EventSubscription } from "react-native";
 
 import "./src/common/util/AndroidTimerFix"; // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
-import NotificationInfoModal from "./src/common/components/NotificationInfoModal";
-import WebpageModal from "./src/common/components/WebpageModal";
-import { log, universalCatch } from "./src/common/logging";
+
+// Fonts
+import BoldoniFlfBoldItalicFont from "./assets/fonts/bodoni-flf-font/Bodoni-FLF-Bold-Italic.ttf";
+import BoldoniFlfBoldFont from "./assets/fonts/bodoni-flf-font/Bodoni-FLF-Bold.ttf";
+import BoldoniFlfItalicFont from "./assets/fonts/bodoni-flf-font/Bodoni-FLF-Italic.ttf";
+import BoldoniFlfRomanFont from "./assets/fonts/bodoni-flf-font/Bodoni-FLF-Roman.ttf";
+import OpenSansCondensedBoldFont from "./assets/fonts/opensans-condensed/OpenSans-Condensed-Bold.ttf";
+import OpenSansCondensedLightItalicFont from "./assets/fonts/opensans-condensed/OpenSans-Condensed-Light-Italic.ttf";
+import OpenSansCondensedLightFont from "./assets/fonts/opensans-condensed/OpenSans-Condensed-Light.ttf";
+// Normal imports
+import ErrorBoundary from "./src/common/components/ErrorBoundary";
+import { log, logError, universalCatch } from "./src/common/logging";
 import { showMessage, showPrompt } from "./src/common/util/alertUtils";
 import { CombinedContext } from "./src/context";
-import RootScreen from "./src/navigation/root/RootScreen";
-import { customTheme } from "./src/theme";
-import { NotificationInfoPopup } from "./src/types/NotificationPayload";
-import { RootStackParamList } from "./src/types/navigationTypes";
+import { FilledNavigationContainer } from "./src/navigation/NavigationContainer";
+import { getCustomTheme } from "./src/theme";
 
 // Import and run the fistLaunch file
 import "./src/firstLaunch";
-
-const linkingPrefixes = [
-  createLinkingURL("/"),
-  // "https://*.danceblue.org",
-  // "https://danceblue.org"
-];
 
 /**
  * Main app container
  */
 const App = () => {
   const isOfflineInternal = useRef(false);
-  const routeNameRef = useRef<string>();
-  const navigationRef = useRef<NavigationContainerRef<RootStackParamList>>(null);
+  const [ theme, setTheme ] = useState<ICustomTheme | undefined>(undefined);
 
-  const {
-    isOpen: isNotificationInfoOpen,
-    onClose: onNotificationInfoClose,
-    onOpen: onNotificationInfoOpen,
-  } = useDisclose(false);
-  const [ notificationInfoPopupContent, setNotificationInfoPopupContent ] = useState<NotificationInfoPopup | null>(null);
+  const [ fontsLoaded, error ] = useFonts({
+    "bodoni-flf-bold": BoldoniFlfBoldFont,
+    "bodoni-flf-bold-italic": BoldoniFlfBoldItalicFont,
+    "bodoni-flf-italic": BoldoniFlfItalicFont,
+    "bodoni-flf-roman": BoldoniFlfRomanFont,
+    "opensans-condensed-bold": OpenSansCondensedBoldFont,
+    "opensans-condensed-light": OpenSansCondensedLightFont,
+    "opensans-condensed-light-italic": OpenSansCondensedLightItalicFont
+  });
 
-  const {
-    isOpen: isNotificationWebviewPopupSourceOpen,
-    onClose: onNotificationWebviewPopupSourceClose,
-    onOpen: onNotificationWebviewPopupSourceOpen,
-  } = useDisclose(false);
-  const [ notificationWebviewPopupSource, setNotificationWebviewPopupSource ] = useState<WebViewSource | null>(null);
+  useEffect(() => {
+    if (error) {
+      logError(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      hideAsync().catch(universalCatch);
+      // Have to get the theme AFTER fonts are loaded
+      setTheme(getCustomTheme());
+    }
+  }, [fontsLoaded]);
 
   useEffect(
     () => NetInfo.addEventListener((state) => {
@@ -112,103 +122,12 @@ const App = () => {
   }, []);
 
   return (
-    <NativeBaseProvider config={{ strictMode: __DEV__ ? "error" : "off" }} theme={customTheme as ICustomTheme}>
-      <CombinedContext>
-        <StatusBar backgroundColor="white" barStyle="dark-content" />
-        <NavigationContainer
-          ref={navigationRef}
-          onReady={() => {
-            routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
-          }}
-          onStateChange={async () => {
-            try {
-              const lastRouteName = routeNameRef.current;
-              const currentRouteName = navigationRef.current?.getCurrentRoute()?.name;
-
-              routeNameRef.current = currentRouteName;
-
-              if (lastRouteName !== currentRouteName) {
-                await analytics().logScreenView({
-                  screen_name: currentRouteName,
-                  screen_class: currentRouteName,
-                });
-              }
-            } catch (error) {
-              universalCatch(error);
-            }
-          }}
-          linking={{
-            prefixes: linkingPrefixes,
-            getInitialURL: getInitialLinkingURL,
-            // Filter out URLs used by expo-auth-session
-            filter: (url) => !url.includes("+expo-auth-session"),
-            subscribe: (listener) => {
-              const onReceiveURL = ({ url }: { url: string }) => listener(url);
-
-              // Listen to incoming links from deep linking
-              const linkingSubscription = addLinkingEventListener("url", onReceiveURL);
-
-              // THIS IS THE NOTIFICATION ENTRY POINT
-              const notificationSubscription = addNotificationResponseReceivedListener((response) => {
-                const {
-                  url: notificationUrl, textPopup, webviewPopup
-                } = response.notification.request.content.data as {
-                  url?: string;
-                  textPopup?: NotificationInfoPopup;
-                  webviewPopup?: WebViewSource;
-                };
-
-                if (textPopup != null) {
-                  setNotificationInfoPopupContent(textPopup);
-                  onNotificationInfoOpen();
-                }
-
-                if (webviewPopup != null) {
-                  setNotificationWebviewPopupSource(webviewPopup);
-                  onNotificationWebviewPopupSourceOpen();
-                }
-
-                if (notificationUrl != null) {
-                  const decodedUrl = decodeURI(notificationUrl);
-                  if (linkingPrefixes.every((prefix) => !decodedUrl.includes(prefix))) {
-                    canOpenURL(decodedUrl).then((canOpen) => {
-                      if (canOpen) {
-                        return openURL(decodedUrl);
-                      }
-                    }).catch(universalCatch);
-                  }
-                  // Let React Navigation handle the URL
-                  listener(decodedUrl);
-                }
-              });
-
-              return () => {
-                // Clean up the event listeners
-                linkingSubscription.remove();
-                notificationSubscription.remove();
-              };
-            },
-            config: {
-              initialRouteName: "Tab",
-              screens: {
-                Tab: {
-                  path: "/",
-                  screens: {
-                    Home: { path: "/" },
-                    Events: { path: "/events" },
-                    Team: { path: "/my-team" },
-                    Scoreboard: { path: "/scoreboard" },
-                  },
-                }
-              }
-            }
-          }}
-        >
-          <NotificationInfoModal isNotificationInfoOpen={isNotificationInfoOpen} onNotificationInfoClose={onNotificationInfoClose} notificationInfoPopupContent={notificationInfoPopupContent} />
-          <WebpageModal isOpen={isNotificationWebviewPopupSourceOpen} onClose={onNotificationWebviewPopupSourceClose} source={notificationWebviewPopupSource} />
-          <RootScreen />
-        </NavigationContainer>
-      </CombinedContext>
+    <NativeBaseProvider config={{ strictMode: __DEV__ ? "error" : "off" }} theme={theme}>
+      <ErrorBoundary>
+        <CombinedContext>
+          <FilledNavigationContainer />
+        </CombinedContext>
+      </ErrorBoundary>
     </NativeBaseProvider>
   );
 };

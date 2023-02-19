@@ -1,17 +1,16 @@
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useTheme as useNavigationTheme } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View } from "native-base";
 import { PixelRatio, TouchableOpacity, useWindowDimensions } from "react-native";
 
 import { RootStackParamList } from "../types/navigationTypes";
 
-const HeaderIcons = ({
-  navigation, color
-}: {
+const HeaderIcons = ({ navigation }: {
   navigation: NativeStackNavigationProp<RootStackParamList>;
-  color?: string;
 }) => {
   const { width } = useWindowDimensions();
+  const reactNavigationTheme = useNavigationTheme();
 
   return (
     <View
@@ -19,14 +18,14 @@ const HeaderIcons = ({
       <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
         <FontAwesome5
           name="bell"
-          color={color}
+          color={reactNavigationTheme.colors.text}
           style={{ textAlignVertical: "center", fontSize: PixelRatio.get() * 8 }}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
         <FontAwesome5
           name="user"
-          color={color}
+          color={reactNavigationTheme.colors.text}
           style={{ textAlignVertical: "center", fontSize: PixelRatio.get() * 8 }}
         />
       </TouchableOpacity>

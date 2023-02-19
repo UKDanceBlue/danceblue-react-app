@@ -40,9 +40,5 @@ export function isFirestoreNotification(notification?: object): notification is 
     return false;
   }
 
-  if (payload != null && typeof payload !== "object") {
-    return false;
-  }
-
-  return true;
+  return !(payload != null && typeof payload !== "object");
 }

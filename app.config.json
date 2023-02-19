@@ -8,16 +8,16 @@
     "scheme": "danceblue",
     "jsEngine": "hermes",
     "notification": {
-      "icon": "./assets/app/icon.png"
+      "icon": "./assets/app/icon-2.png"
     },
     "platforms": [
       "ios",
       "android"
     ],
     "orientation": "portrait",
-    "icon": "./assets/app/icon.png",
+    "icon": "./assets/app/icon-2.png",
     "splash": {
-      "image": "./assets/app/splash2.png",
+      "image": "./assets/app/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
@@ -46,7 +46,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/app/icon.png",
+          "icon": "./assets/app/icon-2.png",
           "color": "#ffffff"
         }
       ],
