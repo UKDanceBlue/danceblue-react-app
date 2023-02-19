@@ -1,8 +1,8 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Icon } from "@expo/vector-icons/build/createIconSet";
 import firebaseFirestore from "@react-native-firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
 import { SpiritTeamsRootDoc } from "@ukdanceblue/db-app-common";
-import { VStack } from "native-base/src/components/primitives";
+import { Pressable, VStack } from "native-base/src/components/primitives";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl, SafeAreaView, ScrollView } from "react-native";
 
@@ -11,6 +11,7 @@ import JumbotronTeam from "../../../../../common/components/JumbotronTeam";
 import { universalCatch } from "../../../../../common/logging";
 import { useAuthData, useUserData } from "../../../../../context";
 import { StandingType } from "../../../../../types/StandingType";
+import { SpiritStackScreenProps } from "../../../../../types/navigationTypes";
 
 import Scoreboard from "./Scoreboard/Scoreboard";
 
@@ -25,6 +26,7 @@ const ScoreBoardScreen = () => {
   // const moraleTeamName = useAppSelector((state) => state);
   const [ standingData, setStandingData ] = useState<StandingType[]>([]);
   const [ loading, setLoading ] = useState(true);
+  const { navigate } = useNavigation<SpiritStackScreenProps<"Scoreboard">["navigation"]>();
 
   const refresh = useCallback(() => {
     setLoading(true);
@@ -103,7 +105,16 @@ const ScoreBoardScreen = () => {
                 iconType={FontAwesome5}
                 iconColor="blue.500"
               />)
-              : (<JumbotronTeam team={team.name} />)
+              : (
+                <Pressable
+                  onPress={() => {
+                    navigate("MyTeam");
+                  }}
+                  _pressed={{ opacity: 0.5 }}
+                >
+                  <JumbotronTeam team={team.name} />
+                </Pressable>
+              )
           }
           <Scoreboard title="Spirit Points" data={standingData}/>
         </VStack>

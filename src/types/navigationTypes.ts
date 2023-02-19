@@ -6,17 +6,17 @@ import { FirestoreEvent } from "@ukdanceblue/db-app-common";
 
 import { FirestoreHour } from "./firebaseTypes";
 
-export type TeamStackParamList = {
+export type SpiritStackParamList = {
   MyTeam: undefined;
   Scoreboard: undefined;
 };
 
-export type TeamStackScreenProps<T extends keyof TeamStackParamList> = NativeStackScreenProps<TeamStackParamList, T>;
+export type SpiritStackScreenProps<T extends keyof SpiritStackParamList> = NativeStackScreenProps<SpiritStackParamList, T>;
 
 export type TabNavigatorParamList = {
   Home: undefined;
   Events: undefined;
-  Team: NavigatorScreenParams<TeamStackParamList>;
+  Spirit: NavigatorScreenParams<SpiritStackParamList>;
   Marathon: undefined;
   "Scavenger Hunt": undefined;
 };

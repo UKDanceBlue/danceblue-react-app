@@ -23,7 +23,7 @@ export const possibleTabs = {
     key="Events"
     name="Events"
     component={EventListScreen}/>,
-  Team: <Tabs.Screen key="Team" name="Team" component={SpiritScreen} />,
+  Spirit: <Tabs.Screen key="Spirit" name="Spirit" component={SpiritScreen} />,
   MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
 } as { [name: string]: ReactElement };
 
@@ -65,7 +65,7 @@ const TabBar = () => {
             Store: "store",
             More: "ellipsis-h",
             Scoreboard: "list-ol",
-            Team: "users",
+            Spirit: "users",
             Donate: "hand-holding-heart",
             Marathon: "people-arrows",
             "Scavenger Hunt": "search"

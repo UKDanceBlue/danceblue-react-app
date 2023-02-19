@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { TeamStackParamList } from "../../../../types/navigationTypes";
+import { SpiritStackParamList } from "../../../../types/navigationTypes";
 
 import ScoreboardScreen from "./ScoreBoardScreen";
 import TeamScreen from "./TeamScreen";
 
-const SpiritStack = createNativeStackNavigator<TeamStackParamList>();
+const SpiritStack = createNativeStackNavigator<SpiritStackParamList>();
 
 const SpiritScreen = () => {
   return (
