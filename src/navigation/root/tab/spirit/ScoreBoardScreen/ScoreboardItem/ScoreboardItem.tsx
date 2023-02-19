@@ -57,7 +57,7 @@ const ScoreboardItem = ({
               <DanceBlueRibbon svgProps={{ width: screenWidth*0.1, height: screenWidth*0.1 }}/>
             </Container>
             <Container
-              justifyContent="flex-start"
+              justifyContent="center"
               marginLeft={1}
               alignItems="stretch">
               <Text color="primary.600" fontSize="lg" bold>{name}</Text>
