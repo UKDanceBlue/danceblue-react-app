@@ -6,6 +6,7 @@ import { HStack, Heading, Icon, Skeleton, Text, VStack, View, useTheme } from "n
 import { memo } from "react";
 import { useWindowDimensions } from "react-native";
 
+import DBLogoCondensed from "../../../../../assets/svgs/DBLogoCondensed";
 import { useThemeFonts } from "../../../../common/customHooks";
 
 const NonMemoizedNotificationRowContent = ({
@@ -29,11 +30,7 @@ const NonMemoizedNotificationRowContent = ({
         padding="2"
         shadow="3"
         style={{ shadowOpacity: unread ? 0.6 : 0 }}>
-        <Icon
-          name={"awareness-ribbon"}
-          as={Entypo}
-          color="secondary.400"
-          size={35}/>
+        <DBLogoCondensed svgProps={{ width: screenWidth*0.1, height: screenWidth*0.1 }} letterColor="#fff"/>
       </View>
       <VStack>
         <View flexDirection="row" justifyContent="space-between" mb="2">
