@@ -25,11 +25,11 @@ const NonMemoizedNotificationRowContent = ({
   return (<>
     <HStack alignItems="center" maxWidth="85%">
       <View
-        backgroundColor={unread ? "primary.600" : "white"}
+        backgroundColor={unread ? "primary.600" : "primary.600"}
         borderRadius="50"
         marginRight="3"
         shadow="3"
-        style={{ shadowOpacity: unread ? 0.6 : 0 }}>
+        style={{ shadowOpacity: unread ? 0.6 : 0.6 }}>
         {/* TODO: FIX AND CHANGE TO DBLOGO CONDENSED
           <DBLogoCondensed svgProps={{ width: screenWidth*0.5, height: screenWidth*0.5 }} letterColor="#fff"/>
         */}

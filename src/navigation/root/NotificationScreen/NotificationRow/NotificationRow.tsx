@@ -88,11 +88,14 @@ export const AnimatedNotificationRow: SectionListRenderItem<NotificationListData
           <Box
             mx="4"
             p="1.5"
-            background= {unread ? "primary.100" : "#ffffff"}
+            background= {unread ? "primary.100" : undefined}
             rounded="md"
             shadow="2"
-            style={{ shadowOpacity: unread ? 0.18 : 0 }}
+            style={{ shadowOpacity: 0.18 }}
             width={screenWidth - (sizes[4] * 2)}
+            borderStyle="solid"
+            borderWidth="1"
+            borderColor="primary.600"
             onLayout={(event) => {
               buttonRowHeight.value = (event.nativeEvent.layout.height);
             }}
