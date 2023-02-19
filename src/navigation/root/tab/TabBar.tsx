@@ -11,6 +11,7 @@ import { useAppConfig } from "../../../context";
 import { RootStackParamList, TabNavigatorParamList } from "../../../types/navigationTypes";
 import HeaderIcons from "../../HeaderIcons";
 
+import { DBHeaderText } from "./DBHeaderText";
 import EventListScreen from "./EventListScreen";
 import HomeScreen from "./HomeScreen";
 import HoursScreen from "./HoursScreen";
@@ -81,6 +82,8 @@ const TabBar = () => {
             />
           );
         },
+        headerLeft: DBHeaderText,
+        headerTitle: () => null,
         headerRight: () => (
           <HeaderIcons navigation={navigation} />
         ),
@@ -89,7 +92,7 @@ const TabBar = () => {
           null,
         ],
       })}
-      tabBar={(props) => (<TabBarComponent {...props} />)}
+      // tabBar={(props) => (<TabBarComponent {...props} />)}
     >
       <Tabs.Screen name="Home" component={HomeScreen} />
       {isConfigLoaded && currentTabs}
@@ -98,3 +101,4 @@ const TabBar = () => {
 };
 
 export default TabBar;
+

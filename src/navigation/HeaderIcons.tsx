@@ -1,31 +1,52 @@
-import { FontAwesome5 } from "@expo/vector-icons";
+import { Entypo, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { useTheme as useNavigationTheme } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View } from "native-base";
-import { PixelRatio, TouchableOpacity, useWindowDimensions } from "react-native";
+import { Linking, PixelRatio, TouchableOpacity, useWindowDimensions } from "react-native";
 
+import DanceBlueRibbon from "../../assets/svgs/DBRibbon";
+import { universalCatch } from "../common/logging";
 import { RootStackParamList } from "../types/navigationTypes";
 
 const HeaderIcons = ({ navigation }: {
   navigation: NativeStackNavigationProp<RootStackParamList>;
 }) => {
   const { width } = useWindowDimensions();
-  const reactNavigationTheme = useNavigationTheme();
 
   return (
     <View
-      style={{ flexDirection: "row", width: Math.round(width * 0.13), justifyContent: "space-between", marginRight: Math.round(width * 0.025) }}>
+      style={{ flexDirection: "row", width: Math.round(width * 0.22), justifyContent: "space-between", marginRight: Math.round(width * 0.025), alignItems: "center" }}>
+      {/* <TouchableOpacity>
+        <DanceBlueRibbon svgProps={{ width: width*0.1, height: width*0.1 }}/>
+      </TouchableOpacity> */}
+      <TouchableOpacity onPress={async () => {
+        if (
+          await Linking.canOpenURL(
+            "https://www.danceblue.org/dancebluetique/"
+          ).catch(universalCatch)
+        ) {
+          Linking.openURL(
+            "https://www.danceblue.org/dancebluetique/"
+          ).catch(universalCatch);
+        }
+      }}>
+        <Entypo
+          name="shop"
+          color="#0032A0"
+          style={{ textAlignVertical: "center", fontSize: PixelRatio.get() * 8 }}
+        />
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
-        <FontAwesome5
+        <FontAwesome
           name="bell"
-          color={reactNavigationTheme.colors.text}
+          color="#0032A0"
           style={{ textAlignVertical: "center", fontSize: PixelRatio.get() * 8 }}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
         <FontAwesome5
-          name="user"
-          color={reactNavigationTheme.colors.text}
+          name="user-alt"
+          color="#0032A0"
           style={{ textAlignVertical: "center", fontSize: PixelRatio.get() * 8 }}
         />
       </TouchableOpacity>

@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp, createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useTheme } from "native-base";
+import { Text, useTheme } from "native-base";
 import { useWindowDimensions } from "react-native";
 
 import { useColorModeValue } from "../../common/customHooks";
