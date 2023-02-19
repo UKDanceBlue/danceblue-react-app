@@ -1,5 +1,4 @@
-import { Icon as IconType } from "@expo/vector-icons/build/createIconSet";
-import { Container, Flex, Icon, Text, View } from "native-base";
+import { Container, Flex, Text, View } from "native-base";
 import { useWindowDimensions } from "react-native";
 
 import DanceBlueRibbon from "../../../../../../../assets/svgs/DBRibbon";
@@ -27,9 +26,9 @@ function getAward(rank: number, size: number, colors: string[]) {
   }
 }
 
-const ScoreboardItem = <PossibleIconNames extends string, IconFontName extends string, IconName extends PossibleIconNames>({
-  rank, name, points, icon, type
-}: { rank: number; name: string; points: number; icon: IconName; type: IconType<PossibleIconNames, IconFontName> }) => {
+const ScoreboardItem = ({
+  rank, name, points
+}: { rank: number; name: string; points: number }) => {
   const { width: screenWidth } = useWindowDimensions();
   const colors = useThemeColors();
 
