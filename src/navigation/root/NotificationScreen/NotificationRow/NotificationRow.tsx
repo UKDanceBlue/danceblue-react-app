@@ -73,6 +73,9 @@ export const AnimatedNotificationRow: SectionListRenderItem<NotificationListData
     isLoggedIn, isAnonymous
   } = useAuthData();
 
+  // TODO: When Backend for Read/Unread Notifications are done, pls add compatibility
+  const unread = true;
+
   const canDelete = !isAnonymous && isLoggedIn;
 
   return (
@@ -85,15 +88,16 @@ export const AnimatedNotificationRow: SectionListRenderItem<NotificationListData
           <Box
             mx="4"
             p="1.5"
-            background="blue.200"
+            background= {unread ? "primary.100" : "#ffffff"}
             rounded="md"
             shadow="2"
+            style={{ shadowOpacity: unread ? 0.18 : 0 }}
             width={screenWidth - (sizes[4] * 2)}
             onLayout={(event) => {
               buttonRowHeight.value = (event.nativeEvent.layout.height);
             }}
           >
-            <NotificationRowContent loading={loading} notification={notification} />
+            <NotificationRowContent loading={loading} notification={notification} unread={unread}/>
           </Box>
           <Animated.View
             style={animatedButtonRowStyle}
