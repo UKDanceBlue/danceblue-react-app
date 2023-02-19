@@ -64,7 +64,7 @@ export const useReactNavigationTheme = (): ReactNavigationTheme => {
           primary: theme.colors.primary[600],
           secondary: theme.colors.secondary[400],
           tertiary: theme.colors.tertiary[500],
-          background: theme.colors.light["50"],
+          background: theme.colors.white,
           card: theme.colors.light[100],
           text: theme.colors.darkText,
           border: theme.colors.light[400],
