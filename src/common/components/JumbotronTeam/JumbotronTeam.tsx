@@ -18,6 +18,7 @@ const JumbotronTeam = ({ team }: { team:string }) => {
       margin={3}
       backgroundColor={primary[100]}
       padding={4}
+      borderRadius={5}
       alignItems="center"
       display="flex"
       justifyContent="space-evenly">

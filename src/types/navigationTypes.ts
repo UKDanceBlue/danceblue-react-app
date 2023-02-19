@@ -16,7 +16,7 @@ export type SpiritStackScreenProps<T extends keyof SpiritStackParamList> = Nativ
 export type TabNavigatorParamList = {
   Home: undefined;
   Events: undefined;
-  Spirit: NavigatorScreenParams<SpiritStackParamList>;
+  Teams: NavigatorScreenParams<SpiritStackParamList>;
   Marathon: undefined;
   "Scavenger Hunt": undefined;
 };
