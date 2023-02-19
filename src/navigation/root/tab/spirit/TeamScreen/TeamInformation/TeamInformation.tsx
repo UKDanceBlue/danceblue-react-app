@@ -1,16 +1,13 @@
 import { Entypo } from "@expo/vector-icons";
 import { Container, Flex, Icon, Image, Text, View, useTheme } from "native-base";
 
-import { useThemeColors, useThemeFonts } from "../../customHooks";
+import { useThemeColors, useThemeFonts } from "../../../../../../common/customHooks";
 
 const TeamInformation = ({
   name, captains, members
 }: { name:string; captains:string[]; members:string[] }) => {
   const themes = useTheme();
-  const {
-    primary,
-    secondary,
-  } = useThemeColors();
+  const { primary } = useThemeColors();
   const {
     body, mono
   } = useThemeFonts();
