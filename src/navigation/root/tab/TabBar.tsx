@@ -3,7 +3,9 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Image } from "native-base";
 import { ReactElement, useEffect, useState } from "react";
+import { ImageSourcePropType, useWindowDimensions } from "react-native";
 
 // Import first-party dependencies
 import { log } from "../../../common/logging";
@@ -32,6 +34,9 @@ const TabBar = () => {
   const {
     isConfigLoaded, enabledScreens
   } = useAppConfig();
+  const {
+    width, height
+  } = useWindowDimensions();
 
   const [ currentTabs, setCurrentTabs ] = useState<ReactElement[]>([]);
 
@@ -82,14 +87,35 @@ const TabBar = () => {
             />
           );
         },
+        tabBarBackground: () => (
+          <Image
+            source={require("../../../../assets/screens/navigation/standardBG.png") as ImageSourcePropType}
+            alt="Navigation Background Image"
+            width={width}
+            height={130}/>
+        ),
         headerLeft: DBHeaderText,
         headerTitle: () => null,
         headerRight: () => (
           <HeaderIcons navigation={navigation} />
         ),
         tabBarStyle: [
-          { display: "flex" },
+          { display: "flex", backgroundColor: "transparent", height: 110, paddingTop: 40, paddingBottom: 20, borderTopColor: "transparent" },
           null,
+        ],
+        headerStyle: [
+          {
+            borderBottomWidth: 1.5,
+            borderBottomColor: "#0032A0",
+            borderStyle: "solid",
+            shadowOffset: {
+              width: 0,
+              height: -5,
+            },
+            shadowRadius: 5,
+            shadowOpacity: 0.5,
+            shadowColor: "#0032A0"
+          }, null
         ],
       })}
       // tabBar={(props) => (<TabBarComponent {...props} />)}
