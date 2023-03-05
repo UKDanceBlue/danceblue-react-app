@@ -1,21 +1,26 @@
 import { DateTime, Duration, Interval } from "luxon";
 import { Text, View } from "native-base";
 import { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 
+import { useThemeColors } from "../../customHooks";
 import TimeUnit from "../TimeUnit";
 
-const CountdownView = ({
-  title, endTime
-}: { title: string; endTime: number }) => {
+const CountdownView = ({ endTime }: { endTime: number }) => {
   const [ countdownDisplayDuration, setCountdownDisplayDuration ] = useState<Duration>(Duration.fromMillis(0));
+  const {
+    primary, secondary
+  } = useThemeColors();
+  const {
+    height: screenHeight, width: screenWidth
+  } = useWindowDimensions();
 
   useEffect(() => {
     // 1 second timer
     const timer = setInterval(() => {
       // Get time components
       setCountdownDisplayDuration(
-        Interval.fromDateTimes(new Date(), DateTime.fromMillis(endTime)).toDuration()
+        Interval.fromDateTimes(new Date(), DateTime.fromMillis(endTime)).toDuration().shiftTo("years", "months", "days", "hours", "minutes", "seconds")
       );
     }, 1000);
 
@@ -23,49 +28,26 @@ const CountdownView = ({
       clearInterval(timer);
     };
   }, [endTime]);
+  
+  // console.log(countdownDisplayDuration.toObject());
 
   return (
     <View style={styles.container}>
-      <View style={styles.countdownTitleView}>
-        <Text adjustsFontSizeToFit numberOfLines={1}>
-          {title}
-        </Text>
-      </View>
       <View style={styles.countdownTimer}>
         {
           // Check that this or any previous unit is nonzero
           Number(!!countdownDisplayDuration.years) > 0 && (
-            <>
+            <View bgColor={`${primary[700]}BD`} marginX={2} minWidth={screenWidth / 5}>
               <TimeUnit unit="years" value={countdownDisplayDuration.years} />
-
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 40,
-                  color: "white",
-                }}
-              >
-                    :
-              </Text>
-            </>
+            </View>
           )
         }
         {
           // Check that this or any previous unit is nonzero
           Number(!!countdownDisplayDuration.years) + Number(!!countdownDisplayDuration.months) > 0 && (
-            <>
+            <View bgColor={`${primary[700]}BD`} marginX={2} minWidth={screenWidth / 5}>
               <TimeUnit unit="months" value={countdownDisplayDuration.months} />
-
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 40,
-                  color: "white",
-                }}
-              >
-                    :
-              </Text>
-            </>
+            </View>
           )
         }
         {
@@ -74,19 +56,9 @@ const CountdownView = ({
                 Number(!!countdownDisplayDuration.months) +
                 Number(!!countdownDisplayDuration.days) >
                 0 && (
-            <>
+            <View bgColor={`${primary[700]}BD`} marginX={2} minWidth={screenWidth / 5}>
               <TimeUnit unit="days" value={countdownDisplayDuration.days} />
-
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 40,
-                  color: "white",
-                }}
-              >
-                    :
-              </Text>
-            </>
+            </View>
           )
         }
         {
@@ -96,19 +68,9 @@ const CountdownView = ({
                 Number(!!countdownDisplayDuration.days) +
                 Number(!!countdownDisplayDuration.hours) >
                 0 && (
-            <>
+            <View bgColor={`${primary[700]}BD`} marginX={2} minWidth={screenWidth / 5}>
               <TimeUnit unit="hours" value={countdownDisplayDuration.hours} />
-
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 40,
-                  color: "white",
-                }}
-              >
-                    :
-              </Text>
-            </>
+            </View>
           )
         }
         {
@@ -119,19 +81,9 @@ const CountdownView = ({
                 Number(!!countdownDisplayDuration.hours) +
                 Number(!!countdownDisplayDuration.minutes) >
                 0 && (
-            <>
+            <View bgColor={`${primary[700]}BD`} marginX={2} minWidth={screenWidth / 5}>
               <TimeUnit unit="minutes" value={countdownDisplayDuration.minutes} />
-
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 40,
-                  color: "white",
-                }}
-              >
-                    :
-              </Text>
-            </>
+            </View>
           )
         }
         {
@@ -143,9 +95,9 @@ const CountdownView = ({
                 Number(!!countdownDisplayDuration.minutes) +
                 Number(!!countdownDisplayDuration.seconds) >
                 0 && (
-            <>
-              <TimeUnit unit="seconds" value={countdownDisplayDuration.seconds} />
-            </>
+            <View bgColor={`${primary[700]}BD`} marginX={2} minWidth={screenWidth / 5}>
+              <TimeUnit unit="seconds" value={Math.trunc(countdownDisplayDuration.seconds)} />
+            </View>
           )
         }
       </View>
@@ -156,20 +108,13 @@ const CountdownView = ({
 export const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: "#0033A0E0",
     flex: 1,
     justifyContent: "center",
   },
   countdownTimer: {
     flexDirection: "row",
     justifyContent: "center",
-  },
-  countdownTitleView: {
-    alignItems: "center",
-    borderBottomColor: "white",
-    borderBottomWidth: 2,
-    width: "95%",
-  },
+  }
 });
 
 export default CountdownView;

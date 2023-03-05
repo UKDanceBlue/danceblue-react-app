@@ -13,7 +13,7 @@ import HeaderIcons from "../../HeaderIcons";
 
 import EventListScreen from "./EventListScreen";
 import HomeScreen from "./HomeScreen";
-import HoursScreen from "./HoursScreen";
+import MarathonScreen from "./MarathonScreen";
 import SpiritScreen from "./spirit/SpiritStack";
 
 const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
@@ -24,7 +24,7 @@ export const possibleTabs = {
     name="Events"
     component={EventListScreen}/>,
   Spirit: <Tabs.Screen key="Spirit" name="Teams" component={SpiritScreen} />,
-  MarathonHours: <Tabs.Screen key="HoursScreen" name="Marathon" component={HoursScreen} />,
+  MarathonHours: <Tabs.Screen key="MarathonScreen" name="Marathon" component={MarathonScreen} />,
 } as { [name: string]: ReactElement };
 
 const TabBar = () => {
@@ -91,6 +91,7 @@ const TabBar = () => {
       })}
     >
       <Tabs.Screen name="Home" component={HomeScreen} />
+      <Tabs.Screen name="Marathon" component={MarathonScreen} />
       {isConfigLoaded && currentTabs}
     </Tabs.Navigator>
   );
