@@ -33,11 +33,7 @@ const ScoreboardItem = ({
   const colors = useThemeColors();
 
   return (
-    <View
-      marginLeft={3}
-      marginRight={3}
-      height={50}
-      style={{ borderBottomWidth: 1, borderBottomColor: "primary.600" }}>
+    <View height={50}>
       <Flex direction="row" alignItems="center" flex={1}>
         <Container
           justifyContent="center"

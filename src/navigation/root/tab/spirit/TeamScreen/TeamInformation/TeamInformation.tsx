@@ -1,72 +1,69 @@
-import { Entypo } from "@expo/vector-icons";
-import { Container, Flex, Icon, Image, Text, View, useTheme } from "native-base";
+import { Flex, HStack, Text, View } from "native-base";
+import { useWindowDimensions } from "react-native";
 
-import { useThemeColors, useThemeFonts } from "../../../../../../common/customHooks";
+import CommitteeHoldingSign from "../../../../../../../assets/svgs/CommitteeHoldingSign";
+import DanceBlueRibbon from "../../../../../../../assets/svgs/DBRibbon";
+import Breadcrumbs from "../../../../../../common/components/Breadcrumbs";
+import { useThemeFonts } from "../../../../../../common/customHooks";
+import { StandingType } from "../../../../../../types/StandingType";
+import Scoreboard from "../../ScoreBoardScreen/Scoreboard";
 
 const TeamInformation = ({
-  name, captains, members
-}: { name:string; captains:string[]; members:string[] }) => {
-  const themes = useTheme();
-  const { primary } = useThemeColors();
+  name, captains, members, scoreboardData
+}: { name:string; captains:string[]; members:string[]; scoreboardData: StandingType[] }) => {
   const {
     body, mono
   } = useThemeFonts();
+  const { width: screenWidth } = useWindowDimensions();
 
   const captainString = captains.join(", ");
-  const memberString = members.join(", ");
+  // const memberString = members.join(", ");
 
   return (
-    <View marginLeft={30} marginRight={30}>
-      <Flex
-        direction="row"
-        alignItems="stretch"
-        justifyContent="center"
-        flex={1}>
-        <Container flex={0.1} justifyContent="center" alignItems="stretch">
-          <Icon
-            name="awareness-ribbon"
-            as={Entypo}
-            color="secondary.400"
-            backgroundColor="white"
-            borderRadius={50}
-            size={35}/>
-        </Container>
-        <Container flex={0.6} alignItems="center">
+    <View overflow="scroll">
+      <Breadcrumbs pageName={name} includeBreadcrumbs={false} previousPage={"Teams"}/>
+      <View>
+        <HStack alignItems="center" justifyContent="center">
+          <DanceBlueRibbon svgProps={{ width: 50, height: 50 }}/>
           <Text
-            color={primary[600]}
-            fontFamily={"bodoni-flf-bold"}
-            fontSize={themes.fontSizes["4xl"]}>Team Info</Text>
-        </Container>
-      </Flex>
-      <Flex direction="row" flex={1}>
-        <Container flex={3} alignItems="stretch" justifyContent="center">
-          <Image
-            src="https://i.gyazo.com/38368bc61fb37e1fe7e738938382ea83.png"
-            alt="Sign Guy"
-            height="150"
-            resizeMode="contain"/>
-        </Container>
-        <Container flex={8.5} alignItems="stretch" justifyContent="center">
-          <Flex direction="row">
-            <Text color={primary[600]}>
-              <Text font={body} fontSize={themes.fontSizes.lg} bold>Name: </Text>
-              <Text fontFamily={mono} fontSize={themes.fontSizes.lg}>{name}</Text>
-            </Text>
-          </Flex>
-          <Flex direction="row">
-            <Text color={primary[600]}>
-              <Text font={body} fontSize={themes.fontSizes.lg} bold>Captain(s): </Text>
-              <Text fontFamily={mono} fontSize={themes.fontSizes.lg}>{captainString}</Text>
-            </Text>
-          </Flex>
-          <Flex direction="row">
-            <Text color={primary[600]}>
-              <Text font={body} fontSize={themes.fontSizes.lg} bold>Members: </Text>
-              <Text fontFamily={mono} fontSize={themes.fontSizes.lg}>{memberString}</Text>
-            </Text>
-          </Flex>
-        </Container>
-      </Flex>
+            fontFamily="headingBold"
+            color="primary.600"
+            fontSize="2xl"
+            paddingRight={3}>Team Info</Text>
+        </HStack>
+        <View display="flex" alignItems="center" marginBottom={5}>
+          <Text color="primary.600" flexDirection="row">
+            <Text font={body} fontSize="lg" bold>Name: </Text>
+            <Text fontFamily={mono} fontSize="lg">{name}</Text>
+          </Text>
+          <Text color="primary.600" flexDirection="row">
+            <Text font={body} fontSize="lg" bold>Captain(s): </Text>
+            <Text fontFamily={mono} fontSize="lg">{captainString}</Text>
+          </Text>
+        </View>
+        <HStack alignItems="center">
+          <CommitteeHoldingSign svgProps={{ width: screenWidth / 2, height: 200 }}/>
+          <View width={screenWidth / 3}>
+            <Flex direction="column">
+              <Text
+                fontFamily="headingBold"
+                fontSize="3xl"
+                color="secondary.400"
+                textAlign="center"
+                paddingTop={2}>0000</Text>
+              <Text
+                fontFamily="mono"
+                fontSize="3xl"
+                color="primary.600"
+                textAlign="center">Spirit Points</Text>
+            </Flex>
+          </View>
+        </HStack>
+      </View>
+      <View
+        borderColor="primary.600">
+        <Scoreboard title="Team Standings" data={scoreboardData}/>
+      </View>
     </View>
   );
 };

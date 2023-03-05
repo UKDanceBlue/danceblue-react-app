@@ -1,13 +1,8 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { canOpenURL, openURL } from "expo-linking";
-import { Box, Center, Divider, Heading, Pressable, ScrollView, Text, ZStack } from "native-base";
-import { useMemo } from "react";
-import { RefreshControl, useWindowDimensions } from "react-native";
+import { Center, Text } from "native-base";
+import { useWindowDimensions } from "react-native";
 
-import Place from "../../../../../common/components/Place";
-import { universalCatch } from "../../../../../common/logging";
-import { useLoading, useUserData } from "../../../../../context";
-import { useRefreshUserData } from "../../../../../context/user";
+import { useUserData } from "../../../../../context";
 
 import TeamInformation from "./TeamInformation";
 
@@ -16,21 +11,6 @@ const TeamScreen = () => {
     team, linkblue: userLinkblue
   } = useUserData();
   const { width: screenWidth } = useWindowDimensions();
-  const reload = useRefreshUserData();
-  const [isLoading] = useLoading("UserDataProvider");
-  const individualTotals = useMemo(
-    () => {
-      if (team?.individualTotals == null) {
-        return null;
-      } else {
-        return Object.entries(team.individualTotals)
-          .filter(([linkblue]) => !(linkblue.startsWith("%") && linkblue.endsWith("%")))
-          .map(([ linkblue, points ]) => ([ linkblue.toLowerCase(), points ] as [string, number]))
-          .sort(([ , a ], [ , b ]) => b - a);
-      }
-    },
-    [team?.individualTotals]
-  );
 
   if (team == null) {
     return (
@@ -55,14 +35,25 @@ const TeamScreen = () => {
     );
   } else {
     const {
-      name, memberNames, fundraisingTotal, totalPoints
+      name, memberNames, individualTotals
     } = team;
+    const captainLinkblues = [Object.keys(memberNames)[0]];
 
     return (
       <TeamInformation
-        captains={[]}
+        // TODO ADD CAPTAINS
+        captains={captainLinkblues.map((linkblue) => memberNames[linkblue]).filter((name): name is string => name != null)}
         members={Object.values(memberNames).filter((name): name is string => name != null)}
         name={name}
+        scoreboardData={individualTotals == null ? [] : Object.entries(individualTotals).filter(([linkblue]) => linkblue !== "%TEAM%").map(([ linkblue, points ]) => {
+          return {
+            id: linkblue,
+            highlighted: linkblue === userLinkblue,
+            name: memberNames[linkblue] ?? linkblue,
+            points
+          };
+        })
+          .sort((a, b) => b.points - a.points)}
       />
     );
   }
