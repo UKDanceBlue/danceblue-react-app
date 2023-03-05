@@ -91,7 +91,6 @@ const TabBar = () => {
       })}
     >
       <Tabs.Screen name="Home" component={HomeScreen} />
-      <Tabs.Screen name="Marathon" component={MarathonScreen} />
       {isConfigLoaded && currentTabs}
     </Tabs.Navigator>
   );
