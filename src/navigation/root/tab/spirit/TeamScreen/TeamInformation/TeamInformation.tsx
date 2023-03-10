@@ -9,8 +9,8 @@ import { StandingType } from "../../../../../../types/StandingType";
 import Scoreboard from "../../ScoreBoardScreen/Scoreboard";
 
 const TeamInformation = ({
-  name, captains, members, scoreboardData
-}: { name:string; captains:string[]; members:string[]; scoreboardData: StandingType[] }) => {
+  name, captains, members, scoreboardData, teamTotal
+}: { name:string; captains:string[]; members:string[]; scoreboardData: StandingType[]; teamTotal:number }) => {
   const {
     body, mono
   } = useThemeFonts();
@@ -47,10 +47,10 @@ const TeamInformation = ({
             <Flex direction="column">
               <Text
                 fontFamily="headingBold"
-                fontSize="3xl"
+                fontSize="5xl"
                 color="secondary.400"
                 textAlign="center"
-                paddingTop={2}>0000</Text>
+                paddingTop={2}>{teamTotal}</Text>
               <Text
                 fontFamily="mono"
                 fontSize="3xl"

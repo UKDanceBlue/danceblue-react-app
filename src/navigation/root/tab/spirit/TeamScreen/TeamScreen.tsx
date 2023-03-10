@@ -54,6 +54,7 @@ const TeamScreen = () => {
           };
         })
           .sort((a, b) => b.points - a.points)}
+        teamTotal={team.totalPoints == null ? 0 : team.totalPoints}
       />
     );
   }
