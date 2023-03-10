@@ -8,7 +8,7 @@ const CommitteeHoldingSign = ({
     id="Layer_1"
     x={0}
     y={0}
-    viewBox="0 0 248 343"
+    viewBox="0 0 248 310"
     {...svgProps}
   >
     <Path
