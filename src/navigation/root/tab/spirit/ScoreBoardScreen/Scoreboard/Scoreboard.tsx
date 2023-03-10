@@ -1,5 +1,5 @@
 import { Entypo } from "@expo/vector-icons";
-import { Text, View } from "native-base";
+import { Box, FlatList, Text, View } from "native-base";
 
 import { useThemeColors } from "../../../../../../common/customHooks";
 import { StandingType } from "../../../../../../types/StandingType";
@@ -16,6 +16,8 @@ const Scoreboard = ({
   return (
     <View>
       <Text
+        justifyContent="center"
+        alignContent="center"
         textAlign="center"
         color="secondary.400"
         fontFamily="heading"
@@ -26,15 +28,27 @@ const Scoreboard = ({
           textShadowRadius: 1
         }}>{title}</Text>
       {
-        data.map((item, index) => (
-          <ScoreboardItem
-            key={item.id}
-            rank={index + 1}
-            name={item.name}
-            points={item.points}
-            icon={ichooseyou}
-            type={fromyou}/>
-        ))
+        <FlatList
+          scrollEnabled={false}
+          overflow="visible"
+          data={data}
+          renderItem={({
+            item, index
+          }) => (
+            <ScoreboardItem
+              key={item.id}
+              rank={index + 1}
+              name={item.name}
+              points={item.points}
+              icon={ichooseyou}
+              type={fromyou}/>
+          )}
+          ItemSeparatorComponent={() => (<Box
+            marginLeft={3}
+            marginRight={3}
+            style={{ borderBottomWidth: 1, borderBottomColor: "#0032A0" }}/>)}
+          keyExtractor={(item) => item.id}
+        />
       }
     </View>
   );
