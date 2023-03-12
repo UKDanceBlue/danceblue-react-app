@@ -1,5 +1,5 @@
 import { Button, Center, Image, Text, View, ZStack } from "native-base";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, ImageSourcePropType, StatusBar } from "react-native";
 
 import { useLinkBlueLogin } from "../../../common/auth";
@@ -32,12 +32,21 @@ const SplashLoginScreen = () => {
   const heightOfBackground = Dimensions.get("window").height * 0.6;
   const heightOfContent = Dimensions.get("window").height * 0.4;
 
+  // TODO: FIX INTERVAL
+  const [ bgImage, setbgImage ] = useState(getRandomSplashLoginBackground());
+  useEffect(() => {
+    const unsub = setInterval(() => {
+      setbgImage(getRandomSplashLoginBackground());
+    }, 1000);
+    return () => clearInterval(unsub);
+  }, []);
+
   return (
     <>
       <StatusBar hidden/>
       <ZStack>
         <Image
-          source={getRandomSplashLoginBackground()}
+          source={bgImage}
           alt="Background"
           width={Dimensions.get("window").width}
           height={heightOfBackground}
