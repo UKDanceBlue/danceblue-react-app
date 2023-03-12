@@ -9,7 +9,7 @@ import { StandingType } from "../../../../../../types/StandingType";
 import Scoreboard from "../../ScoreBoardScreen/Scoreboard";
 
 const TeamInformation = ({
-  name, captains, members, scoreboardData, teamTotal
+  name, captains, scoreboardData, teamTotal
 }: { name:string; captains:string[]; members:string[]; scoreboardData: StandingType[]; teamTotal:number }) => {
   const {
     body, mono
@@ -17,7 +17,6 @@ const TeamInformation = ({
   const { width: screenWidth } = useWindowDimensions();
 
   const captainString = captains.join(", ");
-  // const memberString = members.join(", ");
 
   return (
     <View overflow="scroll" flex={1}>
@@ -36,10 +35,14 @@ const TeamInformation = ({
             <Text font={body} fontSize="lg" bold>Name: </Text>
             <Text fontFamily={mono} fontSize="lg">{name}</Text>
           </Text>
-          <Text color="primary.600" flexDirection="row">
-            <Text font={body} fontSize="lg" bold>Captain(s): </Text>
-            <Text fontFamily={mono} fontSize="lg">{captainString}</Text>
-          </Text>
+          {
+            captains.length > 0 && (
+              <Text color="primary.600" flexDirection="row">
+                <Text font={body} fontSize="lg" bold>{`Captain${captains.length > 1 ? "s" : ""}: `}</Text>
+                <Text fontFamily={mono} fontSize="lg">{captainString}</Text>
+              </Text>
+            )
+          }
         </View>
         <HStack alignItems="center">
           <CommitteeHoldingSign svgProps={{ width: screenWidth / 2, height: 200 }}/>

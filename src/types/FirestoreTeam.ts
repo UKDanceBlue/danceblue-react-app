@@ -3,6 +3,7 @@ export interface FirestoreTeam {
   name: string;
   teamClass?: "public" | "committee";
   members: string[];
+  captains: string[];
   memberNames: Record<string, string | null>;
   memberAccounts: Record<string, string | null>;
   fundraisingTotal?: number;
@@ -28,6 +29,10 @@ export function isFirestoreTeam(
   }
 
   if (!Array.isArray((data as Partial<FirestoreTeam>).members) || (data as Partial<FirestoreTeam>).members?.some((m: unknown) => typeof m !== "string")) {
+    return false;
+  }
+
+  if (!Array.isArray((data as Partial<FirestoreTeam>).captains) || (data as Partial<FirestoreTeam>).captains?.some((m: unknown) => typeof m !== "string")) {
     return false;
   }
 
