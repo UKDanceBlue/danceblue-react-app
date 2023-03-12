@@ -10,6 +10,7 @@ import { UserLoginType } from "./user";
 interface AppConfiguration {
   isConfigLoaded: boolean;
   enabledScreens: string[];
+  fancyTab: string | undefined;
   allowedLoginTypes: UserLoginType[];
   scoreboardMode: { pointType:string;showIcons:boolean;showTrophies:boolean };
   demoModeKey: string;
@@ -18,6 +19,7 @@ interface AppConfiguration {
 const initialState: AppConfiguration = {
   isConfigLoaded: false,
   enabledScreens: [],
+  fancyTab: undefined,
   allowedLoginTypes: [],
   scoreboardMode: { pointType: "", showIcons: false, showTrophies: false },
   demoModeKey: Math.random().toString(), // Start the demo key as junk for safety's sake
@@ -61,7 +63,7 @@ const updateState = async (setLoading: (isLoading: boolean) => void, fbRemoteCon
     const parsedRemoteConfig: Partial<AppConfiguration> = {};
 
     try {
-      parsedRemoteConfig.enabledScreens = (JSON.parse(remoteConfigData.shown_tabs.asString()) ?? undefined) as string[];
+      parsedRemoteConfig.enabledScreens = (JSON.parse(remoteConfigData.shown_tabs.asString()) ?? undefined) as string[] | undefined;
     } catch (e) {
       if (e instanceof SyntaxError) {
         log("Error parsing 'shown_tabs'");
@@ -71,6 +73,18 @@ const updateState = async (setLoading: (isLoading: boolean) => void, fbRemoteCon
         throw e;
       }
     }
+    try {
+      parsedRemoteConfig.fancyTab = remoteConfigData.fancy_tab.asString() as string | undefined;
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        log("Error parsing 'fancy_tab'");
+        logError(e);
+        parsedRemoteConfig.fancyTab = undefined;
+      } else {
+        throw e;
+      }
+    }
+
     try {
       parsedRemoteConfig.allowedLoginTypes = (JSON.parse(remoteConfigData.login_mode.asString()) as (UserLoginType[] | undefined) ?? undefined);
     } catch (e) {
@@ -103,6 +117,7 @@ const updateState = async (setLoading: (isLoading: boolean) => void, fbRemoteCon
       isConfigLoaded: true,
       allowedLoginTypes: parsedRemoteConfig.allowedLoginTypes ?? initialState.allowedLoginTypes,
       enabledScreens: parsedRemoteConfig.enabledScreens ?? initialState.enabledScreens,
+      fancyTab: parsedRemoteConfig.fancyTab ?? initialState.fancyTab,
       demoModeKey: parsedRemoteConfig.demoModeKey ?? initialState.demoModeKey,
       scoreboardMode: parsedRemoteConfig.scoreboardMode ?? initialState.scoreboardMode,
     };

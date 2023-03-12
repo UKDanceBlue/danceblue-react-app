@@ -30,7 +30,7 @@ export const possibleTabs = {
 
 const TabBar = () => {
   const {
-    isConfigLoaded, enabledScreens
+    isConfigLoaded, enabledScreens, fancyTab
   } = useAppConfig();
 
   const [ currentTabs, setCurrentTabs ] = useState<ReactElement[]>([]);
@@ -38,14 +38,24 @@ const TabBar = () => {
   useEffect(() => {
     if (isConfigLoaded) {
       const tempCurrentTabs = [];
-      for (const tabName of enabledScreens) {
-        tempCurrentTabs.push(possibleTabs[tabName]);
+
+      let i = 0;
+      for (; i<tempCurrentTabs.length/2; i++) {
+        tempCurrentTabs.push(possibleTabs[enabledScreens[i]]);
+      }
+      if (fancyTab) {
+        tempCurrentTabs.push(possibleTabs[fancyTab]);
+      }
+      for (; i<enabledScreens.length; i++) {
+        tempCurrentTabs.push(possibleTabs[enabledScreens[i]]);
       }
 
       setCurrentTabs(tempCurrentTabs);
       log(`Config loaded, setting current tabs to ${JSON.stringify({ currentTabs: tempCurrentTabs })}`);
     }
-  }, [ enabledScreens, isConfigLoaded ]);
+  }, [
+    enabledScreens, fancyTab, isConfigLoaded
+  ]);
 
   return (
     <Tabs.Navigator
