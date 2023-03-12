@@ -87,7 +87,7 @@ const EventListScreen = () => {
 
   useLayoutEffect(() => {
     if (!hasSetPage && hasPagerRefBeenSet && lazyPagerRef.current != null) {
-      lazyPagerRef.current.setPageWithoutAnimation(Math.floor(monthCount / 2));
+      lazyPagerRef.current.setPageWithoutAnimation(Math.ceil(monthCount / 2));
       setHasSetPage(true);
     }
   }, [ hasPagerRefBeenSet, hasSetPage ]);
@@ -108,8 +108,8 @@ const EventListScreen = () => {
                   setHasPagerRefBeenSet(true);
                 }
               }}
-              buffer={2}
-              maxRenderWindow={20}
+              buffer={1}
+              maxRenderWindow={7}
               // Lib does not support dynamically orientation change
               orientation="horizontal"
               // Lib does not support dynamically transitionStyle change
