@@ -122,13 +122,14 @@ const App = () => {
   }, []);
 
   return (
-    <NativeBaseProvider config={{ strictMode: __DEV__ ? "error" : "off" }} theme={theme}>
+    fontsLoaded && (<NativeBaseProvider config={{ strictMode: __DEV__ ? "error" : "off" }} theme={theme}>
       <ErrorBoundary>
         <CombinedContext>
           <FilledNavigationContainer />
         </CombinedContext>
       </ErrorBoundary>
     </NativeBaseProvider>
+    )
   );
 };
 
