@@ -15,10 +15,11 @@ const HeaderIcons = ({ navigation }: {
 
   return (
     <View
-      style={{ flexDirection: "row", width: Math.round(width * 0.22), justifyContent: "space-between", marginRight: Math.round(width * 0.025), alignItems: "center" }}>
+      style={{ flexDirection: "row", width: Math.round(width * 0.15), justifyContent: "space-between", marginRight: Math.round(width * 0.025), alignItems: "center" }}>
       {/* <TouchableOpacity>
         <DanceBlueRibbon svgProps={{ width: width*0.1, height: width*0.1 }}/>
       </TouchableOpacity> */}
+      {/* We'll need to wait until next year
       <TouchableOpacity onPress={async () => {
         if (
           await Linking.canOpenURL(
@@ -35,7 +36,7 @@ const HeaderIcons = ({ navigation }: {
           color="#0032A0"
           style={{ textAlignVertical: "center", fontSize: PixelRatio.get() * 8 }}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
         <FontAwesome
           name="bell"
