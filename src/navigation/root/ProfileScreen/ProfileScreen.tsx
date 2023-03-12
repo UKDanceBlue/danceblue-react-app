@@ -28,7 +28,7 @@ const ProfileScreen = () => {
   function jumboText() {
     let welcomeString = "Welcome to DanceBlue!";
     if (userData.firstName != null && !authData.isAnonymous) {
-      welcomeString = `Hey${ userData.firstName }!`;
+      welcomeString = `Hey ${userData.firstName}!`;
     }
 
     return welcomeString;

@@ -68,7 +68,7 @@ function NotificationScreen() {
   function jumboText() {
     let welcomeString = "Welcome to DanceBlue!";
     if (userData.firstName != null) {
-      welcomeString = `Hey${ userData.firstName }!`;
+      welcomeString = `Hey ${ userData.firstName }!`;
     }
 
     return welcomeString;
