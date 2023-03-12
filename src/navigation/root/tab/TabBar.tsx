@@ -13,8 +13,8 @@ import HeaderIcons from "../../HeaderIcons";
 import { DBHeaderText } from "./DBHeaderText";
 import EventListScreen from "./EventListScreen";
 import HomeScreen from "./HomeScreen";
-import TabBarComponent from "./TabBarComponent";
 import MarathonScreen from "./MarathonScreen";
+import TabBarComponent from "./TabBarComponent";
 import SpiritScreen from "./spirit/SpiritStack";
 
 const Tabs = createBottomTabNavigator<TabNavigatorParamList>();
@@ -30,7 +30,7 @@ export const possibleTabs = {
 
 const TabBar = () => {
   const {
-    isConfigLoaded, enabledScreens, fancyTab
+    isConfigLoaded, enabledScreens: allEnabledScreens, fancyTab
   } = useAppConfig();
 
   const [ currentTabs, setCurrentTabs ] = useState<ReactElement[]>([]);
@@ -38,6 +38,8 @@ const TabBar = () => {
   useEffect(() => {
     if (isConfigLoaded) {
       const tempCurrentTabs = [];
+
+      const enabledScreens = allEnabledScreens.filter((screen) => screen !== fancyTab);
 
       let i = 0;
       for (; i<tempCurrentTabs.length/2; i++) {
@@ -54,7 +56,7 @@ const TabBar = () => {
       log(`Config loaded, setting current tabs to ${JSON.stringify({ currentTabs: tempCurrentTabs })}`);
     }
   }, [
-    enabledScreens, fancyTab, isConfigLoaded
+    allEnabledScreens, fancyTab, isConfigLoaded
   ]);
 
   return (
