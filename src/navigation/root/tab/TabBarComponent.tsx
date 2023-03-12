@@ -148,7 +148,8 @@ function TabBarEntry({
             right: 0,
             justifyContent: "center",
             alignItems: "center",
-          }}>
+          }}
+          pointerEvents="box-none">
           <TabBarIcon
             isFocused={isFocused}
             options={options}
@@ -163,8 +164,7 @@ function TabBarEntry({
           style={{ width: screenWidth * .2 }}
           collapsable={false}
           pointerEvents="none"
-        >
-        </View>
+        />
       </>
     ) : (
       <TabBarIcon
