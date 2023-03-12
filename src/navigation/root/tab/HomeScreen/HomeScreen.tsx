@@ -5,6 +5,7 @@ import PodcastPlayer from "../../../../common/components/PodcastPlayer";
 import SponsorsBlock from "../../../../common/components/SponsorsBlock";
 import { useColorModeValue } from "../../../../common/customHooks";
 import { universalCatch } from "../../../../common/logging";
+import { useReactNavigationTheme } from "../../../../theme";
 
 import HeaderImage from "./HeaderImage";
 import SponsorCarousel from "./SponsorCarousel";
@@ -14,7 +15,7 @@ import SponsorCarousel from "./SponsorCarousel";
  */
 const HomeScreen = () => {
   const { colors } = useTheme();
-  const bgColor = useColorModeValue(colors.white, colors.gray[600]);
+  const bgColor = useReactNavigationTheme().colors.background;
 
   return (
     <>

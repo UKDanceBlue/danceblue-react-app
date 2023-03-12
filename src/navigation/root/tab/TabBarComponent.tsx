@@ -7,6 +7,8 @@ import { Text, TouchableOpacity, View, useWindowDimensions } from "react-native"
 
 import BackgroundCutout from "../../../../assets/screens/navigation/background-cutout";
 import DanceBlueRibbon from "../../../../assets/svgs/DBRibbon";
+import { useColorModeValue, useThemeColors } from "../../../common/customHooks";
+import { useReactNavigationTheme } from "../../../theme";
 
 // From https://reactnavigation.org/docs/bottom-tab-navigator#tabbar
 
@@ -57,6 +59,8 @@ function TabBarIcon({
   label?: string;
   iconKey: keyof typeof iconMap;
 }) {
+  const navTheme = useReactNavigationTheme();
+
   return (
     <TouchableOpacity
       accessibilityRole="button"
@@ -77,10 +81,10 @@ function TabBarIcon({
         alignItems="center"
         justifyContent="center"
         flex={1}>
-        {tabBarIcon({ color: isFocused ? "#673ab7" : "#222", size: iconSize, iconKey })}
+        {tabBarIcon({ color: isFocused ? navTheme.colors.primary : navTheme.colors.text, size: iconSize, iconKey })}
         {
           label &&
-          <Text style={{ color: isFocused ? "#673ab7" : "#222" }}>
+          <Text style={{ color: isFocused ? navTheme.colors.primary : navTheme.colors.text }}>
             {label}
           </Text>
         }
@@ -185,12 +189,17 @@ function TabBarComponent({
     height: screenHeight, width: screenWidth
   } = useWindowDimensions();
 
+  const navTheme = useReactNavigationTheme();
+
   const tabBarHeight = screenHeight * .1;
 
+  const { dark } = useThemeColors();
+  const tabBarBackgroundColor = useColorModeValue("#ffeded", dark[100]);
+
   return (
-    <Box height={tabBarHeight} width={screenWidth} style={{ marginBottom: insets.bottom, marginLeft: insets.left, marginRight: insets.right, borderTopColor: "#ffeded", borderTopWidth: fancyTab ? 0 : 2 }}>
+    <Box height={tabBarHeight} width={screenWidth} style={{ marginBottom: insets.bottom, marginLeft: insets.left, marginRight: insets.right, borderTopColor: navTheme.colors.border, borderTopWidth: fancyTab ? 0 : 2 }}>
       <ZStack>
-        {!!fancyTab && <BackgroundCutout svgProps={{ width: screenWidth, height: tabBarHeight }} color="#ffeded" />}
+        {!!fancyTab && <BackgroundCutout svgProps={{ width: screenWidth, height: tabBarHeight }} color={tabBarBackgroundColor} />}
         <View style={{ flexDirection: "row", width: screenWidth, height: tabBarHeight }}>
           {
             state.routes.map(
