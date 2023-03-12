@@ -32,6 +32,7 @@ const JumbotronTeam = ({ team }: { team:string }) => {
         textAlign="center"
         fontSize="lg"
         color={primary[600]}
+        // TODO set this dynamically
         bold>Team Spirit Point Ranking: 1st Place</Text>
       <Text
         textAlign="center"

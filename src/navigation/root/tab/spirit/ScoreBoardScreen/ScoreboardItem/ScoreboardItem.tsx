@@ -1,4 +1,5 @@
 import { Container, Flex, Text, View } from "native-base";
+import { memo, useMemo } from "react";
 import { useWindowDimensions } from "react-native";
 
 import DanceBlueRibbon from "../../../../../../../assets/svgs/DBRibbon";
@@ -8,29 +9,38 @@ import FirstPlaceMedal from "./1stPlace";
 import SecondPlaceMedal from "./2ndPlace";
 import ThirdPlaceMedal from "./3rdPlace";
 
-function getAward(rank: number, size: number, colors: string[]) {
+function Award({
+  rank, size
+}: { rank: number; size: number }) {
+  const colors = useThemeColors();
+
   switch (rank) {
   case 1:
     return (
-      <FirstPlaceMedal width={size} height={size} color={colors[0]}/>
+      <FirstPlaceMedal width={size} height={size} color={colors.secondary[400]}/>
     );
   case 2:
     return (
-      <SecondPlaceMedal width={size} height={size} color={colors[1]}/>
+      <SecondPlaceMedal width={size} height={size} color={colors.primary[400]}/>
     );
   case 3:
     return (
-      <ThirdPlaceMedal width={size} height={size} color={colors[2]}/>
+      <ThirdPlaceMedal width={size} height={size} color={colors.tertiary[400]}/>
     );
   default: return <Text color="primary.600" fontSize="3xl" bold>{rank}</Text>;
   }
 }
 
-const ScoreboardItem = ({
-  rank, name, points
-}: { rank: number; name: string; points: number }) => {
+const ScoreboardItem = (
+  {
+    rank, name, points
+  }: {
+    rank: number; name: string; points: number;
+  }
+) => {
   const { width: screenWidth } = useWindowDimensions();
-  const colors = useThemeColors();
+
+  const icon = useMemo(() => <Award rank={rank} size={screenWidth * 0.1} />, [ rank, screenWidth ]);
 
   return (
     <View height={50}>
@@ -38,12 +48,9 @@ const ScoreboardItem = ({
         <Container
           justifyContent="center"
           alignItems="center"
-          flex={1}
-          ml="2"
-          mr="4">
-          {getAward(rank, screenWidth * 0.1, [
-            colors.secondary[400], colors.primary[400], colors.tertiary[400]
-          ])}
+          flex={1.5}
+          ml="2">
+          {icon}
         </Container>
         <Container
           justifyContent="flex-start"
@@ -62,11 +69,14 @@ const ScoreboardItem = ({
         </Container>
         <Container
           justifyContent="flex-end"
-          flex={2}>
-          <Text color="primary.600" fontSize="lg" fontFamily="mono">{points} points</Text>
+          flexDirection="row"
+          flex={2}
+          paddingRight={4}>
+          <Text color="primary.600" fontSize="lg" fontFamily="mono">{points}</Text>
+          <Text color="primary.600" fontSize="lg" fontFamily="mono"> points</Text>
         </Container>
       </Flex>
     </View>
   );
 };
-export default ScoreboardItem;
+export default memo(ScoreboardItem);

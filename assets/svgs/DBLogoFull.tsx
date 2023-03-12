@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Svg, { Path, SvgProps } from "react-native-svg";
 /* SVGR has dropped some elements not supported by react-native-svg: style */
 
@@ -169,4 +170,4 @@ const DBLogoFull = ({
   </Svg>
 );
 
-export default DBLogoFull;
+export default memo(DBLogoFull);

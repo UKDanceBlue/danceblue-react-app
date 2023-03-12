@@ -36,35 +36,37 @@ const BackgroundCutout = ({
   }
   const svgWidth = Number(svgProps.height) * (ratio.x / ratio.y);
   const sideWidth = (screenWidth - svgWidth) / 2;
-  return (<HStack>
-    <Box
-      position="absolute"
-      left={0}
-      minWidth={sideWidth * 1.1}
-      minHeight={svgProps.height}
-      bg={color}
-      margin={0} />
-    <BackgroundCutoutBase
-      svgProps={{
-        ...svgProps,
-        width: svgWidth,
-        height: svgProps.height,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        style: {
+  return (
+    <HStack>
+      <Box
+        position="absolute"
+        left={0}
+        minWidth={sideWidth * 1.1}
+        minHeight={svgProps.height}
+        bg={color}
+        margin={0} />
+      <BackgroundCutoutBase
+        svgProps={{
+          ...svgProps,
+          width: svgWidth,
+          height: svgProps.height,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          style: {
           // @ts-expect-error This is fine
-          ...(svgProps.style ?? {}),
-          marginLeft: sideWidth
-        }
-      }}
-      color={color} />
-    <Box
-      position="absolute"
-      right={0}
-      minWidth={sideWidth * 1.1}
-      minHeight={svgProps.height}
-      bg={color}
-      margin={0} />
-  </HStack>);
+            ...(svgProps.style ?? {}),
+            marginLeft: sideWidth
+          }
+        }}
+        color={color} />
+      <Box
+        position="absolute"
+        right={0}
+        minWidth={sideWidth * 1.1}
+        minHeight={svgProps.height}
+        bg={color}
+        margin={0} />
+    </HStack>
+  );
 };
 
 export default BackgroundCutout;

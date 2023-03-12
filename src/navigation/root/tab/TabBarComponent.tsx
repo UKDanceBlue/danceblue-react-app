@@ -99,7 +99,7 @@ function TabBarComponent({
 
   return (
     <ZStack height={tabBarHeight} width={screenWidth} style={{ marginTop: insets.top, marginBottom: insets.bottom, marginLeft: insets.left, marginRight: insets.right }}>
-      <BackgroundCutout svgProps={{ width: screenWidth, height: tabBarHeight }} color="#ededed" />
+      <BackgroundCutout svgProps={{ width: screenWidth, height: tabBarHeight }} color="#ffeded" />
       <View style={{ flexDirection: "row", width: screenWidth, height: tabBarHeight }}>
         {
           state.routes.map(
@@ -107,9 +107,11 @@ function TabBarComponent({
               const { options } = descriptors[route.key];
               const label = typeof options.tabBarLabel === "string"
                 ? options.tabBarLabel
-                : options.title !== undefined
-                  ? options.title
-                  : route.name;
+                : (
+                  options.title !== undefined
+                    ? options.title
+                    : route.name
+                );
 
               const isFocused = state.index === index;
 
@@ -138,19 +140,20 @@ function TabBarComponent({
               };
 
               return (
-
-                isMiddle?(
+                isMiddle ? (
                   <>
-                    <View style = {{
-                      position: "absolute",
-                      width: screenWidth,
-                      height: screenWidth*.1*1.4,
-                      bottom: Math.trunc(tabBarHeight * .5),
-                      left: 0,
-                      right: 0,
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}>
+                    <View
+                      key={route.key}
+                      style = {{
+                        position: "absolute",
+                        width: screenWidth,
+                        height: screenWidth*.1*1.4,
+                        bottom: Math.trunc(tabBarHeight * .5),
+                        left: 0,
+                        right: 0,
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}>
                       <TabBarIcon
                         isFocused={isFocused}
                         options={options}
@@ -164,11 +167,13 @@ function TabBarComponent({
                     <View
                       style={{ width: screenWidth * .2 }}
                       collapsable={false}
+                      pointerEvents="none"
                     >
                     </View>
                   </>
                 ) : (
                   <TabBarIcon
+                    key={route.key}
                     isFocused={isFocused}
                     options={options}
                     onPress={onPress}
