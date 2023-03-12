@@ -1,10 +1,9 @@
-// Import third-party dependencies
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ReactElement, useEffect, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// Import first-party dependencies
 import { log } from "../../../common/logging";
 import { useAppConfig } from "../../../context";
 import { RootStackParamList, TabNavigatorParamList } from "../../../types/navigationTypes";
@@ -24,8 +23,8 @@ export const possibleTabs = {
     key="Events"
     name="Events"
     component={EventListScreen}/>,
-  Spirit: <Tabs.Screen key="Spirit" name="Teams" component={SpiritScreen} />,
-  MarathonHours: <Tabs.Screen key="MarathonScreen" name="Marathon" component={MarathonScreen} />,
+  Teams: <Tabs.Screen key="Spirit" name="Teams" component={SpiritScreen} />,
+  Marathon: <Tabs.Screen key="MarathonScreen" name="Marathon" component={MarathonScreen} />,
 } as { [name: string]: ReactElement };
 
 const TabBar = () => {
@@ -78,10 +77,6 @@ const TabBar = () => {
         headerRight: () => (
           <HeaderIcons navigation={navigation} />
         ),
-        tabBarStyle: [
-          { display: "flex", backgroundColor: "transparent", height: 110, paddingTop: 40, paddingBottom: 20, borderTopColor: "transparent" },
-          null,
-        ],
         headerStyle: [
           {
             borderBottomWidth: 1.5,
@@ -97,7 +92,8 @@ const TabBar = () => {
           }, null
         ],
       })}
-      tabBar={(props) => (<TabBarComponent {...props} />)}
+      tabBar={(props) => (<TabBarComponent {...props} fancyTab={fancyTab} />)}
+      safeAreaInsets={useSafeAreaInsets()}
     >
       <Tabs.Screen name="Home" component={HomeScreen} />
       {isConfigLoaded && currentTabs}

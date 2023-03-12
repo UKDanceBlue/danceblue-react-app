@@ -1,6 +1,7 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { BottomTabBarProps, BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
-import { VStack } from "native-base";
+import { ParamListBase, TabNavigationState } from "@react-navigation/native";
+import { Box, VStack } from "native-base";
 import { ZStack } from "native-base/src/components/primitives";
 import { Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
 
@@ -44,14 +45,14 @@ const tabBarIcon = ({
 };
 
 function TabBarIcon({
-  isFocused, options, onPress, onLongPress, sizeFactor, isMiddle, iconSize, label, iconKey
+  isFocused, options, onPress, onLongPress, sizeFactor, isFancy: isMiddle, iconSize, label, iconKey
 }: {
   isFocused: boolean;
   options: BottomTabNavigationOptions;
   onPress: () => void;
   onLongPress: () => void;
   sizeFactor: number;
-  isMiddle: boolean;
+  isFancy?: boolean;
   iconSize: number;
   label?: string;
   iconKey: keyof typeof iconMap;
@@ -88,9 +89,98 @@ function TabBarIcon({
   );
 }
 
+function TabBarEntry({
+  label,
+  isFocused,
+  route,
+  options,
+  navigation,
+  tabBarHeight,
+  screenWidth,
+  isFancyTab
+}: {
+  label: string;
+  isFocused: boolean;
+  route: TabNavigationState<ParamListBase>["routes"][number];
+  options: BottomTabNavigationOptions;
+  navigation: BottomTabBarProps["navigation"];
+  tabBarHeight: number;
+  screenWidth: number;
+  isFancyTab: boolean;
+}) {
+  const sizeOfIcon = tabBarHeight * .32;
+
+  const onPress = () => {
+    const event = navigation.emit({
+      type: "tabPress",
+      target: route.key,
+      canPreventDefault: true,
+    });
+
+    if (!isFocused && !event.defaultPrevented) {
+      // The `merge: true` option makes sure that the params inside the tab screen are preserved
+      navigation.navigate({ name: route.name, merge: true, params: {} });
+    }
+  };
+
+  const onLongPress = () => {
+    navigation.emit({
+      type: "tabLongPress",
+      target: route.key,
+    });
+  };
+
+  return (
+    isFancyTab ? (
+      <>
+        <View
+          key={route.key}
+          style = {{
+            position: "absolute",
+            width: screenWidth,
+            height: screenWidth*.1*1.4,
+            bottom: Math.trunc(tabBarHeight * .5),
+            left: 0,
+            right: 0,
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+          <TabBarIcon
+            isFocused={isFocused}
+            options={options}
+            onPress={onPress}
+            onLongPress={onLongPress}
+            sizeFactor={tabBarHeight * .8}
+            isFancy
+            iconSize={tabBarHeight * .8}
+            iconKey="Logo" />
+        </View>
+        <View
+          style={{ width: screenWidth * .2 }}
+          collapsable={false}
+          pointerEvents="none"
+        >
+        </View>
+      </>
+    ) : (
+      <TabBarIcon
+        key={route.key}
+        isFocused={isFocused}
+        options={options}
+        onPress={onPress}
+        onLongPress={onLongPress}
+        sizeFactor={tabBarHeight * .8}
+        iconSize={sizeOfIcon}
+        label={label}
+        iconKey={route.name as keyof typeof iconMap} />
+    )
+  );
+}
+
+
 function TabBarComponent({
-  state, descriptors, navigation, insets
-}: BottomTabBarProps) {
+  state, descriptors, navigation, insets, fancyTab
+}: BottomTabBarProps & { fancyTab: string | undefined }) {
   const {
     height: screenHeight, width: screenWidth
   } = useWindowDimensions();
@@ -98,98 +188,39 @@ function TabBarComponent({
   const tabBarHeight = screenHeight * .1;
 
   return (
-    <ZStack height={tabBarHeight} width={screenWidth} style={{ marginTop: insets.top, marginBottom: insets.bottom, marginLeft: insets.left, marginRight: insets.right }}>
-      <BackgroundCutout svgProps={{ width: screenWidth, height: tabBarHeight }} color="#ffeded" />
-      <View style={{ flexDirection: "row", width: screenWidth, height: tabBarHeight }}>
-        {
-          state.routes.map(
-            (route, index) => {
-              const { options } = descriptors[route.key];
-              const label = typeof options.tabBarLabel === "string"
-                ? options.tabBarLabel
-                : (
-                  options.title !== undefined
-                    ? options.title
-                    : route.name
-                );
-
-              const isFocused = state.index === index;
-
-              const isMiddle = state.routes.length % 2 === 1 && index === Math.floor(state.routes.length / 2);
-
-              const sizeOfIcon = tabBarHeight * .32;
-
-              const onPress = () => {
-                const event = navigation.emit({
-                  type: "tabPress",
-                  target: route.key,
-                  canPreventDefault: true,
-                });
-
-                if (!isFocused && !event.defaultPrevented) {
-                  // The `merge: true` option makes sure that the params inside the tab screen are preserved
-                  navigation.navigate({ name: route.name, merge: true, params: {} });
-                }
-              };
-
-              const onLongPress = () => {
-                navigation.emit({
-                  type: "tabLongPress",
-                  target: route.key,
-                });
-              };
-
-              return (
-                isMiddle ? (
-                  <>
-                    <View
-                      key={route.key}
-                      style = {{
-                        position: "absolute",
-                        width: screenWidth,
-                        height: screenWidth*.1*1.4,
-                        bottom: Math.trunc(tabBarHeight * .5),
-                        left: 0,
-                        right: 0,
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}>
-                      <TabBarIcon
-                        isFocused={isFocused}
-                        options={options}
-                        onPress={onPress}
-                        onLongPress={onLongPress}
-                        sizeFactor={tabBarHeight * .8}
-                        isMiddle={isMiddle}
-                        iconSize={tabBarHeight * .8}
-                        iconKey="Logo" />
-                    </View>
-                    <View
-                      style={{ width: screenWidth * .2 }}
-                      collapsable={false}
-                      pointerEvents="none"
-                    >
-                    </View>
-                  </>
-                ) : (
-                  <TabBarIcon
+    <Box height={tabBarHeight} width={screenWidth} style={{ marginBottom: insets.bottom, marginLeft: insets.left, marginRight: insets.right, borderTopColor: "#ffeded", borderTopWidth: fancyTab ? 0 : 2 }}>
+      <ZStack>
+        {!!fancyTab && <BackgroundCutout svgProps={{ width: screenWidth, height: tabBarHeight }} color="#ffeded" />}
+        <View style={{ flexDirection: "row", width: screenWidth, height: tabBarHeight }}>
+          {
+            state.routes.map(
+              (route, index) => {
+                const { options } = descriptors[route.key];
+                return (
+                  <TabBarEntry
                     key={route.key}
-                    isFocused={isFocused}
+                    route={route}
+                    label={typeof options.tabBarLabel === "string"
+                      ? options.tabBarLabel
+                      : (
+                        options.title !== undefined
+                          ? options.title
+                          : route.name
+                      )}
+                    isFocused={state.index === index}
                     options={options}
-                    onPress={onPress}
-                    onLongPress={onLongPress}
-                    sizeFactor={tabBarHeight * .8}
-                    isMiddle={isMiddle}
-                    iconSize={sizeOfIcon}
-                    label={label}
-                    iconKey={route.name as keyof typeof iconMap} />
-                )
-              );
-            }
-          )
-        }
-      </View>
-    </ZStack >
+                    navigation={navigation}
+                    tabBarHeight={tabBarHeight}
+                    screenWidth={screenWidth}
+                    isFancyTab={route.name === fancyTab}
+                  />
+                );
+              }
+            )
+          }
+        </View>
+      </ZStack >
+    </Box>
   );
 }
 

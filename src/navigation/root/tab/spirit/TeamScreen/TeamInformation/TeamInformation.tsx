@@ -20,7 +20,7 @@ const TeamInformation = ({
   // const memberString = members.join(", ");
 
   return (
-    <View overflow="scroll">
+    <View overflow="scroll" flex={1}>
       <Breadcrumbs pageName={name} includeBreadcrumbs={false} previousPage={"Teams"}/>
       <View>
         <HStack alignItems="center" justifyContent="center">
@@ -61,7 +61,8 @@ const TeamInformation = ({
         </HStack>
       </View>
       <View
-        borderColor="primary.600">
+        borderColor="primary.600"
+        flex={1}>
         <Scoreboard title="Team Standings" data={scoreboardData}/>
       </View>
     </View>

@@ -33,9 +33,9 @@ function Award({
 
 const ScoreboardItem = (
   {
-    rank, name, points
+    rank, name, points, highlighted
   }: {
-    rank: number; name: string; points: number;
+    rank: number; name: string; points: number; highlighted: boolean;
   }
 ) => {
   const { width: screenWidth } = useWindowDimensions();
@@ -43,7 +43,7 @@ const ScoreboardItem = (
   const icon = useMemo(() => <Award rank={rank} size={screenWidth * 0.1} />, [ rank, screenWidth ]);
 
   return (
-    <View height={50}>
+    <View height={50} backgroundColor={highlighted ? "primary.50" : undefined}>
       <Flex direction="row" alignItems="center" flex={1}>
         <Container
           justifyContent="center"
