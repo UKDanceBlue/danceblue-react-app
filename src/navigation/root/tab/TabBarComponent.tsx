@@ -197,7 +197,7 @@ function TabBarComponent({
   const tabBarBackgroundColor = useColorModeValue("#f8f8f8", dark[100]);
 
   return (
-    <Box height={tabBarHeight} width={screenWidth} style={{ paddingBottom: insets.bottom, marginLeft: insets.left, marginRight: insets.right, borderTopColor: navTheme.colors.border, borderTopWidth: fancyTab ? 0 : 2 }}>
+    <Box height={tabBarHeight} width={screenWidth} style={{ paddingBottom: insets.bottom, paddingLeft: insets.left, paddingRight: insets.right, borderTopColor: navTheme.colors.border, borderTopWidth: fancyTab ? 0 : 2 }}>
       <ZStack>
         {!!fancyTab && <BackgroundCutout svgProps={{ width: screenWidth, height: tabBarHeight }} color={tabBarBackgroundColor} />}
         <View style={{ flexDirection: "row", width: screenWidth, height: tabBarHeight }}>
