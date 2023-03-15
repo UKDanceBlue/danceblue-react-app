@@ -1,5 +1,5 @@
 import firebaseFirestore from "@react-native-firebase/firestore";
-import { Box, Heading, ScrollView, View } from "native-base";
+import { Box, ScrollView, Text, View } from "native-base";
 import { useEffect, useState } from "react";
 
 import SponsorCard from "../../../../common/components/ImageCard";
@@ -42,7 +42,7 @@ const SponsorCarousel = () => {
   return (
     <View height="100%" flex={1} alignContent="flex-end">
       <View>
-        <Heading> SPONSORS </Heading>
+        <Text fontSize="xl" fontFamily="body" paddingLeft="2">Sponsors</Text>
       </View>
       <Box flexDirection="row" flex={1} alignItems="center">
         <ScrollView
@@ -50,7 +50,8 @@ const SponsorCarousel = () => {
           horizontal
           flex={1}
           height="4/5"
-          p="2">
+          paddingLeft="2"
+          paddingRight="2">
           {cards}
         </ScrollView>
       </Box>

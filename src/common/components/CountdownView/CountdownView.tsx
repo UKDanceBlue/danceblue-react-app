@@ -1,5 +1,5 @@
 import { DateTime, Duration, Interval } from "luxon";
-import { Text, View } from "native-base";
+import { View } from "native-base";
 import { useEffect, useState } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
 
@@ -8,12 +8,8 @@ import TimeUnit from "../TimeUnit";
 
 const CountdownView = ({ endTime }: { endTime: number }) => {
   const [ countdownDisplayDuration, setCountdownDisplayDuration ] = useState<Duration>(Duration.fromMillis(0));
-  const {
-    primary, secondary
-  } = useThemeColors();
-  const {
-    height: screenHeight, width: screenWidth
-  } = useWindowDimensions();
+  const { primary } = useThemeColors();
+  const { width: screenWidth } = useWindowDimensions();
 
   useEffect(() => {
     // 1 second timer
@@ -110,6 +106,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     justifyContent: "center",
+    paddingTop: 10
   },
   countdownTimer: {
     flexDirection: "row",
