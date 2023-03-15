@@ -112,7 +112,7 @@ const HomeScreen = () => {
             </Button>
             <Button backgroundColor="transparent">
               <TouchableOpacity onPress={() => {
-                openURL("https://www.tiktok.com/@ukdanceblue").catch(universalCatch);
+                openURL("https://www.tiktok.com/@uk_danceblue").catch(universalCatch);
               }}>
                 <FontAwesome5
                   name="tiktok"
@@ -123,7 +123,7 @@ const HomeScreen = () => {
             </Button>
             <Button backgroundColor="transparent">
               <TouchableOpacity onPress={() => {
-                openURL("https://www.youtube.com/channel/UCcF8V41xkzYkZ0B1IOXntjg/videos").catch(universalCatch);
+                openURL("https://www.youtube.com/channel/UCcF8V41xkzYkZ0B1IOXntjg").catch(universalCatch);
               }}>
                 <FontAwesome5
                   name="youtube"
