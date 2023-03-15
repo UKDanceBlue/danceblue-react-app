@@ -22,6 +22,7 @@ const SponsorCard = ({
     <TouchableHighlight
       onPress={sponsorLink ? () => WebBrowser.openBrowserAsync(sponsorLink) : undefined}
       underlayColor="#dddddd"
+      style={{ flex: 1 }}
     >
       <Box
         shadow="6"
@@ -34,6 +35,7 @@ const SponsorCard = ({
         <Image
           source={{ uri: url ?? undefined, width: PixelRatio.getPixelSizeForLayoutSize(75), height: PixelRatio.getPixelSizeForLayoutSize(50) }}
           alt={name}
+          flex={1}
           style={{ resizeMode: "contain" }}
         />
       </Box>
