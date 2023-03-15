@@ -1,7 +1,7 @@
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { openURL } from "expo-linking";
 import { DateTime } from "luxon";
-import { Box, Button, HStack, Text, VStack, View } from "native-base";
+import { Box, Button, HStack, Text, VStack } from "native-base";
 import { ImageBackground, ImageSourcePropType, PixelRatio, StatusBar, TouchableOpacity, useWindowDimensions } from "react-native";
 
 import CountdownView from "../../../../common/components/CountdownView";
