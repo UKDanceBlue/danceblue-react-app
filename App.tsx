@@ -33,9 +33,6 @@ import { CombinedContext } from "./src/context";
 import { FilledNavigationContainer } from "./src/navigation/NavigationContainer";
 import { getCustomTheme } from "./src/theme";
 
-// Import and run the fistLaunch file
-import "./src/firstLaunch";
-
 /**
  * Main app container
  */
