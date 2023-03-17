@@ -1,3 +1,7 @@
+### Expo Generated Files ###
+android/
+ios/
+
 # Created by https://www.toptal.com/developers/gitignore/api/reactnative,visualstudiocode,windows,macos,linux,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=reactnative,visualstudiocode,windows,macos,linux,node
 
