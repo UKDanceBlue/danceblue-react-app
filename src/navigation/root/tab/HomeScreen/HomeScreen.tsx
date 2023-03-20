@@ -2,7 +2,7 @@ import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { openURL } from "expo-linking";
 import { DateTime } from "luxon";
 import { Box, Button, HStack, Text, VStack } from "native-base";
-import { ImageBackground, ImageSourcePropType, PixelRatio, StatusBar, TouchableOpacity, useWindowDimensions } from "react-native";
+import { ImageBackground, ImageSourcePropType, PixelRatio, Share, StatusBar, TouchableOpacity, useWindowDimensions } from "react-native";
 
 import CountdownView from "../../../../common/components/CountdownView";
 import { universalCatch } from "../../../../common/logging";
@@ -67,9 +67,9 @@ const HomeScreen = () => {
               _pressed={{ opacity: 0.6 }}>
             Donate #FTK!
             </Button>
-            {/* <Button       TODO: FOR ZOOM LINK
+            <Button
               onPress={() => {
-                Share.share({ url: "https://zoom.us" }).catch(universalCatch);
+                Share.share({ url: "https://danceblue.org/marathon-livestream" }).catch(universalCatch);
               }}
               width="2/5"
               backgroundColor={"secondary.400"}
@@ -77,8 +77,7 @@ const HomeScreen = () => {
               _pressed={{ opacity: 0.6 }}>
               Share Zoom Link
             </Button>
-            */}
-            <Button
+            {/* <Button
               onPress={() => {
                 openURL("https://danceblue.org").catch(universalCatch);
               }}
@@ -88,6 +87,7 @@ const HomeScreen = () => {
               _pressed={{ opacity: 0.6 }}>
               Go to DanceBlue HQ
             </Button>
+            */}
           </HStack>
           <HStack justifyContent="center">
             <Button backgroundColor="transparent">

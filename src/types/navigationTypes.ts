@@ -19,6 +19,7 @@ export type TabNavigatorParamList = {
   Teams: NavigatorScreenParams<SpiritStackParamList>;
   Marathon: undefined;
   "Scavenger Hunt": undefined;
+  "Morale Cup": undefined;
 };
 
 export type TabNavigatorProps<T extends keyof TabNavigatorParamList> =

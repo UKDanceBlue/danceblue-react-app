@@ -13,6 +13,7 @@ import { DBHeaderText } from "./DBHeaderText";
 import EventListScreen from "./EventListScreen";
 import HomeScreen from "./HomeScreen";
 import MarathonScreen from "./MarathonScreen";
+import MoraleCup from "./MoraleCup";
 import TabBarComponent from "./TabBarComponent";
 import SpiritScreen from "./spirit/SpiritStack";
 
@@ -25,6 +26,7 @@ export const possibleTabs = {
     component={EventListScreen}/>,
   Teams: <Tabs.Screen key="Spirit" name="Teams" component={SpiritScreen} />,
   Marathon: <Tabs.Screen key="MarathonScreen" name="Marathon" component={MarathonScreen} />,
+  MoraleCup: <Tabs.Screen key="MoraleCup" name="Morale Cup" component={MoraleCup} />,
 } as { [name: string]: ReactElement };
 
 const TabBar = () => {
