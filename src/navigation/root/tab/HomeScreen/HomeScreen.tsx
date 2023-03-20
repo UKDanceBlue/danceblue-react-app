@@ -16,14 +16,16 @@ import SponsorCarousel from "./SponsorCarousel";
  */
 const HomeScreen = () => {
   const bgColor = useReactNavigationTheme().colors.background;
-  const { width: screenWidth } = useWindowDimensions();
+  const {
+    width: screenWidth, fontScale
+  } = useWindowDimensions();
 
   return (
     <>
       <StatusBar hidden = { false } />
-      <VStack flexDirection="column" bgColor={bgColor}>
+      <VStack flexDirection="column" bgColor={bgColor} flex={1}>
         <Box
-          height="25%"
+          flex={1}
           tintColor={bgColor}
           borderBottomColor="secondary.400"
           borderBottomWidth={2}
@@ -33,14 +35,14 @@ const HomeScreen = () => {
         <ImageBackground
           source={require("../../../../../assets/bg-geometric/blue.png") as ImageSourcePropType}
           resizeMode="cover"
-          style={{ width: screenWidth, borderBottomColor: "#FFC72C", borderBottomWidth: 3 }}>
+          style={{ width: screenWidth, borderBottomColor: "#FFC72C", borderBottomWidth: 3, flex: 1 }}>
           <Box height="23%">
             {/* <PodcastPlayer />*/}
             <Text
               textAlign="center"
               color="secondary.400"
               fontFamily="headingBold"
-              fontSize="3xl"
+              fontSize={30/fontScale}
               shadow="1"
               style={{
                 textShadowColor: "secondary.300",
@@ -50,10 +52,10 @@ const HomeScreen = () => {
             <CountdownView endTime={DateTime.fromObject({ year: 2023, month: 3, day: 25, hour: 20 }).toMillis()} />
           </Box>
         </ImageBackground>
-        <Box height="30%">
+        <Box flex={1}>
           <SponsorCarousel />
         </Box>
-        <Box height="22%" justifyContent="center">
+        <Box flex={1} justifyContent="center">
           <HStack justifyContent="center">
             <Button
               onPress={() => {

@@ -1,9 +1,10 @@
 import { Text, View } from "native-base";
+import { useWindowDimensions } from "react-native";
 
-import { useThemeFonts } from "../../customHooks";
+import { useThemeColors, useThemeFonts } from "../../customHooks";
 
 const validUnits = [
-  "seconds", "minutes", "hours", "days", "months", "years"
+  "sec", "min", "hours", "days", "months", "years"
 ] as const;
 
 /**
@@ -22,20 +23,33 @@ const TimeUnit = ({
   const {
     headingBold, body
   } = useThemeFonts();
+  const { fontScale } = useWindowDimensions();
+  const { primary } = useThemeColors();
 
   if (!validUnits.includes(unit)) {
     throw new Error(`Invalid unit: ${unit}`);
   }
 
   return (
-    <View style={{ alignItems: "center", paddingLeft: 7, paddingRight: 7, minHeight: 70 }}>
+    <View
+      bgColor={`${primary[700]}BD`}
+      marginX={2}
+      style={{ alignItems: "center", paddingLeft: 7, paddingRight: 7, flex: 1 }}
+      minWidth={30*fontScale}>
       <Text
         color="secondary.400"
         fontSize="3xl"
-        fontFamily={headingBold}>
+        fontFamily={headingBold}
+        flex={1}
+        minHeight={fontScale*40}>
         {Math.max(0, value ?? 0)}
       </Text>
-      <Text color="secondary.400" fontSize="xl" fontFamily={body}>
+      <Text
+        color="secondary.400"
+        fontSize="xl"
+        fontFamily={body}
+        flex={1}
+        minHeight={fontScale*30}>
         {(value ?? 0) === 1 ? unit.substring(0, unit.length - 1) : unit}
       </Text>
     </View>

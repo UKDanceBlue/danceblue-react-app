@@ -4,7 +4,9 @@ import { Linking, useWindowDimensions } from "react-native";
 import { universalCatch } from "../../../common/logging";
 
 export function DBHeaderText() {
-  const { width } = useWindowDimensions();
+  const {
+    width, fontScale
+  } = useWindowDimensions();
 
   return (<Text
     onPress={async () => {
@@ -19,7 +21,7 @@ export function DBHeaderText() {
       }
     }}
     paddingLeft={Math.round(width * 0.01)}
-    fontSize="3xl"
+    fontSize={30/fontScale}
     color="primary.600"
     fontFamily="bodoni-flf-bold"
     bold
