@@ -4,23 +4,23 @@ import TimeUnit from ".";
 
 describe("<TimeUnit />", () => {
   it("renders 0 with a negative value", () => {
-    const tree = renderWithNativeBase(<TimeUnit value={-1} unit={"seconds"} />);
+    const tree = renderWithNativeBase(<TimeUnit value={-1} unit={"sec"} />);
 
     const valueElement = tree.queryAllByText("0");
     expect(valueElement).toHaveLength(1);
 
-    const unitElement = tree.queryAllByText("seconds");
+    const unitElement = tree.queryAllByText("sec");
     expect(unitElement).toHaveLength(1);
   });
 
   it("renders 0 with a nullish value", () => {
     // @ts-expect-error Testing nullish values
-    const tree = renderWithNativeBase(<TimeUnit value={null} unit={"seconds"} />);
+    const tree = renderWithNativeBase(<TimeUnit value={null} unit={"sec"} />);
 
     const valueElement = tree.queryAllByText("0");
     expect(valueElement).toHaveLength(1);
 
-    const unitElement = tree.queryAllByText("seconds");
+    const unitElement = tree.queryAllByText("sec");
     expect(unitElement).toHaveLength(1);
   });
 
@@ -35,12 +35,12 @@ describe("<TimeUnit />", () => {
   });
 
   it("renders correctly with a singular unit", () => {
-    const tree = renderWithNativeBase(<TimeUnit value={1} unit={"seconds"} />).toJSON() as unknown;
+    const tree = renderWithNativeBase(<TimeUnit value={1} unit={"sec"} />).toJSON() as unknown;
 
     expect(tree).toMatchSnapshot();
   });
   it("renders correctly with a plural unit", () => {
-    const tree = renderWithNativeBase(<TimeUnit value={10} unit={"seconds"} />).toJSON() as unknown;
+    const tree = renderWithNativeBase(<TimeUnit value={10} unit={"sec"} />).toJSON() as unknown;
 
     expect(tree).toMatchSnapshot();
   });
