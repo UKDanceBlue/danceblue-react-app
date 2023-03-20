@@ -18,9 +18,10 @@ export function DBHeaderText() {
         ).catch(universalCatch);
       }
     }}
-    marginLeft={ Math.round(width * 0.025)}
+    paddingLeft={Math.round(width * 0.01)}
     fontSize="3xl"
     color="primary.600"
     fontFamily="bodoni-flf-bold"
-    bold>DanceBlue</Text>);
+    bold
+    overflow="visible">DanceBlue</Text>);
 }

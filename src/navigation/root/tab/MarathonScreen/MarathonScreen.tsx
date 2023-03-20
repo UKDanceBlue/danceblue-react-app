@@ -10,15 +10,13 @@ export const MarathonScreen = () => {
   const {
     height: screenHeight, width: screenWidth
   } = useWindowDimensions();
-  const {
-    primary, secondary
-  } = useThemeColors();
+  const { primary } = useThemeColors();
   return (
     <ImageBackground
       source={require("../../../../../assets/bg-geometric/blue.png") as ImageSourcePropType}
       resizeMode="cover"
-      style={{ width: screenWidth, height: screenHeight }}>
-      <View height={screenHeight * .2}>
+      style={{ width: screenWidth, height: screenHeight, flex: 1 }}>
+      <View flex={1}>
         <Text
           textAlign="center"
           color="secondary.400"
@@ -33,10 +31,10 @@ export const MarathonScreen = () => {
           }}>{"Countdown 'til Marathon"}</Text>
         <CountdownView endTime={DateTime.fromObject({ year: 2023, month: 3, day: 25, hour: 20 }).toMillis()} />
       </View>
-      <View height={screenHeight * 0.45}>
+      <View flex={2}>
         <CommitteeHoldingSign color="#fff"/>
       </View>
-      <View height={screenHeight * 0.3}>
+      <View flex={1}>
         <Text
           textAlign="center"
           color="secondary.400"
