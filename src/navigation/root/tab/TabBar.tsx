@@ -2,7 +2,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ReactElement, useEffect, useState } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { log } from "../../../common/logging";
 import { useAppConfig } from "../../../context";
@@ -27,7 +26,7 @@ export const possibleTabs = {
   Teams: <Tabs.Screen key="Spirit" name="Teams" component={SpiritScreen} />,
   Marathon: <Tabs.Screen key="MarathonScreen" name="Marathon" component={MarathonScreen} />,
   MoraleCup: <Tabs.Screen key="MoraleCup" name="Morale Cup" component={MoraleCup} />,
-} as { [name: string]: ReactElement };
+} as const;
 
 const TabBar = () => {
   const {
@@ -38,19 +37,25 @@ const TabBar = () => {
 
   useEffect(() => {
     if (isConfigLoaded) {
-      const tempCurrentTabs = [];
+      let tempCurrentTabs = [possibleTabs.MoraleCup];
 
       const enabledScreens = allEnabledScreens.filter((screen) => screen !== fancyTab);
 
-      let i = 0;
-      for (; i<tempCurrentTabs.length/2; i++) {
-        tempCurrentTabs.push(possibleTabs[enabledScreens[i]]);
+      for (let i = 0; i<enabledScreens.length; i++) {
+        if (enabledScreens[i] !== fancyTab) {
+          tempCurrentTabs.push(possibleTabs[enabledScreens[i] as keyof typeof possibleTabs]);
+        }
       }
-      if (fancyTab) {
-        tempCurrentTabs.push(possibleTabs[fancyTab]);
-      }
-      for (; i<enabledScreens.length; i++) {
-        tempCurrentTabs.push(possibleTabs[enabledScreens[i]]);
+
+      // if there is a fancy tab, add it to the middle
+      if (fancyTab != null) {
+        const middleIndex = Math.floor(tempCurrentTabs.length / 2);
+        const fancyTabElement = possibleTabs[fancyTab as keyof typeof possibleTabs];
+        const firstHalf = tempCurrentTabs.slice(0, middleIndex);
+        const secondHalf = tempCurrentTabs.slice(middleIndex);
+        tempCurrentTabs = [
+          ...firstHalf, fancyTabElement, ...secondHalf
+        ];
       }
 
       setCurrentTabs(tempCurrentTabs);
@@ -95,7 +100,6 @@ const TabBar = () => {
         ],
       })}
       tabBar={(props) => (<TabBarComponent {...props} fancyTab={fancyTab} />)}
-      safeAreaInsets={useSafeAreaInsets()}
     >
       <Tabs.Screen name="Home" component={HomeScreen} />
       {isConfigLoaded && currentTabs}

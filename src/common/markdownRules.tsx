@@ -63,7 +63,7 @@ const mardownTextStyleKeys: (keyof Partial<TextStyle>)[] = [
 const styleRuleKeys = [
   "body", "heading1", "heading2", "heading3", "heading4", "heading5", "heading6", "hr", "strong", "em", "s", "blockquote", "bullet_list", "ordered_list", "list_item", "bullet_list_icon", "bullet_list_content", "ordered_list_icon", "ordered_list_content", "code_inline", "code_block", "fence", "table", "thead", "tbody", "th", "tr", "td", "link", "blocklink", "image", "text", "textgroup", "paragraph", "hardbreak", "softbreak", "pre", "inline", "span"
 ] as const;
-type StyleRuleKeysType = typeof styleRuleKeys[number] | `_VIEW_SAFE_${typeof styleRuleKeys[number]}`;
+export type StyleRuleKeysType = typeof styleRuleKeys[number] | `_VIEW_SAFE_${typeof styleRuleKeys[number]}`;
 
 type MarkdownRuleStyles = Partial<Record<StyleRuleKeysType, Partial<MarkdownRuleStyle>>>;
 

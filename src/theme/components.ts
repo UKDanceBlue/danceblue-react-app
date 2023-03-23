@@ -34,6 +34,13 @@ export const components: Partial<Record<keyof Theme["components"], ComponentThem
         color: "primary.600",
         fontFamily: "body",
         padding: "1em",
+      },
+      "error-message": {
+        color: "red.500",
+        fontSize: "md",
+        fontWeight: "bold",
+        textAlign: "center",
+        margin: "1em",
       }
     },
   },

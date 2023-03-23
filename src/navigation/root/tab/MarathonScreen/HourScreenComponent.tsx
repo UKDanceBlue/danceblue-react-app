@@ -1,69 +1,80 @@
-import { DownloadableImage, FirestoreImage, FirestoreImageJsonV1 } from "@ukdanceblue/db-app-common";
-import { DateTime } from "luxon";
-import { Box, Image, ScrollView, Spinner, VStack, View } from "native-base";
-import { useCallback, useEffect, useState } from "react";
-import { useWindowDimensions } from "react-native";
+import { Image, ScrollView, Text, VStack } from "native-base";
+import { RefreshControl, useWindowDimensions } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import NativeBaseMarkdown from "../../../../common/components/NativeBaseMarkdown";
-import { universalCatch } from "../../../../common/logging";
-import { lookupHourByTime } from "../../../../common/marathonTime";
-import { useFirebase } from "../../../../context";
 
-import { FirestoreHour } from "./FirestoreHourTypes";
-import mdtest from "./tmp";
-
+import { useCurrentFirestoreHour } from "./FirestoreHourTypes";
 
 export const HourScreenComponent = () => {
-  const currentHour = lookupHourByTime(DateTime.now());
-  const [ hour, setHour ] = useState<FirestoreHour | null>(null);
-  const [ hourImage, setHourImage ] = useState<DownloadableImage | null>(null);
-  const { fbStorage } = useFirebase();
   const { width: screenWidth } = useWindowDimensions();
-  const refresh = useCallback(async () => {
-    const graphicJson: FirestoreImageJsonV1 = {
-      height: 1080,
-      width: 1920,
-      uri: "gs://react-danceblue.appspot.com/marathon/2023/Caturday.png"
-    };
-    setHour({
-      hourName: "Hour 1",
-      content: mdtest,
-      hourNumber: 1,
-      graphic: graphicJson
-    });
 
-    const image = FirestoreImage.fromJson(graphicJson);
-    setHourImage(await DownloadableImage.fromFirestoreImage(image, (uri: string) => fbStorage.refFromURL(uri).getDownloadURL()));
-  }, [fbStorage]);
+  // firestore hour
+  const [
+    isLoading,
+    errorMessage,
+    hourData,
+    hourImage,
+    refresh
+  ] = useCurrentFirestoreHour();
 
-  useEffect(() => {
-    if (currentHour) {
-      refresh().catch(universalCatch);
-    }
-  }, [currentHour]);
+  let hourDataComponent = null;
+  if (hourData != null) {
+    hourDataComponent = (
+      <NativeBaseMarkdown style={{ text: { color: "#0f0f0f" } }}>
+        {hourData.content + hourData.content + hourData.content}
+      </NativeBaseMarkdown>
+    );
+  } else {
+    hourDataComponent = (
+      <Text variant="error-message">No hour data</Text>
+    );
+  }
+
+  let hourImageComponent = null;
+  if (hourImage != null) {
+    hourImageComponent = (
+      <Image
+        width={screenWidth}
+        height={screenWidth * hourImage.height / hourImage.width}
+        alt="Hour Image"
+        source={{
+          uri: hourImage.url,
+          height: hourImage.height,
+          width: hourImage.width
+        }}
+        resizeMode="contain"/>
+    );
+  }
 
   return (
-    <VStack>
-      <Box>
-        {hourImage == null
-          ? <Spinner />
-          : <Image
-            width={screenWidth}
-            height={screenWidth * 9 / 16}
-            alt="Hour Image"
-            source={{
-              uri: hourImage.url,
-              height: hourImage.height,
-              width: hourImage.width
-            }}
-            resizeMode="contain"/>
-        }
-      </Box>
-      <ScrollView paddingX={4} paddingTop={3}>
-        <NativeBaseMarkdown>
-          {hour?.content}
-        </NativeBaseMarkdown>
-      </ScrollView>
+    <VStack
+      flex={1}
+      alignItems="center"
+      flexDirection="column">
+      {hourImageComponent}
+      {
+        errorMessage != null
+          ? <Text flex={1} variant="error-message">{errorMessage}</Text>
+          : null
+      }
+      <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
+        <ScrollView
+          paddingX={4}
+          paddingTop={3}
+          overScrollMode="never"
+          flex={1}
+          bounces={false}
+          contentContainerStyle={{ paddingBottom: 32 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={refresh}
+            />
+          }>
+          {hourDataComponent}
+        </ScrollView>
+      </SafeAreaView>
     </VStack>
   );
 };
