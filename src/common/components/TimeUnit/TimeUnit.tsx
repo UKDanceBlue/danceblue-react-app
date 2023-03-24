@@ -50,7 +50,7 @@ const TimeUnit = ({
         fontFamily={body}
         flex={1}
         minHeight={fontScale*30}>
-        {(value ?? 0) === 1 ? unit.substring(0, unit.length - 1) : unit}
+        {unit}
       </Text>
     </View>
   );

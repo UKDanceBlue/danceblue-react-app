@@ -107,6 +107,7 @@ export const styles = StyleSheet.create({
   countdownTimer: {
     flexDirection: "row",
     justifyContent: "center",
+    flex: 1
   }
 });
 
