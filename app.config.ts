@@ -21,16 +21,16 @@ To bump the app's version:
 const bundleVersion: Version = {
   major: 2,
   minor: 2,
-  patch: 1
+  patch: 2
 } as const;
 const nativeVersion: Version = {
   major: 2,
   minor: 2,
-  patch: 1
+  patch: 2
 } as const;
 
 // Both the sum of version.patch + buildsThisVersion and the sum of baseBuildCount + buildsThisVersion must increase each time a native build is submitted.
-const baseBuildCount = 33;
+const baseBuildCount = 34;
 const buildsThisVersion = 0;
 
 /*

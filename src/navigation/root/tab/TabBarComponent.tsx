@@ -24,7 +24,8 @@ const iconMap = {
   Donate: "hand-holding-heart",
   Marathon: "people-arrows",
   "Scavenger Hunt": "search",
-  "Logo": null
+  "Logo": null,
+  "Morale Cup": "trophy"
 };
 
 const tabBarIcon = ({
