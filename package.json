@@ -74,7 +74,6 @@
     "luxon": "^3.0.3",
     "lz-string": "^1.4.4",
     "native-base": "^3.4.13",
-    "node": "^16.13.0",
     "react": "18.0.0",
     "react-native": "0.69.6",
     "react-native-calendars": "^1.1289.0",
@@ -92,7 +91,6 @@
     "react-native-svg": "12.3.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-webview": "11.23.0",
-    "typescript": "^4.6.3",
     "uuid": "3.4.0"
   },
   "devDependencies": {
@@ -127,6 +125,7 @@
     "metro-babel-register": "^0.71.1",
     "react-native-bundle-visualizer": "^3.1.1",
     "ts-jest": "^29.0.3",
+    "typescript": "^4.6.3",
     "ts-node": "^10.9.1"
   },
   "resolutions": {
