@@ -26,11 +26,11 @@ const bundleVersion: Version = {
 const nativeVersion: Version = {
   major: 2,
   minor: 2,
-  patch: 2
+  patch: 1
 } as const;
 
 // Both the sum of version.patch + buildsThisVersion and the sum of baseBuildCount + buildsThisVersion must increase each time a native build is submitted.
-const baseBuildCount = 34;
+const baseBuildCount = 33;
 const buildsThisVersion = 0;
 
 /*
