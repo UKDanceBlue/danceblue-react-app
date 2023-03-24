@@ -37,7 +37,7 @@ const TabBar = () => {
 
   useEffect(() => {
     if (isConfigLoaded) {
-      let tempCurrentTabs = [possibleTabs.MoraleCup];
+      let tempCurrentTabs = [];
 
       const enabledScreens = allEnabledScreens.filter((screen) => screen !== fancyTab);
 
