@@ -1,8 +1,8 @@
 import { DateTime, Interval } from "luxon";
 
 export const marathonInterval = Interval.fromDateTimes(
-  DateTime.fromObject({ year: 2023, month: 3, day: 25, hour: 16 }),
-  DateTime.fromObject({ year: 2023, month: 3, day: 26, hour: 16 })
+  DateTime.fromObject({ year: 2023, month: 3, day: 25, hour: 20 }),
+  DateTime.fromObject({ year: 2023, month: 3, day: 26, hour: 20 })
 );
 
 export const marathonHourIntervals = marathonInterval.divideEqually(24);
