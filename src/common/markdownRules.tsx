@@ -215,17 +215,29 @@ export const rules: RenderRules = {
 
   // Emphasis
   strong: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Text key={node.key} style={styles.strong} selectable>
+    <Text
+      bold
+      key={node.key}
+      style={styles.strong}
+      selectable>
       {children}
     </Text>
   ),
   em: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Text key={node.key} style={styles.em} selectable>
+    <Text
+      italic
+      key={node.key}
+      style={styles.em}
+      selectable>
       {children}
     </Text>
   ),
   s: (node, children, parent, styles: MarkdownRuleStyles) => (
-    <Text key={node.key} style={styles.s} selectable>
+    <Text
+      strikeThrough
+      key={node.key}
+      style={styles.s}
+      selectable>
       {children}
     </Text>
   ),

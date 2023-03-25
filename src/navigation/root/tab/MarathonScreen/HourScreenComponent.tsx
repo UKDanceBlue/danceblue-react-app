@@ -64,7 +64,7 @@ export const HourScreenComponent = () => {
           marginTop={3}
           flex={1}
           width={screenWidth}
-          contentContainerStyle={{ paddingBottom: 32, width: screenWidth }}
+          contentContainerStyle={{ paddingBottom: 32, width: screenWidth-8, paddingHorizontal: 4 }}
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
