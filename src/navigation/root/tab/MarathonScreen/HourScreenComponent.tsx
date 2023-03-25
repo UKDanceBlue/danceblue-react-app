@@ -22,7 +22,7 @@ export const HourScreenComponent = () => {
   if (hourData != null) {
     hourDataComponent = (
       <NativeBaseMarkdown style={{ text: { color: "#0f0f0f" } }}>
-        {hourData.content + hourData.content + hourData.content}
+        {hourData.content}
       </NativeBaseMarkdown>
     );
   } else {
