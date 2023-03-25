@@ -60,12 +60,11 @@ export const HourScreenComponent = () => {
       }
       <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
         <ScrollView
-          paddingX={4}
-          paddingTop={3}
-          overScrollMode="never"
+          marginX={4}
+          marginTop={3}
           flex={1}
-          bounces={false}
-          contentContainerStyle={{ paddingBottom: 32 }}
+          width={screenWidth}
+          contentContainerStyle={{ paddingBottom: 32, width: screenWidth }}
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
