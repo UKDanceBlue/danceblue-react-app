@@ -22,7 +22,7 @@ export function isFirestoreHour(obj: unknown): obj is FirestoreHour {
   return (
     typeof (obj as FirestoreHour).hourNumber === "number" &&
     typeof (obj as FirestoreHour).hourName === "string" &&
-    FirestoreImage.isValidJson((obj as FirestoreHour).graphic) &&
+    (obj as FirestoreHour).graphic != null && FirestoreImage.isValidJson((obj as FirestoreHour).graphic) &&
     typeof (obj as FirestoreHour).content === "string"
   );
 }
@@ -46,6 +46,8 @@ export function useCurrentFirestoreHour(): [boolean, string | null, FirestoreHou
       setHourImage(null);
       return;
     }
+
+    setError(null);
 
     setLoading(true);
 
